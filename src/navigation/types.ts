@@ -25,8 +25,12 @@ export type RootStackParamList = {
     Onboarding: { screen: keyof OnboardingStackParamList } | undefined;
     Auth: { screen: keyof AuthStackParamList } | undefined;
     Main: { screen: keyof MainTabParamList } | undefined;
-    Booking: { mentorId: string; mentorName: string };
+    SelectDate: { mentorId: string; mentorName: string; mentorAvatar?: string; mentorBio?: string; mentorExpertise?: string[] };
+    ChooseTime: { mentorId: string; mentorName: string; mentorAvatar?: string; selectedDate: string; selectedTime?: string; selectedTimeEnd?: string };
+    ConfirmAppointment: { mentorId: string; mentorName: string; mentorAvatar?: string; selectedDate: string; selectedTime: string; selectedTimeEnd: string; notes?: string };
     ChatDetail: { otherUserId: string; otherUserName: string };
+    MentorDetail: { mentorId: string; mentorName: string; mentorAvatar?: string; mentorBio?: string; mentorExpertise?: string[] };
+    Settings: undefined;
 };
 
 export type RootNavigationProp = StackNavigationProp<RootStackParamList>;

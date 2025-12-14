@@ -7,8 +7,13 @@ import { MainNavigator } from './MainNavigator';
 import { RootStackParamList } from './types';
 import { useAuth } from '../features/auth/hooks/useAuth';
 import { ActivityIndicator, View } from 'react-native';
-import { BookingScreen } from '../features/appointments/screens/BookingScreen';
+
+import SelectDateScreen from '../features/appointments/screens/SelectDateScreen';
+import ChooseTimeScreen from '../features/appointments/screens/ChooseTimeScreen';
+import ConfirmAppointmentScreen from '../features/appointments/screens/ConfirmAppointmentScreen';
 import { ChatDetailScreen } from '../features/messages/screens/ChatDetailScreen';
+import MentorDetailScreen from '../features/mentors/screens/MentorDetailScreen';
+import SettingsScreen from '../features/profile/screens/SettingsScreen';
 import { getOnboardingStatus } from '../utils/helpers';
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -39,8 +44,23 @@ export const AppNavigator = () => {
                 {user ? (
                     <>
                         <Stack.Screen name="Main" component={MainNavigator} />
-                        <Stack.Screen name="Booking" component={BookingScreen} />
+                        <Stack.Screen name="SelectDate" component={SelectDateScreen} />
+                        <Stack.Screen name="ChooseTime" component={ChooseTimeScreen} />
+                        <Stack.Screen name="ConfirmAppointment" component={ConfirmAppointmentScreen} />
                         <Stack.Screen name="ChatDetail" component={ChatDetailScreen} />
+                        <Stack.Screen
+                            name="MentorDetail"
+                            component={MentorDetailScreen}
+                            options={{ presentation: 'card' }}
+                        />
+                        <Stack.Screen
+                            name="Settings"
+                            component={SettingsScreen}
+                            options={{
+                                presentation: 'transparentModal',
+                                cardStyle: { backgroundColor: 'transparent' },
+                            }}
+                        />
                     </>
                 ) : (
                     <>

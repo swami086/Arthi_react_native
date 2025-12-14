@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .shadow-soft {
+        shadow-color: #000;
+        shadow-offset: 0px 4px;
+        shadow-opacity: 0.05;
+        shadow-radius: 10px;
+        elevation: 2;
+    }
+
+    .shadow-card {
+        shadow-color: #000;
+        shadow-offset: 0px 8px;
+        shadow-opacity: 0.1;
+        shadow-radius: 20px;
+        elevation: 5;
+    }
+}
