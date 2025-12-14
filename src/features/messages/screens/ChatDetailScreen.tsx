@@ -1,13 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, FlatList, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, FlatList, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, Platform, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+
 import { RootStackParamList } from '../../../navigation/types';
 import { supabase } from '../../../api/supabase';
 import { useAuth } from '../../auth/hooks/useAuth';
 import { Message } from '../../../api/types';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MessageBubble } from '../../../components/MessageBubble';
+import { GradientAvatar } from '../../../components/GradientAvatar';
 
 type ChatDetailScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ChatDetail'>;
 
@@ -22,9 +26,10 @@ export const ChatDetailScreen = () => {
     const [sending, setSending] = useState(false);
     const [newMessage, setNewMessage] = useState('');
     const flatListRef = useRef<FlatList>(null);
+    const [isTyping, setIsTyping] = useState(false); // Mock typing state
 
     useEffect(() => {
-        if (!user) return;
+        if (!user || !otherUserId) return;
 
         const fetchMessages = async () => {
             const { data, error } = await supabase
@@ -41,7 +46,6 @@ export const ChatDetailScreen = () => {
 
         fetchMessages();
 
-        // Real-time subscription
         const channel = supabase
             .channel(`chat:${user.id}:${otherUserId}`)
             .on(
@@ -54,7 +58,6 @@ export const ChatDetailScreen = () => {
                 },
                 (payload) => {
                     const newMsg = payload.new as Message;
-                    // Check if the message belongs to this conversation (double check receiver too)
                     if (
                         (newMsg.sender_id === user.id && newMsg.receiver_id === otherUserId) ||
                         (newMsg.sender_id === otherUserId && newMsg.receiver_id === user.id)
@@ -66,9 +69,11 @@ export const ChatDetailScreen = () => {
             .subscribe();
 
         return () => {
-            supabase.removeChannel(channel);
+            if (channel) {
+                supabase.removeChannel(channel);
+            }
         };
-    }, [user, otherUserId]);
+    }, [user?.id, otherUserId]);
 
     const handleSend = async () => {
         if (!newMessage.trim() || !user) return;
@@ -89,81 +94,121 @@ export const ChatDetailScreen = () => {
         setSending(false);
     };
 
-    const renderMessage = ({ item }: { item: Message }) => {
-        const isMyMessage = item.sender_id === user?.id;
-        return (
-            <View className={`my-1 mx-4 max-w-[80%] p-3 rounded-2xl ${isMyMessage
-                    ? 'bg-primary self-end rounded-br-none'
-                    : 'bg-gray-200 dark:bg-gray-700 self-start rounded-bl-none'
-                }`}>
-                <Text className={`${isMyMessage ? 'text-white' : 'text-black dark:text-white'
-                    }`}>
-                    {item.content}
-                </Text>
-                <Text className={`text-[10px] mt-1 ${isMyMessage ? 'text-white/70' : 'text-gray-500 box'}`}>
-                    {new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+    const renderDateSeparator = (date: Date) => (
+        <View className="items-center my-4">
+            <View className="bg-gray-200 rounded-full px-3 py-1">
+                <Text className="text-xs font-bold text-gray-500 uppercase">
+                    {date.toDateString() === new Date().toDateString() ? 'Today' : date.toLocaleDateString()}
                 </Text>
             </View>
-        );
-    };
+        </View>
+    );
 
     return (
-        <SafeAreaView className="flex-1 bg-background-light dark:bg-background-dark" edges={['top']}>
-            {/* Header */}
-            <View className="flex-row items-center p-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm z-10">
-                <TouchableOpacity onPress={() => navigation.goBack()} className="mr-3">
-                    <Icon name="arrow-left" size={24} color="#30bae8" />
-                </TouchableOpacity>
-                <View className="w-10 h-10 bg-primary/20 rounded-full items-center justify-center mr-3">
-                    <Text className="text-primary font-bold text-lg">{otherUserName.charAt(0)}</Text>
-                </View>
-                <Text className="text-lg font-bold text-text-main-light dark:text-text-main-dark flex-1">
-                    {otherUserName}
-                </Text>
-            </View>
+        <View className="flex-1 bg-white">
+            <StatusBar barStyle="dark-content" />
+            <SafeAreaView className="flex-1" edges={['top']}>
+                {/* Header */}
+                <View className="flex-row items-center px-4 py-3 border-b border-gray-100 bg-white z-10 shadow-sm">
+                    <TouchableOpacity onPress={() => navigation.goBack()} className="mr-3 p-2 -ml-2 rounded-full active:bg-gray-50">
+                        <MaterialCommunityIcons name="arrow-left" size={24} color="#333" />
+                    </TouchableOpacity>
 
-            {loading ? (
-                <View className="flex-1 items-center justify-center">
-                    <ActivityIndicator size="large" color="#30bae8" />
-                </View>
-            ) : (
-                <FlatList
-                    ref={flatListRef}
-                    data={messages}
-                    renderItem={renderMessage}
-                    keyExtractor={item => item.id}
-                    inverted
-                    contentContainerStyle={{ paddingVertical: 16 }}
-                />
-            )}
-
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-                keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
-            >
-                <View className="flex-row items-center p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
-                    <TextInput
-                        className="flex-1 bg-gray-100 dark:bg-gray-800 text-text-main-light dark:text-text-main-dark rounded-full px-4 py-3 mr-3 max-h-24"
-                        placeholder="Type a message..."
-                        placeholderTextColor="#9ca3af"
-                        value={newMessage}
-                        onChangeText={setNewMessage}
-                        multiline
-                    />
                     <TouchableOpacity
-                        onPress={handleSend}
-                        disabled={sending || !newMessage.trim()}
-                        className={`w-12 h-12 rounded-full items-center justify-center ${!newMessage.trim() ? 'bg-gray-300 dark:bg-gray-700' : 'bg-primary'
-                            }`}
+                        className="flex-1 flex-row items-center"
+                        onPress={() => {
+                            // Navigate to Mentor Profile if needed
+                            // navigation.navigate('MentorDetail', { mentorId: otherUserId, ... })
+                        }}
                     >
-                        {sending ? (
-                            <ActivityIndicator size="small" color="#white" />
-                        ) : (
-                            <Icon name="send" size={20} color="white" />
-                        )}
+                        <View className="mr-3">
+                            <GradientAvatar
+                                source={{ uri: 'https://via.placeholder.com/150' }} // Fallback or pass avatar
+                                size={40}
+                                online={true}
+                            />
+                        </View>
+                        <View>
+                            <Text className="text-base font-bold text-gray-900">{otherUserName}</Text>
+                            <Text className="text-xs text-green-500 font-medium">Online</Text>
+                        </View>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity className="bg-red-50 p-2 rounded-full border border-red-100">
+                        <MaterialCommunityIcons name="alert-circle-outline" size={24} color="#EF4444" />
                     </TouchableOpacity>
                 </View>
-            </KeyboardAvoidingView>
-        </SafeAreaView>
+
+                {loading ? (
+                    <View className="flex-1 items-center justify-center bg-gray-50">
+                        <ActivityIndicator size="large" color="#30bae8" />
+                    </View>
+                ) : (
+                    <FlatList
+                        ref={flatListRef}
+                        data={messages}
+                        renderItem={({ item, index }) => {
+                            const isMyMessage = item.sender_id === user?.id;
+                            // Logic to show date separator could go here by comparing with next item
+                            return (
+                                <MessageBubble
+                                    content={item.content}
+                                    timestamp={item.created_at}
+                                    isMyMessage={isMyMessage}
+                                    isRead={true} // Mock read receipt
+                                />
+                            );
+                        }}
+                        keyExtractor={item => item.id}
+                        inverted
+                        contentContainerStyle={{ paddingVertical: 16, paddingHorizontal: 16 }}
+                        className="bg-gray-50"
+                        ListFooterComponent={
+                            <View className="items-center py-4">
+                                {isTyping && (
+                                    <Text className="text-xs text-gray-400 italic">{otherUserName} is typing...</Text>
+                                )}
+                            </View>
+                        }
+                    />
+                )}
+
+                <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                    keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+                    className="bg-white border-t border-gray-100"
+                >
+                    <View className="flex-row items-end px-4 py-3 space-x-2">
+                        <TouchableOpacity className="mb-3 p-2 text-gray-400">
+                            <MaterialCommunityIcons name="plus" size={24} color="#9CA3AF" />
+                        </TouchableOpacity>
+
+                        <View className="flex-1 bg-gray-100 rounded-2xl px-4 py-2 min-h-[48px] justify-center border border-gray-200 focus:border-primary">
+                            <TextInput
+                                className="text-base text-gray-900 max-h-24"
+                                placeholder="Message..."
+                                placeholderTextColor="#9CA3AF"
+                                value={newMessage}
+                                onChangeText={setNewMessage}
+                                multiline
+                            />
+                        </View>
+
+                        <TouchableOpacity
+                            onPress={handleSend}
+                            disabled={sending || !newMessage.trim()}
+                            className={`w-12 h-12 rounded-full items-center justify-center mb-1 ${!newMessage.trim() ? 'bg-gray-200' : 'bg-primary shadow-lg shadow-blue-200'
+                                }`}
+                        >
+                            {sending ? (
+                                <ActivityIndicator size="small" color="#fff" />
+                            ) : (
+                                <MaterialCommunityIcons name="send" size={20} color="white" />
+                            )}
+                        </TouchableOpacity>
+                    </View>
+                </KeyboardAvoidingView>
+            </SafeAreaView>
+        </View>
     );
 };
