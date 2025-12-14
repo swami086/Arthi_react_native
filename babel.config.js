@@ -13,7 +13,6 @@ module.exports = function (api) {
                     path: '.env',
                 },
             ],
-            'react-native-worklets/plugin',
             'react-native-reanimated/plugin',
         ],
     };
