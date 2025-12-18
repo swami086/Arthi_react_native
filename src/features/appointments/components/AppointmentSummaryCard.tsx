@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MotiView } from 'moti';
 
 interface AppointmentSummaryCardProps {
     mentorName: string;
@@ -16,36 +17,55 @@ export const AppointmentSummaryCard: React.FC<AppointmentSummaryCardProps> = ({
     onEdit
 }) => {
     return (
-        <View className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm mb-4 border border-gray-100 dark:border-gray-700">
+        <MotiView
+            animate={{ scale: 1 }}
+            // Redesign card layout with mentor avatar and details
+            // Improve shadow and border effects
+            className="bg-white dark:bg-surface-dark p-5 rounded-2xl shadow-card mb-6 border border-gray-100 dark:border-gray-700 relative overflow-hidden"
+        >
             <View className="flex-row items-center">
-                <Image
-                    source={
-                        mentorAvatar
-                            ? { uri: mentorAvatar }
-                            : { uri: 'https://ui-avatars.com/api/?name=' + mentorName }
-                    }
-                    className="w-12 h-12 rounded-full mr-3"
-                />
-                <View className="flex-1">
-                    <Text className="font-bold text-lg text-gray-900 dark:text-white">
+                <View className="relative">
+                    {/* Update avatar styling with border */}
+                    <Image
+                        source={
+                            mentorAvatar
+                                ? { uri: mentorAvatar }
+                                : { uri: 'https://ui-avatars.com/api/?name=' + mentorName }
+                        }
+                        className="w-16 h-16 rounded-full border-2 border-primary/20"
+                    />
+                    <View className="absolute bottom-0 right-0 w-5 h-5 bg-green-500 rounded-full border-2 border-white dark:border-surface-dark" />
+                </View>
+
+                <View className="flex-1 ml-4 justify-center">
+                    {/* Enhance text hierarchy for mentor name and expertise */}
+                    <Text className="font-bold text-xl text-text-main-light dark:text-text-main-dark mb-1 font-sans leading-tight">
                         {mentorName}
                     </Text>
-                    {mentorExpertise && (
-                        <Text className="text-gray-500 dark:text-gray-400 text-sm">
-                            {mentorExpertise}
-                        </Text>
-                    )}
+                    {/* Add specialty tag with refined styling */}
+                    <View className="flex-row flex-wrap">
+                        <View className="bg-primary/10 px-2 py-1 rounded-md self-start">
+                             <Text className="text-primary dark:text-primary-dark text-xs font-bold uppercase tracking-wider">
+                                {mentorExpertise || 'Mentor'}
+                            </Text>
+                        </View>
+                    </View>
                 </View>
+
+                {/* Add edit button in top-right corner */}
                 {onEdit && (
-                    <TouchableOpacity onPress={onEdit} className="p-2">
+                    <TouchableOpacity
+                        onPress={onEdit}
+                        className="absolute top-0 right-0 p-2 bg-gray-50 dark:bg-gray-700/50 rounded-bl-xl"
+                    >
                         <MaterialCommunityIcons
                             name="pencil"
-                            size={20}
+                            size={18}
                             color="#30bae8"
                         />
                     </TouchableOpacity>
                 )}
             </View>
-        </View>
+        </MotiView>
     );
 };

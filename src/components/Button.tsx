@@ -29,14 +29,17 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
     const [pressed, setPressed] = useState(false);
 
-    const baseClasses = "py-4 px-6 rounded-2xl flex-row justify-center items-center shadow-sm";
+    // Refined border radius to rounded-full
+    const baseClasses = "py-4 px-6 rounded-full flex-row justify-center items-center shadow-sm overflow-hidden";
     let variantClasses = "";
-    let baseTextClasses = "font-display font-bold text-base";
+    // Enhanced text sizing: primary buttons use text-lg font-bold
+    let baseTextClasses = "font-sans text-lg font-bold";
     let iconColor = "#ffffff";
 
     switch (variant) {
         case 'primary':
-            variantClasses = "bg-primary dark:bg-primary-dark shadow-lg shadow-blue-500/30";
+            // Update primary button styling with enhanced shadow
+            variantClasses = "bg-primary dark:bg-primary-dark shadow-lg shadow-primary/30";
             baseTextClasses += " text-white";
             iconColor = "#ffffff";
             break;
@@ -67,8 +70,9 @@ export const Button: React.FC<ButtonProps> = ({
 
     return (
         <MotiView
-            animate={{ scale: pressed ? 0.95 : 1, opacity: pressed ? 0.8 : 1 }}
-            transition={{ type: 'spring', damping: 15, stiffness: 150 }}
+            // Improve hover and active states with scale transforms
+            animate={{ scale: pressed ? 0.98 : 1, opacity: pressed ? 0.9 : 1 }}
+            transition={{ type: 'spring', damping: 20, stiffness: 300 }}
             style={{ width: '100%' }}
         >
             <Pressable
@@ -79,21 +83,22 @@ export const Button: React.FC<ButtonProps> = ({
                 className={`${baseClasses} ${variantClasses} ${className}`}
             >
                 {loading ? (
+                    // Enhance loading state with better spinner animation
                     <MotiView
-                        from={{ rotate: '0deg' }}
-                        animate={{ rotate: '360deg' }}
+                        from={{ rotate: '0deg', scale: 1 }}
+                        animate={{ rotate: '360deg', scale: 1.2 }}
                         transition={{ loop: true, type: 'timing', duration: 1000 }}
                     >
-                        <ActivityIndicator color={iconColor} />
+                        <ActivityIndicator color={iconColor} size="small" />
                     </MotiView>
                 ) : (
                     <View className="flex-row items-center">
                         {icon && iconPosition === 'left' && (
-                            <Icon name={icon} size={20} color={iconColor} style={{ marginRight: 8 }} />
+                            <Icon name={icon} size={24} color={iconColor} style={{ marginRight: 8 }} />
                         )}
                         <Text className={`${baseTextClasses} ${textClassName}`}>{title}</Text>
                         {icon && iconPosition === 'right' && (
-                            <Icon name={icon} size={20} color={iconColor} style={{ marginLeft: 8 }} />
+                            <Icon name={icon} size={24} color={iconColor} style={{ marginLeft: 8 }} />
                         )}
                     </View>
                 )}
