@@ -16,7 +16,7 @@ export const AppointmentSummaryCard: React.FC<AppointmentSummaryCardProps> = ({
     onEdit
 }) => {
     return (
-        <View className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm mb-4">
+        <View className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm mb-4 border border-gray-100 dark:border-gray-700">
             <View className="flex-row items-center">
                 <Image
                     source={

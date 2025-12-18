@@ -3,6 +3,7 @@ import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, TextInput, Aler
 import { useNavigation, useRoute, RouteProp, CommonActions } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { format } from 'date-fns';
+import { MotiView } from 'moti';
 
 import { RootStackParamList, RootNavigationProp } from '../../../navigation/types';
 import { ProgressIndicator } from '../components/ProgressIndicator';
@@ -68,41 +69,65 @@ export default function ConfirmAppointmentScreen() {
             <ScrollView className="flex-1 px-4">
                 <ProgressIndicator currentStep={3} />
 
-                <Text className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Review session details</Text>
-                <Text className="text-gray-500 dark:text-gray-400 mb-6">You're almost there! Please check that everything looks right before confirming.</Text>
+                <MotiView
+                    from={{ opacity: 0, translateY: 10 }}
+                    animate={{ opacity: 1, translateY: 0 }}
+                    transition={{ type: 'timing', duration: 400 }}
+                >
+                    <Text className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Review session details</Text>
+                    <Text className="text-gray-500 dark:text-gray-400 mb-6">You're almost there! Please check that everything looks right before confirming.</Text>
+                </MotiView>
 
-                <AppointmentSummaryCard
-                    mentorName={mentorName}
-                    mentorAvatar={mentorAvatar}
-                    mentorExpertise="Mentoring Session"
-                    onEdit={() => navigation.navigate('SelectDate', { mentorId, mentorName, mentorAvatar })}
-                />
+                <MotiView
+                    from={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ type: 'timing', duration: 400, delay: 100 }}
+                >
+                    <AppointmentSummaryCard
+                        mentorName={mentorName}
+                        mentorAvatar={mentorAvatar}
+                        mentorExpertise="Mentoring Session"
+                        onEdit={() => navigation.navigate('SelectDate', { mentorId, mentorName, mentorAvatar })}
+                    />
+                </MotiView>
 
-                <AppointmentDetailsCard
-                    date={formattedDate}
-                    time={selectedTime}
-                    duration="45 minutes"
-                    format="Video Call"
-                />
+                <MotiView
+                    from={{ opacity: 0, translateY: 20 }}
+                    animate={{ opacity: 1, translateY: 0 }}
+                    transition={{ type: 'timing', duration: 400, delay: 200 }}
+                >
+                    <AppointmentDetailsCard
+                        date={formattedDate}
+                        time={selectedTime}
+                        duration="45 minutes"
+                        format="Video Call"
+                    />
 
-                <View className="bg-green-50 dark:bg-green-900/20 p-4 rounded-xl flex-row items-center mb-6 border border-green-100 dark:border-green-800">
-                    <MaterialCommunityIcons name="check-decagram" size={24} color="#10B981" className="mr-3" />
-                    <View>
-                        <Text className="font-bold text-green-800 dark:text-green-300">Free Introductory Session</Text>
-                        <Text className="text-green-600 dark:text-green-400 text-xs">First session is on us!</Text>
+                    <View className="bg-green-50 dark:bg-green-900/20 p-4 rounded-xl flex-row items-center mb-6 border border-green-100 dark:border-green-800">
+                        <MaterialCommunityIcons name="check-decagram" size={24} color="#10B981" className="mr-3" />
+                        <View>
+                            <Text className="font-bold text-green-800 dark:text-green-300">Free Introductory Session</Text>
+                            <Text className="text-green-600 dark:text-green-400 text-xs">First session is on us!</Text>
+                        </View>
                     </View>
-                </View>
+                </MotiView>
 
-                <Text className="font-bold text-gray-900 dark:text-white mb-2">Add a note (optional)</Text>
-                <TextInput
-                    className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 min-h-[100px] mb-8 text-gray-900 dark:text-white"
-                    placeholder="Share any specific topics you'd like to discuss..."
-                    placeholderTextColor="#9CA3AF"
-                    multiline
-                    textAlignVertical="top"
-                    value={notes}
-                    onChangeText={setNotes}
-                />
+                <MotiView
+                    from={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ type: 'timing', duration: 400, delay: 300 }}
+                >
+                    <Text className="font-bold text-gray-900 dark:text-white mb-2">Add a note (optional)</Text>
+                    <TextInput
+                        className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 min-h-[100px] mb-8 text-gray-900 dark:text-white"
+                        placeholder="Share any specific topics you'd like to discuss..."
+                        placeholderTextColor="#9CA3AF"
+                        multiline
+                        textAlignVertical="top"
+                        value={notes}
+                        onChangeText={setNotes}
+                    />
+                </MotiView>
             </ScrollView>
 
             <View className="p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">

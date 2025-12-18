@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+// ... imports
+import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '../../../api/supabase';
 import { Appointment } from '../../../api/types';
 import { useAuth } from '../../auth/hooks/useAuth';
@@ -9,26 +10,27 @@ export const useAppointments = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
+    const fetchAppointments = useCallback(async () => {
         if (!user) return;
+        try {
+            setLoading(true);
+            const { data, error: apiError } = await supabase
+                .from('appointments')
+                .select('*')
+                .or(`mentor_id.eq.${user.id},mentee_id.eq.${user.id}`)
+                .order('start_time', { ascending: true });
 
-        const fetchAppointments = async () => {
-            try {
-                const { data, error: apiError } = await supabase
-                    .from('appointments')
-                    .select('*')
-                    .or(`mentor_id.eq.${user.id},mentee_id.eq.${user.id}`)
-                    .order('start_time', { ascending: true });
+            if (apiError) throw apiError;
+            if (data) setAppointments(data);
+            setError(null);
+        } catch (err: any) {
+            setError(err.message || 'Failed to fetch appointments');
+        } finally {
+            setLoading(false);
+        }
+    }, [user]);
 
-                if (apiError) throw apiError;
-                if (data) setAppointments(data);
-            } catch (err: any) {
-                setError(err.message || 'Failed to fetch appointments');
-            } finally {
-                setLoading(false);
-            }
-        };
-
+    useEffect(() => {
         fetchAppointments();
 
         const channel = supabase
@@ -45,7 +47,7 @@ export const useAppointments = () => {
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [user]);
+    }, [fetchAppointments]);
 
-    return { appointments, loading, error };
+    return { appointments, loading, error, refetch: fetchAppointments };
 };

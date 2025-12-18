@@ -1,8 +1,9 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Animated } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Pressable } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { GradientAvatar } from './GradientAvatar';
 import { TagPill } from './TagPill';
+import { MotiView } from 'moti';
 
 interface MentorCardProps {
     name: string;
@@ -15,6 +16,8 @@ interface MentorCardProps {
     onPress: () => void;
 }
 
+
+
 export const MentorCard: React.FC<MentorCardProps> = ({
     name,
     role,
@@ -25,30 +28,19 @@ export const MentorCard: React.FC<MentorCardProps> = ({
     isOnline = false,
     onPress
 }) => {
-    const scaleValue = React.useRef(new Animated.Value(1)).current;
-
-    const handlePressIn = () => {
-        Animated.spring(scaleValue, {
-            toValue: 0.98,
-            useNativeDriver: true,
-        }).start();
-    };
-
-    const handlePressOut = () => {
-        Animated.spring(scaleValue, {
-            toValue: 1,
-            useNativeDriver: true,
-        }).start();
-    };
+    const [pressed, setPressed] = useState(false);
 
     return (
-        <Animated.View style={{ transform: [{ scale: scaleValue }] }}>
-            <TouchableOpacity
+        <MotiView
+            animate={pressed ? { scale: 0.98, shadowOpacity: 0.3 } : { scale: 1, shadowOpacity: 0.1 }}
+            transition={{ type: 'spring', damping: 15 }}
+            style={{ marginBottom: 16 }}
+        >
+            <Pressable
                 onPress={onPress}
-                onPressIn={handlePressIn}
-                onPressOut={handlePressOut}
-                activeOpacity={0.9}
-                className="bg-white p-5 rounded-2xl mb-4 shadow-sm border border-gray-100 flex-row"
+                onPressIn={() => setPressed(true)}
+                onPressOut={() => setPressed(false)}
+                className="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex-row"
             >
                 <View className="mr-4">
                     <GradientAvatar
@@ -64,30 +56,43 @@ export const MentorCard: React.FC<MentorCardProps> = ({
                             <Text className="text-primary font-bold text-xs uppercase tracking-wider mb-1">
                                 {role || 'Mentor'}
                             </Text>
-                            <Text className="text-lg font-bold text-gray-900 mb-1 leading-6">
+                            <Text className="text-lg font-bold text-gray-900 dark:text-white mb-1 leading-6">
                                 {name}
                             </Text>
                         </View>
-                        <View className="bg-yellow-50 px-2 py-0.5 rounded-md flex-row items-center border border-yellow-100">
+                        <View className="bg-yellow-50 dark:bg-yellow-900/30 px-2 py-0.5 rounded-md flex-row items-center border border-yellow-100 dark:border-yellow-800">
                             <MaterialCommunityIcons name="star" size={14} color="#FFD700" />
-                            <Text className="text-xs font-bold text-gray-800 ml-1">{rating}</Text>
+                            <Text className="text-xs font-bold text-gray-800 dark:text-gray-200 ml-1">{rating}</Text>
                         </View>
                     </View>
 
-                    <Text className="text-gray-500 text-sm leading-5 mb-3" numberOfLines={2}>
+                    <Text className="text-gray-500 dark:text-gray-400 text-sm leading-5 mb-3" numberOfLines={2}>
                         {bio || 'No bio available.'}
                     </Text>
 
                     <View className="flex-row flex-wrap">
                         {expertise.slice(0, 3).map((tag, index) => (
-                            <TagPill key={index} label={tag} color="blue" />
+                            <MotiView
+                                key={index}
+                                from={{ opacity: 0, translateY: 10 }}
+                                animate={{ opacity: 1, translateY: 0 }}
+                                transition={{ type: 'timing', duration: 300, delay: index * 50 }}
+                            >
+                                <TagPill label={tag} color="blue" />
+                            </MotiView>
                         ))}
                         {expertise.length > 3 && (
-                            <TagPill label={`+${expertise.length - 3}`} color="gray" />
+                            <MotiView
+                                from={{ opacity: 0, translateY: 10 }}
+                                animate={{ opacity: 1, translateY: 0 }}
+                                transition={{ type: 'timing', duration: 300, delay: 150 }}
+                            >
+                                <TagPill label={`+${expertise.length - 3}`} color="gray" />
+                            </MotiView>
                         )}
                     </View>
                 </View>
-            </TouchableOpacity>
-        </Animated.View>
+            </Pressable>
+        </MotiView>
     );
 };

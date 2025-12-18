@@ -3,6 +3,7 @@ import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, ActivityIndicat
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { format } from 'date-fns';
+import { MotiView } from 'moti';
 
 import { RootStackParamList, RootNavigationProp } from '../../../navigation/types';
 import { ProgressIndicator } from '../components/ProgressIndicator';
@@ -68,46 +69,64 @@ export default function ChooseTimeScreen() {
             <ScrollView className="flex-1 px-4">
                 <ProgressIndicator currentStep={2} />
 
-                <Text className="text-2xl font-bold text-gray-900 dark:text-white mb-2">When works best for you?</Text>
-                <Text className="text-gray-500 dark:text-gray-400 mb-6">Select a time for your mentoring session.</Text>
+                <MotiView
+                    from={{ opacity: 0, translateY: 10 }}
+                    animate={{ opacity: 1, translateY: 0 }}
+                    transition={{ type: 'timing', duration: 400 }}
+                >
+                    <Text className="text-2xl font-bold text-gray-900 dark:text-white mb-2">When works best for you?</Text>
+                    <Text className="text-gray-500 dark:text-gray-400 mb-6">Select a time for your mentoring session.</Text>
+                </MotiView>
 
                 {/* Filter */}
-                <View className="flex-row bg-gray-200 dark:bg-gray-800 rounded-full p-1 mb-6">
-                    {['morning', 'afternoon', 'evening'].map((period) => (
-                        <TouchableOpacity
-                            key={period}
-                            onPress={() => setTimeOfDay(period as any)}
-                            className={`flex-1 py-2 rounded-full items-center ${timeOfDay === period ? 'bg-white shadow-sm' : ''
-                                }`}
-                        >
-                            <Text className={`font-medium capitalize ${timeOfDay === period ? 'text-primary font-bold' : 'text-gray-500'
-                                }`}>
-                                {period}
-                            </Text>
-                        </TouchableOpacity>
-                    ))}
-                </View>
+                <MotiView
+                    from={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ type: 'timing', duration: 400, delay: 100 }}
+                >
+                    <View className="flex-row bg-gray-200 dark:bg-gray-800 rounded-full p-1 mb-6">
+                        {['morning', 'afternoon', 'evening'].map((period) => (
+                            <TouchableOpacity
+                                key={period}
+                                onPress={() => setTimeOfDay(period as any)}
+                                className={`flex-1 py-2 rounded-full items-center ${timeOfDay === period ? 'bg-white dark:bg-gray-700 shadow-sm' : ''
+                                    }`}
+                            >
+                                <Text className={`font-medium capitalize ${timeOfDay === period ? 'text-primary dark:text-white font-bold' : 'text-gray-500 dark:text-gray-400'
+                                    }`}>
+                                    {period}
+                                </Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                </MotiView>
 
                 {loading ? (
                     <ActivityIndicator color="#30bae8" size="large" className="mt-10" />
                 ) : (
-                    <View className="flex-row flex-wrap justify-between">
-                        {availableSlots.length === 0 ? (
-                            <Text className="w-full text-center text-gray-500 py-10">No slots available for this time of day.</Text>
-                        ) : (
-                            availableSlots.map((slot, index) => (
-                                <View key={index} style={{ width: '48%', marginBottom: 8 }}>
-                                    <TimeSlotButton
-                                        time={slot.time}
-                                        duration="45 mins"
-                                        isSelected={selectedTimeSlot?.time === slot.time}
-                                        onPress={() => setSelectedTimeSlot(slot)}
-                                        disabled={!slot.available}
-                                    />
-                                </View>
-                            ))
-                        )}
-                    </View>
+                    <MotiView
+                        from={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ type: 'timing', duration: 400, delay: 200 }}
+                    >
+                        <View className="flex-row flex-wrap justify-between">
+                            {availableSlots.length === 0 ? (
+                                <Text className="w-full text-center text-gray-500 py-10">No slots available for this time of day.</Text>
+                            ) : (
+                                availableSlots.map((slot, index) => (
+                                    <View key={index} style={{ width: '48%', marginBottom: 8 }}>
+                                        <TimeSlotButton
+                                            time={slot.time}
+                                            duration="45 mins"
+                                            isSelected={selectedTimeSlot?.time === slot.time}
+                                            onPress={() => setSelectedTimeSlot(slot)}
+                                            disabled={!slot.available}
+                                        />
+                                    </View>
+                                ))
+                            )}
+                        </View>
+                    </MotiView>
                 )}
 
                 <Text className="text-gray-400 text-xs text-center mt-4 mb-2">Times shown in your local timezone</Text>

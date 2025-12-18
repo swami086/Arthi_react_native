@@ -141,6 +141,13 @@ export const SignUpScreen = () => {
                                 <Text className={`font-bold ${role === 'mentor' ? 'text-white' : 'text-text-sub-light'}`}>Mentor</Text>
                             </TouchableOpacity>
                         </View>
+                        {role === 'mentor' && (
+                            <View className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg mt-2">
+                                <Text className="text-blue-600 dark:text-blue-400 text-xs">
+                                    Note: Mentor accounts require admin approval before you can access the platform.
+                                </Text>
+                            </View>
+                        )}
 
                         {/* Terms */}
                         <View className="flex-row items-start mt-2 px-1">

@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { parse, isValid } from 'date-fns';
 import { TimeSlot, generateTimeSlots, filterAvailableSlots } from '../utils/timeSlots';
 import { supabase } from '../../../api/supabase';
 
@@ -73,11 +74,26 @@ export const useBookingFlow = () => {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error('Not authenticated');
 
-            // Construct ISO strings for start_time and end_time
+            // Construct ISO strings for start_time and end_time using date-fns for reliability
             // appointmentData.date is YYYY-MM-DD
-            // appointmentData.time is "h:mm a"
-            const startDateTime = new Date(`${appointmentData.date} ${appointmentData.time}`);
-            const endDateTime = new Date(`${appointmentData.date} ${appointmentData.endTime}`);
+            // appointmentData.time is "h:mm a" (e.g. "10:00 AM")
+
+            // Helper to parse date and time
+            const parseDateTime = (d: string, t: string) => {
+                const parsed = parse(`${d} ${t}`, 'yyyy-MM-dd h:mm a', new Date());
+                if (!isValid(parsed)) {
+                    throw new Error(`Invalid date/time format: ${d} ${t}`);
+                }
+                return parsed;
+            };
+
+            const startDateTime = parseDateTime(appointmentData.date, appointmentData.time);
+            const endDateTime = parseDateTime(appointmentData.date, appointmentData.endTime);
+
+            // Double check for NaN (isValid covers this, but being explicit per instructions)
+            if (isNaN(startDateTime.getTime()) || isNaN(endDateTime.getTime())) {
+                throw new Error('Failed to parse appointment date/time');
+            }
 
             const { error: insertError } = await supabase.from('appointments').insert([
                 {
@@ -85,9 +101,8 @@ export const useBookingFlow = () => {
                     mentee_id: user.id,
                     start_time: startDateTime.toISOString(),
                     end_time: endDateTime.toISOString(),
-                    status: 'pending'
-                    // Note: 'notes' and 'duration' columns do not exist in the current schema
-                    // If needed, they should be added to the Supabase types and database first
+                    status: 'pending',
+                    notes: appointmentData.notes // Included notes field
                 }
             ]);
 

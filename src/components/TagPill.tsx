@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Text } from 'react-native';
+import { MotiView } from 'moti';
 
 interface TagPillProps {
     label: string;
@@ -26,8 +27,13 @@ export const TagPill: React.FC<TagPillProps> = ({ label, color = 'blue', classNa
     const styles = getColorStyles();
 
     return (
-        <View className={`${styles.bg} ${styles.border} px-2 py-0.5 rounded-full border mr-1 mb-1 ${className}`}>
+        <MotiView
+            from={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: 'spring', damping: 15 }}
+            className={`${styles.bg} ${styles.border} px-2 py-0.5 rounded-full border mr-1 mb-1 ${className}`}
+        >
             <Text className={`${styles.text} text-xs font-medium`}>{label}</Text>
-        </View>
+        </MotiView>
     );
 };

@@ -32,7 +32,7 @@ export const AppointmentDetailsCard: React.FC<AppointmentDetailsCardProps> = ({
     );
 
     return (
-        <View className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm mb-4">
+        <View className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm mb-4 border border-gray-100 dark:border-gray-700">
             <DetailRow icon="calendar" text={date} />
             <DetailRow icon="clock-outline" text={time} subtext={duration} />
             <DetailRow icon="video" text={format} />

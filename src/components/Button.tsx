@@ -1,5 +1,7 @@
-import React, { useRef } from 'react';
-import { TouchableOpacity, Text, ActivityIndicator, View, Animated } from 'react-native';
+import React, { useState } from 'react';
+import { Text, ActivityIndicator, View, Pressable } from 'react-native';
+import { MotiView } from 'moti';
+import * as Haptics from 'expo-haptics';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface ButtonProps {
@@ -25,23 +27,7 @@ export const Button: React.FC<ButtonProps> = ({
     icon,
     iconPosition = 'left',
 }) => {
-    const scaleAnim = useRef(new Animated.Value(1)).current;
-
-    const handlePressIn = () => {
-        Animated.spring(scaleAnim, {
-            toValue: 0.98,
-            useNativeDriver: true,
-            speed: 50,
-        }).start();
-    };
-
-    const handlePressOut = () => {
-        Animated.spring(scaleAnim, {
-            toValue: 1,
-            useNativeDriver: true,
-            speed: 50,
-        }).start();
-    };
+    const [pressed, setPressed] = useState(false);
 
     const baseClasses = "py-4 px-6 rounded-2xl flex-row justify-center items-center shadow-sm";
     let variantClasses = "";
@@ -72,18 +58,34 @@ export const Button: React.FC<ButtonProps> = ({
         variantClasses += " opacity-50";
     }
 
+    const handlePress = () => {
+        if (!disabled && !loading) {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            onPress();
+        }
+    };
+
     return (
-        <Animated.View style={{ transform: [{ scale: scaleAnim }], width: '100%' }}>
-            <TouchableOpacity
-                onPress={onPress}
-                onPressIn={handlePressIn}
-                onPressOut={handlePressOut}
+        <MotiView
+            animate={{ scale: pressed ? 0.95 : 1, opacity: pressed ? 0.8 : 1 }}
+            transition={{ type: 'spring', damping: 15, stiffness: 150 }}
+            style={{ width: '100%' }}
+        >
+            <Pressable
+                onPress={handlePress}
+                onPressIn={() => setPressed(true)}
+                onPressOut={() => setPressed(false)}
                 disabled={disabled || loading}
-                activeOpacity={0.9}
                 className={`${baseClasses} ${variantClasses} ${className}`}
             >
                 {loading ? (
-                    <ActivityIndicator color={iconColor} />
+                    <MotiView
+                        from={{ rotate: '0deg' }}
+                        animate={{ rotate: '360deg' }}
+                        transition={{ loop: true, type: 'timing', duration: 1000 }}
+                    >
+                        <ActivityIndicator color={iconColor} />
+                    </MotiView>
                 ) : (
                     <View className="flex-row items-center">
                         {icon && iconPosition === 'left' && (
@@ -95,7 +97,7 @@ export const Button: React.FC<ButtonProps> = ({
                         )}
                     </View>
                 )}
-            </TouchableOpacity>
-        </Animated.View>
+            </Pressable>
+        </MotiView>
     );
 };

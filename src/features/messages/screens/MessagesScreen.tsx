@@ -4,57 +4,78 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useMessages, Conversation } from '../hooks/useMessages';
+import { useProfile } from '../../profile/hooks/useProfile';
 import { ConversationCard } from '../../../components/ConversationCard';
 import { MainTabCompositeProp } from '../../../navigation/types';
 
+import { MotiView } from 'moti';
+import { useColorScheme } from '../../../hooks/useColorScheme';
+
 export const MessagesScreen = () => {
     const { conversations, loading, error } = useMessages();
+    const { profile } = useProfile();
+    const { isDark } = useColorScheme();
     const navigation = useNavigation<MainTabCompositeProp>();
     const [searchQuery, setSearchQuery] = useState('');
 
-    const filteredConversations = conversations.filter(c =>
-        c.otherUser?.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        c.lastMessage?.content?.toLowerCase()?.includes(searchQuery.toLowerCase())
-    );
+    const filteredConversations = conversations.filter(c => {
+        const matchesSearch = c.otherUser?.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            c.lastMessage?.content?.toLowerCase()?.includes(searchQuery.toLowerCase());
 
-    const renderConversation = ({ item }: { item: Conversation }) => (
-        <ConversationCard
-            name={item.otherUser?.full_name || 'Unknown User'}
-            avatarUrl={undefined} // Add avatar to schema if available
-            lastMessage={item.lastMessage?.content || ''}
-            timestamp={item.lastMessage?.created_at || new Date().toISOString()}
-            unreadCount={item.unreadCount || 0}
-            isOnline={Math.random() > 0.7} // Mock online status
-            onPress={() => navigation.navigate('ChatDetail', {
-                otherUserId: item.otherUser?.user_id || item.otherUserId,
-                otherUserName: item.otherUser?.full_name || 'Unknown User'
-            })}
-        />
+        let matchesRole = true;
+        if (profile?.role === 'mentor') {
+            matchesRole = c.otherUser?.role === 'mentee';
+        } else if (profile?.role === 'mentee') {
+            matchesRole = c.otherUser?.role === 'mentor';
+        }
+
+        return matchesSearch && matchesRole;
+    });
+
+    const renderConversation = ({ item, index }: { item: Conversation, index: number }) => (
+        <MotiView
+            from={{ opacity: 0, translateY: 20 }}
+            animate={{ opacity: 1, translateY: 0 }}
+            transition={{ delay: index * 100, type: 'timing', duration: 350 }}
+        >
+            <ConversationCard
+                name={item.otherUser?.full_name || 'Unknown User'}
+                avatarUrl={undefined} // Add avatar to schema if available
+                lastMessage={item.lastMessage?.content || ''}
+                timestamp={item.lastMessage?.created_at || new Date().toISOString()}
+                unreadCount={0}
+                isOnline={Math.random() > 0.7} // Mock online status
+                onPress={() => navigation.navigate('ChatDetail', {
+                    otherUserId: item.otherUser?.user_id || item.otherUserId,
+                    otherUserName: item.otherUser?.full_name || 'Unknown User'
+                })}
+            />
+        </MotiView>
     );
 
     return (
-        <View className="flex-1 bg-gray-50">
-            <StatusBar barStyle="dark-content" />
+        <View className="flex-1 bg-gray-50 dark:bg-background-dark">
+            <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
             <SafeAreaView className="flex-1" edges={['top']}>
                 {/* Header */}
-                <View className="px-6 py-4 bg-white border-b border-gray-100 mb-2">
+                <View className="px-6 py-4 bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 mb-2">
                     <View className="flex-row justify-between items-center mb-4">
                         <TouchableOpacity onPress={() => navigation.goBack()} className="p-2 -ml-2 rounded-full">
-                            <MaterialCommunityIcons name="arrow-left" size={24} color="#333" />
+                            <MaterialCommunityIcons name="arrow-left" size={24} color={isDark ? "#fff" : "#333"} />
                         </TouchableOpacity>
-                        <Text className="text-2xl font-bold text-gray-900">Messages</Text>
-                        <TouchableOpacity className="p-2 bg-blue-50 rounded-full">
+                        <Text className="text-2xl font-bold text-gray-900 dark:text-white">Messages</Text>
+                        <TouchableOpacity className="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-full">
                             <MaterialCommunityIcons name="square-edit-outline" size={20} color="#30bae8" />
                         </TouchableOpacity>
                     </View>
 
                     {/* Search Bar */}
-                    <View className="flex-row items-center bg-gray-100 rounded-xl px-4 py-3">
-                        <MaterialCommunityIcons name="magnify" size={20} color="#9CA3AF" />
+                    <View className="flex-row items-center bg-gray-100 dark:bg-gray-700 rounded-xl px-4 py-3">
+                        <MaterialCommunityIcons name="magnify" size={20} color={isDark ? "#9CA3AF" : "#9CA3AF"} />
                         <TextInput
-                            className="flex-1 ml-2 text-base text-gray-900"
+                            className="flex-1 ml-2 text-base text-gray-900 dark:text-white"
                             placeholder="Search messages..."
-                            placeholderTextColor="#9CA3AF"
+                            placeholderTextColor={isDark ? "#9CA3AF" : "#9CA3AF"}
                             value={searchQuery}
                             onChangeText={setSearchQuery}
                         />
@@ -81,8 +102,8 @@ export const MessagesScreen = () => {
                         }
                         ListEmptyComponent={
                             <View className="items-center justify-center mt-20">
-                                <MaterialCommunityIcons name="message-text-outline" size={48} color="#D1D5DB" />
-                                <Text className="text-gray-400 mt-4 font-medium">No messages yet</Text>
+                                <MaterialCommunityIcons name="message-text-outline" size={48} color={isDark ? "#4B5563" : "#D1D5DB"} />
+                                <Text className="text-gray-400 dark:text-gray-500 mt-4 font-medium">No messages yet</Text>
                             </View>
                         }
                     />

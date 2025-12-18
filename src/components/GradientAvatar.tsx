@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { MotiView } from 'moti';
 
 interface GradientAvatarProps {
     source: { uri: string } | number;
@@ -41,8 +42,16 @@ export const GradientAvatar: React.FC<GradientAvatarProps> = ({ source, size = 8
                 </View>
             </LinearGradient>
             {online && (
-                <View
+                <MotiView
                     className="absolute bottom-1 right-1 bg-green-500 rounded-full border-2 border-white"
+                    from={{ scale: 0.8, opacity: 0.8 }}
+                    animate={{ scale: 1.2, opacity: 1 }}
+                    transition={{
+                        type: 'timing',
+                        duration: 1500,
+                        loop: true,
+                        repeatReverse: true
+                    }}
                     style={{
                         width: size * 0.2,
                         height: size * 0.2,

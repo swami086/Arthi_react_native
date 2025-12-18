@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { format } from 'date-fns';
+import { MotiView } from 'moti';
 
 interface MessageBubbleProps {
     content: string;
@@ -17,13 +18,16 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
     isRead = false
 }) => {
     return (
-        <View
+        <MotiView
+            from={{ opacity: 0, translateX: isMyMessage ? 50 : -50 }}
+            animate={{ opacity: 1, translateX: 0 }}
+            transition={{ type: 'spring', damping: 15 }}
             className={`max-w-[80%] mb-3 px-4 py-3 shadow-sm ${isMyMessage
-                    ? 'bg-primary self-end rounded-2xl rounded-br-sm'
-                    : 'bg-white self-start rounded-2xl rounded-bl-sm border border-gray-100'
+                ? 'bg-primary self-end rounded-2xl rounded-br-sm'
+                : 'bg-white dark:bg-gray-800 self-start rounded-2xl rounded-bl-sm border border-gray-100 dark:border-gray-700'
                 }`}
         >
-            <Text className={`text-base ${isMyMessage ? 'text-white' : 'text-gray-800'}`}>
+            <Text className={`text-base ${isMyMessage ? 'text-white' : 'text-gray-800 dark:text-gray-200'}`}>
                 {content}
             </Text>
             <View className="flex-row items-center justify-end mt-1 space-x-1">
@@ -38,6 +42,6 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
                     />
                 )}
             </View>
-        </View>
+        </MotiView>
     );
 };

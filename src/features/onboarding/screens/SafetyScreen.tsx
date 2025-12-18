@@ -5,9 +5,12 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { PageIndicator } from '../components/PageIndicator';
 import { setOnboardingCompleted } from '../../../utils/helpers';
+import { useColorScheme } from '../../../hooks/useColorScheme';
+import { StatusBar } from 'react-native';
 
 export const SafetyScreen = () => {
     const navigation = useNavigation<any>();
+    const { isDark } = useColorScheme();
 
     const handleGetStarted = async () => {
         await setOnboardingCompleted();
@@ -16,6 +19,7 @@ export const SafetyScreen = () => {
 
     return (
         <SafeAreaView className="flex-1 bg-background-light dark:bg-background-dark">
+            <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
             <View className="flex-1 w-full max-w-md mx-auto flex-col">
                 <ScrollView className="flex-1 flex flex-col" contentContainerStyle={{ flexGrow: 1 }}>
                     {/* Header Image */}

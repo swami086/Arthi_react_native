@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
+import { MotiView } from 'moti';
 
 interface BottomActionBarProps {
     onSecondaryPress: () => void;
@@ -15,9 +16,14 @@ export const BottomActionBar: React.FC<BottomActionBarProps> = ({
     primaryLabel
 }) => {
     return (
-        <View className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-6 py-4 flex-row justify-between items-center pb-8 shadow-lg">
+        <MotiView
+            from={{ translateY: 100, opacity: 0 }}
+            animate={{ translateY: 0, opacity: 1 }}
+            transition={{ type: 'spring', damping: 15 }}
+            className="absolute bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 px-6 py-4 flex-row justify-between items-center pb-8 shadow-lg"
+        >
             <TouchableOpacity
-                className="flex-1 bg-blue-50 py-3 rounded-xl mr-3 items-center"
+                className="flex-1 bg-blue-50 dark:bg-blue-900/30 py-3 rounded-xl mr-3 items-center"
                 onPress={onSecondaryPress}
             >
                 <Text className="text-primary font-bold text-base">{secondaryLabel}</Text>
@@ -28,6 +34,6 @@ export const BottomActionBar: React.FC<BottomActionBarProps> = ({
             >
                 <Text className="text-white font-bold text-base">{primaryLabel}</Text>
             </TouchableOpacity>
-        </View>
+        </MotiView>
     );
 };
