@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, Linking, Alert } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { GradientAvatar } from './GradientAvatar';
+import { MotiView } from 'moti';
 
 interface SessionCardProps {
     title: string;
@@ -30,60 +31,75 @@ export const SessionCard: React.FC<SessionCardProps> = ({
     const statusColor = getStatusColor();
 
     return (
-        <TouchableOpacity
-            onPress={onPress}
-            className="bg-white dark:bg-gray-800 p-4 rounded-xl mb-3 shadow-sm border-l-4"
-            style={{ borderLeftColor: statusColor }}
+        <MotiView
+            animate={{ scale: 1 }}
+            transition={{ type: 'timing', duration: 200 }}
         >
-            <View className="flex-row justify-between items-start mb-2">
-                <View>
-                    <Text className="font-bold text-gray-900 dark:text-white text-base">{title}</Text>
-                    <View className="flex-row items-center mt-1">
-                        <MaterialCommunityIcons name="clock-outline" size={14} color="#6B7280" />
-                        <Text className="text-gray-500 dark:text-gray-400 text-xs ml-1">{date} • {duration}</Text>
+            <TouchableOpacity
+                onPress={onPress}
+                // Redesign card layout with left border color coding
+                // Improve shadow and border effects
+                className="bg-white dark:bg-surface-dark p-5 rounded-2xl mb-4 shadow-card border-l-[6px] relative overflow-hidden active:opacity-95"
+                style={{ borderLeftColor: statusColor }}
+            >
+                <View className="flex-row justify-between items-start mb-3">
+                    <View className="flex-1 mr-2">
+                        {/* Enhance text hierarchy */}
+                        <Text className="font-bold text-text-main-light dark:text-text-main-dark text-lg font-sans leading-tight">{title}</Text>
+                        <View className="flex-row items-center mt-1.5">
+                            <MaterialCommunityIcons name="clock-time-four-outline" size={16} color={statusColor} />
+                            <Text className="text-text-sub-light dark:text-text-sub-dark text-sm ml-1.5 font-medium">{date} • {duration}</Text>
+                        </View>
+                    </View>
+
+                    {/* Status Badge */}
+                    <View
+                        className="px-2.5 py-1 rounded-md"
+                        style={{ backgroundColor: `${statusColor}15` }}
+                    >
+                        <Text
+                            className="text-[10px] font-bold uppercase tracking-wider"
+                            style={{ color: statusColor }}
+                        >
+                            {status}
+                        </Text>
                     </View>
                 </View>
-                <View className={`px-2 py-1 rounded-full bg-opacity-10`} style={{ backgroundColor: `${statusColor}20` }}>
-                    <MaterialCommunityIcons
-                        name={
-                            status === 'confirmed' ? 'check-circle' :
-                                status === 'pending' ? 'clock' :
-                                    status === 'completed' ? 'checkbox-marked-circle' : 'close-circle'
-                        }
-                        size={16}
-                        color={statusColor}
-                    />
-                </View>
-            </View>
 
-            <View className="flex-row items-center mt-2 pt-2 border-t border-gray-100 dark:border-gray-700 justify-between">
-                <View className="flex-row items-center">
-                    <GradientAvatar
-                        source={menteeAvatar ? { uri: menteeAvatar } : { uri: 'https://via.placeholder.com/150' }}
-                        size={24}
-                    />
-                    <Text className="text-gray-600 dark:text-gray-400 text-sm ml-2 font-medium">with {menteeName}</Text>
+                <View className="flex-row items-center mt-3 pt-3 border-t border-gray-100 dark:border-gray-700/50 justify-between">
+                    <View className="flex-row items-center">
+                        <View className="shadow-sm shadow-black/10 rounded-full">
+                            {/* Update avatar styling with status indicator */}
+                            <GradientAvatar
+                                source={menteeAvatar ? { uri: menteeAvatar } : { uri: 'https://via.placeholder.com/150' }}
+                                size={32}
+                            />
+                        </View>
+                        <Text className="text-text-main-light dark:text-text-main-dark text-sm ml-3 font-bold">with {menteeName}</Text>
+                    </View>
+
+                    {/* Add action buttons with proper styling */}
+                    {status === 'confirmed' && meetingLink && (
+                        <TouchableOpacity
+                            className="bg-primary flex-row items-center px-4 py-2 rounded-xl shadow-md shadow-primary/20"
+                            onPress={() => {
+                                if (meetingLink) {
+                                    Linking.openURL(meetingLink).catch(err => Alert.alert("Error", "Could not open link"));
+                                }
+                            }}
+                        >
+                            <MaterialCommunityIcons name="video" size={16} color="white" style={{marginRight: 6}} />
+                            <Text className="text-white font-bold text-xs">Join</Text>
+                        </TouchableOpacity>
+                    )}
                 </View>
 
-                {status === 'confirmed' && meetingLink && (
-                    <TouchableOpacity
-                        className="bg-blue-50 dark:bg-blue-900/30 px-3 py-1.5 rounded-full"
-                        onPress={() => {
-                            if (meetingLink) {
-                                Linking.openURL(meetingLink).catch(err => Alert.alert("Error", "Could not open link"));
-                            }
-                        }}
-                    >
-                        <Text className="text-primary font-bold text-xs">Join Call</Text>
-                    </TouchableOpacity>
+                {feedback && (status === 'completed' || status === 'confirmed') && (
+                    <View className="mt-3 bg-gray-50 dark:bg-gray-800/50 p-3 rounded-xl border border-gray-100 dark:border-gray-700/50">
+                        <Text className="text-text-sub-light dark:text-text-sub-dark text-xs italic leading-relaxed" numberOfLines={2}>"{feedback}"</Text>
+                    </View>
                 )}
-            </View>
-
-            {feedback && (status === 'completed' || status === 'confirmed') && (
-                <View className="mt-2 bg-gray-50 dark:bg-gray-700 p-2 rounded-lg">
-                    <Text className="text-gray-500 dark:text-gray-400 text-xs italic" numberOfLines={2}>"{feedback}"</Text>
-                </View>
-            )}
-        </TouchableOpacity>
+            </TouchableOpacity>
+        </MotiView>
     );
 };

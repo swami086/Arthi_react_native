@@ -29,6 +29,8 @@ export const Input: React.FC<InputProps> = ({
     const [isFocused, setIsFocused] = React.useState(false);
     const { isDark } = useColorScheme();
 
+    // Enhance focus states: focus:ring-2 focus:ring-primary/20 focus:border-primary
+    // Update border styling
     const borderColor = error
         ? '#ef4444' // red-500
         : isFocused
@@ -49,37 +51,39 @@ export const Input: React.FC<InputProps> = ({
             style={{ marginBottom: 16 }}
         >
             {label && (
-                <MotiView
-                    from={{ translateY: 0, scale: 1 }}
-                    animate={{
-                        translateY: isFocused || value ? -14 : 0,
-                        scale: isFocused || value ? 0.85 : 1,
-                    }}
-                    transition={{ type: 'timing', duration: 200 }}
-                >
-                    <Text className="mb-2 text-text-main-light dark:text-text-main-dark font-display font-medium">{label}</Text>
+                <MotiView>
+                    {/* Improve label styling: text-xs font-bold uppercase tracking-wider */}
+                    <Text className="mb-2 text-text-sub-light dark:text-text-sub-dark text-xs font-bold uppercase tracking-wider font-sans">{label}</Text>
                 </MotiView>
             )}
             <MotiView
                 animate={{
                     borderColor: borderColor,
                     backgroundColor: isFocused
-                        ? (isDark ? '#1f2937' : '#f0f9ff')
-                        : (isDark ? '#111827' : '#ffffff'),
+                        ? (isDark ? '#1a2c32' : '#ffffff') // surface
+                        : (isDark ? '#111d21' : '#f8fbfc'), // background
+                    borderWidth: isFocused ? 2 : 1,
+                    scale: 1,
                 }}
                 transition={{ type: 'timing', duration: 200 }}
-                className={`flex-row items-center border rounded-2xl px-4 ${props.multiline ? 'h-auto py-3' : 'h-14'}`}
-                style={{ borderWidth: 1 }}
+                // Refine border radius to rounded-2xl
+                // Update padding to accommodate left icons (pl-11 via absolute position or padding)
+                className={`relative flex-row items-center rounded-2xl ${props.multiline ? 'h-auto py-3' : 'h-14'} ${leftIcon ? 'pl-11' : 'px-4'}`}
             >
+                {/* Add left icon support with Material Symbols positioned absolutely */}
                 {leftIcon && (
-                    <MotiView animate={{ scale: isFocused ? 1.1 : 1 }}>
-                        <Icon name={leftIcon} size={20} color={isFocused ? "#30bae8" : (isDark ? "#9ca3af" : "#9ca3af")} style={{ marginRight: 10 }} />
-                    </MotiView>
+                    <View className="absolute left-4 z-10">
+                        <MotiView animate={{ scale: isFocused ? 1.1 : 1 }}>
+                            <Icon name={leftIcon} size={22} color={isFocused ? "#30bae8" : (isDark ? "#94aeb8" : "#4e8597")} />
+                        </MotiView>
+                    </View>
                 )}
+
                 <TextInput
-                    className={`flex-1 text-text-main-light dark:text-text-main-dark font-display ${props.multiline ? 'min-h-[60px] text-top' : 'h-full'}`}
+                    className={`flex-1 text-text-main-light dark:text-text-main-dark font-sans text-base ${props.multiline ? 'min-h-[60px] text-top' : 'h-full'}`}
                     placeholder={placeholder}
-                    placeholderTextColor={isDark ? "#6b7280" : "#9ca3af"}
+                    // Enhance placeholder text color for better visibility
+                    placeholderTextColor={isDark ? "#94aeb8" : "#9ca3af"}
                     value={value}
                     onChangeText={onChangeText}
                     secureTextEntry={secureTextEntry && !showPassword}
@@ -88,19 +92,20 @@ export const Input: React.FC<InputProps> = ({
                     onBlur={() => setIsFocused(false)}
                     {...props}
                 />
+
                 {secureTextEntry ? (
-                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                        <Icon name={showPassword ? "eye-off" : "eye"} size={20} color={isFocused ? "#30bae8" : "#9ca3af"} />
+                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)} className="px-2">
+                        <Icon name={showPassword ? "eye-off" : "eye"} size={22} color={isFocused ? "#30bae8" : "#94aeb8"} />
                     </TouchableOpacity>
                 ) : rightIcon ? (
-                    <TouchableOpacity onPress={onRightIconPress} disabled={!onRightIconPress}>
-                        <Icon name={rightIcon} size={20} color={isFocused ? "#30bae8" : "#9ca3af"} />
+                    <TouchableOpacity onPress={onRightIconPress} disabled={!onRightIconPress} className="px-2">
+                        <Icon name={rightIcon} size={22} color={isFocused ? "#30bae8" : "#94aeb8"} />
                     </TouchableOpacity>
                 ) : null}
             </MotiView>
             {error && (
                 <MotiView from={{ opacity: 0, translateY: -5 }} animate={{ opacity: 1, translateY: 0 }}>
-                    <Text className="text-red-500 text-sm mt-1">{error}</Text>
+                    <Text className="text-error text-sm mt-1 ml-1">{error}</Text>
                 </MotiView>
             )}
         </MotiView>

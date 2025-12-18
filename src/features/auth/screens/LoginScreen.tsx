@@ -90,19 +90,22 @@ export const LoginScreen = () => {
                             transition={{ type: 'timing', duration: 400, delay: 0 }}
                             className="items-center mb-10"
                         >
+                            {/* Update hero icon container: w-20 h-20 rounded-full bg-primary/10 */}
                             <MotiView
                                 from={{ scale: 0, rotate: '-10deg' }}
-                                animate={{ scale: 1, rotate: '3deg' }}
+                                animate={{ scale: 1, rotate: '0deg' }}
                                 transition={{ type: 'spring', damping: 12 }}
-                                className="w-24 h-24 bg-primary/10 dark:bg-primary-dark/10 rounded-3xl items-center justify-center mb-6 shadow-sm border border-primary/20"
+                                className="w-20 h-20 bg-primary/10 dark:bg-primary/20 rounded-full items-center justify-center mb-6 shadow-sm"
                             >
-                                <Icon name="hand-heart" size={48} color="#30bae8" />
+                                <Icon name="hand-heart" size={40} color="#30bae8" />
                             </MotiView>
 
-                            <Text className="text-3xl font-display font-bold mb-2 text-text-main-light dark:text-text-main-dark text-center">
+                            {/* Enhance headline: text-[28px] font-extrabold tracking-tight */}
+                            <Text className="text-[28px] font-extrabold tracking-tight mb-2 text-text-main-light dark:text-text-main-dark text-center leading-tight">
                                 Welcome Back
                             </Text>
-                            <Text className="text-base text-text-sub-light dark:text-text-sub-dark text-center px-4 leading-relaxed">
+                            {/* Update subtitle styling for better readability */}
+                            <Text className="text-base text-text-sub-light dark:text-text-sub-dark text-center px-4 leading-relaxed font-medium">
                                 Enter your safe space to continue your journey.
                             </Text>
                         </MotiView>
@@ -112,6 +115,7 @@ export const LoginScreen = () => {
                             animate={shake ? shakeVariants.shake as any : shakeVariants.initial as any}
                             className="space-y-4 w-full"
                         >
+                            {/* Enhance input fields with left icons (use updated Input component) */}
                             <Input
                                 label="Email Address"
                                 placeholder="name@example.com"
@@ -130,6 +134,7 @@ export const LoginScreen = () => {
                                     secureTextEntry
                                     leftIcon="lock"
                                 />
+                                {/* Add "Forgot Password?" link with primary color */}
                                 <TouchableOpacity className="self-end mt-2" onPress={() => console.log('Forgot Password')}>
                                     <Text className="text-primary dark:text-primary-dark font-bold text-sm">Forgot Password?</Text>
                                 </TouchableOpacity>
@@ -139,8 +144,9 @@ export const LoginScreen = () => {
                                 from={{ opacity: 0, translateY: 20 }}
                                 animate={{ opacity: 1, translateY: 0 }}
                                 transition={{ type: 'timing', duration: 400, delay: 200 }}
-                                className="mt-8 mb-6"
+                                className="mt-6 mb-4"
                             >
+                                {/* Update "Log In" button with enhanced shadow */}
                                 <Button
                                     title="Log In"
                                     onPress={handleLogin}
@@ -156,10 +162,11 @@ export const LoginScreen = () => {
                             from={{ opacity: 0, translateY: 20 }}
                             animate={{ opacity: 1, translateY: 0 }}
                             transition={{ type: 'timing', duration: 400, delay: 300 }}
-                            className="flex-row items-center mb-6"
+                            className="flex-row items-center mb-6 mt-2"
                         >
+                            {/* Improve divider styling with "or" text */}
                             <View className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
-                            <Text className="mx-4 text-gray-400 font-medium text-xs uppercase tracking-widest">Or</Text>
+                            <Text className="mx-4 text-text-sub-light dark:text-text-sub-dark font-bold text-xs uppercase tracking-widest">Or</Text>
                             <View className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
                         </MotiView>
 
@@ -168,13 +175,14 @@ export const LoginScreen = () => {
                             animate={{ opacity: 1, translateY: 0 }}
                             transition={{ type: 'timing', duration: 400, delay: 400 }}
                         >
+                            {/* Enhance "Login with Google" button with Google icon */}
                             <Button
                                 title="Sign in with Google"
                                 onPress={signInWithGoogle}
                                 variant="outline"
                                 icon="google"
-                                className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-sm"
-                                textClassName="text-text-main-light dark:text-white"
+                                className="bg-white dark:bg-surface-dark border-gray-200 dark:border-gray-700 shadow-sm"
+                                textClassName="text-text-main-light dark:text-text-main-dark"
                             />
                         </MotiView>
 
@@ -182,34 +190,40 @@ export const LoginScreen = () => {
                             from={{ opacity: 0, translateY: 20 }}
                             animate={{ opacity: 1, translateY: 0 }}
                             transition={{ type: 'timing', duration: 400, delay: 500 }}
-                            className="mt-10 mb-4"
+                            className="mt-8 mb-4"
                         >
-                            <View className="flex-row justify-center mb-6">
+                            <View className="flex-row justify-center mb-2">
                                 <Text className="text-text-sub-light dark:text-text-sub-dark font-medium">Don't have an account? </Text>
+                                {/* Update "Create an account" link styling */}
                                 <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
                                     <Text className="text-primary dark:text-primary-dark font-bold">Sign Up</Text>
                                 </TouchableOpacity>
                             </View>
+                            {/* Add terms text at bottom */}
+                             <Text className="text-text-sub-light dark:text-text-sub-dark text-xs text-center px-8 opacity-60 mt-4 leading-relaxed">
+                                By continuing, you agree to our Terms of Service and Privacy Policy.
+                            </Text>
                         </MotiView>
                     </MotiView>
                 </ScrollView>
             </View>
             {loading && (
-                <BlurView intensity={20} className="absolute inset-0 items-center justify-center z-50 bg-black/20">
-                    {/* Lottie or ActivityIndicator */}
+                // Improve loading overlay with blur effect
+                <BlurView intensity={30} tint={isDark ? 'dark' : 'light'} className="absolute inset-0 items-center justify-center z-50">
                     <MotiView
-                        from={{ scale: 0.8, opacity: 0 }}
+                        from={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        transition={{ type: 'timing', duration: 300 }}
-                        className="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-xl items-center justify-center"
+                        transition={{ type: 'timing', duration: 200 }}
+                        className="p-8 bg-white/90 dark:bg-surface-dark/90 rounded-3xl shadow-2xl items-center justify-center"
                     >
                         <MotiView
                             from={{ rotate: '0deg' }}
                             animate={{ rotate: '360deg' }}
                             transition={{ loop: true, repeatReverse: false, type: 'timing', duration: 1000 }}
                         >
-                            <Icon name="loading" size={40} color="#30bae8" />
+                            <Icon name="loading" size={48} color="#30bae8" />
                         </MotiView>
+                        <Text className="mt-4 text-text-sub-light dark:text-text-sub-dark font-bold">Logging in...</Text>
                     </MotiView>
                 </BlurView>
             )}

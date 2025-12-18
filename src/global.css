@@ -2,7 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    /* Base typography styles */
+    /* Note: In React Native, html/body selectors don't apply directly to Views,
+       but NativeWind can apply base styles if configured.
+       We rely on utility classes mostly. */
+}
+
 @layer utilities {
+    /* Shadow Utilities */
     .shadow-soft {
         shadow-color: #000;
         shadow-offset: 0px 4px;
@@ -17,5 +25,37 @@
         shadow-opacity: 0.1;
         shadow-radius: 20px;
         elevation: 5;
+    }
+
+    /* Custom shadow matching shadow-primary/30 intent for RN */
+    .shadow-primary-30 {
+        shadow-color: #30bae8;
+        shadow-offset: 0px 8px;
+        shadow-opacity: 0.3;
+        shadow-radius: 12px;
+        elevation: 8;
+    }
+
+    /* Material Symbols Configuration */
+    .material-symbols {
+        font-family: 'Material Symbols Outlined';
+    }
+
+    /* Transition Utilities - simple simulation or for web */
+    .transition-slow {
+        transition-duration: 300ms;
+    }
+
+    .transition-fast {
+        transition-duration: 150ms;
+    }
+
+    /* Scrollbar Hiding */
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
     }
 }
