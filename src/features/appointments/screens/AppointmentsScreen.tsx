@@ -12,7 +12,7 @@ import { Button } from '../../../components/Button';
 import { useColorScheme } from '../../../hooks/useColorScheme';
 
 export const AppointmentsScreen = () => {
-    const { appointments, loading, error, refetch } = useAppointments();
+    const { appointments, loading, error, refetch: refreshAppointments } = useAppointments();
     const navigation = useNavigation<MainTabCompositeProp>();
     const { isDark } = useColorScheme();
     const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
@@ -119,15 +119,22 @@ export const AppointmentsScreen = () => {
                         </>
                     )}
                     {item.status === 'confirmed' && activeTab === 'upcoming' && (
-                        <>
-                            <TouchableOpacity className="w-12 h-12 items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-xl">
-                                <MaterialCommunityIcons name="calendar-edit" size={20} color={isDark ? "white" : "#4b5563"} />
-                            </TouchableOpacity>
-                            <TouchableOpacity className="flex-1 bg-primary py-3 rounded-xl items-center shadow-md shadow-primary/20 flex-row justify-center">
+                        <View className="flex-col w-full gap-2">
+                            <View className="flex-row gap-2">
+                                <TouchableOpacity className="flex-1 bg-blue-50 dark:bg-blue-900/20 py-3 px-4 rounded-xl items-center border border-blue-100 dark:border-blue-900/30 flex-row justify-center">
+                                    <MaterialCommunityIcons name="calendar-edit" size={18} color="#30bae8" />
+                                    <Text className="text-primary font-bold text-sm ml-1">Reschedule</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity className="flex-1 bg-red-50 dark:bg-red-900/20 py-3 px-4 rounded-xl items-center border border-red-100 dark:border-red-900/30 flex-row justify-center">
+                                    <MaterialCommunityIcons name="close-circle-outline" size={18} color="#EF4444" />
+                                    <Text className="text-red-600 dark:text-red-400 font-bold text-sm ml-1">Cancel</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <TouchableOpacity className="bg-primary py-3 rounded-xl items-center shadow-md shadow-primary/20 flex-row justify-center">
                                 <MaterialCommunityIcons name="video" size={18} color="white" style={{marginRight: 6}} />
                                 <Text className="text-white font-bold text-sm">Join Session</Text>
                             </TouchableOpacity>
-                        </>
+                        </View>
                     )}
                      {item.status === 'confirmed' && activeTab === 'past' && (
                         <TouchableOpacity className="flex-1 bg-gray-100 dark:bg-gray-700 py-3 rounded-xl items-center border border-gray-200 dark:border-gray-600">

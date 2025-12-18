@@ -37,10 +37,13 @@ export default function ChooseTimeScreen() {
     const loadSlots = async () => {
         const slots = await getAvailableTimeSlots(mentorId, selectedDate, timeOfDay);
         setAvailableSlots(slots);
+        if (selectedTimeSlot && !slots.some(s => s.time === selectedTimeSlot.time)) {
+            setSelectedTimeSlot(null);
+        }
     };
 
     const handleNext = () => {
-        if (selectedTimeSlot) {
+        if (selectedTimeSlot && availableSlots.some(slot => slot.time === selectedTimeSlot.time)) {
             navigation.navigate('ConfirmAppointment', {
                 mentorId,
                 mentorName,
