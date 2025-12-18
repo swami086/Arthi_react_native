@@ -6,19 +6,23 @@ import MenteesScreen from '../features/mentor/screens/MenteesScreen';
 import MentorSessionsScreen from '../features/mentor/screens/MentorSessionsScreen';
 import { MentorProfileScreen } from '../features/mentor/screens/MentorProfileScreen';
 import { MentorTabParamList } from './types';
+import { useColorScheme } from '../hooks/useColorScheme';
 
 const Tab = createBottomTabNavigator<MentorTabParamList>();
 
 export const MentorNavigator = () => {
+    const { isDark } = useColorScheme();
+
     return (
         <Tab.Navigator
             screenOptions={{
                 headerShown: false,
-                tabBarActiveTintColor: '#4e8597',
+                tabBarActiveTintColor: '#30bae8',
                 tabBarInactiveTintColor: 'gray',
                 tabBarStyle: {
+                    backgroundColor: isDark ? '#1a2c32' : '#ffffff',
                     borderTopWidth: 1,
-                    borderTopColor: '#f0f0f0',
+                    borderTopColor: isDark ? '#1a2c32' : '#f0f0f0',
                     height: 60,
                     paddingBottom: 8,
                     paddingTop: 8,

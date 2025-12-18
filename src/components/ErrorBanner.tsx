@@ -13,14 +13,14 @@ export const ErrorBanner: React.FC<ErrorBannerProps> = ({ message, onRetry, visi
     if (!visible) return null;
 
     return (
-        <View className="bg-red-50 p-4 border-b border-red-200 flex-row items-start">
+        <View className="bg-red-50 dark:bg-red-900/20 p-4 border-b border-red-200 dark:border-red-900/30 flex-row items-start">
             <MaterialCommunityIcons name="alert-circle" size={20} color="#EF4444" style={{ marginTop: 2 }} />
             <View className="flex-1 ml-3">
-                <Text className="text-red-800 font-bold text-sm mb-1">An error occurred</Text>
-                <Text className="text-red-600 text-sm">{message}</Text>
+                <Text className="text-red-800 dark:text-red-300 font-bold text-sm mb-1">An error occurred</Text>
+                <Text className="text-red-600 dark:text-red-400 text-sm">{message}</Text>
                 {onRetry && (
-                    <TouchableOpacity onPress={onRetry} className="mt-2 bg-red-100 self-start px-3 py-1 rounded">
-                        <Text className="text-red-700 font-bold text-xs">Retry</Text>
+                    <TouchableOpacity onPress={onRetry} className="mt-2 bg-red-100 dark:bg-red-900/40 self-start px-3 py-1 rounded">
+                        <Text className="text-red-700 dark:text-red-300 font-bold text-xs">Retry</Text>
                     </TouchableOpacity>
                 )}
             </View>

@@ -40,7 +40,7 @@ export const CreateAdminModal = () => {
             <View className="px-6 py-4 flex-row items-center justify-between border-b border-gray-200 dark:border-gray-800">
                 <Text className="text-xl font-bold text-text-main-light dark:text-white">New Admin</Text>
                 <TouchableOpacity onPress={() => navigation.goBack()} className="p-2">
-                    <Icon name="close" size={24} color="#666" />
+                    <Icon name="close" size={24} color="#666" className="text-gray-500 dark:text-gray-400" />
                 </TouchableOpacity>
             </View>
 

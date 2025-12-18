@@ -10,16 +10,23 @@ import { TouchableOpacity } from 'react-native';
 import { MotiView } from 'moti';
 import * as Haptics from 'expo-haptics';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useColorScheme } from '../hooks/useColorScheme';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
 export const MainNavigator = () => {
+    const { isDark } = useColorScheme();
+
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
                 headerShown: false,
                 tabBarActiveTintColor: '#30bae8',
-                tabBarInactiveTintColor: '#9ca3af',
+                tabBarInactiveTintColor: isDark ? '#9ca3af' : '#9ca3af',
+                tabBarStyle: {
+                    backgroundColor: isDark ? '#1a2c32' : '#ffffff',
+                    borderTopColor: isDark ? '#1a2c32' : '#e5e7eb',
+                },
                 tabBarIcon: ({ color, size, focused }) => {
                     let iconName = 'circle';
 
@@ -39,17 +46,38 @@ export const MainNavigator = () => {
                         </MotiView>
                     );
                 },
-                tabBarButton: (props) => (
-                    <TouchableOpacity
-                        {...props}
-                        onPress={(e) => {
-                            if (props.onPress) {
-                                props.onPress(e);
-                                Haptics.selectionAsync();
-                            }
-                        }}
-                    />
-                ),
+                tabBarButton: (props) => {
+                    const {
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        delayLongPress,
+                        disabled,
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        onBlur,
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        onFocus,
+                        onLongPress,
+                        onPressIn,
+                        onPressOut,
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        ref,
+                        ...rest
+                    } = props;
+                    return (
+                        <TouchableOpacity
+                            {...rest}
+                            disabled={disabled || undefined}
+                            onLongPress={onLongPress || undefined}
+                            onPressIn={onPressIn || undefined}
+                            onPressOut={onPressOut || undefined}
+                            onPress={(e) => {
+                                if (props.onPress) {
+                                    props.onPress(e);
+                                    Haptics.selectionAsync();
+                                }
+                            }}
+                        />
+                    );
+                },
             })}
         >
             <Tab.Screen name="Home" component={HomeScreen} />

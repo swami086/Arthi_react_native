@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { MotiView } from 'moti';
+import * as Haptics from 'expo-haptics';
 import { useAuth } from '../../auth/hooks/useAuth';
 import { useColorScheme } from '../../../hooks/useColorScheme';
 
@@ -12,6 +13,11 @@ const SettingsScreen = () => {
     const { signOut } = useAuth();
     const { colorScheme, toggleColorScheme, setColorScheme } = useColorScheme();
     const [notificationsEnabled, setNotificationsEnabled] = React.useState(true);
+
+    const handleDarkModeToggle = (value: boolean) => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        setColorScheme(value ? 'dark' : 'light');
+    };
 
     const menuItems = [
         {
@@ -40,7 +46,7 @@ const SettingsScreen = () => {
             subtitle: 'Switch to dark theme',
             toggle: true,
             value: colorScheme === 'dark',
-            onValueChange: (value: boolean) => setColorScheme(value ? 'dark' : 'light')
+            onValueChange: handleDarkModeToggle
         },
         {
             icon: 'help-circle-outline',

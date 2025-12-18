@@ -38,7 +38,7 @@ export const MentorReviewScreen = () => {
                 {
                     text: "Reject",
                     style: "destructive",
-                    onPress: async (reason) => {
+                    onPress: async (reason: string | undefined) => {
                         if (!reason) return;
                         setActionLoading(true);
                         try {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import { AuthNavigator } from './AuthNavigator';
 import { OnboardingNavigator } from './OnboardingNavigator';
@@ -8,6 +8,7 @@ import { RootStackParamList } from './types';
 import { useAuth } from '../features/auth/hooks/useAuth';
 import { ActivityIndicator, View, Text, TouchableOpacity, Alert } from 'react-native';
 import { getOnboardingStatus } from '../utils/helpers';
+import { useColorScheme } from '../hooks/useColorScheme';
 
 import SelectDateScreen from '../features/appointments/screens/SelectDateScreen';
 import ChooseTimeScreen from '../features/appointments/screens/ChooseTimeScreen';
@@ -56,6 +57,7 @@ const customTransitionSpec = {
 export const AppNavigator = () => {
     const { user, loading: authLoading, profile } = useAuth();
     const { loading: profileLoading } = useProfile();
+    const { isDark } = useColorScheme();
     const [isOnboardingCompleted, setIsOnboardingCompleted] = useState<boolean | null>(null);
 
     useEffect(() => {
@@ -115,7 +117,7 @@ export const AppNavigator = () => {
     }
 
     return (
-        <NavigationContainer>
+        <NavigationContainer theme={isDark ? DarkTheme : DefaultTheme}>
             <Stack.Navigator
                 screenOptions={{
                     headerShown: false,

@@ -8,7 +8,11 @@ import { StatusBar } from 'expo-status-bar';
 import { useColorScheme } from './src/hooks/useColorScheme';
 
 export default function App() {
-  const { colorScheme } = useColorScheme();
+  const { colorScheme, isLoaded } = useColorScheme();
+
+  if (!isLoaded) {
+    return null; // Or a splash screen
+  }
 
   return (
     <SafeAreaProvider>

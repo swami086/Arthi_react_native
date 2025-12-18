@@ -12,15 +12,35 @@ export const TagPill: React.FC<TagPillProps> = ({ label, color = 'blue', classNa
     const getColorStyles = () => {
         switch (color) {
             case 'purple':
-                return { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-purple-100' };
+                return {
+                    bg: 'bg-purple-50 dark:bg-purple-900/30',
+                    text: 'text-purple-600 dark:text-purple-300',
+                    border: 'border-purple-100 dark:border-purple-800'
+                };
             case 'orange':
-                return { bg: 'bg-orange-50', text: 'text-orange-600', border: 'border-orange-100' };
+                return {
+                    bg: 'bg-orange-50 dark:bg-orange-900/30',
+                    text: 'text-orange-600 dark:text-orange-300',
+                    border: 'border-orange-100 dark:border-orange-800'
+                };
             case 'green':
-                return { bg: 'bg-green-50', text: 'text-green-600', border: 'border-green-100' };
+                return {
+                    bg: 'bg-green-50 dark:bg-green-900/30',
+                    text: 'text-green-600 dark:text-green-400',
+                    border: 'border-green-100 dark:border-green-800'
+                };
             case 'gray':
-                return { bg: 'bg-gray-100', text: 'text-gray-600', border: 'border-gray-200' };
+                return {
+                    bg: 'bg-gray-100 dark:bg-gray-800',
+                    text: 'text-gray-600 dark:text-gray-400',
+                    border: 'border-gray-200 dark:border-gray-700'
+                };
             default: // blue
-                return { bg: 'bg-blue-50', text: 'text-primary', border: 'border-blue-100' };
+                return {
+                    bg: 'bg-blue-50 dark:bg-blue-900/30',
+                    text: 'text-primary dark:text-blue-300',
+                    border: 'border-blue-100 dark:border-blue-800'
+                };
         }
     };
 

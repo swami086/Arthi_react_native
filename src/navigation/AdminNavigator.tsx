@@ -7,19 +7,23 @@ import { AdminMenteesScreen } from '../features/admin/screens/AdminMenteesScreen
 import { ManageAdminsScreen } from '../features/admin/screens/ManageAdminsScreen';
 import SettingsScreen from '../features/profile/screens/SettingsScreen';
 import { AdminTabParamList } from './types';
+import { useColorScheme } from '../hooks/useColorScheme';
 
 const Tab = createBottomTabNavigator<AdminTabParamList>();
 
 export const AdminNavigator = () => {
+    const { isDark } = useColorScheme();
+
     return (
         <Tab.Navigator
             screenOptions={{
                 headerShown: false,
-                tabBarActiveTintColor: '#4e8597',
+                tabBarActiveTintColor: '#30bae8',
                 tabBarInactiveTintColor: 'gray',
                 tabBarStyle: {
+                    backgroundColor: isDark ? '#1a2c32' : '#ffffff',
                     borderTopWidth: 1,
-                    borderTopColor: '#f0f0f0',
+                    borderTopColor: isDark ? '#1a2c32' : '#f0f0f0',
                     height: 60,
                     paddingBottom: 8,
                     paddingTop: 8,

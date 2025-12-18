@@ -12,7 +12,7 @@ import { Button } from '../../../components/Button';
 import { useColorScheme } from '../../../hooks/useColorScheme';
 
 export const AppointmentsScreen = () => {
-    const { appointments, loading, error, refreshAppointments } = useAppointments(); // Assume refreshAppointments exists or can be added
+    const { appointments, loading, error, refetch } = useAppointments();
     const navigation = useNavigation<MainTabCompositeProp>();
     const { isDark } = useColorScheme();
     const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
@@ -195,7 +195,7 @@ export const AppointmentsScreen = () => {
             ) : error ? (
                 <View className="flex-1 items-center justify-center px-6">
                     <Text className="text-red-500 text-center mb-4">{error}</Text>
-                    <Button title="Try Again" onPress={() => refreshAppointments && refreshAppointments()} variant="outline" />
+                    <Button title="Try Again" onPress={() => refetch && refetch()} variant="outline" />
                 </View>
             ) : (
                 <ErrorBoundary>
@@ -207,7 +207,7 @@ export const AppointmentsScreen = () => {
                         contentContainerStyle={{ padding: 24, paddingTop: 10 }}
                         showsVerticalScrollIndicator={false}
                         refreshControl={
-                            <RefreshControl refreshing={loading} onRefresh={() => refreshAppointments && refreshAppointments()} tintColor="#30bae8" />
+                            <RefreshControl refreshing={loading} onRefresh={() => refetch && refetch()} tintColor="#30bae8" />
                         }
                     />
                 </ErrorBoundary>
