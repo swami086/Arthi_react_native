@@ -113,6 +113,7 @@ export default function ConfirmAppointmentScreen() {
                         time={selectedTime}
                         duration="45 minutes"
                         format="Video Call"
+                        onEdit={() => navigation.navigate('SelectDate', { mentorId, mentorName, mentorAvatar })}
                     />
 
                     {/* Cost banner */}
