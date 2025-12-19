@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Transcript Viewer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Roboto+Mono:wght@400;500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30bae8",
+                        "background-light": "#f8fbfc",
+                        "background-dark": "#111d21",
+                        "text-main": "#0e181b",
+                        "text-secondary": "#4e8597",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "mono": ["Roboto Mono", "monospace"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "1.5rem",
+                        "xl": "2rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding for cleaner mobile look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-main antialiased selection:bg-primary/20">
+<!-- Main Container -->
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-hidden max-w-md mx-auto shadow-2xl bg-background-light dark:bg-background-dark">
+<!-- Sticky Header -->
+<header class="sticky top-0 z-20 flex items-center justify-between bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md px-4 pt-12 pb-4 border-b border-gray-100 dark:border-gray-800">
+<button class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-text-main dark:text-white" style="font-size: 24px;">arrow_back_ios_new</span>
+</button>
+<h1 class="text-lg font-bold text-text-main dark:text-white">Session Transcript</h1>
+<button class="flex items-center justify-end">
+<span class="text-primary text-sm font-bold tracking-wide">Generate SOAP</span>
+</button>
+</header>
+<!-- Scrollable Content Area -->
+<main class="flex-1 overflow-y-auto pb-32">
+<!-- Metadata Row -->
+<div class="px-4 py-4">
+<div class="grid grid-cols-3 gap-3">
+<!-- Duration Card -->
+<div class="flex flex-col items-center justify-center gap-1 rounded-2xl bg-white dark:bg-gray-800 p-3 shadow-sm border border-gray-100 dark:border-gray-700">
+<span class="material-symbols-outlined text-primary mb-1" style="font-size: 20px;">schedule</span>
+<h2 class="text-sm font-bold text-text-main dark:text-white">45:00</h2>
+<p class="text-[10px] font-medium text-text-secondary uppercase tracking-wider">Duration</p>
+</div>
+<!-- Word Count Card -->
+<div class="flex flex-col items-center justify-center gap-1 rounded-2xl bg-white dark:bg-gray-800 p-3 shadow-sm border border-gray-100 dark:border-gray-700">
+<span class="material-symbols-outlined text-primary mb-1" style="font-size: 20px;">description</span>
+<h2 class="text-sm font-bold text-text-main dark:text-white">3,240</h2>
+<p class="text-[10px] font-medium text-text-secondary uppercase tracking-wider">Words</p>
+</div>
+<!-- Language Card -->
+<div class="flex flex-col items-center justify-center gap-1 rounded-2xl bg-white dark:bg-gray-800 p-3 shadow-sm border border-gray-100 dark:border-gray-700">
+<span class="material-symbols-outlined text-primary mb-1" style="font-size: 20px;">language</span>
+<h2 class="text-sm font-bold text-text-main dark:text-white">EN-US</h2>
+<p class="text-[10px] font-medium text-text-secondary uppercase tracking-wider">Lang</p>
+</div>
+</div>
+</div>
+<!-- Search Bar -->
+<div class="sticky top-0 z-10 bg-background-light dark:bg-background-dark px-4 pb-2">
+<div class="relative">
+<div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+<span class="material-symbols-outlined text-text-secondary" style="font-size: 20px;">search</span>
+</div>
+<input class="block w-full rounded-full border-none bg-white dark:bg-gray-800 py-3 pl-11 pr-4 text-sm text-text-main dark:text-white shadow-sm ring-1 ring-inset ring-gray-200 dark:ring-gray-700 placeholder:text-text-secondary focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" placeholder="Search in transcript..." type="text"/>
+</div>
+</div>
+<!-- Transcript Content -->
+<div class="flex flex-col gap-6 px-4 py-6">
+<!-- Message 1 -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<div class="h-8 w-8 overflow-hidden rounded-full bg-gray-200">
+<img class="h-full w-full object-cover" data-alt="Professional woman mentor portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjOpFnEPaDh84KMPCjrwuOT-G4Ej5h-jCwR_2UNeQ2XuZwfEsYcuDqm3EdqCV1EyZCw34e3CunqpBJOLDqazShcDRz5cmH6fLALEtbXxpDNqu1o_VJgpxu1TrROk4HeVp2TzAMRdfAWFGq4boIHUDhiDyZ2RJZ--MmxaUuhyAHp9D7GyIxJQJsuMKShj7rY5O5zhhFLXy_FZwhORfwyg844vl__NDhN22hiRc3_o8ghwj41rnfx0l0ocSoJGxKSzKSPXVC8ohEKnnY"/>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-sm font-bold text-text-main dark:text-white">Mentor</span>
+<span class="text-xs text-text-secondary">10:02 AM</span>
+</div>
+</div>
+<div class="pl-10">
+<p class="font-mono text-sm leading-relaxed text-text-main dark:text-gray-300 bg-white dark:bg-gray-800 p-3 rounded-lg rounded-tl-none border border-gray-100 dark:border-gray-700 shadow-sm">
+                            How have you been feeling since our last session? I recall we discussed some <span class="bg-[#FCD34D] text-black px-1 rounded-sm">anxiety</span> about work.
+                        </p>
+</div>
+</div>
+<!-- Message 2 -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<div class="h-8 w-8 overflow-hidden rounded-full bg-gray-200">
+<img class="h-full w-full object-cover" data-alt="Young man mentee portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbJF9jKg2RgBo9mrKjKwJWtmfTGVq2qA5LWXJGROrsz-qnUl1dPYh-t0MJ6aF_nqh0eit9f-XXnWGea29WO5TWdNFnhJ0xUuFnCcryOKtCHpo-kwTmeYJZEEbc8FApc28q2_PCdiqIv5PDV8AdvDCsrAb3kmBznEco6eKsePTkEzL1PMr80w8YzT8KHppdlIi6Ba_8oL99mwiSNMEZyyofPGJ5tLfSLmfb5mWjwk2uccr1rbg3oXPS5ZY7jGdSAyS9NBQEforL2GY2"/>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-sm font-bold text-text-main dark:text-white">Mentee</span>
+<span class="text-xs text-text-secondary">10:03 AM</span>
+</div>
+</div>
+<div class="pl-10">
+<p class="font-mono text-sm leading-relaxed text-text-main dark:text-gray-300 bg-primary/5 dark:bg-primary/10 p-3 rounded-lg rounded-tl-none border border-primary/10 dark:border-primary/20">
+                            I've been okay, but a bit stressed about the upcoming project. It's really weighing on me.
+                        </p>
+</div>
+</div>
+<!-- Message 3 -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<div class="h-8 w-8 overflow-hidden rounded-full bg-gray-200">
+<img class="h-full w-full object-cover" data-alt="Professional woman mentor portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCizieOrn34uvCJYkh2eScqNjFisCvqHoelRnEmi7qtto-0V6Z27th0ywkjdh3wuJ5PeG6KVLGq_iWTeBkHjMfZ3wmQPmMnq54_Ek_LIP26uPAI-TIMnURsg8jNC2j1yUTJifCcNFCvY7frfbOytLRucpw1LhGYm4u8y_s5SBktS501cpkWo-EiSDosDBj0Xyuv8beNdpaGuXlFVD0Tfjz6IwYPSn2L2wf1mDDY3MmF5EYQYwE5qEjxnyKBFPDE9o56FXh3Yb8C5pXT"/>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-sm font-bold text-text-main dark:text-white">Mentor</span>
+<span class="text-xs text-text-secondary">10:04 AM</span>
+</div>
+</div>
+<div class="pl-10">
+<p class="font-mono text-sm leading-relaxed text-text-main dark:text-gray-300 bg-white dark:bg-gray-800 p-3 rounded-lg rounded-tl-none border border-gray-100 dark:border-gray-700 shadow-sm">
+                            That's understandable. Can you tell me more about what specifically feels overwhelming about it? Is it the timeline or the scope?
+                        </p>
+</div>
+</div>
+<!-- Message 4 -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<div class="h-8 w-8 overflow-hidden rounded-full bg-gray-200">
+<img class="h-full w-full object-cover" data-alt="Young man mentee portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAV1HC8rBIpRP3C3TafOkMDzg-ttmdp07vA9sL9VDq1r3Q-xYmVr8LznasV0bGyKFGgO8uKrycDvbnVJy1t7OihavOo_AQL80o4FU0dybkZ8dXChpRmtnEQ_4T7l8hNGPK8ZOv1oIpN_WCKXfaU_1qoISF-5kskciTtVGPNfGw7hPbQYs7CKra5BRRTtfYj3g44L7Ok_Rp9s2UumR0FWz8EOPXRpldZpBRXf_Cf8DrpH8B3R0_li5SSdtCbDRAbQRfADOBTlNQU3t0L"/>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-sm font-bold text-text-main dark:text-white">Mentee</span>
+<span class="text-xs text-text-secondary">10:05 AM</span>
+</div>
+</div>
+<div class="pl-10">
+<p class="font-mono text-sm leading-relaxed text-text-main dark:text-gray-300 bg-primary/5 dark:bg-primary/10 p-3 rounded-lg rounded-tl-none border border-primary/10 dark:border-primary/20">
+                            I think it's the scope. We have fewer resources than last time, and the client expectations are higher. I'm worried I won't deliver.
+                        </p>
+</div>
+</div>
+<!-- Message 5 -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<div class="h-8 w-8 overflow-hidden rounded-full bg-gray-200">
+<img class="h-full w-full object-cover" data-alt="Professional woman mentor portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzIVOXUzkkpACinwRwgZqczNUU-craHuRWMleB239PywxON5hRhLzzX5_iDvx8V7j4zndLgIYPftp82M9PSPdd8pkfo6KeWESC9Se7sL7atikcZ3OFYOmeGfJXf5I3k1rZkQweUIRdlpyRs_uOHNI5hMsh8ao1Lbzxs70gs19vdbdCqB4N1a9cADhDY67Bms4PI2QskjYnJnMMjTC1uJ6_h1o2KDvSQhHQDIn13RBS0astBI1N4ESj1JtmSJW4sru2ED4aWd9qMSe6"/>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-sm font-bold text-text-main dark:text-white">Mentor</span>
+<span class="text-xs text-text-secondary">10:06 AM</span>
+</div>
+</div>
+<div class="pl-10">
+<p class="font-mono text-sm leading-relaxed text-text-main dark:text-gray-300 bg-white dark:bg-gray-800 p-3 rounded-lg rounded-tl-none border border-gray-100 dark:border-gray-700 shadow-sm">
+                            Let's break that down. What is the single biggest risk you see right now? We can map out a strategy for that specific piece first.
+                        </p>
+</div>
+</div>
+<div class="h-10"></div> <!-- Spacer for footer -->
+</div>
+</main>
+<!-- Sticky Footer Action Bar -->
+<div class="absolute bottom-0 left-0 right-0 z-30 border-t border-gray-100 bg-white/90 dark:bg-gray-900/90 dark:border-gray-800 px-4 pt-4 pb-8 backdrop-blur-lg">
+<div class="flex flex-col gap-3">
+<div class="flex gap-3">
+<button class="flex flex-1 items-center justify-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-text-main hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700">
+<span class="material-symbols-outlined text-text-secondary" style="font-size: 20px;">content_copy</span>
+                        Copy
+                    </button>
+<button class="flex flex-1 items-center justify-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-text-main hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700">
+<span class="material-symbols-outlined text-text-secondary" style="font-size: 20px;">download</span>
+                        Export
+                    </button>
+</div>
+<button class="flex w-full items-center justify-center gap-2 rounded-full bg-primary px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-primary/25 hover:bg-primary/90 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined" style="font-size: 20px;">auto_awesome</span>
+                    Generate SOAP Note
+                </button>
+</div>
+</div>
+</div>
+</body></html>
