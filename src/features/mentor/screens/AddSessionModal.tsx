@@ -115,9 +115,9 @@ export const AddSessionModal: React.FC<AddSessionModalProps> = ({ visible, onClo
                         </View>
                     ) : (
                         <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-4">
-                            {mentees.map(mentee => (
+                            {mentees.map((mentee, index) => (
                                 <TouchableOpacity
-                                    key={mentee.mentee_id}
+                                    key={`${mentee.mentee_id}-${index}`}
                                     onPress={() => setSelectedMentee(mentee.mentee_id)}
                                     className={`mr-3 p-3 rounded-lg border ${selectedMentee === mentee.mentee_id ? 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-500' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700'}`}
                                 >

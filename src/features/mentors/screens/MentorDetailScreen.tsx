@@ -197,7 +197,7 @@ const MentorDetailScreen = () => {
                     <FlatList
                         data={reviews}
                         renderItem={renderReviewItem}
-                        keyExtractor={(item) => item.id}
+                        keyExtractor={(item, index) => `${item.id}-${index}`}
                         horizontal
                         showsHorizontalScrollIndicator={false}
                         contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 10 }}

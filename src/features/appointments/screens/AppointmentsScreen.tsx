@@ -77,7 +77,7 @@ export const AppointmentsScreen = () => {
                 <View className="flex-row items-center mb-4">
                     {/* Placeholder for mentor avatar if available in appointment object, else initial or default */}
                     <View className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 items-center justify-center mr-3 border border-gray-100 dark:border-gray-600">
-                         {/* Assuming appointment has mentor info, if not we might need to fetch or use placeholder */}
+                        {/* Assuming appointment has mentor info, if not we might need to fetch or use placeholder */}
                         <MaterialCommunityIcons name="account" size={24} color="#9ca3af" />
                     </View>
                     <View>
@@ -86,10 +86,10 @@ export const AppointmentsScreen = () => {
                             {/* {item.mentor?.fullName || "Mentor"} */}
                         </Text>
                         <View className="flex-row items-center mt-1">
-                             <MaterialCommunityIcons name="calendar-blank" size={14} color={isDark ? "#94aeb8" : "#4e8597"} />
-                             <Text className="text-text-sub-light dark:text-text-sub-dark text-xs ml-1 font-medium">
+                            <MaterialCommunityIcons name="calendar-blank" size={14} color={isDark ? "#94aeb8" : "#4e8597"} />
+                            <Text className="text-text-sub-light dark:text-text-sub-dark text-xs ml-1 font-medium">
                                 {startTime.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
-                             </Text>
+                            </Text>
                         </View>
                     </View>
                 </View>
@@ -131,12 +131,12 @@ export const AppointmentsScreen = () => {
                                 </TouchableOpacity>
                             </View>
                             <TouchableOpacity className="bg-primary py-3 rounded-xl items-center shadow-md shadow-primary/20 flex-row justify-center">
-                                <MaterialCommunityIcons name="video" size={18} color="white" style={{marginRight: 6}} />
+                                <MaterialCommunityIcons name="video" size={18} color="white" style={{ marginRight: 6 }} />
                                 <Text className="text-white font-bold text-sm">Join Session</Text>
                             </TouchableOpacity>
                         </View>
                     )}
-                     {item.status === 'confirmed' && activeTab === 'past' && (
+                    {item.status === 'confirmed' && activeTab === 'past' && (
                         <TouchableOpacity className="flex-1 bg-gray-100 dark:bg-gray-700 py-3 rounded-xl items-center border border-gray-200 dark:border-gray-600">
                             <Text className="text-text-main-light dark:text-text-main-dark font-bold text-sm">View Notes</Text>
                         </TouchableOpacity>
@@ -202,19 +202,19 @@ export const AppointmentsScreen = () => {
             ) : error ? (
                 <View className="flex-1 items-center justify-center px-6">
                     <Text className="text-red-500 text-center mb-4">{error}</Text>
-                    <Button title="Try Again" onPress={() => refetch && refetch()} variant="outline" />
+                    <Button title="Try Again" onPress={() => refreshAppointments && refreshAppointments()} variant="outline" />
                 </View>
             ) : (
                 <ErrorBoundary>
                     <FlatList
                         data={filteredAppointments}
                         renderItem={renderAppointment}
-                        keyExtractor={(item, index) => item?.id || `appointment-${index}`}
+                        keyExtractor={(item, index) => `${item?.id || 'ppt'}-${index}`}
                         ListEmptyComponent={renderEmptyComponent}
                         contentContainerStyle={{ padding: 24, paddingTop: 10 }}
                         showsVerticalScrollIndicator={false}
                         refreshControl={
-                            <RefreshControl refreshing={loading} onRefresh={() => refetch && refetch()} tintColor="#30bae8" />
+                            <RefreshControl refreshing={loading} onRefresh={() => refreshAppointments && refreshAppointments()} tintColor="#30bae8" />
                         }
                     />
                 </ErrorBoundary>

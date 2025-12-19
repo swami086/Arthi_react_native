@@ -99,9 +99,9 @@ export default function MenteeDetailScreen() {
                                 </TouchableOpacity>
                             </View>
                             {goals.length > 0 ? (
-                                goals.map(goal => (
+                                goals.map((goal, index) => (
                                     <GoalProgress
-                                        key={goal.id}
+                                        key={`${goal.id}-${index}`}
                                         title={goal.goal_title}
                                         percentage={goal.progress_percentage}
                                         color={goal.progress_percentage > 70 ? '#10B981' : '#F59E0B'}

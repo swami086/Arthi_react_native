@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView, TextInput, Alert, ActivityInd
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { RootStackParamList } from '../../../navigation/types';
+import { RootStackParamList, RootNavigationProp } from '../../../navigation/types';
 import { useColorScheme } from '../../../hooks/useColorScheme';
 import * as recordingService from '../../../api/recordingService';
 import MetadataCard from '../../../components/MetadataCard';
@@ -11,7 +11,7 @@ import MetadataCard from '../../../components/MetadataCard';
 type TranscriptViewerRouteProp = RouteProp<RootStackParamList, 'TranscriptViewer'>;
 
 export default function TranscriptViewerScreen() {
-    const navigation = useNavigation();
+    const navigation = useNavigation<RootNavigationProp>();
     const route = useRoute<TranscriptViewerRouteProp>();
     const { transcriptId, appointmentId } = route.params;
     const { isDark } = useColorScheme();
@@ -24,21 +24,19 @@ export default function TranscriptViewerScreen() {
     useEffect(() => {
         const fetchTranscript = async () => {
             try {
-                const data = await recordingService.getTranscriptByRecording(transcriptId.replace('trans_', 'rec_'));
-                // Use placeholder if not found (for dev)
+                // Fetch using the passed transcriptId (which is now the UUID from DB)
+                const data = await recordingService.getTranscriptById(transcriptId);
+
                 if (!data) {
-                    setTranscript({
-                        id: transcriptId,
-                        transcript_text: "Speaker 1: Hello, how have you been feeling since our last session?\n\nSpeaker 2: I've been feeling a bit better, but still struggling with anxiety in social situations. I tried the breathing exercises you recommended.\n\nSpeaker 1: That's great to hear. Can you tell me more about how the breathing exercises worked for you?\n\nSpeaker 2: They helped me calm down when I started feeling overwhelmed at work yesterday. My heart rate went down and I could focus again.\n\nSpeaker 1: Excellent. It sounds like you're building good coping mechanisms. Let's discuss triggers...",
-                        word_count: 85,
-                        language_detected: 'English',
-                        duration: '45 mins' // Added for UI
-                    });
+                    Alert.alert("Not Found", "Transcript could not be found. It might still be processing.");
+                    navigation.goBack();
                 } else {
                     setTranscript(data);
                 }
             } catch (err) {
+                console.error("Fetch Transcript Error:", err);
                 Alert.alert("Error", "Failed to load transcript");
+                navigation.goBack();
             } finally {
                 setLoading(false);
             }
@@ -113,8 +111,7 @@ export default function TranscriptViewerScreen() {
                         className="bg-primary-50 dark:bg-primary-900/20 px-3 py-1.5 rounded-lg"
                         onPress={() => {
                             // If SOAP note exists, navigate to it, otherwise generate (nav only for now)
-                             navigation.navigate('SoapNoteEditor', {
-                                soapNoteId: `soap_${Date.now()}`,
+                            navigation.navigate('SoapNoteEditor', {
                                 appointmentId: appointmentId || '',
                                 transcriptId
                             });

@@ -1,7 +1,5 @@
+import { supabase } from './supabase';
 import { Alert } from 'react-native';
-
-// PLACEHOLDER: These functions will be implemented after Supabase configuration
-// For now, they use mock data and local storage
 
 export interface SessionRecording {
   id: string;
@@ -39,11 +37,6 @@ export interface SoapNote {
   updated_at: string;
 }
 
-// Mock storage for development
-const mockRecordings: Map<string, SessionRecording> = new Map();
-const mockTranscripts: Map<string, Transcript> = new Map();
-const mockSoapNotes: Map<string, SoapNote> = new Map();
-
 export const createRecording = async (
   appointmentId: string,
   mentorId: string,
@@ -51,21 +44,26 @@ export const createRecording = async (
   consentGiven: boolean
 ): Promise<SessionRecording | null> => {
   try {
-    const recording: SessionRecording = {
-      id: `recording_${Date.now()}`,
-      appointment_id: appointmentId,
-      mentor_id: mentorId,
-      mentee_id: menteeId,
-      recording_url: '',
-      file_size_bytes: 0,
-      duration_seconds: 0,
-      recording_status: 'recording',
-      consent_captured: consentGiven,
-      created_at: new Date().toISOString(),
-    };
-    mockRecordings.set(recording.id, recording);
-    console.log('PLACEHOLDER: Recording created (mock):', recording.id);
-    return recording;
+    const { data, error } = await supabase
+      .from('session_recordings')
+      .insert({
+        appointment_id: appointmentId,
+        mentor_id: mentorId,
+        mentee_id: menteeId,
+        consent_captured: consentGiven,
+        recording_status: 'recording',
+        recording_url: '', // Will be updated after upload
+        file_size_bytes: 0,
+        duration_seconds: 0,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating recording:', error);
+      return null;
+    }
+    return data;
   } catch (error) {
     console.error('Error creating recording:', error);
     return null;
@@ -76,12 +74,17 @@ export const getRecordingByAppointment = async (
   appointmentId: string
 ): Promise<SessionRecording | null> => {
   try {
-    for (const recording of mockRecordings.values()) {
-      if (recording.appointment_id === appointmentId) {
-        return recording;
-      }
+    const { data, error } = await supabase
+      .from('session_recordings')
+      .select('*')
+      .eq('appointment_id', appointmentId)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error fetching recording:', error);
+      return null;
     }
-    return null;
+    return data;
   } catch (error) {
     console.error('Error fetching recording:', error);
     return null;
@@ -92,14 +95,39 @@ export const getTranscriptByRecording = async (
   recordingId: string
 ): Promise<Transcript | null> => {
   try {
-    for (const transcript of mockTranscripts.values()) {
-      if (transcript.recording_id === recordingId) {
-        return transcript;
-      }
+    const { data, error } = await supabase
+      .from('transcripts')
+      .select('*')
+      .eq('recording_id', recordingId)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error fetching transcript:', error);
+      return null;
     }
-    return null;
+    return data;
   } catch (error) {
     console.error('Error fetching transcript:', error);
+    return null;
+  }
+};
+
+export const getTranscriptById = async (transcriptId: string): Promise<Transcript | null> => {
+  try {
+    const { data, error } = await supabase
+      .from('transcripts')
+      .select('*')
+      .eq('id', transcriptId)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error fetching transcript by ID:', error);
+      return null;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error fetching transcript by ID:', error);
     return null;
   }
 };
@@ -108,12 +136,17 @@ export const getSoapNoteByAppointment = async (
   appointmentId: string
 ): Promise<SoapNote | null> => {
   try {
-    for (const soapNote of mockSoapNotes.values()) {
-      if (soapNote.appointment_id === appointmentId) {
-        return soapNote;
-      }
+    const { data, error } = await supabase
+      .from('soap_notes')
+      .select('*')
+      .eq('appointment_id', appointmentId)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error fetching SOAP note:', error);
+      return null;
     }
-    return null;
+    return data;
   } catch (error) {
     console.error('Error fetching SOAP note:', error);
     return null;
@@ -125,13 +158,18 @@ export const updateSoapNote = async (
   updates: Partial<SoapNote>
 ): Promise<SoapNote | null> => {
   try {
-    const soapNote = mockSoapNotes.get(soapNoteId);
-    if (!soapNote) return null;
+    const { data, error } = await supabase
+      .from('soap_notes')
+      .update({ ...updates, edited_by_mentor: true, updated_at: new Date().toISOString() })
+      .eq('id', soapNoteId)
+      .select()
+      .maybeSingle();
 
-    const updated = { ...soapNote, ...updates, updated_at: new Date().toISOString() };
-    mockSoapNotes.set(soapNoteId, updated);
-    console.log('PLACEHOLDER: SOAP note updated (mock):', soapNoteId);
-    return updated;
+    if (error) {
+      console.error('Error updating SOAP note:', error);
+      return null;
+    }
+    return data;
   } catch (error) {
     console.error('Error updating SOAP note:', error);
     return null;
@@ -140,13 +178,15 @@ export const updateSoapNote = async (
 
 export const finalizeSoapNote = async (soapNoteId: string): Promise<boolean> => {
   try {
-    const soapNote = mockSoapNotes.get(soapNoteId);
-    if (!soapNote) return false;
+    const { error } = await supabase
+      .from('soap_notes')
+      .update({ is_finalized: true, updated_at: new Date().toISOString() })
+      .eq('id', soapNoteId);
 
-    soapNote.is_finalized = true;
-    soapNote.updated_at = new Date().toISOString();
-    mockSoapNotes.set(soapNoteId, soapNote);
-    console.log('PLACEHOLDER: SOAP note finalized (mock):', soapNoteId);
+    if (error) {
+      console.error('Error finalizing SOAP note:', error);
+      return false;
+    }
     return true;
   } catch (error) {
     console.error('Error finalizing SOAP note:', error);
@@ -156,11 +196,20 @@ export const finalizeSoapNote = async (soapNoteId: string): Promise<boolean> => 
 
 export const deleteRecording = async (recordingId: string): Promise<boolean> => {
   try {
-    mockRecordings.delete(recordingId);
-    console.log('PLACEHOLDER: Recording deleted (mock):', recordingId);
+    // Note: This will delete from DB. Storage deletion relies on triggers or manual calls.
+    const { error } = await supabase
+      .from('session_recordings')
+      .delete()
+      .eq('id', recordingId);
+
+    if (error) {
+      console.error('Error deleting recording:', error);
+      return false;
+    }
     return true;
   } catch (error) {
     console.error('Error deleting recording:', error);
     return false;
   }
 };
+

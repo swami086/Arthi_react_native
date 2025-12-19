@@ -28,10 +28,10 @@ export const ReferralManagementScreen = () => {
                     {viewMode === 'received' ? `From: ${item.referring_mentor?.full_name}` : `To: ${item.referred_to_mentor?.full_name}`}
                 </Text>
                 <View className={`px-2 py-1 rounded ${item.status === 'pending' ? 'bg-yellow-100' :
-                        item.status === 'accepted' ? 'bg-green-100' : 'bg-red-100'
+                    item.status === 'accepted' ? 'bg-green-100' : 'bg-red-100'
                     }`}>
                     <Text className={`text-xs font-bold capitalize ${item.status === 'pending' ? 'text-yellow-700' :
-                            item.status === 'accepted' ? 'text-green-700' : 'text-red-700'
+                        item.status === 'accepted' ? 'text-green-700' : 'text-red-700'
                         }`}>{item.status}</Text>
                 </View>
             </View>
@@ -87,7 +87,7 @@ export const ReferralManagementScreen = () => {
             <FlatList
                 data={viewMode === 'received' ? received : sent}
                 renderItem={renderItem}
-                keyExtractor={item => item.id}
+                keyExtractor={(item, index) => `${item.id}-${index}`}
                 contentContainerStyle={{ padding: 24 }}
                 refreshing={loading}
                 onRefresh={fetchReferrals}

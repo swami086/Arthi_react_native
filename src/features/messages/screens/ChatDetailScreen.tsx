@@ -169,7 +169,7 @@ export const ChatDetailScreen = () => {
                                 </MotiView>
                             );
                         }}
-                        keyExtractor={item => item.id}
+                        keyExtractor={(item, index) => `${item.id}-${index}`}
                         inverted
                         contentContainerStyle={{ paddingVertical: 16, paddingHorizontal: 16 }}
                         className="bg-gray-50 dark:bg-background-dark"

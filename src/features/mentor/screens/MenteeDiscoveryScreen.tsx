@@ -29,7 +29,8 @@ export const MenteeDiscoveryScreen = () => {
         setLoading(true);
         try {
             const results = await searchAvailableMentees(user.id, query, selectedCategory);
-            setMentees(results);
+            const uniqueResults = Array.from(new Map(results.map((r: Profile) => [r.user_id, r])).values());
+            setMentees(uniqueResults);
         } catch (error) {
             console.error(error);
             Alert.alert("Error", "Failed to fetch mentees");
@@ -74,13 +75,13 @@ export const MenteeDiscoveryScreen = () => {
         <TouchableOpacity
             onPress={() => setSelectedCategory(item)}
             className={`px-4 py-2 rounded-full mr-2 ${selectedCategory === item
-                    ? 'bg-primary-light dark:bg-primary-dark'
-                    : 'bg-gray-100 dark:bg-gray-700'
+                ? 'bg-primary-light dark:bg-primary-dark'
+                : 'bg-gray-100 dark:bg-gray-700'
                 }`}
         >
             <Text className={`${selectedCategory === item
-                    ? 'text-white font-bold'
-                    : 'text-gray-600 dark:text-gray-300'
+                ? 'text-white font-bold'
+                : 'text-gray-600 dark:text-gray-300'
                 }`}>
                 {item}
             </Text>
@@ -247,7 +248,7 @@ export const MenteeDiscoveryScreen = () => {
                 <FlatList
                     data={listData}
                     renderItem={({ item, index }) => renderMenteeCard({ item, index })}
-                    keyExtractor={(item) => item.user_id}
+                    keyExtractor={(item, index) => `${item.user_id}-${index}`}
                     contentContainerStyle={{ padding: 24 }}
                     ListHeaderComponent={renderHeader}
                     ListEmptyComponent={renderEmptyComponent}

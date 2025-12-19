@@ -180,7 +180,7 @@ export const ProfileScreen = () => {
                                 <FlatList
                                     data={mentors}
                                     renderItem={renderMentorItem}
-                                    keyExtractor={item => item.id}
+                                    keyExtractor={(item, index) => `${item.id}-${index}`}
                                     horizontal
                                     showsHorizontalScrollIndicator={false}
                                     contentContainerStyle={{ paddingHorizontal: 24 }}

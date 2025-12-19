@@ -177,6 +177,16 @@ export const AppNavigator = () => {
                             options={{ presentation: 'modal' }}
                         />
 
+                        {/* AI Scribe Screens */}
+                        <Stack.Screen
+                            name="TranscriptViewer"
+                            component={require('../features/mentor/screens/TranscriptViewerScreen').default}
+                        />
+                        <Stack.Screen
+                            name="SoapNoteEditor"
+                            component={require('../features/mentor/screens/SoapNoteEditorScreen').default}
+                        />
+
                         {/* Admin Routes */}
                         <Stack.Screen name="PendingApprovals" component={PendingApprovalsScreen} />
                         <Stack.Screen name="MentorReview" component={MentorReviewScreen} />

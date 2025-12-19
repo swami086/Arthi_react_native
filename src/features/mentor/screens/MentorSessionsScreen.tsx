@@ -69,7 +69,7 @@ export default function MentorSessionsScreen() {
                     ) : (
                         <SectionList
                             sections={sections}
-                            keyExtractor={item => item.id}
+                            keyExtractor={(item, index) => `${item.id}-${index}`}
                             renderSectionHeader={({ section: { title, data } }) => (
                                 data.length > 0 ? <Text className="px-6 py-2 text-gray-500 font-bold bg-gray-50">{title}</Text> : null
                             )}

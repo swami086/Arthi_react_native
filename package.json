@@ -17,6 +17,7 @@
     "@react-navigation/stack": "^7.6.12",
     "@shopify/react-native-skia": "^2.4.7",
     "@supabase/supabase-js": "^2.87.1",
+    "base64-arraybuffer": "^1.0.2",
     "date-fns": "^4.1.0",
     "expo": "~54.0.29",
     "expo-av": "~16.0.8",

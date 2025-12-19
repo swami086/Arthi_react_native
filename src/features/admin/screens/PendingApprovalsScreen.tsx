@@ -93,7 +93,7 @@ export const PendingApprovalsScreen = () => {
             <FlatList
                 data={pendingMentors}
                 renderItem={renderItem}
-                keyExtractor={item => item.user_id}
+                keyExtractor={(item, index) => `${item.user_id}-${index}`}
                 contentContainerStyle={{ padding: 24 }}
                 refreshing={loading}
                 onRefresh={fetchPending}

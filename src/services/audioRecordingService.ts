@@ -1,5 +1,6 @@
 import { Audio } from 'expo-av';
 import { Alert } from 'react-native';
+import * as FileSystem from 'expo-file-system/legacy';
 
 let recording: Audio.Recording | null = null;
 
@@ -35,31 +36,8 @@ export const startRecording = async (): Promise<boolean> => {
     recording = new Audio.Recording();
 
     // Prepare recording with quality settings
-    await recording.prepareToRecordAsync({
-      android: {
-        extension: '.m4a',
-        outputFormat: Audio.AndroidOutputFormat.MPEG_4,
-        audioEncoder: Audio.AndroidAudioEncoder.AAC,
-        sampleRate: 44100,
-        numberOfChannels: 2,
-        bitRate: 128000,
-      },
-      ios: {
-        extension: '.m4a',
-        outputFormat: Audio.IOSOutputFormat.MPEG4AAC,
-        audioQuality: Audio.IOSAudioQuality.HIGH,
-        sampleRate: 44100,
-        numberOfChannels: 2,
-        bitRate: 128000,
-        linearPCMBitDepth: 16,
-        linearPCMIsBigEndian: false,
-        linearPCMIsFloat: false,
-      },
-      web: {
-        mimeType: 'audio/webm',
-        bitsPerSecond: 128000,
-      },
-    });
+    // Prepare recording with quality settings - Use Preset for better compatibility
+    await recording.prepareToRecordAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY);
 
     // Start recording
     await recording.startAsync();
@@ -139,7 +117,6 @@ export const getRecordingStatus = async (): Promise<{
 export const deleteRecording = async (uri: string): Promise<boolean> => {
   try {
     // For local files, use FileSystem
-    const { FileSystem } = require('expo-file-system');
     await FileSystem.deleteAsync(uri, { idempotent: true });
     return true;
   } catch (error) {

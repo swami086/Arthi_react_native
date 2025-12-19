@@ -55,7 +55,7 @@ export const PendingMentorRequestsScreen = () => {
                             isProcessing={processingId === item.id}
                         />
                     )}
-                    keyExtractor={item => item.id}
+                    keyExtractor={(item, index) => `${item.id}-${index}`}
                     contentContainerStyle={{ padding: 24 }}
                     ListEmptyComponent={!loading ? renderEmpty : null}
                     refreshControl={

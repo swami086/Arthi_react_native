@@ -140,7 +140,7 @@ export const MentorsScreen = () => {
                         <FlatList
                             data={filteredMentors}
                             renderItem={renderItem}
-                            keyExtractor={(item, index) => item?.user_id || `mentor-${index}`}
+                            keyExtractor={(item, index) => `${item?.user_id || 'mentor'}-${index}`}
                             ListHeaderComponent={renderHeader}
                             showsVerticalScrollIndicator={false}
                             contentContainerStyle={{ paddingBottom: 20 }}

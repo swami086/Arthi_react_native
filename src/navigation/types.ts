@@ -63,13 +63,13 @@ export type RootStackParamList = {
 
     // Recording & SOAP Note Screens
     TranscriptViewer: {
-      transcriptId: string;
-      appointmentId?: string;
+        transcriptId: string;
+        appointmentId?: string;
     };
     SoapNoteEditor: {
-      soapNoteId: string;
-      appointmentId: string;
-      transcriptId?: string;
+        soapNoteId?: string;
+        appointmentId: string;
+        transcriptId?: string;
     };
 
     // Admin Screens

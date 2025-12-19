@@ -15,7 +15,9 @@ export const useMenteeList = () => {
         try {
             setLoading(true);
             const data = await getMenteeList(user.id);
-            setMentees(data);
+            // Deduplicate by mentee_id to prevent UI errors
+            const uniqueMentees = Array.from(new Map(data.map(item => [item.mentee_id, item])).values());
+            setMentees(uniqueMentees);
         } catch (err: any) {
             setError(err.message);
         } finally {

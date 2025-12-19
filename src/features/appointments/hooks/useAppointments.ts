@@ -21,7 +21,11 @@ export const useAppointments = () => {
                 .order('start_time', { ascending: true });
 
             if (apiError) throw apiError;
-            if (data) setAppointments(data);
+            if (data) {
+                // Deduplicate appointments by ID to prevent UI key errors
+                const uniqueAppointments = Array.from(new Map(data.map(item => [item.id, item])).values());
+                setAppointments(uniqueAppointments);
+            }
             setError(null);
         } catch (err: any) {
             setError(err.message || 'Failed to fetch appointments');

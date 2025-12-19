@@ -18,11 +18,13 @@ import ConsentCheckbox from '../components/ConsentCheckbox';
 import RecordingControls from '../components/RecordingControls';
 import ProcessingProgress from '../components/ProcessingProgress';
 import RecordingConsentModal from '../components/RecordingConsentModal';
+import { uploadAudioToSupabase, UploadProgress } from '../../../services/audioUploadService';
+import { RootNavigationProp } from '../../../navigation/types';
 
 type SessionDetailRouteProp = RouteProp<RootStackParamList, 'SessionDetail'>;
 
 export default function SessionDetailScreen() {
-    const navigation = useNavigation();
+    const navigation = useNavigation<RootNavigationProp>();
     const route = useRoute<SessionDetailRouteProp>();
     const { appointmentId } = route.params || {};
     const { isDark } = useColorScheme();
@@ -70,6 +72,7 @@ export default function SessionDetailScreen() {
         if (soapError) Alert.alert('SOAP Generation Error', soapError);
     }, [recordingError, transcriptionError, soapError]);
 
+
     const handleStopRecording = async () => {
         const result = await stopRecording();
         if (result && result.uri) {
@@ -77,33 +80,53 @@ export default function SessionDetailScreen() {
             setProcessingStep('uploading');
             setProcessingProgress(0);
 
-            // Simulate upload progress
-            const interval = setInterval(() => {
-                setProcessingProgress(prev => Math.min(prev + 10, 30));
-            }, 500);
+            try {
+                // 1. Upload to Supabase Storage
+                const uploadResult = await uploadAudioToSupabase(
+                    result.uri,
+                    appointmentId,
+                    appointment.mentor_id,
+                    appointment.mentee_id,
+                    (progress: UploadProgress) => setProcessingProgress(Math.min(Math.round(progress.percentage * 0.3), 30))
+                );
 
-            // 1. Upload (Placeholder - integrated in next steps usually, but we mock it here)
-            // In a real app, we'd upload to Supabase Storage here
-            setTimeout(async () => {
-                clearInterval(interval);
-                setProcessingProgress(33);
+                if (!uploadResult) {
+                    throw new Error("Upload failed");
+                }
+
+                setProcessingProgress(35);
                 setProcessingStep('transcribing');
 
-                // 2. Transcribe
-                const mockRecordingId = `rec_${Date.now()}`; // This would come from upload response
-                await triggerTranscription(mockRecordingId);
+                // 2. Transcribe (using Edge Function)
+                const transcriptResult = await triggerTranscription(uploadResult.recordingId);
+
+                if (!transcriptResult || !transcriptResult.id) {
+                    throw new Error("Transcription failed");
+                }
+
+                setTranscriptId(transcriptResult.id);
                 setProcessingProgress(66);
                 setProcessingStep('generating');
-                setTranscriptId(`trans_${Date.now()}`); // Mock transcript ID
 
-                // 3. Generate SOAP Note
-                await generateSoapNote(`trans_${Date.now()}`, appointmentId);
+                // 3. Generate SOAP Note (using Edge Function)
+                const soapResult = await generateSoapNote(transcriptResult.id, appointmentId);
+
+                if (!soapResult) {
+                    throw new Error("SOAP note generation failed");
+                }
+
+                setSoapNoteId(soapResult.id);
                 setProcessingProgress(100);
                 setProcessingStep('completed');
-                setSoapNoteId(`soap_${Date.now()}`); // Mock SOAP note ID
 
                 Alert.alert('Success', 'Session processed successfully! You can now view the transcript and SOAP note.');
-            }, 2000);
+
+            } catch (err) {
+                console.error("Processing Error:", err);
+                Alert.alert("Processing Error", "Failed to process the recording. Please try again.");
+                setProcessingStep('completed');
+                // Don't reset everything, allow retry? For now handled by restart recording which is default UI behavior if state is idle
+            }
         }
     };
 
@@ -121,8 +144,44 @@ export default function SessionDetailScreen() {
                 if (error) throw error;
                 setAppointment(data);
                 setNotes(data.notes || '');
+
+                // Check for existing AI Scribe data
+                const { data: recording } = await supabase
+                    .from('session_recordings')
+                    .select('id, recording_status')
+                    .eq('appointment_id', appointmentId)
+                    .maybeSingle();
+
+                if (recording) {
+                    const { data: transcript } = await supabase
+                        .from('transcripts')
+                        .select('id')
+                        .eq('recording_id', recording.id)
+                        .maybeSingle();
+
+                    if (transcript) {
+                        setTranscriptId(transcript.id);
+
+                        const { data: soap } = await supabase
+                            .from('soap_notes')
+                            .select('id')
+                            .eq('transcript_id', transcript.id)
+                            .maybeSingle();
+
+                        if (soap) {
+                            setSoapNoteId(soap.id);
+                            setProcessingStep('completed');
+                        } else {
+                            // Recording and transcript exist, but no SOAP note
+                            setProcessingStep('completed'); // Or keep it at completed since we found the transcript
+                        }
+                    } else if (recording.recording_status === 'completed') {
+                        // Recording exists but no transcript yet (maybe failed or in progress)
+                    }
+                }
             } catch (err) {
-                Alert.alert("Error", "Failed to fetch appointment details");
+                console.error("Error fetching session state:", err);
+                Alert.alert("Error", "Failed to fetch session details");
                 navigation.goBack();
             } finally {
                 setLoading(false);

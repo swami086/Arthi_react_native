@@ -79,7 +79,7 @@ export const AdminMentorsScreen = () => {
             <FlatList
                 data={filteredMentors}
                 renderItem={renderItem}
-                keyExtractor={item => item.user_id}
+                keyExtractor={(item, index) => `${item.user_id}-${index}`}
                 contentContainerStyle={{ padding: 24 }}
                 refreshing={loading}
                 onRefresh={fetchMentors}

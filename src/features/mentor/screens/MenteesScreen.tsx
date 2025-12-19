@@ -112,7 +112,7 @@ export default function MenteesScreen() {
                     <ErrorBoundary>
                         <FlatList
                             data={filteredMentees}
-                            keyExtractor={(item, index) => item?.mentee_id || `mentee-${index}`}
+                            keyExtractor={(item, index) => `${item?.mentee_id || 'mentee'}-${index}`}
                             renderItem={renderMenteeItem}
                             contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 20 }}
                             ListEmptyComponent={renderEmpty}

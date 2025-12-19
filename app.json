@@ -13,8 +13,20 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Allow access to the microphone to record therapy sessions used for generating transcripts and SOAP notes."
+      },
+      "bundleIdentifier": "com.safespace.app"
     },
+    "plugins": [
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Allow access to the microphone to record therapy sessions used for generating transcripts and SOAP notes."
+        }
+      ]
+    ],
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import * as audioRecordingService from '../../../services/audioRecordingService';
 
 export const useRecording = () => {
@@ -6,7 +6,16 @@ export const useRecording = () => {
   const [duration, setDuration] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [metering, setMetering] = useState(-160);
-  let durationInterval: NodeJS.Timeout | null = null;
+  const durationInterval = useRef<NodeJS.Timeout | null>(null);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (durationInterval.current) {
+        clearInterval(durationInterval.current);
+      }
+    };
+  }, []);
 
   const startRecording = useCallback(async () => {
     try {
@@ -24,11 +33,11 @@ export const useRecording = () => {
         setMetering(-160);
 
         // Update duration every second (and metering if possible)
-        durationInterval = setInterval(async () => {
+        durationInterval.current = setInterval(async () => {
           setDuration(prev => prev + 1);
           const status = await audioRecordingService.getRecordingStatus();
           if (status) {
-             setMetering(status.metering);
+            setMetering(status.metering);
           }
         }, 1000);
 
@@ -47,7 +56,7 @@ export const useRecording = () => {
       const success = await audioRecordingService.pauseRecording();
       if (success) {
         setRecordingState('paused');
-        if (durationInterval) clearInterval(durationInterval);
+        if (durationInterval.current) clearInterval(durationInterval.current);
         return true;
       }
       return false;
@@ -63,11 +72,11 @@ export const useRecording = () => {
       const success = await audioRecordingService.resumeRecording();
       if (success) {
         setRecordingState('recording');
-        durationInterval = setInterval(async () => {
+        durationInterval.current = setInterval(async () => {
           setDuration(prev => prev + 1);
-           const status = await audioRecordingService.getRecordingStatus();
+          const status = await audioRecordingService.getRecordingStatus();
           if (status) {
-             setMetering(status.metering);
+            setMetering(status.metering);
           }
         }, 1000);
         return true;
@@ -82,7 +91,7 @@ export const useRecording = () => {
 
   const stopRecording = useCallback(async () => {
     try {
-      if (durationInterval) clearInterval(durationInterval);
+      if (durationInterval.current) clearInterval(durationInterval.current);
       const result = await audioRecordingService.stopRecording();
       setRecordingState('idle');
       setDuration(0);

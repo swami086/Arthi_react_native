@@ -92,7 +92,7 @@ export const MessagesScreen = () => {
                     <FlatList
                         data={filteredConversations}
                         renderItem={renderConversation}
-                        keyExtractor={item => item.otherUserId}
+                        keyExtractor={(item, index) => `${item.otherUserId}-${index}`}
                         contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 10 }}
                         ListFooterComponent={
                             <View className="mt-8 mb-10 items-center flex-row justify-center opacity-60">

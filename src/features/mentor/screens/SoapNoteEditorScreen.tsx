@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView, Alert, ActivityIndicator, Key
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { RootStackParamList } from '../../../navigation/types';
+import { RootStackParamList, RootNavigationProp } from '../../../navigation/types';
 import { useColorScheme } from '../../../hooks/useColorScheme';
 import { useSoapNote } from '../hooks/useSoapNote';
 import SoapSection from '../../../components/SoapSection';
@@ -12,7 +12,7 @@ import * as recordingService from '../../../api/recordingService';
 type SoapNoteEditorRouteProp = RouteProp<RootStackParamList, 'SoapNoteEditor'>;
 
 export default function SoapNoteEditorScreen() {
-    const navigation = useNavigation();
+    const navigation = useNavigation<RootNavigationProp>();
     const route = useRoute<SoapNoteEditorRouteProp>();
     const { soapNoteId, appointmentId, transcriptId } = route.params;
     const { isDark } = useColorScheme();
@@ -40,6 +40,8 @@ export default function SoapNoteEditorScreen() {
     const [autoSaveStatus, setAutoSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
     const [regenerating, setRegenerating] = useState(false);
 
+    const [realSoapNoteId, setRealSoapNoteId] = useState<string | null>(null);
+
     // Load SOAP note
     useEffect(() => {
         const fetchSoapNote = async () => {
@@ -47,32 +49,34 @@ export default function SoapNoteEditorScreen() {
                 // Try to get existing note
                 let note = await recordingService.getSoapNoteByAppointment(appointmentId);
 
-                // If not found, try to generate or use placeholder (for dev)
-                if (!note) {
-                    // For demo purposes, we'll set placeholder data immediately
-                    note = {
-                        id: soapNoteId,
-                        transcript_id: transcriptId || '',
-                        appointment_id: appointmentId,
-                        subjective: "Patient reports feeling 'overwhelmed' by work deadlines. Mentions increased heart rate and difficulty sleeping (4-5 hours/night). Used breathing exercises successfully once.",
-                        objective: "Patient appeared anxious (fidgeting, fast speech) at start of session. Mood improved after discussing coping strategies. Oriented x3. Affect congruent with reported mood.",
-                        assessment: "Generalized Anxiety symptoms exacerbated by work stress. Patient is receptive to CBT techniques and shows ability to apply them. Sleep deprivation may be contributing to symptom severity.",
-                        plan: "1. Continue daily breathing exercises (4-7-8 technique).\n2. Implement 'worry time' technique (15 mins/day).\n3. Sleep hygiene: no screens 1 hour before bed.\n4. Follow up next week.",
-                        is_finalized: false,
-                        edited_by_mentor: false,
-                        created_at: new Date().toISOString(),
-                        updated_at: new Date().toISOString()
-                    };
+                if (note) {
+                    setRealSoapNoteId(note.id);
+                    setSoapData({
+                        subjective: note.subjective || '',
+                        objective: note.objective || '',
+                        assessment: note.assessment || '',
+                        plan: note.plan || ''
+                    });
+                    setIsFinalized(note.is_finalized);
+                } else if (transcriptId) {
+                    // Automatically trigger generation if we have a transcript but no SOAP note
+                    setLoading(true);
+                    const newNote = await generateSoapNote(transcriptId, appointmentId);
+                    if (newNote) {
+                        setRealSoapNoteId(newNote.id);
+                        setSoapData({
+                            subjective: newNote.subjective || '',
+                            objective: newNote.objective || '',
+                            assessment: newNote.assessment || '',
+                            plan: newNote.plan || ''
+                        });
+                        setIsFinalized(newNote.is_finalized);
+                    }
+                } else {
+                    setRealSoapNoteId(null);
                 }
-
-                setSoapData({
-                    subjective: note.subjective,
-                    objective: note.objective,
-                    assessment: note.assessment,
-                    plan: note.plan
-                });
-                setIsFinalized(note.is_finalized);
             } catch (err) {
+                console.error("Error loading/generating SOAP note:", err);
                 Alert.alert("Error", "Failed to load SOAP note");
             } finally {
                 setLoading(false);
@@ -80,22 +84,22 @@ export default function SoapNoteEditorScreen() {
         };
 
         fetchSoapNote();
-    }, [soapNoteId, appointmentId]);
+    }, [appointmentId]);
 
     // Auto-save logic
     useEffect(() => {
-        if (loading || isFinalized) return;
+        if (loading || isFinalized || !realSoapNoteId) return;
 
         const timeoutId = setTimeout(async () => {
-            if (autoSaveStatus === 'saved') return; // Don't save if nothing changed (logic simplified)
+            if (autoSaveStatus === 'saved') return;
 
             setAutoSaveStatus('saving');
-            await saveSoapUpdate(soapNoteId, soapData);
+            await saveSoapUpdate(realSoapNoteId, soapData);
             setAutoSaveStatus('saved');
-        }, 3000); // Auto-save after 3 seconds of inactivity
+        }, 3000);
 
         return () => clearTimeout(timeoutId);
-    }, [soapData]); // Runs whenever soapData changes
+    }, [soapData, realSoapNoteId]);
 
     const handleTextChange = (section: keyof typeof soapData, text: string) => {
         if (isFinalized) return;
@@ -108,10 +112,15 @@ export default function SoapNoteEditorScreen() {
     };
 
     const handleFinalize = async () => {
+        if (!realSoapNoteId) {
+            Alert.alert("Error", "No SOAP note to finalize.");
+            return;
+        }
+
         // Validate
         const sections = ['subjective', 'objective', 'assessment', 'plan'] as const;
         for (const section of sections) {
-            if (soapData[section].length < 10) { // Using 10 chars for simpler testing
+            if (soapData[section].length < 10) {
                 Alert.alert("Validation Error", `Please complete the ${section} section before finalizing.`);
                 setExpandedSections(prev => ({ ...prev, [section]: true }));
                 return;
@@ -127,7 +136,7 @@ export default function SoapNoteEditorScreen() {
                     text: "Finalize",
                     style: 'destructive',
                     onPress: async () => {
-                        const success = await finalize(soapNoteId);
+                        const success = await finalize(realSoapNoteId);
                         if (success) {
                             setIsFinalized(true);
                             Alert.alert("Success", "SOAP note finalized and saved.");
@@ -165,7 +174,7 @@ export default function SoapNoteEditorScreen() {
     };
 
     if (loading) {
-         return (
+        return (
             <View className="flex-1 items-center justify-center bg-white dark:bg-gray-900">
                 <ActivityIndicator size="large" color="#30bae8" />
             </View>
