@@ -25,30 +25,36 @@ export default function ConfirmAppointmentScreen() {
     const [notes, setNotes] = useState('');
     const { loading, createAppointment } = useBookingFlow();
 
+    // Mock price for demonstration - in real app, fetch from mentor profile
+    const sessionPrice = 0; // Set to 500 for paid testing, 0 for free
+
     const handleConfirm = async () => {
         try {
-            const appointment = await createAppointment({
-                mentorId,
-                date: selectedDate,
-                time: selectedTime,
-                endTime: selectedTimeEnd,
-                notes
-            });
+            // In a real implementation, we would create the appointment first and get the ID
+            // Here we simulate the process
 
-            // Check if payment is required
-            if (appointment && (appointment as any).payment_required) {
-                // Navigate to payment screen
+            if (sessionPrice > 0) {
+                // Mock appointment ID
+                const mockAppointmentId = 'temp-id-' + Date.now();
+
                 navigation.navigate('PaymentCheckout', {
-                    appointmentId: (appointment as any).id,
+                    appointmentId: mockAppointmentId,
                     mentorId,
                     mentorName,
                     mentorAvatar,
-                    amount: (appointment as any).price || 0,
+                    amount: sessionPrice,
                     selectedDate,
                     selectedTime
                 });
             } else {
-                // Free session - show success
+                await createAppointment({
+                    mentorId,
+                    date: selectedDate,
+                    time: selectedTime,
+                    endTime: selectedTimeEnd,
+                    notes
+                });
+
                 Alert.alert(
                     "Appointment Confirmed",
                     "Your session has been successfully booked.",
@@ -138,11 +144,22 @@ export default function ConfirmAppointmentScreen() {
                                 <MaterialCommunityIcons name="tag-outline" size={20} color="white" />
                             </View>
                             <View>
-                                <Text className="font-bold text-white text-base">Free Introductory Session</Text>
-                                <Text className="text-white/80 text-xs font-medium">First session is on us!</Text>
+                                {sessionPrice > 0 ? (
+                                    <>
+                                        <Text className="font-bold text-white text-base">Paid Session</Text>
+                                        <Text className="text-white/80 text-xs font-medium">Standard consultation fee</Text>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Text className="font-bold text-white text-base">Free Introductory Session</Text>
+                                        <Text className="text-white/80 text-xs font-medium">First session is on us!</Text>
+                                    </>
+                                )}
                             </View>
                         </View>
-                        <Text className="text-white font-bold text-lg">$0.00</Text>
+                        <Text className="text-white font-bold text-lg">
+                            {sessionPrice > 0 ? `₹${sessionPrice}` : 'Free'}
+                        </Text>
                     </View>
                 </MotiView>
 
@@ -172,11 +189,11 @@ export default function ConfirmAppointmentScreen() {
                 </View>
 
                 <Button
-                    title="Confirm Booking"
+                    title={sessionPrice > 0 ? "Proceed to Pay" : "Confirm Booking"}
                     onPress={handleConfirm}
                     loading={loading}
                     variant="primary"
-                    icon="check"
+                    icon={sessionPrice > 0 ? "credit-card" : "check"}
                     iconPosition="right"
                     className="w-full mb-3 shadow-lg shadow-primary/30"
                 />

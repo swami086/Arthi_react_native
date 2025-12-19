@@ -417,11 +417,8 @@ export interface Database {
                     razorpay_order_id: string | null
                     razorpay_payment_id: string | null
                     razorpay_signature: string | null
-                    upi_transaction_id: string | null
-                    upi_ref_id: string | null
-                    upi_status: string | null
                     status: 'pending' | 'processing' | 'completed' | 'failed' | 'refunded'
-                    payment_method: string | null
+                    payment_method: string
                     platform_fee: number | null
                     mentor_payout: number | null
                     failure_reason: string | null
@@ -439,11 +436,8 @@ export interface Database {
                     razorpay_order_id?: string | null
                     razorpay_payment_id?: string | null
                     razorpay_signature?: string | null
-                    upi_transaction_id?: string | null
-                    upi_ref_id?: string | null
-                    upi_status?: string | null
                     status?: 'pending' | 'processing' | 'completed' | 'failed' | 'refunded'
-                    payment_method?: string | null
+                    payment_method?: string
                     platform_fee?: number | null
                     mentor_payout?: number | null
                     failure_reason?: string | null
@@ -461,55 +455,14 @@ export interface Database {
                     razorpay_order_id?: string | null
                     razorpay_payment_id?: string | null
                     razorpay_signature?: string | null
-                    upi_transaction_id?: string | null
-                    upi_ref_id?: string | null
-                    upi_status?: string | null
                     status?: 'pending' | 'processing' | 'completed' | 'failed' | 'refunded'
-                    payment_method?: string | null
+                    payment_method?: string
                     platform_fee?: number | null
                     mentor_payout?: number | null
                     failure_reason?: string | null
                     metadata?: Json | null
                     created_at?: string
                     updated_at?: string
-                }
-            }
-            payment_splits: {
-                Row: {
-                    id: string
-                    payment_id: string
-                    recipient_type: string
-                    recipient_id: string | null
-                    amount: number
-                    percentage: number | null
-                    razorpay_transfer_id: string | null
-                    status: string
-                    processed_at: string | null
-                    created_at: string
-                }
-                Insert: {
-                    id?: string
-                    payment_id: string
-                    recipient_type: string
-                    recipient_id?: string | null
-                    amount: number
-                    percentage?: number | null
-                    razorpay_transfer_id?: string | null
-                    status?: string
-                    processed_at?: string | null
-                    created_at?: string
-                }
-                Update: {
-                    id?: string
-                    payment_id?: string
-                    recipient_type?: string
-                    recipient_id?: string | null
-                    amount?: number
-                    percentage?: number | null
-                    razorpay_transfer_id?: string | null
-                    status?: string
-                    processed_at?: string | null
-                    created_at?: string
                 }
             }
             video_rooms: {
@@ -647,7 +600,6 @@ export type MenteeReferral = Tables<'mentee_referrals'>
 export type MenteeInvitation = Tables<'mentee_invitations'>
 export type AdminAction = Tables<'admin_actions'>
 export type Payment = Tables<'payments'>
-export type PaymentSplit = Tables<'payment_splits'>
 export type VideoRoom = Tables<'video_rooms'>
 export type WhatsAppMessage = Tables<'whatsapp_messages'>
 

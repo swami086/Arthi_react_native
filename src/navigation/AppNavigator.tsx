@@ -40,6 +40,16 @@ import { ReferralManagementScreen } from '../features/mentor/screens/ReferralMan
 import { MenteeOnboardingScreen } from '../features/mentor/screens/MenteeOnboardingScreen';
 import { PendingMentorRequestsScreen } from '../features/profile/screens/PendingMentorRequestsScreen';
 
+// Payment & Video Screens
+import { PaymentCheckoutScreen } from '../features/appointments/screens/PaymentCheckoutScreen';
+import { UPIPaymentProcessingScreen } from '../features/appointments/screens/UPIPaymentProcessingScreen';
+import { PaymentSuccessScreen } from '../features/appointments/screens/PaymentSuccessScreen';
+import { PaymentHistoryScreen } from '../features/appointments/screens/PaymentHistoryScreen';
+import { VideoCallWaitingRoomScreen } from '../features/appointments/screens/VideoCallWaitingRoomScreen';
+import { VideoCallScreen } from '../features/appointments/screens/VideoCallScreen';
+import { PostSessionFeedbackScreen } from '../features/appointments/screens/PostSessionFeedbackScreen';
+import { MentorPaymentDashboardScreen } from '../features/mentor/screens/MentorPaymentDashboardScreen';
+
 const Stack = createStackNavigator<RootStackParamList>();
 
 // Define custom transition spec
@@ -205,6 +215,40 @@ export const AppNavigator = () => {
                         <Stack.Screen name="ReferralsManagement" component={ReferralManagementScreen} />
                         <Stack.Screen name="MenteeOnboarding" component={MenteeOnboardingScreen} />
                         <Stack.Screen name="PendingMentorRequests" component={PendingMentorRequestsScreen} />
+
+                        {/* Payment & Video Flow */}
+                        <Stack.Screen name="PaymentCheckout" component={PaymentCheckoutScreen} />
+                        <Stack.Screen
+                            name="UPIPaymentProcessing"
+                            component={UPIPaymentProcessingScreen}
+                            options={{ gestureEnabled: false, headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="PaymentSuccess"
+                            component={PaymentSuccessScreen}
+                            options={{ gestureEnabled: false, headerShown: false }}
+                        />
+                        <Stack.Screen name="PaymentHistory" component={PaymentHistoryScreen} />
+
+                        {/* Video Call Flow */}
+                        <Stack.Screen
+                            name="VideoCallWaitingRoom"
+                            component={VideoCallWaitingRoomScreen}
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="VideoCall"
+                            component={VideoCallScreen}
+                            options={{ headerShown: false, gestureEnabled: false }}
+                        />
+                        <Stack.Screen
+                            name="PostSessionFeedback"
+                            component={PostSessionFeedbackScreen}
+                            options={{ gestureEnabled: false }}
+                        />
+
+                        {/* Mentor Earnings */}
+                        <Stack.Screen name="MentorPaymentDashboard" component={MentorPaymentDashboardScreen} />
                     </>
                 ) : (
                     <>

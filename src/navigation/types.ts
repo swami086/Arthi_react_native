@@ -51,6 +51,41 @@ export type RootStackParamList = {
     ChooseTime: { mentorId: string; mentorName: string; mentorAvatar?: string; selectedDate: string; selectedTime?: string; selectedTimeEnd?: string };
     ConfirmAppointment: { mentorId: string; mentorName: string; mentorAvatar?: string; selectedDate: string; selectedTime: string; selectedTimeEnd: string; notes?: string };
 
+    // Payment Flow
+    PaymentCheckout: {
+        appointmentId: string;
+        mentorId: string;
+        mentorName: string;
+        mentorAvatar?: string;
+        amount: number;
+        selectedDate: string;
+        selectedTime: string;
+    };
+    UPIPaymentProcessing: {
+        paymentId: string;
+        appointmentId: string;
+    };
+    PaymentSuccess: {
+        paymentId: string;
+        appointmentId: string;
+    };
+    PaymentHistory: undefined;
+
+    // Video Call Flow
+    VideoCallWaitingRoom: {
+        appointmentId: string;
+        roomId: string;
+    };
+    VideoCall: {
+        appointmentId: string;
+        roomId: string;
+        token: string;
+    };
+    PostSessionFeedback: {
+        appointmentId: string;
+        mentorId?: string;
+    };
+
     // Shared
     ChatDetail: { otherUserId: string; otherUserName: string };
     Settings: undefined;
@@ -90,43 +125,6 @@ export type RootStackParamList = {
     ReferMentee: { menteeId: string };
     ReferralsManagement: undefined;
     MenteeOnboarding: { menteeId?: string };
-
-    // Payment Flow
-    PaymentCheckout: {
-        appointmentId: string;
-        mentorId: string;
-        mentorName: string;
-        mentorAvatar?: string;
-        amount: number;
-        selectedDate: string;
-        selectedTime: string;
-    };
-    PaymentProcessing: {
-        orderId: string;
-        appointmentId: string;
-    };
-    PaymentSuccess: {
-        paymentId: string;
-        appointmentId: string;
-    };
-    PaymentHistory: undefined;
-
-    // Video Call Flow
-    VideoCallWaitingRoom: {
-        appointmentId: string;
-        roomId: string;
-    };
-    VideoCall: {
-        appointmentId: string;
-        roomId: string;
-        token: string;
-    };
-    PostSessionFeedback: {
-        appointmentId: string;
-        mentorId: string;
-    };
-
-    // Mentor Earnings
     MentorPaymentDashboard: undefined;
 };
 
