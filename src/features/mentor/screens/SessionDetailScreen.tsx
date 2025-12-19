@@ -10,6 +10,15 @@ import { GradientAvatar } from '../../../components/GradientAvatar';
 import { updateAppointmentStatus } from '../../../api/mentorService';
 import { useColorScheme } from '../../../hooks/useColorScheme';
 
+// AI Scribe Imports
+import { useRecording } from '../hooks/useRecording';
+import { useTranscription } from '../hooks/useTranscription';
+import { useSoapNote } from '../hooks/useSoapNote';
+import ConsentCheckbox from '../components/ConsentCheckbox';
+import RecordingControls from '../components/RecordingControls';
+import ProcessingProgress from '../components/ProcessingProgress';
+import RecordingConsentModal from '../components/RecordingConsentModal';
+
 type SessionDetailRouteProp = RouteProp<RootStackParamList, 'SessionDetail'>;
 
 export default function SessionDetailScreen() {
@@ -22,6 +31,81 @@ export default function SessionDetailScreen() {
     const [loading, setLoading] = useState(true);
     const [notes, setNotes] = useState('');
     const [saving, setSaving] = useState(false);
+
+    // AI Scribe State
+    const [consentGiven, setConsentGiven] = useState(false);
+    const [showConsentModal, setShowConsentModal] = useState(false);
+    const [processingStep, setProcessingStep] = useState<'uploading' | 'transcribing' | 'generating' | 'completed'>('uploading');
+    const [processingProgress, setProcessingProgress] = useState(0);
+    const [transcriptId, setTranscriptId] = useState<string | null>(null);
+    const [soapNoteId, setSoapNoteId] = useState<string | null>(null);
+
+    // AI Scribe Hooks
+    const {
+        startRecording,
+        pauseRecording,
+        resumeRecording,
+        stopRecording,
+        recordingState,
+        duration,
+        metering,
+        error: recordingError
+    } = useRecording();
+
+    const {
+        triggerTranscription,
+        isProcessing: isTranscribing,
+        error: transcriptionError
+    } = useTranscription();
+
+    const {
+        generateSoapNote,
+        isGenerating: isGeneratingSoap,
+        error: soapError
+    } = useSoapNote();
+
+    useEffect(() => {
+        if (recordingError) Alert.alert('Recording Error', recordingError);
+        if (transcriptionError) Alert.alert('Transcription Error', transcriptionError);
+        if (soapError) Alert.alert('SOAP Generation Error', soapError);
+    }, [recordingError, transcriptionError, soapError]);
+
+    const handleStopRecording = async () => {
+        const result = await stopRecording();
+        if (result && result.uri) {
+            // Start processing workflow
+            setProcessingStep('uploading');
+            setProcessingProgress(0);
+
+            // Simulate upload progress
+            const interval = setInterval(() => {
+                setProcessingProgress(prev => Math.min(prev + 10, 30));
+            }, 500);
+
+            // 1. Upload (Placeholder - integrated in next steps usually, but we mock it here)
+            // In a real app, we'd upload to Supabase Storage here
+            setTimeout(async () => {
+                clearInterval(interval);
+                setProcessingProgress(33);
+                setProcessingStep('transcribing');
+
+                // 2. Transcribe
+                const mockRecordingId = `rec_${Date.now()}`; // This would come from upload response
+                await triggerTranscription(mockRecordingId);
+                setProcessingProgress(66);
+                setProcessingStep('generating');
+                setTranscriptId(`trans_${Date.now()}`); // Mock transcript ID
+
+                // 3. Generate SOAP Note
+                await generateSoapNote(`trans_${Date.now()}`, appointmentId);
+                setProcessingProgress(100);
+                setProcessingStep('completed');
+                setSoapNoteId(`soap_${Date.now()}`); // Mock SOAP note ID
+
+                Alert.alert('Success', 'Session processed successfully! You can now view the transcript and SOAP note.');
+            }, 2000);
+        }
+    };
 
     useEffect(() => {
         if (!appointmentId) return;
@@ -141,6 +225,109 @@ export default function SessionDetailScreen() {
                             </TouchableOpacity>
                         </View>
                     )}
+
+                    {/* AI Scribe Section */}
+                    <View className="px-6 mb-8">
+                        <View className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                            {/* Header */}
+                            <View className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-800 p-4 border-b border-gray-100 dark:border-gray-700 flex-row justify-between items-center">
+                                <View className="flex-row items-center">
+                                    <View className="bg-blue-100 dark:bg-blue-900/40 p-2 rounded-lg mr-3">
+                                        <MaterialCommunityIcons name="robot" size={20} color="#3b82f6" />
+                                    </View>
+                                    <View>
+                                        <Text className="font-bold text-slate-800 dark:text-white text-base">AI Scribe</Text>
+                                        <Text className="text-xs text-slate-500 dark:text-slate-400">Automated documentation</Text>
+                                    </View>
+                                </View>
+                                <TouchableOpacity onPress={() => setShowConsentModal(true)}>
+                                    <MaterialCommunityIcons name="information-outline" size={22} color={isDark ? '#94a3b8' : '#64748b'} />
+                                </TouchableOpacity>
+                            </View>
+
+                            {/* Content */}
+                            <View className="p-4">
+                                {processingStep !== 'completed' && recordingState === 'idle' && !soapNoteId && (
+                                    <>
+                                        <View className="bg-amber-50 dark:bg-amber-900/20 p-3 rounded-lg mb-4 border border-amber-100 dark:border-amber-800/50">
+                                            <Text className="text-xs text-amber-800 dark:text-amber-200 leading-4">
+                                                Record your session to automatically generate a transcript and SOAP note. Requires patient consent.
+                                            </Text>
+                                        </View>
+
+                                        <ConsentCheckbox
+                                            checked={consentGiven}
+                                            onChange={setConsentGiven}
+                                            label="I have obtained verbal consent from the patient to record this session for clinical documentation purposes."
+                                        />
+                                    </>
+                                )}
+
+                                {(consentGiven || recordingState !== 'idle' || soapNoteId) && !soapNoteId && (
+                                    <RecordingControls
+                                        recordingState={recordingState}
+                                        duration={duration}
+                                        onStart={startRecording}
+                                        onPause={pauseRecording}
+                                        onResume={resumeRecording}
+                                        onStop={handleStopRecording}
+                                        metering={metering}
+                                    />
+                                )}
+
+                                {(processingStep !== 'uploading' || processingProgress > 0) && !soapNoteId && (
+                                    <ProcessingProgress
+                                        progress={processingProgress}
+                                        status={processingStep}
+                                    />
+                                )}
+
+                                {soapNoteId && (
+                                    <View className="items-center py-2">
+                                        <View className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full items-center justify-center mb-3">
+                                            <MaterialCommunityIcons name="check-circle" size={32} color="#10b981" />
+                                        </View>
+                                        <Text className="text-lg font-bold text-slate-800 dark:text-white mb-1">
+                                            Session Processed
+                                        </Text>
+                                        <Text className="text-slate-500 dark:text-slate-400 text-center text-sm mb-4">
+                                            Transcript and SOAP note are ready for review.
+                                        </Text>
+
+                                        <View className="flex-row w-full space-x-3">
+                                            <TouchableOpacity
+                                                className="flex-1 bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 py-3 rounded-xl flex-row justify-center items-center"
+                                                onPress={() => navigation.navigate('TranscriptViewer', {
+                                                    transcriptId: transcriptId!,
+                                                    appointmentId
+                                                })}
+                                            >
+                                                <MaterialCommunityIcons name="text-box-outline" size={20} color={isDark ? '#e2e8f0' : '#475569'} className="mr-2" />
+                                                <Text className="font-semibold text-slate-700 dark:text-slate-200">Transcript</Text>
+                                            </TouchableOpacity>
+
+                                            <TouchableOpacity
+                                                className="flex-1 bg-primary-500 py-3 rounded-xl flex-row justify-center items-center shadow-md"
+                                                onPress={() => navigation.navigate('SoapNoteEditor', {
+                                                    soapNoteId: soapNoteId!,
+                                                    appointmentId,
+                                                    transcriptId: transcriptId!
+                                                })}
+                                            >
+                                                <MaterialCommunityIcons name="file-document-edit-outline" size={20} color="white" className="mr-2" />
+                                                <Text className="font-bold text-white">SOAP Note</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                )}
+                            </View>
+                        </View>
+                    </View>
+
+                    <RecordingConsentModal
+                        visible={showConsentModal}
+                        onClose={() => setShowConsentModal(false)}
+                    />
 
                     {/* Notes Section */}
                     <View className="px-6 mb-6">

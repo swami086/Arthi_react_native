@@ -61,6 +61,17 @@ export type RootStackParamList = {
     AddNote: { menteeId: string };
     AddGoal: { menteeId: string };
 
+    // Recording & SOAP Note Screens
+    TranscriptViewer: {
+      transcriptId: string;
+      appointmentId?: string;
+    };
+    SoapNoteEditor: {
+      soapNoteId: string;
+      appointmentId: string;
+      transcriptId?: string;
+    };
+
     // Admin Screens
     PendingApproval: undefined; // For pending message
     PendingApprovals: undefined; // Admin list
