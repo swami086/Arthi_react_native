@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, RefreshControl, Image } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, RefreshControl, Image, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Appointment } from '../../../api/types';
 import { useAppointments } from '../hooks/useAppointments';
@@ -13,7 +13,7 @@ import { useColorScheme } from '../../../hooks/useColorScheme';
 
 export const AppointmentsScreen = () => {
     const { appointments, loading, error, refetch: refreshAppointments } = useAppointments();
-    const navigation = useNavigation<MainTabCompositeProp>();
+    const navigation = useNavigation<any>();
     const { isDark } = useColorScheme();
     const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
 
@@ -42,6 +42,34 @@ export const AppointmentsScreen = () => {
             case 'pending': return isDark ? 'rgba(245, 158, 11, 0.2)' : '#FFFBEB';
             case 'cancelled': return isDark ? 'rgba(239, 68, 68, 0.2)' : '#FEF2F2';
             default: return isDark ? 'rgba(48, 186, 232, 0.2)' : '#F0F9FF';
+        }
+    };
+
+    const handleJoinSession = async (appointment: Appointment) => {
+        try {
+            // Check for payment if required
+            if (appointment.payment_required && appointment.payment_status !== 'paid') {
+                navigation.navigate('PaymentCheckout', {
+                    appointmentId: appointment.id,
+                    mentorId: appointment.mentor_id,
+                    mentorName: 'Mentor', // Ideally fetch from profile
+                    amount: appointment.price || 0,
+                    selectedDate: appointment.start_time,
+                    selectedTime: new Date(appointment.start_time).toLocaleTimeString()
+                });
+                return;
+            }
+
+            // Navigate to waiting room
+            // In a real scenario, fetch room ID from DB or service
+            const roomId = appointment.video_room_id || `room-${appointment.id}`;
+
+            navigation.navigate('VideoCallWaitingRoom', {
+                appointmentId: appointment.id,
+                roomId
+            });
+        } catch (error) {
+            Alert.alert('Error', 'Failed to join session. Please try again.');
         }
     };
 
@@ -130,7 +158,10 @@ export const AppointmentsScreen = () => {
                                     <Text className="text-red-600 dark:text-red-400 font-bold text-sm ml-1">Cancel</Text>
                                 </TouchableOpacity>
                             </View>
-                            <TouchableOpacity className="bg-primary py-3 rounded-xl items-center shadow-md shadow-primary/20 flex-row justify-center">
+                            <TouchableOpacity
+                                className="bg-primary py-3 rounded-xl items-center shadow-md shadow-primary/20 flex-row justify-center"
+                                onPress={() => handleJoinSession(item)}
+                            >
                                 <MaterialCommunityIcons name="video" size={18} color="white" style={{ marginRight: 6 }} />
                                 <Text className="text-white font-bold text-sm">Join Session</Text>
                             </TouchableOpacity>

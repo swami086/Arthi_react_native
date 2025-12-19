@@ -235,6 +235,10 @@ export interface Database {
                     meeting_link: string | null
                     feedback: string | null
                     created_at: string
+                    price: number
+                    payment_required: boolean
+                    payment_status: string
+                    video_room_id: string | null
                 }
                 Insert: {
                     id?: string
@@ -247,6 +251,10 @@ export interface Database {
                     meeting_link?: string | null
                     feedback?: string | null
                     created_at?: string
+                    price?: number
+                    payment_required?: boolean
+                    payment_status?: string
+                    video_room_id?: string | null
                 }
                 Update: {
                     id?: string
@@ -259,6 +267,10 @@ export interface Database {
                     meeting_link?: string | null
                     feedback?: string | null
                     created_at?: string
+                    price?: number
+                    payment_required?: boolean
+                    payment_status?: string
+                    video_room_id?: string | null
                 }
             }
             messages: {
@@ -394,6 +406,180 @@ export interface Database {
                     updated_at?: string
                 }
             }
+            payments: {
+                Row: {
+                    id: string
+                    appointment_id: string
+                    mentee_id: string
+                    mentor_id: string
+                    amount: number
+                    currency: string
+                    razorpay_order_id: string | null
+                    razorpay_payment_id: string | null
+                    razorpay_signature: string | null
+                    status: 'pending' | 'processing' | 'completed' | 'failed' | 'refunded'
+                    payment_method: string
+                    platform_fee: number | null
+                    mentor_payout: number | null
+                    failure_reason: string | null
+                    metadata: Json | null
+                    created_at: string
+                    updated_at: string
+                }
+                Insert: {
+                    id?: string
+                    appointment_id: string
+                    mentee_id: string
+                    mentor_id: string
+                    amount: number
+                    currency?: string
+                    razorpay_order_id?: string | null
+                    razorpay_payment_id?: string | null
+                    razorpay_signature?: string | null
+                    status?: 'pending' | 'processing' | 'completed' | 'failed' | 'refunded'
+                    payment_method?: string
+                    platform_fee?: number | null
+                    mentor_payout?: number | null
+                    failure_reason?: string | null
+                    metadata?: Json | null
+                    created_at?: string
+                    updated_at?: string
+                }
+                Update: {
+                    id?: string
+                    appointment_id?: string
+                    mentee_id?: string
+                    mentor_id?: string
+                    amount?: number
+                    currency?: string
+                    razorpay_order_id?: string | null
+                    razorpay_payment_id?: string | null
+                    razorpay_signature?: string | null
+                    status?: 'pending' | 'processing' | 'completed' | 'failed' | 'refunded'
+                    payment_method?: string
+                    platform_fee?: number | null
+                    mentor_payout?: number | null
+                    failure_reason?: string | null
+                    metadata?: Json | null
+                    created_at?: string
+                    updated_at?: string
+                }
+            }
+            video_rooms: {
+                Row: {
+                    id: string
+                    appointment_id: string
+                    room_name: string
+                    room_url: string
+                    provider: 'daily' | 'agora'
+                    daily_room_id: string | null
+                    mentor_token: string | null
+                    mentee_token: string | null
+                    status: 'created' | 'active' | 'ended'
+                    started_at: string | null
+                    ended_at: string | null
+                    duration_minutes: number | null
+                    recording_enabled: boolean
+                    recording_url: string | null
+                    metadata: Json | null
+                    created_at: string
+                    updated_at: string
+                }
+                Insert: {
+                    id?: string
+                    appointment_id: string
+                    room_name: string
+                    room_url: string
+                    provider?: 'daily' | 'agora'
+                    daily_room_id?: string | null
+                    mentor_token?: string | null
+                    mentee_token?: string | null
+                    status?: 'created' | 'active' | 'ended'
+                    started_at?: string | null
+                    ended_at?: string | null
+                    duration_minutes?: number | null
+                    recording_enabled?: boolean
+                    recording_url?: string | null
+                    metadata?: Json | null
+                    created_at?: string
+                    updated_at?: string
+                }
+                Update: {
+                    id?: string
+                    appointment_id?: string
+                    room_name?: string
+                    room_url?: string
+                    provider?: 'daily' | 'agora'
+                    daily_room_id?: string | null
+                    mentor_token?: string | null
+                    mentee_token?: string | null
+                    status?: 'created' | 'active' | 'ended'
+                    started_at?: string | null
+                    ended_at?: string | null
+                    duration_minutes?: number | null
+                    recording_enabled?: boolean
+                    recording_url?: string | null
+                    metadata?: Json | null
+                    created_at?: string
+                    updated_at?: string
+                }
+            }
+            whatsapp_messages: {
+                Row: {
+                    id: string
+                    appointment_id: string | null
+                    recipient_id: string
+                    phone_number: string
+                    message_type: 'confirmation' | 'reminder' | 'cancellation' | 'booking_link'
+                    template_name: string | null
+                    message_content: string | null
+                    whatsapp_message_id: string | null
+                    provider: 'twilio' | 'gupshup' | 'messagebird'
+                    status: 'pending' | 'sent' | 'delivered' | 'read' | 'failed'
+                    sent_at: string | null
+                    delivered_at: string | null
+                    read_at: string | null
+                    failure_reason: string | null
+                    metadata: Json | null
+                    created_at: string
+                }
+                Insert: {
+                    id?: string
+                    appointment_id?: string | null
+                    recipient_id: string
+                    phone_number: string
+                    message_type: 'confirmation' | 'reminder' | 'cancellation' | 'booking_link'
+                    template_name?: string | null
+                    message_content?: string | null
+                    whatsapp_message_id?: string | null
+                    provider?: 'twilio' | 'gupshup' | 'messagebird'
+                    status?: 'pending' | 'sent' | 'delivered' | 'read' | 'failed'
+                    sent_at?: string | null
+                    delivered_at?: string | null
+                    read_at?: string | null
+                    failure_reason?: string | null
+                    metadata?: Json | null
+                    created_at?: string
+                }
+                Update: {
+                    id?: string
+                    appointment_id?: string | null
+                    recipient_id?: string
+                    phone_number?: string
+                    message_type?: 'confirmation' | 'reminder' | 'cancellation' | 'booking_link'
+                    template_name?: string | null
+                    message_content?: string | null
+                    whatsapp_message_id?: string | null
+                    provider?: 'twilio' | 'gupshup' | 'messagebird'
+                    status?: 'pending' | 'sent' | 'delivered' | 'read' | 'failed'
+                    sent_at?: string | null
+                    delivered_at?: string | null
+                    read_at?: string | null
+                    failure_reason?: string | null
+                    metadata?: Json | null
+                    created_at?: string
+                }
+            }
         }
     }
 }
@@ -413,6 +599,9 @@ export type MentorMenteeRelationship = Tables<'mentor_mentee_relationships'>
 export type MenteeReferral = Tables<'mentee_referrals'>
 export type MenteeInvitation = Tables<'mentee_invitations'>
 export type AdminAction = Tables<'admin_actions'>
+export type Payment = Tables<'payments'>
+export type VideoRoom = Tables<'video_rooms'>
+export type WhatsAppMessage = Tables<'whatsapp_messages'>
 
 export type MentorStats = {
     total_mentees: number

@@ -62,6 +62,7 @@ export default function MentorHomeScreen() {
     const handleMessage = () => navigation.navigate('Mentees');
     const handleResources = () => alert('Resources feature coming soon!');
     const handleNotes = () => navigation.navigate('Mentees');
+    const handleEarnings = () => navigation.navigate('MentorPaymentDashboard');
 
     return (
         <View className="flex-1 bg-gray-50 dark:bg-background-dark">
@@ -132,6 +133,7 @@ export default function MentorHomeScreen() {
                             <ScrollView horizontal showsHorizontalScrollIndicator={false} className="pl-1">
                                 <QuickActionButton icon="account-plus" label="Add Mentee" color={isDark ? "#0EA5E9" : "#30bae8"} onPress={handleFindMentee} />
                                 <QuickActionButton icon="calendar-plus" label="Add Session" color={isDark ? "#7C3AED" : "#8B5CF6"} onPress={handleAddSession} />
+                                <QuickActionButton icon="cash-multiple" label="Earnings" color={isDark ? "#10B981" : "#059669"} onPress={handleEarnings} />
                                 <QuickActionButton icon="message-text" label="Message" color={isDark ? "#D97706" : "#F59E0B"} onPress={handleMessage} />
                                 <QuickActionButton icon="notebook" label="Notes" color={isDark ? "#059669" : "#10B981"} onPress={handleNotes} />
                                 <QuickActionButton icon="book-open-page-variant" label="Resources" color={isDark ? "#DB2777" : "#EC4899"} onPress={handleResources} />
