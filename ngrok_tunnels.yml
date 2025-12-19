@@ -1,0 +1,11 @@
+version: "2"
+authtoken: 36Gzv9o2xysgESsuhERXJftPwTv_3qqrULXdQ7vvYS2zRMCeF
+tunnels:
+  swami_cursor:
+    proto: http
+    addr: 8765
+    domain: equirotal-elbert-unproblematically.ngrok-free.dev
+  swami_mcp:
+    proto: http
+    addr: 27495
+    domain: swami-mcp-access.ngrok.app

@@ -44,6 +44,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [profile, setProfile] = useState<Profile | null>(null);
     const [role, setRole] = useState<'mentor' | 'mentee' | 'admin' | null>(null);
     const [loading, setLoading] = useState(true);
+    const processingUserId = React.useRef<string | null>(null);
 
     const isAdmin = role === 'admin';
     const isSuperAdmin = !!profile?.is_super_admin;
@@ -51,16 +52,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const isMentee = role === 'mentee';
 
     const fetchProfile = async (userId: string) => {
+        console.log('fetchProfile: fetching for', userId);
         const { data, error } = await supabase
             .from('profiles')
             .select('*')
             .eq('user_id', userId)
             .single();
 
+        if (error) {
+            console.error('fetchProfile: error', error);
+        }
+
         if (data && !error) {
+            console.log('fetchProfile: success', data.role);
             setProfile(data as Profile);
             setRole(data.role as any);
-            await AsyncStorage.setItem('userRole', data.role);
+            try {
+                await AsyncStorage.setItem('userRole', data.role);
+            } catch (storageError) {
+                console.error('fetchProfile: storage error', storageError);
+            }
         }
         return data as Profile;
     };
@@ -83,38 +94,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const checkAndCreateProfile = async (session: Session) => {
-        console.log('checkAndCreateProfile: start', session?.user?.id);
-        if (!session?.user) return;
-
-        const currentProfile = await fetchProfile(session.user.id);
-        console.log('checkAndCreateProfile: fetched profile', !!currentProfile);
-
-        if (!currentProfile) {
-            console.log('checkAndCreateProfile: creating profile...');
-            // Profile doesn't exist, create it
-            // Default to mentee if not specified in metadata
-            const role = session.user.user_metadata.role || 'mentee';
-            const approvalStatus = role === 'mentor' ? 'pending' : null;
-
-            const { error: insertError } = await supabase
-                .from('profiles')
-                .insert({
-                    user_id: session.user.id,
-                    role: role,
-                    full_name: session.user.user_metadata.full_name || session.user.email?.split('@')[0],
-                    avatar_url: session.user.user_metadata.avatar_url,
-                    approval_status: approvalStatus,
-                    created_at: new Date().toISOString(),
-                });
-
-            if (insertError) {
-                console.error('Error creating profile for Google user:', insertError);
-            } else {
-                console.log('checkAndCreateProfile: profile created, fetching...');
-                await fetchProfile(session.user.id);
-            }
+        if (!session?.user || processingUserId.current === session.user.id) {
+            console.log('checkAndCreateProfile: already processing or no user', session?.user?.id);
+            return;
         }
-        console.log('checkAndCreateProfile: done');
+
+        try {
+            processingUserId.current = session.user.id;
+            console.log('checkAndCreateProfile: start', session.user.id);
+
+            const currentProfile = await fetchProfile(session.user.id);
+            console.log('checkAndCreateProfile: fetched profile', !!currentProfile);
+
+            if (!currentProfile) {
+                console.log('checkAndCreateProfile: creating profile...');
+                // ... (rest of logic)
+                const role = session.user.user_metadata.role || 'mentee';
+                const approvalStatus = role === 'mentor' ? 'pending' : null;
+
+                const { error: insertError } = await supabase
+                    .from('profiles')
+                    .insert({
+                        user_id: session.user.id,
+                        role: role,
+                        full_name: session.user.user_metadata.full_name || session.user.email?.split('@')[0],
+                        avatar_url: session.user.user_metadata.avatar_url,
+                        approval_status: approvalStatus,
+                        created_at: new Date().toISOString(),
+                    });
+
+                if (insertError) {
+                    console.error('Error creating profile for Google user:', insertError);
+                } else {
+                    console.log('checkAndCreateProfile: profile created, fetching...');
+                    await fetchProfile(session.user.id);
+                }
+            }
+        } finally {
+            processingUserId.current = null;
+            console.log('checkAndCreateProfile: done', session.user.id);
+        }
     };
 
     useEffect(() => {
@@ -125,9 +144,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
             try {
                 if (session?.user) {
-                    // Timeout checkAndCreateProfile to prevent infinite hanging (e.g., 10s)
+                    // Increased timeout to 30s for slower connections
                     const profilePromise = checkAndCreateProfile(session);
-                    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Profile check timed out')), 10000));
+                    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Profile check timed out (30s)')), 30000));
                     await Promise.race([profilePromise, timeoutPromise]);
                 } else {
                     setProfile(null);
@@ -149,9 +168,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setUser(session?.user ?? null);
             try {
                 if (session?.user) {
-                    // Timeout checkAndCreateProfile
+                    // Increased timeout to 30s
                     const profilePromise = checkAndCreateProfile(session);
-                    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Profile check timed out')), 10000));
+                    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Profile check timed out (30s)')), 30000));
                     await Promise.race([profilePromise, timeoutPromise]);
                 }
             } catch (error) {

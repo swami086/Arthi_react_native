@@ -56,14 +56,14 @@ export default function MenteesScreen() {
     ), []);
 
     return (
-        <View className="flex-1 bg-gray-50 dark:bg-background-dark">
+        <View key={isDark ? 'dark' : 'light'} className="flex-1 bg-background-light dark:bg-background-dark">
             <SafeAreaView className="flex-1" edges={['top']}>
                 <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
-                <View className="px-6 py-4 flex-row justify-between items-center bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+                <View className="px-6 py-4 flex-row justify-between items-center bg-surface-light dark:bg-surface-dark border-b border-gray-100 dark:border-gray-800">
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <MaterialCommunityIcons name="arrow-left" size={24} color={isDark ? "#fff" : "#333"} />
                     </TouchableOpacity>
-                    <Text className="text-xl font-bold text-gray-900 dark:text-white">My Mentees</Text>
+                    <Text className="text-xl font-bold text-text-main-light dark:text-text-main-dark">My Mentees</Text>
                     <TouchableOpacity>
                         <MaterialCommunityIcons name="magnify" size={24} color={isDark ? "#fff" : "#333"} />
                     </TouchableOpacity>
@@ -78,10 +78,10 @@ export default function MenteesScreen() {
                 )}
 
                 <View className="px-6 py-4">
-                    <View className="bg-white dark:bg-gray-800 p-3 rounded-xl flex-row items-center border border-gray-200 dark:border-gray-700 mb-4">
+                    <View className="bg-surface-light dark:bg-gray-800 p-3 rounded-xl flex-row items-center border border-gray-200 dark:border-gray-700 mb-4">
                         <MaterialCommunityIcons name="magnify" size={20} color={isDark ? "#9CA3AF" : "#9CA3AF"} />
                         <TextInput
-                            className="flex-1 ml-2 text-gray-900 dark:text-white"
+                            className="flex-1 ml-2 text-text-main-light dark:text-text-main-dark"
                             placeholder="Search mentees..."
                             placeholderTextColor={isDark ? "#6B7280" : "#9CA3AF"}
                             value={searchQuery}

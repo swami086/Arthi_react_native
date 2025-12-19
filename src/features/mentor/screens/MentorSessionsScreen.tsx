@@ -14,10 +14,12 @@ import { AddSessionModal } from './AddSessionModal';
 import Icon from 'react-native-vector-icons/Feather';
 import { useAuth } from '../../auth/context/AuthContext';
 import { TouchableOpacity } from 'react-native';
+import { useColorScheme } from '../../../hooks/useColorScheme';
 
 export default function MentorSessionsScreen() {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const { user } = useAuth();
+    const { isDark } = useColorScheme();
     const { appointments, loading, error, refetch } = useAppointments();
     const [filter, setFilter] = useState('All');
     const [showAddModal, setShowAddModal] = useState(false);
@@ -38,11 +40,11 @@ export default function MentorSessionsScreen() {
     ];
 
     return (
-        <View className="flex-1 bg-gray-50">
+        <View key={isDark ? 'dark' : 'light'} className="flex-1 bg-background-light dark:bg-background-dark">
             <SafeAreaView className="flex-1" edges={['top']}>
-                <StatusBar barStyle="dark-content" />
-                <View className="px-6 py-4 bg-white border-b border-gray-100">
-                    <Text className="text-xl font-bold text-gray-900 mb-4">Sessions</Text>
+                <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
+                <View className="px-6 py-4 bg-surface-light dark:bg-surface-dark border-b border-gray-100 dark:border-gray-800">
+                    <Text className="text-xl font-bold text-text-main-light dark:text-text-main-dark mb-4">Sessions</Text>
                     <View className="flex-row gap-2">
                         <FilterChip label="All" isSelected={filter === 'All'} onPress={() => setFilter('All')} />
                         <FilterChip label="Upcoming" isSelected={filter === 'Upcoming'} onPress={() => setFilter('Upcoming')} />
@@ -71,7 +73,11 @@ export default function MentorSessionsScreen() {
                             sections={sections}
                             keyExtractor={(item, index) => `${item.id}-${index}`}
                             renderSectionHeader={({ section: { title, data } }) => (
-                                data.length > 0 ? <Text className="px-6 py-2 text-gray-500 font-bold bg-gray-50">{title}</Text> : null
+                                data.length > 0 ? (
+                                    <Text className="px-6 py-2 text-text-sub-light dark:text-text-sub-dark font-bold bg-background-light dark:bg-background-dark">
+                                        {title}
+                                    </Text>
+                                ) : null
                             )}
                             renderItem={({ item }) => (
                                 <View className="px-6 py-1">

@@ -8,7 +8,12 @@ import { Input } from '../../../components/Input';
 import { supabase } from '../../../api/supabase';
 import { pickImage, uploadImageToSupabase } from '../../../utils/imageUpload';
 
+import { useNavigation } from '@react-navigation/native';
+import { useColorScheme } from '../../../hooks/useColorScheme';
+
 export const MentorProfileScreen = () => {
+    const navigation = useNavigation<any>();
+    const { isDark } = useColorScheme();
     const { user, profile, refreshProfile, signOut } = useAuth();
     // Removed isEditing state, fields are always editable
     const [bio, setBio] = useState(profile?.bio || '');
@@ -95,8 +100,8 @@ export const MentorProfileScreen = () => {
                 <View className="bg-white dark:bg-gray-800 pb-6 rounded-b-[30px] shadow-sm mb-6">
                     <View className="px-6 py-4 flex-row justify-between items-center">
                         <Text className="text-xl font-bold text-text-main-light dark:text-white">Profile</Text>
-                        <TouchableOpacity onPress={signOut}>
-                            <Icon name="logout" size={24} color="#ef4444" />
+                        <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+                            <Icon name="cog-outline" size={24} color={isDark ? "#fff" : "#333"} />
                         </TouchableOpacity>
                     </View>
 

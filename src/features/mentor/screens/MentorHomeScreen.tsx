@@ -26,7 +26,7 @@ type MentorHomeNavigationProp = CompositeNavigationProp<
 >;
 
 export default function MentorHomeScreen() {
-    const { user } = useAuth();
+    const { user, profile } = useAuth();
     const navigation = useNavigation<MentorHomeNavigationProp>();
     const { isDark } = useColorScheme();
 
@@ -68,15 +68,25 @@ export default function MentorHomeScreen() {
             <SafeAreaView className="flex-1" edges={['top']}>
                 <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
-                <View className="px-6 py-4 flex-row justify-between items-center bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+                <View className="px-6 py-4 flex-row justify-between items-center bg-white dark:bg-gray-800 shadow-sm border-b border-gray-100 dark:border-gray-700">
                     <View>
-                        <Text className="text-gray-500 dark:text-gray-400 text-sm font-medium">Welcome back,</Text>
-                        <Text className="text-xl font-bold text-gray-900 dark:text-white">{user?.email?.split('@')[0] || 'Mentor'}</Text>
+                        <Text className="text-text-sub-light dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Mentor Portal</Text>
+                        <Text className="text-xl font-bold text-text-main-light dark:text-white">
+                            Hello, {profile?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'Mentor'} 👋
+                        </Text>
                     </View>
-                    <TouchableOpacity className="p-2 bg-gray-50 dark:bg-gray-700 rounded-full relative">
-                        <MaterialCommunityIcons name="bell-outline" size={24} color={isDark ? "#fff" : "#333"} />
-                        <View className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-gray-800" />
-                    </TouchableOpacity>
+                    <View className="flex-row gap-2">
+                        <TouchableOpacity className="p-2 bg-gray-50 dark:bg-gray-700 rounded-full relative">
+                            <MaterialCommunityIcons name="bell-outline" size={20} color={isDark ? "#fff" : "#666"} />
+                            <View className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-gray-800" />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('Settings')}
+                            className="p-2 bg-gray-50 dark:bg-gray-700 rounded-full"
+                        >
+                            <MaterialCommunityIcons name="cog-outline" size={20} color={isDark ? "#fff" : "#666"} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
                 {error && (

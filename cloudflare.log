@@ -1,0 +1,10 @@
+npm notice Access token expired or revoked. Please try logging in again.
+npm notice Access token expired or revoked. Please try logging in again.
+npm error code E404
+npm error 404 Not Found - GET https://registry.npmjs.org/@cloudflare%2fcloudflared - Not found
+npm error 404
+npm error 404  '@cloudflare/cloudflared@*' is not in this registry.
+npm error 404
+npm error 404 Note that you can also install from a
+npm error 404 tarball, folder, http url, or git url.
+npm error A complete log of this run can be found in: /Users/swami/.npm/_logs/2025-12-19T08_02_47_897Z-debug-0.log

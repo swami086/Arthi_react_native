@@ -5,6 +5,7 @@ import MentorHomeScreen from '../features/mentor/screens/MentorHomeScreen';
 import MenteesScreen from '../features/mentor/screens/MenteesScreen';
 import MentorSessionsScreen from '../features/mentor/screens/MentorSessionsScreen';
 import { MentorProfileScreen } from '../features/mentor/screens/MentorProfileScreen';
+import SettingsScreen from '../features/profile/screens/SettingsScreen';
 import { MentorTabParamList } from './types';
 import { useColorScheme } from '../hooks/useColorScheme';
 
@@ -66,6 +67,16 @@ export const MentorNavigator = () => {
                     tabBarLabel: 'Profile',
                     tabBarIcon: ({ color, size }) => (
                         <Icon name="account-circle" color={color} size={size} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Settings"
+                component={SettingsScreen}
+                options={{
+                    tabBarLabel: 'Settings',
+                    tabBarIcon: ({ color, size }) => (
+                        <Icon name="cog" color={color} size={size} />
                     ),
                 }}
             />

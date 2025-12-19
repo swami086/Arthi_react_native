@@ -28,6 +28,7 @@ export type MentorTabParamList = {
     Mentees: undefined;
     Sessions: undefined;
     Profile: undefined;
+    Settings: undefined;
 };
 
 export type AdminTabParamList = {
