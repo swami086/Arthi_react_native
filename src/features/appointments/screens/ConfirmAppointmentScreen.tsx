@@ -27,7 +27,7 @@ export default function ConfirmAppointmentScreen() {
 
     const handleConfirm = async () => {
         try {
-            await createAppointment({
+            const appointment = await createAppointment({
                 mentorId,
                 date: selectedDate,
                 time: selectedTime,
@@ -35,25 +35,40 @@ export default function ConfirmAppointmentScreen() {
                 notes
             });
 
-            Alert.alert(
-                "Appointment Confirmed",
-                "Your session has been successfully booked.",
-                [
-                    {
-                        text: "Done",
-                        onPress: () => {
-                            navigation.dispatch(
-                                CommonActions.reset({
-                                    index: 0,
-                                    routes: [
-                                        { name: 'Main', params: { screen: 'Appointments' } },
-                                    ],
-                                })
-                            );
+            // Check if payment is required
+            if (appointment && (appointment as any).payment_required) {
+                // Navigate to payment screen
+                navigation.navigate('PaymentCheckout', {
+                    appointmentId: (appointment as any).id,
+                    mentorId,
+                    mentorName,
+                    mentorAvatar,
+                    amount: (appointment as any).price || 0,
+                    selectedDate,
+                    selectedTime
+                });
+            } else {
+                // Free session - show success
+                Alert.alert(
+                    "Appointment Confirmed",
+                    "Your session has been successfully booked.",
+                    [
+                        {
+                            text: "Done",
+                            onPress: () => {
+                                navigation.dispatch(
+                                    CommonActions.reset({
+                                        index: 0,
+                                        routes: [
+                                            { name: 'Main', params: { screen: 'Appointments' } },
+                                        ],
+                                    })
+                                );
+                            }
                         }
-                    }
-                ]
-            );
+                    ]
+                );
+            }
         } catch (error) {
             Alert.alert("Error", "Failed to book appointment. Please try again.");
         }

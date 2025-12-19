@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, RefreshControl, Image } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, RefreshControl, Image, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Appointment } from '../../../api/types';
 import { useAppointments } from '../hooks/useAppointments';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
 import { MainTabCompositeProp } from '../../../navigation/types';
+import { getVideoRoom, createVideoRoom } from '../../../api/videoService';
 import { ErrorBoundary } from '../../../components/ErrorBoundary';
 import { MotiView } from 'moti';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -26,6 +27,26 @@ export const AppointmentsScreen = () => {
             return appointments.filter(a => new Date(a.end_time) < now).sort((a, b) => new Date(b.start_time).getTime() - new Date(a.start_time).getTime());
         }
     }, [appointments, activeTab]);
+
+    const handleJoinSession = async (appointment: Appointment) => {
+        try {
+            // Get or create video room
+            let videoRoom = await getVideoRoom(appointment.id);
+
+            if (!videoRoom) {
+                videoRoom = await createVideoRoom(appointment.id);
+            }
+
+            // Navigate to waiting room
+            navigation.navigate('VideoCallWaitingRoom', {
+                appointmentId: appointment.id,
+                roomId: videoRoom.id
+            });
+        } catch (error) {
+            console.error('Error joining session:', error);
+            Alert.alert('Error', 'Failed to join session. Please try again.');
+        }
+    };
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -130,7 +151,10 @@ export const AppointmentsScreen = () => {
                                     <Text className="text-red-600 dark:text-red-400 font-bold text-sm ml-1">Cancel</Text>
                                 </TouchableOpacity>
                             </View>
-                            <TouchableOpacity className="bg-primary py-3 rounded-xl items-center shadow-md shadow-primary/20 flex-row justify-center">
+                            <TouchableOpacity
+                                className="bg-primary py-3 rounded-xl items-center shadow-md shadow-primary/20 flex-row justify-center"
+                                onPress={() => handleJoinSession(item)}
+                            >
                                 <MaterialCommunityIcons name="video" size={18} color="white" style={{ marginRight: 6 }} />
                                 <Text className="text-white font-bold text-sm">Join Session</Text>
                             </TouchableOpacity>

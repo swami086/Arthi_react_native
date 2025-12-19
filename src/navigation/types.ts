@@ -90,6 +90,44 @@ export type RootStackParamList = {
     ReferMentee: { menteeId: string };
     ReferralsManagement: undefined;
     MenteeOnboarding: { menteeId?: string };
+
+    // Payment Flow
+    PaymentCheckout: {
+        appointmentId: string;
+        mentorId: string;
+        mentorName: string;
+        mentorAvatar?: string;
+        amount: number;
+        selectedDate: string;
+        selectedTime: string;
+    };
+    PaymentProcessing: {
+        orderId: string;
+        appointmentId: string;
+    };
+    PaymentSuccess: {
+        paymentId: string;
+        appointmentId: string;
+    };
+    PaymentHistory: undefined;
+
+    // Video Call Flow
+    VideoCallWaitingRoom: {
+        appointmentId: string;
+        roomId: string;
+    };
+    VideoCall: {
+        appointmentId: string;
+        roomId: string;
+        token: string;
+    };
+    PostSessionFeedback: {
+        appointmentId: string;
+        mentorId: string;
+    };
+
+    // Mentor Earnings
+    MentorPaymentDashboard: undefined;
 };
 
 export type RootNavigationProp = StackNavigationProp<RootStackParamList>;

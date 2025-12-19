@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Payment Checkout</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30bae8",
+                        "background-light": "#f8f9fa", // Adjusted to match description slightly better
+                        "background-dark": "#111d21",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1A262B",
+                        "text-main-light": "#0e181b",
+                        "text-sub-light": "#4e8597",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "body": ["Manrope", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>/* Custom checkbox style */
+.custom-checkbox:checked {
+    background-color: #30bae8;
+    border-color: #30bae8;
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAWx8QGOvMkAmNDU4jfhz0tOk5A6egwFdSZaCE6mPIZDUMVtYa1xWVG_VNL7A1Dhq6haNMXAwyeyC4nrjEajb_rZxZ9GxiZAu-96zW8AdrpW8wxBSFpm0cShakeCNCEVsvRE5kAUyzsBJJdQYPT6UUgnx5Gmzvus9xYtLCcKKRe5SUkgLLwzK4o8G2pt1iUtYhRpa1oypB1g_nX1H3v8CIjjudDzjtPVwCzRnd50xsyZkgR7TNNu4wpnXE5AH79-7ebUhc1tXivM4J3)
+    }
+/* Hide scrollbar for clean UI */
+.no-scrollbar::-webkit-scrollbar {
+    display: none
+    }
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none
+    }</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-main-light dark:text-white antialiased transition-colors duration-200">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden pb-32">
+<!-- Header -->
+<header class="sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm px-4 py-4 flex items-center justify-between shadow-sm dark:shadow-none border-b border-transparent dark:border-gray-800 transition-all">
+<button aria-label="Go back" class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-text-main-light dark:text-white">arrow_back_ios_new</span>
+</button>
+<h1 class="text-lg font-bold text-text-main-light dark:text-white">Payment Details</h1>
+<div class="w-10"></div> <!-- Spacer for center alignment -->
+</header>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col gap-6 p-4 pt-2">
+<!-- Appointment Summary Card -->
+<section class="bg-surface-light dark:bg-surface-dark p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 animate-fade-in-up">
+<div class="flex items-start gap-4">
+<div class="relative shrink-0">
+<img alt="Portrait of Dr. Sarah Jenkins" class="h-16 w-16 rounded-full object-cover border-2 border-white dark:border-gray-700 shadow-md" data-alt="Professional headshot of a female doctor smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAd7un5w8aMQUl4Vf3UaSWXlkizPkwAAGyyjsvuEXjHZYrrlY0zN_jSbJiecMay8R8PZCdtBOBYHnSD7qtTvBemeyw6nsjgNUWKeIJilwOMKAemjDJTqn0QUfYIzOEr3Sra6PpNWyAIuYPms-63h3uYpFHDVtvgYYtvZZYwsd7xVjhHfAjaMQ0nPPWDShGscnVrpge20kgJqQim5eearX61WYLJEnHNCpkI0UWsmlWZLIEA1l9VaSQVBD3uOjicRv_Z2uqXAdxRGGTI"/>
+<div class="absolute -bottom-1 -right-1 bg-green-500 h-4 w-4 rounded-full border-2 border-white dark:border-surface-dark"></div>
+</div>
+<div class="flex-1 min-w-0">
+<h2 class="text-lg font-bold text-text-main-light dark:text-white truncate">Dr. Sarah Jenkins</h2>
+<p class="text-text-sub-light text-sm font-medium truncate">Clinical Psychologist</p>
+</div>
+</div>
+<div class="my-4 h-px bg-gray-100 dark:bg-gray-800 w-full"></div>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex items-center gap-2.5">
+<div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-sm">calendar_month</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs text-text-sub-light font-medium">Date &amp; Time</span>
+<span class="text-sm font-bold text-text-main-light dark:text-white">Oct 24, 10:00 AM</span>
+</div>
+</div>
+<div class="flex items-center gap-2.5">
+<div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-sm">videocam</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs text-text-sub-light font-medium">Session Type</span>
+<span class="text-sm font-bold text-text-main-light dark:text-white">Video Call • 45m</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Pricing Breakdown -->
+<section class="bg-surface-light dark:bg-surface-dark p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+<div class="flex flex-col gap-3">
+<div class="flex justify-between items-center text-sm">
+<span class="text-text-main-light dark:text-gray-300">Session Fee</span>
+<span class="font-semibold text-text-main-light dark:text-white">₹999</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-text-main-light dark:text-gray-300">Platform Fee (10%)</span>
+<span class="font-semibold text-text-main-light dark:text-white">₹99</span>
+</div>
+<div class="my-1 border-b border-dashed border-gray-200 dark:border-gray-700"></div>
+<div class="flex justify-between items-center pt-1">
+<span class="text-base font-bold text-text-main-light dark:text-white">Total Amount</span>
+<span class="text-xl font-extrabold text-primary">₹1,098</span>
+</div>
+</div>
+</section>
+<!-- Payment Methods -->
+<section>
+<h3 class="text-lg font-bold text-text-main-light dark:text-white px-1 mb-3">Payment Method</h3>
+<div class="flex flex-col gap-3" style="--radio-dot-svg: url('data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27rgb(48,186,232)%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3ccircle cx=%278%27 cy=%278%27 r=%273%27/%3e%3c/svg%3e');">
+<!-- UPI (Selected) -->
+<label class="group relative flex items-center gap-4 rounded-xl border border-primary bg-primary/5 dark:bg-primary/10 p-4 transition-all cursor-pointer">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-800 shadow-sm">
+<span class="material-symbols-outlined text-primary">qr_code_2</span>
+</div>
+<div class="flex grow flex-col">
+<p class="text-text-main-light dark:text-white text-sm font-semibold">UPI</p>
+<p class="text-text-sub-light text-xs">GPay, PhonePe, Paytm</p>
+</div>
+<input checked="" class="h-5 w-5 border-2 border-gray-300 dark:border-gray-600 bg-transparent text-transparent checked:border-primary checked:bg-[image:--radio-dot-svg] focus:ring-0 focus:ring-offset-0 transition-all" name="payment_method" type="radio"/>
+</label>
+<!-- Card -->
+<label class="group relative flex items-center gap-4 rounded-xl border border-transparent bg-surface-light dark:bg-surface-dark p-4 shadow-sm transition-all hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700">
+<span class="material-symbols-outlined text-gray-600 dark:text-gray-400">credit_card</span>
+</div>
+<div class="flex grow flex-col">
+<p class="text-text-main-light dark:text-white text-sm font-semibold">Credit / Debit Card</p>
+<p class="text-text-sub-light text-xs">Visa, Mastercard, RuPay</p>
+</div>
+<input class="h-5 w-5 border-2 border-gray-300 dark:border-gray-600 bg-transparent text-transparent checked:border-primary checked:bg-[image:--radio-dot-svg] focus:ring-0 focus:ring-offset-0 transition-all" name="payment_method" type="radio"/>
+</label>
+<!-- Net Banking -->
+<label class="group relative flex items-center gap-4 rounded-xl border border-transparent bg-surface-light dark:bg-surface-dark p-4 shadow-sm transition-all hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700">
+<span class="material-symbols-outlined text-gray-600 dark:text-gray-400">account_balance</span>
+</div>
+<div class="flex grow flex-col">
+<p class="text-text-main-light dark:text-white text-sm font-semibold">Net Banking</p>
+<p class="text-text-sub-light text-xs">All Indian banks</p>
+</div>
+<input class="h-5 w-5 border-2 border-gray-300 dark:border-gray-600 bg-transparent text-transparent checked:border-primary checked:bg-[image:--radio-dot-svg] focus:ring-0 focus:ring-offset-0 transition-all" name="payment_method" type="radio"/>
+</label>
+<!-- Wallets -->
+<label class="group relative flex items-center gap-4 rounded-xl border border-transparent bg-surface-light dark:bg-surface-dark p-4 shadow-sm transition-all hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700">
+<span class="material-symbols-outlined text-gray-600 dark:text-gray-400">account_balance_wallet</span>
+</div>
+<div class="flex grow flex-col">
+<p class="text-text-main-light dark:text-white text-sm font-semibold">Wallets</p>
+<p class="text-text-sub-light text-xs">Paytm, PhonePe, Amazon Pay</p>
+</div>
+<input class="h-5 w-5 border-2 border-gray-300 dark:border-gray-600 bg-transparent text-transparent checked:border-primary checked:bg-[image:--radio-dot-svg] focus:ring-0 focus:ring-offset-0 transition-all" name="payment_method" type="radio"/>
+</label>
+</div>
+</section>
+<!-- Promo Code -->
+<section class="mt-2">
+<div class="relative flex items-center">
+<div class="absolute left-4 text-gray-400">
+<span class="material-symbols-outlined">local_offer</span>
+</div>
+<input class="w-full bg-surface-light dark:bg-surface-dark rounded-full py-3.5 pl-12 pr-24 border-0 shadow-sm focus:ring-2 focus:ring-primary text-text-main-light dark:text-white placeholder-gray-400 dark:placeholder-gray-600" placeholder="Have a promo code?" type="text"/>
+<button class="absolute right-2 top-1.5 bottom-1.5 bg-primary/10 hover:bg-primary/20 text-primary px-4 rounded-full text-sm font-bold transition-colors">
+                        Apply
+                    </button>
+</div>
+</section>
+<!-- Terms -->
+<section class="mt-2 mb-4">
+<label class="flex items-start gap-3 cursor-pointer group">
+<div class="relative flex items-center pt-1">
+<input class="custom-checkbox h-5 w-5 rounded-md border-gray-300 dark:border-gray-600 text-primary focus:ring-primary dark:bg-surface-dark transition-all" type="checkbox"/>
+</div>
+<span class="text-xs text-text-sub-light leading-relaxed">
+                        By proceeding, I agree to the <a class="text-primary font-semibold hover:underline" href="#">Terms &amp; Conditions</a> and <a class="text-primary font-semibold hover:underline" href="#">Cancellation Policy</a> of SafeSpace.
+                    </span>
+</label>
+</section>
+</main>
+<!-- Sticky Footer -->
+<footer class="fixed bottom-0 left-0 right-0 bg-surface-light dark:bg-surface-dark border-t border-gray-100 dark:border-gray-800 shadow-[0_-8px_30px_rgba(0,0,0,0.05)] dark:shadow-[0_-8px_30px_rgba(0,0,0,0.4)] p-4 pb-8 z-40 rounded-t-3xl">
+<div class="max-w-md mx-auto w-full flex flex-col gap-3">
+<!-- Trust Badge -->
+<div class="flex items-center justify-center gap-1.5 text-xs font-medium text-gray-400 dark:text-gray-500 mb-1">
+<span class="material-symbols-outlined text-[16px]">lock</span>
+<span>100% Secured by Razorpay</span>
+</div>
+<!-- Action Button -->
+<button class="relative w-full overflow-hidden rounded-full bg-primary p-4 text-center transition-all hover:bg-[#20aadd] active:scale-[0.98] shadow-lg shadow-primary/30 group">
+<div class="relative z-10 flex items-center justify-center gap-2">
+<span class="text-base font-bold text-white">Proceed to Pay</span>
+<span class="text-base font-bold text-white/90">₹1,098</span>
+<span class="material-symbols-outlined text-white text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
+</div>
+</button>
+</div>
+</footer>
+</div>
+</body></html>

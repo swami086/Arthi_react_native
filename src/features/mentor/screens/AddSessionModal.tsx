@@ -115,13 +115,13 @@ export const AddSessionModal: React.FC<AddSessionModalProps> = ({ visible, onClo
                         </View>
                     ) : (
                         <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-4">
-                            {mentees.map((mentee, index) => (
+                            {Array.from(new Map(mentees.map(m => [m.mentee_id, m])).values()).map((mentee) => (
                                 <TouchableOpacity
-                                    key={`${mentee.mentee_id}-${index}`}
+                                    key={mentee.mentee_id}
                                     onPress={() => setSelectedMentee(mentee.mentee_id)}
-                                    className={`mr-3 p-3 rounded-lg border ${selectedMentee === mentee.mentee_id ? 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-500' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700'}`}
+                                    className={`mr-3 p-3 rounded-lg border ${selectedMentee !== null && selectedMentee === mentee.mentee_id ? 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-500' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700'}`}
                                 >
-                                    <Text className={`font-medium ${selectedMentee === mentee.mentee_id ? 'text-indigo-700 dark:text-indigo-300' : 'text-gray-700 dark:text-gray-300'}`}>
+                                    <Text className={`font-medium ${selectedMentee !== null && selectedMentee === mentee.mentee_id ? 'text-indigo-700 dark:text-indigo-300' : 'text-gray-700 dark:text-gray-300'}`}>
                                         {mentee.full_name || 'Unknown'}
                                     </Text>
                                 </TouchableOpacity>

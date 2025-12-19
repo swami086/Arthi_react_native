@@ -1,6 +1,6 @@
 import { supabase } from './supabase';
 import { MenteeGoal, MentorNote, MentorStats, MenteeWithActivity, Appointment } from './types';
-import { generateJitsiMeetLink } from '../utils/meetingLink';
+import { generateDailyMeetLink } from '../utils/meetingLink';
 
 export const getMentorStats = async (mentorId: string): Promise<MentorStats | null> => {
     const { data, error } = await supabase.rpc('get_mentor_stats', { mentor_user_id: mentorId });
@@ -290,28 +290,50 @@ export const createSession = async (
     menteeId: string,
     startTime: Date,
     durationMinutes: number,
-    notes?: string
+    notes?: string,
+    price?: number
 ) => {
     const endTime = new Date(startTime.getTime() + durationMinutes * 60000);
 
     if (await checkAppointmentConflict(mentorId, startTime.toISOString(), endTime.toISOString())) {
         throw new Error('Time slot conflict');
     }
-    const uniqueRoomId = Date.now().toString();
-    const meetingLink = generateJitsiMeetLink(mentorId, menteeId, uniqueRoomId);
 
     const appointmentData = {
         mentor_id: mentorId,
         mentee_id: menteeId,
         start_time: startTime.toISOString(),
         end_time: endTime.toISOString(),
-        status: 'confirmed' as const,
+        status: 'pending' as const,
         notes: notes ?? null,
-        meeting_link: meetingLink,
-        feedback: null
+        meeting_link: null, // Will be generated after appointment creation
+        feedback: null,
+        price: price || 0,
+        payment_required: (price ?? 0) > 0,
+        payment_status: (price ?? 0) > 0 ? 'pending' : 'not_required',
+        video_room_id: null
     };
 
-    return createAppointment(appointmentData);
+    const appointment = await createAppointment(appointmentData);
+
+    // Generate Daily.co meeting link
+    if (appointment) {
+        try {
+            const meetingLink = await generateDailyMeetLink(appointment.id);
+            await supabase
+                .from('appointments')
+                .update({
+                    meeting_link: meetingLink,
+                    status: (price ?? 0) > 0 ? 'pending' : 'confirmed'
+                })
+                .eq('id', appointment.id);
+        } catch (error) {
+            console.error('Error generating meeting link:', error);
+            // Appointment still exists but without a link yet
+        }
+    }
+
+    return appointment;
 };
 
 export const createAppointment = async (appointment: Omit<Appointment, 'id' | 'created_at'>) => {

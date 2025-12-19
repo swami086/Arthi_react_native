@@ -95,19 +95,19 @@ export const useBookingFlow = () => {
                 throw new Error('Failed to parse appointment date/time');
             }
 
-            const { error: insertError } = await supabase.from('appointments').insert([
+            const { data, error: insertError } = await supabase.from('appointments').insert([
                 {
                     mentor_id: appointmentData.mentorId,
                     mentee_id: user.id,
                     start_time: startDateTime.toISOString(),
                     end_time: endDateTime.toISOString(),
                     status: 'pending',
-                    notes: appointmentData.notes // Included notes field
+                    notes: appointmentData.notes
                 }
-            ]);
+            ]).select().single();
 
             if (insertError) throw insertError;
-            return true;
+            return data;
         } catch (err: any) {
             console.error('Booking error:', err);
             setError(err.message || 'Failed to create appointment');
