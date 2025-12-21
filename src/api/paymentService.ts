@@ -1,6 +1,6 @@
 import { supabase } from './supabase';
 import { Payment } from './types';
-import { reportError } from '../services/rollbar';
+import { reportError, withRollbarTrace } from '../services/rollbar';
 
 // Razorpay configuration (Placeholder for now, in Direct UPI context these might be less used but kept for plan consistency)
 const RAZORPAY_KEY_ID = '';
@@ -31,7 +31,8 @@ export const createPaymentOrder = async (params: CreateOrderParams): Promise<any
                 amount: params.amount,
                 currency: params.currency || 'INR',
                 notes: params.notes
-            }
+            },
+            headers: withRollbarTrace()
         });
 
         if (error) throw error;

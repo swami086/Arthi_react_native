@@ -24,3 +24,8 @@ The booking flow has been enhanced to a 3-step wizard designed to provide a seam
 
 ### State Management
 Navigation parameters (`SelectDate`, `ChooseTime`, `ConfirmAppointment` routes) are used to persist booking data across the workflow, ensuring a stateless and robust experience even if the app is backgrounded.
+
+## Error Handling & Monitoring
+The application is integrated with Rollbar for comprehensive error tracking.
+- See [Rollbar Setup Guide](docs/ROLLBAR_SETUP.md) for configuration instructions.
+- See [Error Handling Guidelines](docs/ERROR_HANDLING.md) for best practices.

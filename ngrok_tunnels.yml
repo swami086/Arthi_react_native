@@ -4,8 +4,6 @@ tunnels:
   swami_cursor:
     proto: http
     addr: 8765
-    domain: equirotal-elbert-unproblematically.ngrok-free.dev
   swami_mcp:
     proto: http
     addr: 27495
-    domain: swami-mcp-access.ngrok.app

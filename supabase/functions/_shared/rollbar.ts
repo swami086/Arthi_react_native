@@ -14,6 +14,12 @@ const rollbar = new Rollbar({
     },
 });
 
+
+// Helper to extract trace ID from request headers
+export const getTraceId = (req: Request): string | undefined => {
+    return req.headers.get('X-Rollbar-Trace-Id') || undefined;
+};
+
 export const reportError = (error: any, context?: string, metadata?: Record<string, any>): Promise<void> => {
     console.error(`[Error] ${context || 'Unknown'}:`, error);
     if (rollbar.options.enabled) {

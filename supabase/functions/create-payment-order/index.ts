@@ -1,9 +1,10 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import Razorpay from 'npm:razorpay@2.9.2';
-import { reportError, reportInfo } from '../_shared/rollbar.ts';
+import { reportError, reportInfo, getTraceId } from '../_shared/rollbar.ts';
 
 
 serve(async (req) => {
+    const traceId = getTraceId(req);
     // Variables for error context
     let appointmentIdVal: string | undefined;
     let amountVal: number | undefined;
@@ -39,13 +40,17 @@ serve(async (req) => {
         // Store order in database
         // (Database update logic usually goes here using service_role key)
 
-        reportInfo('Payment order created', 'create-payment-order', { orderId: order.id });
+        reportInfo('Payment order created', 'create-payment-order', { orderId: order.id, trace_id: traceId });
 
         return new Response(JSON.stringify({ order }), {
             headers: { 'Content-Type': 'application/json' },
         });
     } catch (error: any) {
-        await reportError(error, 'create-payment-order', { appointmentId: appointmentIdVal, amount: amountVal });
+        await reportError(error, 'create-payment-order', {
+            appointmentId: appointmentIdVal,
+            amount: amountVal,
+            trace_id: traceId
+        });
 
         return new Response(JSON.stringify({ error: error.message }), {
             status: 400,

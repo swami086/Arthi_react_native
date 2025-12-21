@@ -3,6 +3,31 @@ import { Client, Configuration } from 'rollbar-react-native';
 // @ts-ignore
 import { ROLLBAR_ACCESS_TOKEN, ROLLBAR_ENVIRONMENT } from '@env';
 
+// Basic UUID-like generator for browser/mobile environment
+const generateUUID = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+};
+
+// Persistent trace ID for the session, can be cleared/reset if needed
+let currentTraceId = generateUUID();
+
+export const getTraceId = () => currentTraceId;
+
+export const resetTraceId = () => {
+    currentTraceId = generateUUID();
+    return currentTraceId;
+};
+
+export const withRollbarTrace = (headers: Record<string, string> = {}) => {
+    return {
+        ...headers,
+        'X-Rollbar-Trace-Id': currentTraceId
+    };
+};
+
 const rollbarConfig = {
     accessToken: ROLLBAR_ACCESS_TOKEN || '952d416d0aa146639af1a0d99e7d2592',
     captureUncaught: true,
@@ -41,7 +66,11 @@ export const reportError = (error: any, context?: string) => {
     if (__DEV__) {
         console.error(`[Error] ${context || 'Unknown'}:`, error);
     }
-    rollbar.error(err, { context, originalError: error });
+    rollbar.error(err, {
+        context,
+        originalError: error,
+        trace_id: currentTraceId // Link to backend traces
+    });
 };
 
 export const reportInfo = (message: string, context?: string, metadata?: object) => {
