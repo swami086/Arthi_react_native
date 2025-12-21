@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { supabase } from '../../../api/supabase';
 import { Payment } from '../../../api/types';
 import { Alert } from 'react-native';
+import { NotificationService } from '../../notifications/services/notificationService';
+import { reportError } from '../../../services/rollbar';
 
 export const usePayment = () => {
     const [loading, setLoading] = useState(false);
@@ -48,6 +50,7 @@ export const usePayment = () => {
         } catch (err: any) {
             setError(err.message);
             console.error('Payment initiation error:', err);
+            reportError(err, 'usePayment:initiatePayment');
             throw err;
         } finally {
             setLoading(false);
@@ -71,9 +74,9 @@ export const usePayment = () => {
             // If payment successful, update appointment payment status
             if (status === 'completed') {
                 // Get appointment ID from payment
-                 const { data: payment } = await supabase
+                const { data: payment } = await supabase
                     .from('payments')
-                    .select('appointment_id')
+                    .select('appointment_id, mentee_id, mentor_id, amount')
                     .eq('id', paymentId)
                     .single();
 
@@ -85,12 +88,31 @@ export const usePayment = () => {
                             status: 'confirmed' // Auto-confirm on payment
                         })
                         .eq('id', payment.appointment_id);
+
+                    // Notify Mentee
+                    await NotificationService.createNotification(
+                        payment.mentee_id,
+                        'Payment Successful',
+                        `Your payment of $${payment.amount} was successful. Appointment confirmed!`,
+                        'payment',
+                        payment.appointment_id
+                    );
+
+                    // Notify Mentor
+                    await NotificationService.createNotification(
+                        payment.mentor_id,
+                        'New Appointment',
+                        'You have a new confirmed appointment.',
+                        'appointment',
+                        payment.appointment_id
+                    );
                 }
             }
 
             return true;
         } catch (err: any) {
             setError(err.message);
+            reportError(err, 'usePayment:handlePaymentResponse');
             throw err;
         } finally {
             setLoading(false);

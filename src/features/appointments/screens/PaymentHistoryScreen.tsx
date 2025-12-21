@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '../../../components/Button';
@@ -23,14 +23,12 @@ export const PaymentHistoryScreen = () => {
     return (
         <SafeAreaView className="flex-1 bg-white dark:bg-gray-900">
             <View className="flex-row items-center p-4 border-b border-gray-100 dark:border-gray-800">
-                <Button
-                    variant="ghost"
-                    size="icon"
+                <TouchableOpacity
                     onPress={() => navigation.goBack()}
-                    className="mr-2"
+                    className="mr-2 p-2 rounded-full active:bg-gray-100 dark:active:bg-gray-800"
                 >
-                    <MaterialCommunityIcons name="arrow-left" size={24} className="text-gray-900 dark:text-white" />
-                </Button>
+                    <MaterialCommunityIcons name="arrow-left" size={24} color={activeFilter === 'All' ? '#111827' : '#fff'} />
+                </TouchableOpacity>
                 <Text className="text-xl font-bold text-gray-900 dark:text-white">Payment History</Text>
             </View>
 

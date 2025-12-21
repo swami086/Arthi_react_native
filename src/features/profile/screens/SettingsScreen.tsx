@@ -49,6 +49,14 @@ const SettingsScreen = () => {
             onValueChange: handleDarkModeToggle
         },
         {
+            icon: 'bug-check-outline',
+            title: 'Verify Rollbar',
+            subtitle: 'Run manual verification tests',
+            action: () => {
+                navigation.navigate('RollbarDebug' as never);
+            }
+        },
+        {
             icon: 'help-circle-outline',
             title: 'Help & Support',
             subtitle: 'FAQs and contact support',

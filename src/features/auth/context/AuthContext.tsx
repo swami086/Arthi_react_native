@@ -3,6 +3,7 @@ import { Session, User } from '@supabase/supabase-js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '../../../api/supabase';
 import { Profile } from '../../../api/types';
+import { reportError, setRollbarUser, clearRollbarUser } from '../../../services/rollbar';
 
 interface AuthContextType {
     user: User | null;
@@ -19,6 +20,7 @@ interface AuthContextType {
     signOut: () => Promise<void>;
     signInWithGoogle: () => Promise<void>;
     refreshProfile: () => Promise<void>;
+    resetPassword: (email: string) => Promise<{ error: any }>;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -36,6 +38,7 @@ export const AuthContext = createContext<AuthContextType>({
     signOut: async () => { },
     signInWithGoogle: async () => { },
     refreshProfile: async () => { },
+    resetPassword: async () => ({ error: null }),
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -61,6 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         if (error) {
             console.error('fetchProfile: error', error);
+            reportError(error, 'AuthContext:fetchProfile');
         }
 
         if (data && !error) {
@@ -90,6 +94,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             if (error) throw error;
         } catch (error) {
             console.error("Google Sign In Error:", error);
+            reportError(error, 'AuthContext:signInWithGoogle');
         }
     };
 
@@ -125,6 +130,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
                 if (insertError) {
                     console.error('Error creating profile for Google user:', insertError);
+                    reportError(insertError, 'AuthContext:checkAndCreateProfile:insert');
                 } else {
                     console.log('checkAndCreateProfile: profile created, fetching...');
                     await fetchProfile(session.user.id);
@@ -142,18 +148,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setSession(session);
             setUser(session?.user ?? null);
 
+            // Zipy integration removed
+            if (session?.user) {
+                // User context set below after profile check
+            }
+
             try {
                 if (session?.user) {
                     // Increased timeout to 30s for slower connections
                     const profilePromise = checkAndCreateProfile(session);
-                    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Profile check timed out (30s)')), 30000));
+                    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Profile check timed out (60s)')), 60000));
                     await Promise.race([profilePromise, timeoutPromise]);
+
+                    // Set Rollbar user context
+                    if (session.user) {
+                        setRollbarUser(
+                            session.user.id,
+                            session.user.email,
+                            session.user.user_metadata?.full_name,
+                            { role: session.user.user_metadata?.role }
+                        );
+                    }
                 } else {
                     setProfile(null);
                     setRole(null);
                 }
             } catch (error) {
-                console.error('Error during auth state change profile check:', error);
+                // console.warn('Warning during auth state change profile check:', JSON.stringify(error, Object.getOwnPropertyNames(error)));
+                reportError(error, 'AuthContext:onAuthStateChange');
                 // Fallback: Ensure loading does not stay true forever
             } finally {
                 setLoading(false);
@@ -170,7 +192,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 if (session?.user) {
                     // Increased timeout to 30s
                     const profilePromise = checkAndCreateProfile(session);
-                    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Profile check timed out (30s)')), 30000));
+                    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Profile check timed out (60s)')), 60000));
                     await Promise.race([profilePromise, timeoutPromise]);
                 }
             } catch (error) {
@@ -228,6 +250,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const signOut = async () => {
+        clearRollbarUser();
         await supabase.auth.signOut();
         await AsyncStorage.removeItem('userRole');
         setProfile(null);
@@ -255,7 +278,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             signUp,
             signOut,
             signInWithGoogle,
-            refreshProfile
+            refreshProfile,
+            resetPassword: async (email: string) => {
+                const { error } = await supabase.auth.resetPasswordForEmail(email);
+                return { error };
+            }
         }}>
             {children}
         </AuthContext.Provider>

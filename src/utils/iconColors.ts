@@ -12,7 +12,7 @@ export const getIconColor = (type: IconColorType, isDark: boolean): string => {
         case 'secondary':
             return isDark ? colors.secondary.dark : colors.secondary.light;
         case 'success':
-            return isDark ? colors.success.dark : colors.success.light;
+            return colors.status.success;
         case 'error':
             return isDark ? colors.error.dark : colors.error.light;
         case 'warning':

@@ -11,6 +11,7 @@ import { MotiView } from 'moti';
 import * as Haptics from 'expo-haptics';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useColorScheme } from '../hooks/useColorScheme';
+import { tokens } from '../design-system/tokens';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
@@ -21,11 +22,17 @@ export const MainNavigator = () => {
         <Tab.Navigator
             screenOptions={({ route }) => ({
                 headerShown: false,
-                tabBarActiveTintColor: '#30bae8',
-                tabBarInactiveTintColor: isDark ? '#9ca3af' : '#9ca3af',
+                tabBarActiveTintColor: tokens.colors.primary.light,
+                tabBarInactiveTintColor: isDark ? tokens.colors.text.disabled.dark : tokens.colors.text.disabled.light,
                 tabBarStyle: {
-                    backgroundColor: isDark ? '#1a2c32' : '#ffffff',
-                    borderTopColor: isDark ? '#1a2c32' : '#e5e7eb',
+                    backgroundColor: isDark ? tokens.colors.surface.dark : tokens.colors.surface.light,
+                    borderTopColor: isDark ? tokens.colors.border.dark : tokens.colors.border.light,
+                },
+                tabBarLabelStyle: {
+                    fontFamily: tokens.typography.fontFamily.primary,
+                    fontWeight: '600',
+                    fontSize: tokens.typography.fontSize.xxs,
+                    marginBottom: 4,
                 },
                 tabBarIcon: ({ color, size, focused }) => {
                     let iconName = 'circle';

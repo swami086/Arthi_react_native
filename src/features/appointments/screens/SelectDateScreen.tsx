@@ -13,6 +13,7 @@ import { useBookingFlow } from '../hooks/useBookingFlow';
 import { TimeSlot } from '../utils/timeSlots';
 import { useColorScheme } from '../../../hooks/useColorScheme';
 import { Button } from '../../../components/Button';
+import { tokens } from '../../../design-system/tokens';
 
 type SelectDateRouteProp = RouteProp<RootStackParamList, 'SelectDate'>;
 
@@ -64,24 +65,26 @@ export default function SelectDateScreen() {
     };
 
     return (
-        <View className="flex-1 bg-background-light dark:bg-background-dark">
+        <View className="flex-1 bg-background dark:bg-background-dark">
             <SafeAreaView className="flex-1">
                 {/* Header */}
-                <View className="flex-row items-center justify-between px-6 py-4 z-10">
-                    <TouchableOpacity onPress={() => navigation.goBack()} className="p-2 -ml-2 rounded-full active:bg-gray-100 dark:active:bg-gray-800">
-                        <MaterialCommunityIcons name="arrow-left" size={24} color={isDark ? "#fff" : "#0e181b"} />
+                <View className="flex-row items-center justify-between px-6 py-4 z-10 h-[72px]">
+                    <TouchableOpacity onPress={() => navigation.goBack()} className="w-10 h-10 items-center justify-center rounded-full bg-surface dark:bg-surface-dark border border-border dark:border-border-dark">
+                        <MaterialCommunityIcons name="arrow-left" size={24} color={isDark ? tokens.colors.text.primary.dark : tokens.colors.text.primary.light} />
                     </TouchableOpacity>
-                    <Text className="text-lg font-bold text-text-main-light dark:text-text-main-dark">Book Session</Text>
+                    <Text className="text-lg font-bold text-text-primary dark:text-text-primary-dark font-primary">Book Session</Text>
                     <View className="w-10" />
                 </View>
 
                 <ScrollView className="flex-1 px-6 pt-2" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 140 }}>
                     <ProgressIndicator currentStep={1} />
 
-                    <Text className="text-3xl font-bold text-text-main-light dark:text-text-main-dark mb-2 leading-tight tracking-tight">Select Date</Text>
-                    <Text className="text-text-sub-light dark:text-text-sub-dark mb-8 leading-relaxed font-medium">
-                        Pick a day that works for you.
-                    </Text>
+                    <View className="mb-6">
+                        <Text className="text-xxxl font-bold text-text-primary dark:text-text-primary-dark mb-2 leading-tight tracking-tight font-primary">Select Date</Text>
+                        <Text className="text-text-secondary dark:text-text-secondary-dark leading-relaxed font-medium font-primary">
+                            Pick a day that works for you.
+                        </Text>
+                    </View>
 
                     {/* Calendar Card */}
                     <MotiView
@@ -89,13 +92,13 @@ export default function SelectDateScreen() {
                         animate={{ opacity: 1, translateY: 0 }}
                         transition={{ type: 'timing', duration: 500 }}
                     >
-                        <View className="bg-white dark:bg-surface-dark rounded-3xl shadow-card p-4 mb-8 border border-gray-100 dark:border-gray-700">
+                        <View className="bg-surface dark:bg-surface-elevated-dark rounded-3xl shadow-soft dark:shadow-none p-4 mb-8 border border-border dark:border-border-dark">
                             <Calendar
                                 onDayPress={(day: DateData) => setSelectedDate(day.dateString)}
                                 markedDates={{
                                     [selectedDate]: {
                                         selected: true,
-                                        selectedColor: '#30bae8',
+                                        selectedColor: tokens.colors.primary.light,
                                         customStyles: {
                                             container: {
                                                 borderRadius: 12,
@@ -105,9 +108,9 @@ export default function SelectDateScreen() {
                                     }
                                 }}
                                 theme={{
-                                    todayTextColor: '#30bae8',
-                                    arrowColor: '#30bae8',
-                                    monthTextColor: isDark ? '#ffffff' : '#0e181b',
+                                    todayTextColor: tokens.colors.primary.light,
+                                    arrowColor: tokens.colors.primary.light,
+                                    monthTextColor: isDark ? tokens.colors.text.primary.dark : tokens.colors.text.primary.light,
                                     textMonthFontWeight: '800',
                                     textMonthFontSize: 18,
                                     textDayFontFamily: 'Plus Jakarta Sans',
@@ -115,12 +118,12 @@ export default function SelectDateScreen() {
                                     textDayHeaderFontFamily: 'Plus Jakarta Sans',
                                     textDayFontWeight: '600',
                                     textDayHeaderFontWeight: '700',
-                                    selectedDayBackgroundColor: '#30bae8',
+                                    selectedDayBackgroundColor: tokens.colors.primary.light,
                                     selectedDayTextColor: '#ffffff',
                                     backgroundColor: 'transparent',
-                                    calendarBackground: 'transparent', // Important for dark mode
-                                    dayTextColor: isDark ? '#e5e7eb' : '#0e181b',
-                                    textDisabledColor: isDark ? '#4b5563' : '#d9e1e8',
+                                    calendarBackground: 'transparent',
+                                    dayTextColor: isDark ? tokens.colors.text.primary.dark : tokens.colors.text.primary.light,
+                                    textDisabledColor: isDark ? tokens.colors.text.disabled.dark : tokens.colors.text.disabled.light,
                                 }}
                                 minDate={new Date().toISOString().split('T')[0]}
                                 enableSwipeMonths={true}
@@ -137,24 +140,24 @@ export default function SelectDateScreen() {
                             transition={{ type: 'timing', duration: 400, delay: 200 }}
                         >
                             <View className="mb-4">
-                                <View className="flex-row items-center mb-4">
-                                    <View className="bg-primary/10 p-2 rounded-full mr-3">
-                                        <MaterialCommunityIcons name="clock-time-four-outline" size={20} color="#30bae8" />
+                                <View className="flex-row items-center mb-4 gap-3">
+                                    <View className="bg-primary/10 dark:bg-primary-dark/20 p-2.5 rounded-full">
+                                        <MaterialCommunityIcons name="clock-time-four-outline" size={20} color={tokens.colors.primary.light} />
                                     </View>
-                                    <Text className="text-lg font-bold text-text-main-light dark:text-text-main-dark">
+                                    <Text className="text-xl font-bold text-text-primary dark:text-text-primary-dark font-primary">
                                         Available Times
                                     </Text>
                                 </View>
 
-                                <View className="bg-blue-50 dark:bg-blue-900/20 px-4 py-3 rounded-xl mb-6 flex-row items-start">
-                                    <MaterialCommunityIcons name="information-outline" size={20} color="#30bae8" style={{ marginTop: 2 }} />
-                                    <Text className="ml-2 text-sm text-text-sub-light dark:text-text-sub-dark flex-1">
+                                <View className="bg-primary/5 dark:bg-primary-dark/10 px-4 py-3 rounded-xl mb-6 flex-row items-start border border-primary/10 dark:border-primary-dark/10">
+                                    <MaterialCommunityIcons name="information-outline" size={20} color={tokens.colors.primary.light} style={{ marginTop: 2 }} />
+                                    <Text className="ml-2 text-sm text-text-secondary dark:text-text-secondary-dark flex-1 font-primary leading-relaxed">
                                         All times are shown in your local timezone. Select a slot to proceed.
                                     </Text>
                                 </View>
 
                                 {loading ? (
-                                    <ActivityIndicator color="#30bae8" size="large" className="py-8" />
+                                    <ActivityIndicator color={tokens.colors.primary.light} size="large" className="py-8" />
                                 ) : (
                                     <View className="flex-row flex-wrap justify-between -mx-1">
                                         {availableSlots.length > 0 ? availableSlots.map((slot, index) => (
@@ -168,7 +171,9 @@ export default function SelectDateScreen() {
                                                 />
                                             </View>
                                         )) : (
-                                            <Text className="text-text-sub-light dark:text-text-sub-dark py-4 w-full text-center">No slots available for this date.</Text>
+                                            <View className="w-full py-8 items-center bg-surface dark:bg-surface-elevated-dark rounded-2xl border border-dashed border-border dark:border-border-dark">
+                                                <Text className="text-text-secondary dark:text-text-secondary-dark font-primary">No slots available for this date.</Text>
+                                            </View>
                                         )}
                                     </View>
                                 )}
@@ -179,8 +184,8 @@ export default function SelectDateScreen() {
 
                 {/* Bottom Bar */}
                 <View className="absolute bottom-0 left-0 right-0">
-                     {/* @ts-ignore */}
-                    <BlurView intensity={80} tint={isDark ? 'dark' : 'light'} className="p-6 pb-10 border-t border-gray-200/50 dark:border-gray-700/50">
+                    {/* @ts-ignore */}
+                    <BlurView intensity={80} tint={isDark ? 'dark' : 'light'} className="p-6 pb-10 border-t border-border dark:border-border-dark">
                         <Button
                             title="Next Step"
                             onPress={handleNext}
@@ -188,7 +193,7 @@ export default function SelectDateScreen() {
                             variant="primary"
                             icon="arrow-right"
                             iconPosition="right"
-                            className="w-full shadow-lg shadow-primary/30"
+                            className="w-full shadow-elevated"
                         />
                     </BlurView>
                 </View>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, FlatList, RefreshControl, Dimensions } from 'react-native';
+import { View, Text, ScrollView, FlatList, RefreshControl, Dimensions, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '../../../components/Button';
@@ -18,27 +18,36 @@ export const MentorPaymentDashboardScreen = () => {
     const screenWidth = Dimensions.get('window').width;
 
     const chartConfig = {
-        backgroundGradientFrom: isDark ? "#111827" : "#ffffff",
-        backgroundGradientTo: isDark ? "#111827" : "#ffffff",
+        backgroundGradientFrom: isDark ? "#1f2937" : "#ffffff", // darker gray for dark mode
+        backgroundGradientTo: isDark ? "#1f2937" : "#ffffff",
         color: (opacity = 1) => `rgba(48, 186, 232, ${opacity})`,
-        strokeWidth: 2,
+        strokeWidth: 3, // thicker line
         barPercentage: 0.5,
         useShadowColorFromDataset: false,
         decimalPlaces: 0,
         labelColor: (opacity = 1) => isDark ? `rgba(255, 255, 255, ${opacity})` : `rgba(0, 0, 0, ${opacity})`,
+        propsForDots: {
+            r: "4",
+            strokeWidth: "2",
+            stroke: "#30bae8"
+        },
+        propsForBackgroundLines: {
+            strokeDasharray: "", // solid lines
+            stroke: isDark ? "#374151" : "#e5e7eb", // visible grid lines
+            strokeWidth: 1,
+            strokeOpacity: 0.2
+        }
     };
 
     return (
         <SafeAreaView className="flex-1 bg-white dark:bg-gray-900">
-             <View className="flex-row items-center p-4 border-b border-gray-100 dark:border-gray-800">
-                <Button
-                    variant="ghost"
-                    size="icon"
+            <View className="flex-row items-center p-4 border-b border-gray-100 dark:border-gray-800">
+                <TouchableOpacity
                     onPress={() => navigation.goBack()}
-                    className="mr-2"
+                    className="mr-2 p-2 rounded-full active:bg-gray-100 dark:active:bg-gray-800"
                 >
                     <MaterialCommunityIcons name="arrow-left" size={24} className="text-gray-900 dark:text-white" />
-                </Button>
+                </TouchableOpacity>
                 <Text className="text-xl font-bold text-gray-900 dark:text-white">Earnings & Payouts</Text>
             </View>
 
@@ -67,7 +76,7 @@ export const MentorPaymentDashboardScreen = () => {
                             color="#16a34a"
                             delay={100}
                         />
-                         <EarningsCard
+                        <EarningsCard
                             title="Pending Payout"
                             amount={earnings.pending}
                             icon="clock-outline"
@@ -99,15 +108,17 @@ export const MentorPaymentDashboardScreen = () => {
                                 }}
                             />
                         ) : (
-                             <View className="h-40 items-center justify-center">
+                            <View className="h-40 items-center justify-center">
                                 <Text className="text-gray-400">No data available</Text>
                             </View>
                         )}
                     </MotiView>
 
-                    <View className="flex-row justify-between items-center mb-4">
-                         <Text className="text-lg font-bold text-gray-900 dark:text-white">Recent Transactions</Text>
-                         <Button variant="ghost" size="sm" onPress={() => {}}>See All</Button>
+                    <View className="flex-row justify-between items-center mb-4 px-1">
+                        <Text className="text-lg font-bold text-gray-900 dark:text-white">Recent Transactions</Text>
+                        <TouchableOpacity onPress={() => { }}>
+                            <Text className="text-primary dark:text-primary-dark font-bold">See All</Text>
+                        </TouchableOpacity>
                     </View>
 
                     {transactions.map((payment) => (

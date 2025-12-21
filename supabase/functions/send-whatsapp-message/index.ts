@@ -1,4 +1,5 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import { reportError, reportInfo } from '../_shared/rollbar.ts';
 
 const TWILIO_ACCOUNT_SID = Deno.env.get('TWILIO_ACCOUNT_SID')!;
 const TWILIO_AUTH_TOKEN = Deno.env.get('TWILIO_AUTH_TOKEN')!;
@@ -47,10 +48,15 @@ serve(async (req) => {
         // Store in database
         // (Database update logic usually goes here)
 
+        // (Database update logic usually goes here)
+
+        reportInfo('WhatsApp message sent', 'send-whatsapp-message', { messageType, phoneNumber: phoneNumber.slice(-4) });
+
         return new Response(JSON.stringify({ success: true, messageId: result.sid }), {
             headers: { 'Content-Type': 'application/json' },
         });
     } catch (error: any) {
+        reportError(error, 'send-whatsapp-message', { messageType: (req as any).messageType });
         return new Response(JSON.stringify({ error: error.message }), {
             status: 400,
             headers: { 'Content-Type': 'application/json' },

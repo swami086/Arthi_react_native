@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { Button } from "./Button";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { reportError } from "../services/rollbar";
 
 interface Props {
     children?: ReactNode;
@@ -23,6 +23,8 @@ export class ErrorBoundary extends Component<Props, State> {
 
     public componentDidCatch(error: Error, errorInfo: any) {
         console.error("Uncaught error:", error, errorInfo);
+        reportError(error, `ErrorBoundary: ${JSON.stringify(errorInfo)}`);
+
     }
 
     public render() {
@@ -31,7 +33,18 @@ export class ErrorBoundary extends Component<Props, State> {
                 <View style={styles.container}>
                     <Text style={styles.title}>Something went wrong.</Text>
                     <Text style={styles.error}>{this.state.error?.message}</Text>
-                    <Button title="Try Again" onPress={() => this.setState({ hasError: false })} />
+                    <TouchableOpacity
+                        onPress={() => this.setState({ hasError: false })}
+                        style={{
+                            backgroundColor: '#30bae8',
+                            paddingHorizontal: 20,
+                            paddingVertical: 10,
+                            borderRadius: 8,
+                            marginTop: 10
+                        }}
+                    >
+                        <Text style={{ color: 'white', fontWeight: 'bold' }}>Try Again</Text>
+                    </TouchableOpacity>
                 </View>
             );
         }
@@ -46,15 +59,17 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         padding: 20,
+        backgroundColor: 'white',
     },
     title: {
         fontSize: 24,
         fontWeight: "bold",
         marginBottom: 10,
+        color: '#111827',
     },
     error: {
         marginBottom: 20,
-        color: "red",
+        color: "#ef4444",
         textAlign: "center",
     },
 });

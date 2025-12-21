@@ -20,6 +20,8 @@ import ProcessingProgress from '../components/ProcessingProgress';
 import RecordingConsentModal from '../components/RecordingConsentModal';
 import { uploadAudioToSupabase, UploadProgress } from '../../../services/audioUploadService';
 import { RootNavigationProp } from '../../../navigation/types';
+import { LinearGradient } from 'expo-linear-gradient';
+import { MotiView } from 'moti';
 
 type SessionDetailRouteProp = RouteProp<RootStackParamList, 'SessionDetail'>;
 
@@ -229,222 +231,247 @@ export default function SessionDetailScreen() {
     const mentee = appointment.profiles;
 
     return (
-        <View className="flex-1 bg-white dark:bg-gray-900">
+        <View className="flex-1 bg-white dark:bg-[#111d21]">
             <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
-            <SafeAreaView className="flex-1">
-                <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
-                    {/* Header */}
-                    <View className="px-6 py-4 flex-row items-center border-b border-gray-100 dark:border-gray-700 mb-6">
-                        <TouchableOpacity onPress={() => navigation.goBack()} className="mr-4">
-                            <MaterialCommunityIcons name="arrow-left" size={24} color={isDark ? "#fff" : "#333"} />
-                        </TouchableOpacity>
-                        <Text className="text-xl font-bold text-gray-900 dark:text-white">Session Details</Text>
-                    </View>
 
-                    {/* Mentee Info */}
-                    <View className="px-6 items-center mb-8">
-                        <GradientAvatar
-                            source={mentee?.avatar_url ? { uri: mentee.avatar_url } : { uri: 'https://via.placeholder.com/150' }}
-                            size={80}
-                        />
-                        <Text className="text-xl font-bold text-gray-900 dark:text-white mt-3">{mentee?.full_name || 'Mentee'}</Text>
-                        <View className={`px-3 py-1 rounded-full mt-2 bg-gray-100 dark:bg-gray-800`}>
-                            <Text className="text-gray-600 dark:text-gray-300 font-bold uppercase text-xs">{appointment.status}</Text>
-                        </View>
-                    </View>
+            {/* Top Header */}
+            <SafeAreaView edges={['top']} className="bg-white/95 dark:bg-[#111d21]/95 z-50 border-b border-gray-100 dark:border-white/5">
+                <View className="px-4 py-3 flex-row items-center justify-between">
+                    <TouchableOpacity
+                        onPress={() => navigation.goBack()}
+                        className="w-10 h-10 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                    >
+                        <MaterialCommunityIcons name="arrow-left" size={24} color={isDark ? "#fff" : "#1e293b"} />
+                    </TouchableOpacity>
+                    <Text className="text-lg font-bold text-slate-900 dark:text-white">Session Details</Text>
+                    <TouchableOpacity className="w-10 h-10 items-center justify-center">
+                        <MaterialCommunityIcons name="dots-vertical" size={24} color={isDark ? "#94a3b8" : "#94a3b8"} />
+                    </TouchableOpacity>
+                </View>
+            </SafeAreaView>
 
-                    {/* Meta Data */}
-                    <View className="px-6 mb-8 flex-row justify-around">
-                        <View className="items-center">
-                            <MaterialCommunityIcons name="calendar" size={24} color="#30bae8" />
-                            <Text className="text-gray-900 dark:text-white font-bold mt-1">{new Date(appointment.start_time).toLocaleDateString()}</Text>
-                            <Text className="text-gray-400 dark:text-gray-500 text-xs">Date</Text>
-                        </View>
-                        <View className="items-center">
-                            <MaterialCommunityIcons name="clock-outline" size={24} color="#30bae8" />
-                            <Text className="text-gray-900 dark:text-white font-bold mt-1">{new Date(appointment.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
-                            <Text className="text-gray-400 dark:text-gray-500 text-xs">Time</Text>
-                        </View>
-                        <View className="items-center">
-                            <MaterialCommunityIcons name="video" size={24} color={appointment.meeting_link ? "#10B981" : "#9CA3AF"} />
-                            <Text className="text-gray-900 dark:text-white font-bold mt-1">{appointment.meeting_link ? 'Online' : 'TBD'}</Text>
-                            <Text className="text-gray-400 dark:text-gray-500 text-xs">Location</Text>
-                        </View>
-                    </View>
+            <ScrollView contentContainerStyle={{ paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
 
-                    {/* Meeting Link */}
-                    {appointment.meeting_link && (appointment.status === 'confirmed' || appointment.status === 'pending') && (
-                        <View className="px-6 mb-8">
-                            <TouchableOpacity
-                                className="bg-blue-500 py-4 rounded-xl flex-row justify-center items-center shadow-md shadow-blue-200"
-                                onPress={() => Linking.openURL(appointment.meeting_link)}
-                            >
-                                <MaterialCommunityIcons name="video" size={24} color="white" className="mr-2" />
-                                <Text className="text-white font-bold text-lg">Join Meeting</Text>
-                            </TouchableOpacity>
+                {/* Profile Header */}
+                <View className="p-4">
+                    <View className="flex-row items-center gap-4 bg-white dark:bg-[#1a2a2e] p-4 rounded-3xl shadow-sm border border-gray-100 dark:border-white/5">
+                        <View className="relative">
+                            <GradientAvatar
+                                source={mentee?.avatar_url ? { uri: mentee.avatar_url } : { uri: 'https://via.placeholder.com/150' }}
+                                size={64}
+                            />
+                            <View className="absolute bottom-0 right-0 h-4 w-4 bg-green-500 border-2 border-white dark:border-[#1a2a2e] rounded-full" />
                         </View>
-                    )}
-
-                    {/* AI Scribe Section */}
-                    <View className="px-6 mb-8">
-                        <View className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
-                            {/* Header */}
-                            <View className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-800 p-4 border-b border-gray-100 dark:border-gray-700 flex-row justify-between items-center">
-                                <View className="flex-row items-center">
-                                    <View className="bg-blue-100 dark:bg-blue-900/40 p-2 rounded-lg mr-3">
-                                        <MaterialCommunityIcons name="robot" size={20} color="#3b82f6" />
-                                    </View>
-                                    <View>
-                                        <Text className="font-bold text-slate-800 dark:text-white text-base">AI Scribe</Text>
-                                        <Text className="text-xs text-slate-500 dark:text-slate-400">Automated documentation</Text>
-                                    </View>
+                        <View className="flex-1">
+                            <View className="flex-row justify-between items-start">
+                                <View>
+                                    <Text className="text-slate-900 dark:text-white text-xl font-bold">{mentee?.full_name || 'Mentee'}</Text>
+                                    <Text className="text-slate-500 dark:text-[#93bac8] text-sm font-medium mt-1">Mentee • Career Growth</Text>
                                 </View>
-                                <TouchableOpacity onPress={() => setShowConsentModal(true)}>
-                                    <MaterialCommunityIcons name="information-outline" size={22} color={isDark ? '#94a3b8' : '#64748b'} />
-                                </TouchableOpacity>
+                                <View className="bg-[#30bae8]/10 px-2.5 py-1 rounded-md">
+                                    <Text className="text-[#30bae8] text-xs font-bold uppercase">{appointment.status}</Text>
+                                </View>
                             </View>
+                        </View>
+                    </View>
+                </View>
 
-                            {/* Content */}
-                            <View className="p-4">
-                                {processingStep !== 'completed' && recordingState === 'idle' && !soapNoteId && (
-                                    <>
-                                        <View className="bg-amber-50 dark:bg-amber-900/20 p-3 rounded-lg mb-4 border border-amber-100 dark:border-amber-800/50">
-                                            <Text className="text-xs text-amber-800 dark:text-amber-200 leading-4">
-                                                Record your session to automatically generate a transcript and SOAP note. Requires patient consent.
+                {/* Session Details List */}
+                <View className="px-4 space-y-3 gap-3">
+                    {/* Date/Time */}
+                    <View className="flex-row items-center gap-4 bg-white dark:bg-[#1a2a2e] px-4 py-3 rounded-2xl border border-gray-100 dark:border-white/5">
+                        <View className="items-center justify-center rounded-xl bg-[#30bae8]/10 h-10 w-10">
+                            <MaterialCommunityIcons name="calendar-month" size={20} color="#30bae8" />
+                        </View>
+                        <View>
+                            <Text className="text-slate-900 dark:text-white text-base font-semibold">
+                                {new Date(appointment.start_time).toLocaleDateString()} • {new Date(appointment.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </Text>
+                            <Text className="text-slate-500 dark:text-slate-400 text-xs">45 mins duration</Text>
+                        </View>
+                    </View>
+
+                    {/* Location */}
+                    <View className="flex-row items-center gap-4 bg-white dark:bg-[#1a2a2e] px-4 py-3 rounded-2xl border border-gray-100 dark:border-white/5">
+                        <View className="items-center justify-center rounded-xl bg-[#30bae8]/10 h-10 w-10">
+                            <MaterialCommunityIcons name="video" size={20} color="#30bae8" />
+                        </View>
+                        <View className="flex-1">
+                            <Text className="text-slate-900 dark:text-white text-base font-semibold">Online Session</Text>
+                            <Text className="text-slate-500 dark:text-slate-400 text-xs">Google Meet Available</Text>
+                        </View>
+                        {(appointment.status === 'confirmed' || appointment.status === 'pending') && (
+                            <TouchableOpacity
+                                onPress={() => navigation.navigate('VideoCallWaitingRoom', {
+                                    appointmentId: appointment.id,
+                                    roomId: ''
+                                })}
+                            >
+                                <Text className="text-[#30bae8] font-bold text-sm">Join</Text>
+                            </TouchableOpacity>
+                        )}
+                    </View>
+                </View>
+
+                <View className="h-6" />
+
+                {/* AI Scribe Section */}
+                <View className="mx-4 overflow-hidden rounded-[2rem]">
+                    <LinearGradient
+                        colors={['#1a2c32', '#142328']}
+                        className="p-6 border border-[#243e47]"
+                    >
+                        {/* Header */}
+                        <View className="flex-row items-center justify-between mb-6 z-10">
+                            <View className="flex-row items-center gap-2">
+                                <MaterialCommunityIcons name="robot" size={24} color="#30bae8" />
+                                <Text className="text-white text-lg font-bold">AI Scribe</Text>
+                            </View>
+                            <View className="bg-[#243e47] px-2 py-1 rounded-md">
+                                <Text className="text-[#93bac8] text-xs font-bold">BETA</Text>
+                            </View>
+                        </View>
+
+                        {/* Controls */}
+                        {processingStep !== 'completed' && !soapNoteId && (
+                            <>
+                                {!consentGiven && (
+                                    <TouchableOpacity
+                                        activeOpacity={0.8}
+                                        onPress={() => setConsentGiven(!consentGiven)}
+                                        className="flex-row gap-3 mb-8 z-10"
+                                    >
+                                        <View className={`h-5 w-5 rounded border-2 items-center justify-center ${consentGiven ? 'bg-[#30bae8] border-[#30bae8]' : 'border-[#345965]'}`}>
+                                            {consentGiven && <MaterialCommunityIcons name="check" size={14} color="#111d21" />}
+                                        </View>
+                                        <Text className="text-slate-300 text-sm flex-1 leading-5">
+                                            I have obtained verbal consent from the patient to record this session.
+                                        </Text>
+                                    </TouchableOpacity>
+                                )}
+
+                                {consentGiven && (
+                                    <View className="items-center justify-center gap-4 z-10">
+                                        <View className="relative items-center justify-center">
+                                            {recordingState === 'recording' && (
+                                                <MotiView
+                                                    from={{ opacity: 0.5, scale: 1 }}
+                                                    animate={{ opacity: 0, scale: 1.5 }}
+                                                    transition={{ type: 'timing', duration: 1000, loop: true }}
+                                                    className="absolute w-20 h-20 rounded-full bg-[#30bae8]/30"
+                                                />
+                                            )}
+
+                                            <TouchableOpacity
+                                                onPress={() => recordingState === 'idle' ? startRecording() : stopRecording()}
+                                                className={`h-20 w-20 items-center justify-center rounded-full shadow-lg ${recordingState === 'recording' ? 'bg-red-500' : 'bg-[#30bae8]'}`}
+                                            >
+                                                <MaterialCommunityIcons name={recordingState === 'recording' ? "stop" : "microphone"} size={32} color={recordingState === 'recording' ? "white" : "#111d21"} />
+                                            </TouchableOpacity>
+                                        </View>
+                                        <View className="items-center">
+                                            <Text className="text-white font-bold text-base">
+                                                {recordingState === 'recording' ? formatDuration(duration) : "Tap to Record"}
+                                            </Text>
+                                            <Text className="text-[#93bac8] text-xs mt-1">
+                                                {recordingState === 'recording' ? "Recording in progress..." : "Audio is processed securely"}
                                             </Text>
                                         </View>
-
-                                        <ConsentCheckbox
-                                            checked={consentGiven}
-                                            onChange={setConsentGiven}
-                                            label="I have obtained verbal consent from the patient to record this session for clinical documentation purposes."
-                                        />
-                                    </>
-                                )}
-
-                                {(consentGiven || recordingState !== 'idle' || soapNoteId) && !soapNoteId && (
-                                    <RecordingControls
-                                        recordingState={recordingState}
-                                        duration={duration}
-                                        onStart={startRecording}
-                                        onPause={pauseRecording}
-                                        onResume={resumeRecording}
-                                        onStop={handleStopRecording}
-                                        metering={metering}
-                                    />
-                                )}
-
-                                {(processingStep !== 'uploading' || processingProgress > 0) && !soapNoteId && (
-                                    <ProcessingProgress
-                                        progress={processingProgress}
-                                        status={processingStep}
-                                    />
-                                )}
-
-                                {soapNoteId && (
-                                    <View className="items-center py-2">
-                                        <View className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full items-center justify-center mb-3">
-                                            <MaterialCommunityIcons name="check-circle" size={32} color="#10b981" />
-                                        </View>
-                                        <Text className="text-lg font-bold text-slate-800 dark:text-white mb-1">
-                                            Session Processed
-                                        </Text>
-                                        <Text className="text-slate-500 dark:text-slate-400 text-center text-sm mb-4">
-                                            Transcript and SOAP note are ready for review.
-                                        </Text>
-
-                                        <View className="flex-row w-full space-x-3">
-                                            <TouchableOpacity
-                                                className="flex-1 bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 py-3 rounded-xl flex-row justify-center items-center"
-                                                onPress={() => navigation.navigate('TranscriptViewer', {
-                                                    transcriptId: transcriptId!,
-                                                    appointmentId
-                                                })}
-                                            >
-                                                <MaterialCommunityIcons name="text-box-outline" size={20} color={isDark ? '#e2e8f0' : '#475569'} className="mr-2" />
-                                                <Text className="font-semibold text-slate-700 dark:text-slate-200">Transcript</Text>
-                                            </TouchableOpacity>
-
-                                            <TouchableOpacity
-                                                className="flex-1 bg-primary-500 py-3 rounded-xl flex-row justify-center items-center shadow-md"
-                                                onPress={() => navigation.navigate('SoapNoteEditor', {
-                                                    soapNoteId: soapNoteId!,
-                                                    appointmentId,
-                                                    transcriptId: transcriptId!
-                                                })}
-                                            >
-                                                <MaterialCommunityIcons name="file-document-edit-outline" size={20} color="white" className="mr-2" />
-                                                <Text className="font-bold text-white">SOAP Note</Text>
-                                            </TouchableOpacity>
-                                        </View>
                                     </View>
                                 )}
+                            </>
+                        )}
+
+                        {(soapNoteId || processingStep === 'completed') && (
+                            <View className="items-center py-4 z-10">
+                                <View className="h-16 w-16 bg-green-500/20 rounded-full items-center justify-center mb-3">
+                                    <MaterialCommunityIcons name="check-circle" size={32} color="#22c55e" />
+                                </View>
+                                <Text className="text-white font-bold text-lg">Session Processed</Text>
+                                <Text className="text-slate-400 text-sm mb-6">Transcript and SOAP note ready.</Text>
+
+                                <View className="flex-row gap-3 w-full">
+                                    <TouchableOpacity
+                                        className="flex-1 bg-[#243e47] py-3 rounded-xl flex-row justify-center items-center"
+                                        onPress={() => navigation.navigate('TranscriptViewer', { transcriptId: transcriptId!, appointmentId })}
+                                    >
+                                        <Text className="text-white font-bold text-sm">Transcript</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        className="flex-1 bg-[#30bae8] py-3 rounded-xl flex-row justify-center items-center"
+                                        onPress={() => navigation.navigate('SoapNoteEditor', { soapNoteId: soapNoteId!, appointmentId, transcriptId: transcriptId! })}
+                                    >
+                                        <Text className="text-[#111d21] font-bold text-sm">SOAP Note</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
-                        </View>
-                    </View>
+                        )}
 
-                    <RecordingConsentModal
-                        visible={showConsentModal}
-                        onClose={() => setShowConsentModal(false)}
-                    />
+                        {/* Status for processing */}
+                        {processingStep !== 'completed' && processingStep !== 'uploading' && processingProgress > 0 && !soapNoteId && (
+                            <View className="mt-4">
+                                <Text className="text-[#93bac8] text-xs mb-2 text-center capitalize">{processingStep}...</Text>
+                                <View className="h-1 bg-[#243e47] rounded-full overflow-hidden w-full">
+                                    <View className="h-full bg-[#30bae8]" style={{ width: `${processingProgress}%` }} />
+                                </View>
+                            </View>
+                        )}
 
-                    {/* Notes Section */}
-                    <View className="px-6 mb-6">
-                        <View className="flex-row justify-between items-center mb-2">
-                            <Text className="text-lg font-bold text-gray-900 dark:text-white">Session Notes</Text>
-                            <TouchableOpacity onPress={handleSaveNotes} disabled={saving}>
-                                <Text className="text-primary font-bold">{saving ? 'Saving...' : 'Save'}</Text>
-                            </TouchableOpacity>
+                    </LinearGradient>
+                </View>
+
+                <View className="h-6" />
+
+                {/* Notes Section */}
+                <View className="px-4">
+                    <Text className="text-slate-900 dark:text-white text-lg font-bold mb-3 px-1">Session Notes</Text>
+                    <View className="bg-white dark:bg-[#1a2a2e] rounded-2xl p-4 border border-gray-100 dark:border-white/5 min-h-[160px]">
+                        <View className="flex-row items-center gap-2 mb-3">
+                            <MaterialCommunityIcons name="history" size={16} color="#93bac8" />
+                            <Text className="text-xs uppercase tracking-wider font-bold text-[#93bac8]">Previous Note Summary</Text>
                         </View>
+                        <Text className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-4">
+                            {notes ? notes.substring(0, 100) + (notes.length > 100 ? '...' : '') : "No previous notes."}
+                        </Text>
+                        <View className="h-[1px] bg-gray-100 dark:bg-gray-700 my-2" />
                         <TextInput
-                            className="bg-gray-50 dark:bg-gray-800 p-4 rounded-xl text-gray-800 dark:text-white min-h-[120px] text-base"
-                            placeholder="Add private notes about this session..."
+                            className="text-slate-900 dark:text-white text-base min-h-[80px]"
+                            placeholder="Add manual notes here..."
+                            placeholderTextColor="#64748b"
                             multiline
-                            textAlignVertical="top"
                             value={notes}
                             onChangeText={setNotes}
                         />
                     </View>
+                </View>
 
-                    {/* Feedback Section (if completed) */}
-                    {appointment.feedback && (
-                        <View className="px-6 mb-8">
-                            <Text className="text-lg font-bold text-gray-900 dark:text-white mb-2">Mentee Feedback</Text>
-                            <View className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-xl border border-purple-100 dark:border-purple-800">
-                                <Text className="text-gray-700 dark:text-gray-300 italic">"{appointment.feedback}"</Text>
-                            </View>
-                        </View>
-                    )}
+            </ScrollView>
 
-                    {/* Action Buttons */}
-                    <View className="px-6 mt-4 gap-3">
-                        {appointment.status === 'pending' && (
-                            <TouchableOpacity
-                                className="bg-green-500 py-3 rounded-xl items-center"
-                                onPress={() => handleUpdateStatus('confirmed')}
-                            >
-                                <Text className="text-white font-bold text-base">Confirm Session</Text>
-                            </TouchableOpacity>
-                        )}
-                        {appointment.status === 'confirmed' && (
-                            <TouchableOpacity
-                                className="bg-gray-900 py-3 rounded-xl items-center"
-                                onPress={() => handleUpdateStatus('completed')}
-                            >
-                                <Text className="text-white font-bold text-base">Mark as Completed</Text>
-                            </TouchableOpacity>
-                        )}
-                        {(appointment.status === 'pending' || appointment.status === 'confirmed') && (
-                            <TouchableOpacity
-                                className="bg-red-50 py-3 rounded-xl items-center border border-red-100"
-                                onPress={() => handleUpdateStatus('cancelled')}
-                            >
-                                <Text className="text-red-500 font-bold text-base">Cancel Session</Text>
-                            </TouchableOpacity>
-                        )}
-                    </View>
-                </ScrollView>
-            </SafeAreaView>
+            {/* Sticky Footer */}
+            <View className="absolute bottom-0 w-full bg-white/95 dark:bg-[#111d21]/95 backdrop-blur-xl border-t border-gray-200 dark:border-white/5 p-4 pb-8 z-50">
+                <View className="flex-row gap-3">
+                    <TouchableOpacity
+                        className="flex-1 h-12 rounded-full border border-gray-300 dark:border-gray-600 items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800"
+                        onPress={() => navigation.goBack()}
+                    >
+                        <Text className="text-slate-700 dark:text-white font-bold text-sm">Cancel</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        className="flex-[2] h-12 rounded-full bg-[#30bae8] items-center justify-center flex-row gap-2 shadow-lg shadow-blue-500/25"
+                        onPress={() => handleUpdateStatus('completed')}
+                    >
+                        <MaterialCommunityIcons name="check-circle-outline" size={20} color="#111d21" />
+                        <Text className="text-[#111d21] font-bold text-sm">Mark as Completed</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
         </View>
     );
 }
+
+// Helper to format duration
+const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+};

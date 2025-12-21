@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Text, Pressable } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MotiView } from 'moti';
+import { tokens } from '../design-system/tokens';
 
 interface QuickActionButtonProps {
     icon: keyof typeof MaterialCommunityIcons.glyphMap;
@@ -27,12 +28,12 @@ export const QuickActionButton: React.FC<QuickActionButtonProps> = ({ icon, labe
                     shadowOpacity: pressed ? 0.3 : 0.1
                 }}
                 transition={{ type: 'spring', damping: 10 }}
-                className={`w-14 h-14 rounded-full items-center justify-center mb-2 shadow-sm`}
+                className={`w-14 h-14 rounded-full items-center justify-center mb-2 shadow-soft`}
                 style={{ backgroundColor: color }}
             >
-                <MaterialCommunityIcons name={icon} size={28} color="white" />
+                <MaterialCommunityIcons name={icon} size={tokens.dimensions.icon.xl} color={tokens.colors.surface.light} />
             </MotiView>
-            <Text className="text-gray-600 text-xs font-bold text-center">{label}</Text>
+            <Text className="text-text-secondary dark:text-text-secondary-dark text-xs font-bold text-center font-primary">{label}</Text>
         </Pressable>
     );
 };

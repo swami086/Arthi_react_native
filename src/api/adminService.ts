@@ -1,4 +1,6 @@
 import { supabase } from './supabase';
+
+import { reportError } from '../services/rollbar';
 import { Profile, AdminAction } from './types';
 
 export const getPendingMentors = async () => {
@@ -117,5 +119,8 @@ export const logAdminAction = async (adminId: string, actionType: AdminAction['a
             details
         });
 
-    if (error) console.error('Error logging admin action:', error);
+    if (error) {
+        console.error('Error logging admin action:', error);
+        reportError(error, 'adminService:logAdminAction');
+    }
 };

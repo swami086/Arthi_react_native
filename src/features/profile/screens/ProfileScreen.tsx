@@ -28,7 +28,7 @@ export const ProfileScreen = () => {
 
     // Calculate upcoming appointment
     const upcomingAppointment = appointments.find(app =>
-        app.status === 'confirmed' && new Date(app.start_time) > new Date()
+        app.status === 'confirmed' && app.start_time && !isNaN(new Date(app.start_time).getTime()) && new Date(app.start_time) > new Date()
     );
 
     if (loading) {
@@ -91,7 +91,10 @@ export const ProfileScreen = () => {
                             <Text className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{profile?.full_name || 'User'}</Text>
                             <Text className="text-gray-500 dark:text-gray-400 font-medium mb-4 capitalize">{profile?.role || 'Member'}</Text>
 
-                            <TouchableOpacity className="flex-row items-center px-6 py-2 border border-gray-200 dark:border-gray-600 rounded-full bg-gray-50 dark:bg-gray-700">
+                            <TouchableOpacity
+                                onPress={() => navigation.navigate('EditProfile')}
+                                className="flex-row items-center px-6 py-2 border border-gray-200 dark:border-gray-600 rounded-full bg-gray-50 dark:bg-gray-700"
+                            >
                                 <MaterialCommunityIcons name="pencil-outline" size={16} color={isDark ? "#fff" : "#333"} className="mr-2" />
                                 <Text className="text-gray-700 dark:text-white font-bold ml-2">Edit Profile</Text>
                             </TouchableOpacity>
@@ -123,18 +126,28 @@ export const ProfileScreen = () => {
 
                                     <Text className="text-white/80 font-medium mb-1">Upcoming Session</Text>
                                     <Text className="text-white text-2xl font-bold mb-4">
-                                        {new Date(upcomingAppointment.start_time).toLocaleDateString()}
+                                        {upcomingAppointment.start_time && !isNaN(new Date(upcomingAppointment.start_time).getTime())
+                                            ? new Date(upcomingAppointment.start_time).toLocaleDateString()
+                                            : 'No Date'}
                                     </Text>
 
                                     <View className="flex-row items-center mb-6">
                                         <View className="bg-white/20 px-3 py-1.5 rounded-lg mr-3">
                                             <Text className="text-white font-bold">
-                                                {new Date(upcomingAppointment.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                {upcomingAppointment.start_time && !isNaN(new Date(upcomingAppointment.start_time).getTime())
+                                                    ? new Date(upcomingAppointment.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                                                    : 'TBD'}
                                             </Text>
                                         </View>
                                     </View>
 
-                                    <TouchableOpacity className="bg-white py-3 rounded-xl items-center shadow-md">
+                                    <TouchableOpacity
+                                        onPress={() => navigation.navigate('VideoCallWaitingRoom', {
+                                            appointmentId: upcomingAppointment.id,
+                                            roomId: upcomingAppointment.video_room_id ?? undefined
+                                        })}
+                                        className="bg-white py-3 rounded-xl items-center shadow-md"
+                                    >
                                         <Text className="text-primary font-bold text-base">Join Waiting Room</Text>
                                     </TouchableOpacity>
                                 </LinearGradient>

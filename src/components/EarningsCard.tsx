@@ -29,13 +29,13 @@ export const EarningsCard: React.FC<EarningsCardProps> = ({
             from={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ type: 'spring', delay }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm w-40 mr-4 border border-gray-100 dark:border-gray-700"
+            className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm w-44 mr-4 border border-gray-100 dark:border-gray-700"
         >
             <View className={`w-10 h-10 rounded-full items-center justify-center mb-3`} style={{ backgroundColor: `${color}20` }}>
                 <MaterialCommunityIcons name={icon} size={20} color={color} />
             </View>
 
-            <Text className="text-gray-500 dark:text-gray-400 text-xs font-medium mb-1">
+            <Text className="text-gray-500 dark:text-gray-400 text-xs font-medium mb-1" numberOfLines={1}>
                 {title}
             </Text>
 

@@ -8,6 +8,7 @@ import { MentorProfileScreen } from '../features/mentor/screens/MentorProfileScr
 import SettingsScreen from '../features/profile/screens/SettingsScreen';
 import { MentorTabParamList } from './types';
 import { useColorScheme } from '../hooks/useColorScheme';
+import { tokens } from '../design-system/tokens';
 
 const Tab = createBottomTabNavigator<MentorTabParamList>();
 
@@ -18,16 +19,21 @@ export const MentorNavigator = () => {
         <Tab.Navigator
             screenOptions={{
                 headerShown: false,
-                tabBarActiveTintColor: '#30bae8',
-                tabBarInactiveTintColor: 'gray',
+                tabBarActiveTintColor: tokens.colors.primary.light,
+                tabBarInactiveTintColor: isDark ? tokens.colors.text.disabled.dark : tokens.colors.text.disabled.light,
                 tabBarStyle: {
-                    backgroundColor: isDark ? '#1a2c32' : '#ffffff',
+                    backgroundColor: isDark ? tokens.colors.surface.dark : tokens.colors.surface.light,
                     borderTopWidth: 1,
-                    borderTopColor: isDark ? '#1a2c32' : '#f0f0f0',
+                    borderTopColor: isDark ? tokens.colors.border.dark : tokens.colors.border.light,
                     height: 60,
-                    paddingBottom: 8,
-                    paddingTop: 8,
+                    paddingBottom: tokens.spacing[2],
+                    paddingTop: tokens.spacing[2],
                 },
+                tabBarLabelStyle: {
+                    fontFamily: tokens.typography.fontFamily.primary,
+                    fontWeight: '600',
+                    fontSize: tokens.typography.fontSize.xs,
+                }
             }}
         >
             <Tab.Screen

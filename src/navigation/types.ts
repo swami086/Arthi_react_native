@@ -6,6 +6,7 @@ import { Profile } from '../api/types';
 export type AuthStackParamList = {
     Login: undefined;
     SignUp: undefined;
+    ForgotPassword: undefined;
 };
 
 export type OnboardingStackParamList = {
@@ -74,12 +75,15 @@ export type RootStackParamList = {
     // Video Call Flow
     VideoCallWaitingRoom: {
         appointmentId: string;
-        roomId: string;
+        roomId?: string;
+        googleMeetCode?: string;
     };
     VideoCall: {
         appointmentId: string;
         roomId: string;
-        token: string;
+        token?: string;
+        meetingUrl: string;
+        googleMeetCode: string;
     };
     PostSessionFeedback: {
         appointmentId: string;
@@ -89,6 +93,8 @@ export type RootStackParamList = {
     // Shared
     ChatDetail: { otherUserId: string; otherUserName: string };
     Settings: undefined;
+    EditProfile: undefined;
+    Notifications: undefined;
 
     // Mentor/Mentee Details
     MentorDetail: { mentorId: string; mentorName: string; mentorAvatar?: string; mentorBio?: string; mentorExpertise?: string[] };
@@ -118,7 +124,7 @@ export type RootStackParamList = {
     AdminMentees: undefined;
 
     // Mentor Screens
-    MenteeDiscovery: undefined;
+    MenteeDiscovery: { autoOpenAddModal?: boolean } | undefined;
 
     PendingMentorRequests: undefined;
 
@@ -126,6 +132,9 @@ export type RootStackParamList = {
     ReferralsManagement: undefined;
     MenteeOnboarding: { menteeId?: string };
     MentorPaymentDashboard: undefined;
+    Resources: undefined;
+    CrisisResources: undefined;
+    RollbarDebug: undefined;
 };
 
 export type RootNavigationProp = StackNavigationProp<RootStackParamList>;

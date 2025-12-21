@@ -144,16 +144,14 @@ export const PostSessionFeedbackScreen = () => {
                         onPress={handleSubmit}
                         loading={loading}
                         className="w-full mb-3"
-                    >
-                        Submit Feedback
-                    </Button>
+                        title="Submit Feedback"
+                    />
                     <Button
                         variant="ghost"
                         onPress={navigateHome}
+                        title="Skip"
                         className="w-full"
-                    >
-                        Skip
-                    </Button>
+                    />
                 </View>
             </KeyboardAvoidingView>
         </SafeAreaView>

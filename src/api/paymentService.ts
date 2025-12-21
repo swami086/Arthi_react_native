@@ -1,5 +1,6 @@
 import { supabase } from './supabase';
 import { Payment } from './types';
+import { reportError } from '../services/rollbar';
 
 // Razorpay configuration (Placeholder for now, in Direct UPI context these might be less used but kept for plan consistency)
 const RAZORPAY_KEY_ID = '';
@@ -37,6 +38,7 @@ export const createPaymentOrder = async (params: CreateOrderParams): Promise<any
         return data;
     } catch (error) {
         console.error('Error creating payment order:', error);
+        reportError(error, 'paymentService:createPaymentOrder');
         throw error;
     }
 };
@@ -54,6 +56,7 @@ export const verifyPayment = async (verification: PaymentVerification): Promise<
         return data.verified;
     } catch (error) {
         console.error('Error verifying payment:', error);
+        reportError(error, 'paymentService:verifyPayment');
         throw error;
     }
 };
@@ -81,6 +84,7 @@ export const getPaymentHistory = async (userId: string): Promise<Payment[]> => {
         return data as any[]; // Type cast as supabase selector join types can be complex
     } catch (error) {
         console.error('Error fetching payment history:', error);
+        reportError(error, 'paymentService:getPaymentHistory');
         throw error;
     }
 };
@@ -100,6 +104,7 @@ export const getPaymentById = async (paymentId: string): Promise<Payment | null>
         return data;
     } catch (error) {
         console.error('Error fetching payment:', error);
+        reportError(error, 'paymentService:getPaymentById');
         return null;
     }
 };
@@ -117,6 +122,7 @@ export const requestRefund = async (paymentId: string, reason: string): Promise<
         return data.success;
     } catch (error) {
         console.error('Error requesting refund:', error);
+        reportError(error, 'paymentService:requestRefund');
         throw error;
     }
 };
@@ -140,6 +146,7 @@ export const getMentorEarnings = async (
         return data;
     } catch (error) {
         console.error('Error fetching mentor earnings:', error);
+        reportError(error, 'paymentService:getMentorEarnings');
         throw error;
     }
 };

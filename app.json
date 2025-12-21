@@ -15,7 +15,11 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSMicrophoneUsageDescription": "Allow access to the microphone to record therapy sessions used for generating transcripts and SOAP notes."
+        "NSMicrophoneUsageDescription": "Allow access to the microphone to record therapy sessions used for generating transcripts and SOAP notes.",
+        "UIBackgroundModes": [
+          "fetch",
+          "remote-notification"
+        ]
       },
       "bundleIdentifier": "com.safespace.app"
     },
@@ -25,9 +29,16 @@
         {
           "microphonePermission": "Allow access to the microphone to record therapy sessions used for generating transcripts and SOAP notes."
         }
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.723184741946-8v893831hobc5ffa2fok3ooq2jn13miv"
+        }
       ]
     ],
     "android": {
+      "package": "com.safespace.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"

@@ -21,42 +21,49 @@ export const MenteeCard: React.FC<MenteeCardProps> = ({
     return (
         <TouchableOpacity
             onPress={onViewProfile}
-            className="bg-white dark:bg-gray-800 p-4 rounded-2xl mb-3 shadow-sm border border-gray-100 dark:border-gray-700 flex-row items-center"
+            className="bg-surface dark:bg-surface-dark p-4 rounded-2xl mb-3 shadow-soft dark:shadow-none border border-border dark:border-border-dark flex-row items-center gap-4"
         >
-            <View className="relative mr-4">
+            <View className="relative">
                 <GradientAvatar
                     source={avatar ? { uri: avatar } : { uri: 'https://via.placeholder.com/150' }}
-                    size={60}
+                    size={64}
                     online={true}
                 />
             </View>
 
-            <View className="flex-1">
-                <View className="flex-row justify-between items-start mb-1">
-                    <Text className="text-gray-900 dark:text-white font-bold text-lg">{name}</Text>
+            <View className="flex-1 gap-2">
+                <View className="flex-row justify-between items-start">
+                    <View>
+                        <Text className="text-text-primary dark:text-text-primary-dark font-bold text-lg leading-tight font-primary">{name}</Text>
+                        <Text className="text-text-secondary dark:text-text-secondary-dark text-xs font-medium font-primary">
+                            {age ? `${age} yrs` : ''}
+                            {education ? ` • ${education}` : ''}
+                        </Text>
+                    </View>
                     <View className={`px-2 py-1 rounded-full bg-opacity-10`} style={{ backgroundColor: `${statusColor}20` }}>
-                        <Text style={{ color: statusColor }} className="text-xs font-bold">{status}</Text>
+                        <Text style={{ color: statusColor }} className="text-xs font-bold font-primary capitalize">{status}</Text>
                     </View>
                 </View>
 
-                <Text className="text-gray-500 dark:text-gray-400 text-xs mb-2">
-                    {age ? `${age} yrs` : ''}
-                    {education ? ` • ${education}` : ''}
-                </Text>
-
                 {nextInfo && (
-                    <View className="flex-row items-center mb-2">
-                        <MaterialCommunityIcons name="calendar-clock" size={12} color="#9CA3AF" />
-                        <Text className="text-gray-400 dark:text-gray-500 text-xs ml-1">{nextInfo}</Text>
+                    <View className="flex-row items-center gap-1">
+                        <MaterialCommunityIcons name="calendar-clock" size={14} className="text-text-secondary dark:text-text-secondary-dark" color="#4f626b" />
+                        <Text className="text-text-secondary dark:text-text-secondary-dark text-xs font-primary">{nextInfo}</Text>
                     </View>
                 )}
 
-                <View className="flex-row mt-1">
-                    <TouchableOpacity onPress={onMessage} className="bg-gray-50 dark:bg-gray-700 px-4 py-2 rounded-lg mr-2 flex-1 items-center">
-                        <Text className="text-gray-700 dark:text-gray-200 font-bold text-xs">Message</Text>
+                <View className="flex-row gap-2 mt-1">
+                    <TouchableOpacity
+                        onPress={onMessage}
+                        className="bg-background dark:bg-background-dark px-3 py-2 rounded-xl flex-1 items-center justify-center border border-border dark:border-border-dark"
+                    >
+                        <Text className="text-text-primary dark:text-text-primary-dark font-semibold text-xs font-primary">Message</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={onViewProfile} className="bg-blue-50 dark:bg-blue-900/30 px-4 py-2 rounded-lg flex-1 items-center">
-                        <Text className="text-blue-600 dark:text-blue-400 font-bold text-xs">Profile</Text>
+                    <TouchableOpacity
+                        onPress={onViewProfile}
+                        className="bg-primary/10 dark:bg-primary-dark/20 px-3 py-2 rounded-xl flex-1 items-center justify-center"
+                    >
+                        <Text className="text-primary dark:text-primary-dark font-semibold text-xs font-primary">Profile</Text>
                     </TouchableOpacity>
                 </View>
             </View>

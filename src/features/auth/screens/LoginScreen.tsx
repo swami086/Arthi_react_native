@@ -135,7 +135,7 @@ export const LoginScreen = () => {
                                     leftIcon="lock"
                                 />
                                 {/* Add "Forgot Password?" link with primary color */}
-                                <TouchableOpacity className="self-end mt-2" onPress={() => console.log('Forgot Password')}>
+                                <TouchableOpacity className="self-end mt-2" onPress={() => navigation.navigate('ForgotPassword')}>
                                     <Text className="text-primary dark:text-primary-dark font-bold text-sm">Forgot Password?</Text>
                                 </TouchableOpacity>
                             </View>
@@ -200,7 +200,7 @@ export const LoginScreen = () => {
                                 </TouchableOpacity>
                             </View>
                             {/* Add terms text at bottom */}
-                             <Text className="text-text-sub-light dark:text-text-sub-dark text-xs text-center px-8 opacity-60 mt-4 leading-relaxed">
+                            <Text className="text-text-sub-light dark:text-text-sub-dark text-xs text-center px-8 opacity-60 mt-4 leading-relaxed">
                                 By continuing, you agree to our Terms of Service and Privacy Policy.
                             </Text>
                         </MotiView>

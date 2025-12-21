@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { reportError } from '../services/rollbar';
 import { Alert } from 'react-native';
 
 export interface SessionRecording {
@@ -61,11 +62,13 @@ export const createRecording = async (
 
     if (error) {
       console.error('Error creating recording:', error);
+      reportError(error, 'recordingService:createRecording');
       return null;
     }
     return data;
   } catch (error) {
     console.error('Error creating recording:', error);
+    reportError(error, 'recordingService:createRecording');
     return null;
   }
 };
@@ -82,11 +85,13 @@ export const getRecordingByAppointment = async (
 
     if (error) {
       console.error('Error fetching recording:', error);
+      reportError(error, 'recordingService:getRecordingByAppointment');
       return null;
     }
     return data;
   } catch (error) {
     console.error('Error fetching recording:', error);
+    reportError(error, 'recordingService:getRecordingByAppointment');
     return null;
   }
 };
@@ -108,6 +113,7 @@ export const getTranscriptByRecording = async (
     return data;
   } catch (error) {
     console.error('Error fetching transcript:', error);
+    reportError(error, 'recordingService:getTranscriptByRecording');
     return null;
   }
 };
@@ -128,6 +134,7 @@ export const getTranscriptById = async (transcriptId: string): Promise<Transcrip
     return data;
   } catch (error) {
     console.error('Error fetching transcript by ID:', error);
+    reportError(error, 'recordingService:getTranscriptById');
     return null;
   }
 };
@@ -149,6 +156,7 @@ export const getSoapNoteByAppointment = async (
     return data;
   } catch (error) {
     console.error('Error fetching SOAP note:', error);
+    reportError(error, 'recordingService:getSoapNoteByAppointment');
     return null;
   }
 };
@@ -172,6 +180,7 @@ export const updateSoapNote = async (
     return data;
   } catch (error) {
     console.error('Error updating SOAP note:', error);
+    reportError(error, 'recordingService:updateSoapNote');
     return null;
   }
 };
@@ -185,11 +194,13 @@ export const finalizeSoapNote = async (soapNoteId: string): Promise<boolean> => 
 
     if (error) {
       console.error('Error finalizing SOAP note:', error);
+      reportError(error, 'recordingService:finalizeSoapNote');
       return false;
     }
     return true;
   } catch (error) {
     console.error('Error finalizing SOAP note:', error);
+    reportError(error, 'recordingService:finalizeSoapNote');
     return false;
   }
 };
@@ -209,6 +220,7 @@ export const deleteRecording = async (recordingId: string): Promise<boolean> => 
     return true;
   } catch (error) {
     console.error('Error deleting recording:', error);
+    reportError(error, 'recordingService:deleteRecording');
     return false;
   }
 };

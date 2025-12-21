@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { reportError, reportInfo } from '../_shared/rollbar.ts'
 
 
 console.log("Generate SOAP Note Function Up and Running!")
@@ -82,7 +83,9 @@ serve(async (req) => {
 
         if (openAIData.error) {
             console.error("OpenAI API Error:", openAIData.error);
-            throw new Error(`OpenAI Error: ${openAIData.error.message}`)
+            const err = new Error(`OpenAI Error: ${openAIData.error.message}`);
+            reportError(err, 'generate-soap-note:openai', { transcript_id });
+            throw err;
         }
 
         const content = openAIData.choices[0].message.content
@@ -93,6 +96,7 @@ serve(async (req) => {
             soapContent = JSON.parse(cleanedContent)
         } catch (e) {
             console.error("JSON Parse Error. Raw content:", content);
+            reportError(e, 'generate-soap-note:json-parse', { content });
             throw new Error('Failed to parse AI response as JSON')
         }
 
@@ -134,6 +138,7 @@ serve(async (req) => {
         }
 
         console.log("SOAP note saved successfully.");
+        reportInfo('SOAP note generated', 'generate-soap-note', { soapNoteId: soapNote.id });
         return new Response(
             JSON.stringify({ soapNote }),
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -141,6 +146,7 @@ serve(async (req) => {
 
     } catch (error) {
         console.error("SOAP Gen Error:", error);
+        reportError(error, 'generate-soap-note', { transcript_id: (req as any).transcript_id, appointment_id: (req as any).appointment_id });
         return new Response(
             JSON.stringify({ error: error.message }),
             { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

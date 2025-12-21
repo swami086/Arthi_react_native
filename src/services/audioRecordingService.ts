@@ -1,4 +1,5 @@
 import { Audio } from 'expo-av';
+import { reportError } from './rollbar';
 import { Alert } from 'react-native';
 import * as FileSystem from 'expo-file-system/legacy';
 
@@ -17,6 +18,7 @@ export const requestAudioPermissions = async (): Promise<boolean> => {
     return true;
   } catch (error) {
     console.error('Error requesting audio permissions:', error);
+    reportError(error, 'audioRecordingService:requestPermissions');
     Alert.alert('Error', 'Failed to request microphone permission');
     return false;
   }
@@ -44,6 +46,7 @@ export const startRecording = async (): Promise<boolean> => {
     return true;
   } catch (error) {
     console.error('Error starting recording:', error);
+    reportError(error, 'audioRecordingService:startRecording');
     Alert.alert('Error', 'Failed to start recording');
     return false;
   }
@@ -56,6 +59,7 @@ export const pauseRecording = async (): Promise<boolean> => {
     return true;
   } catch (error) {
     console.error('Error pausing recording:', error);
+    reportError(error, 'audioRecordingService:pauseRecording');
     return false;
   }
 };
@@ -67,6 +71,7 @@ export const resumeRecording = async (): Promise<boolean> => {
     return true;
   } catch (error) {
     console.error('Error resuming recording:', error);
+    reportError(error, 'audioRecordingService:resumeRecording');
     return false;
   }
 };
@@ -89,6 +94,7 @@ export const stopRecording = async (): Promise<{ uri: string; duration: number }
     };
   } catch (error) {
     console.error('Error stopping recording:', error);
+    reportError(error, 'audioRecordingService:stopRecording');
     Alert.alert('Error', 'Failed to stop recording');
     return null;
   }

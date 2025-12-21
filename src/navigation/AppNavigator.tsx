@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
+import { initializeGoogleSignIn } from '../services/googleSignInService';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import { AuthNavigator } from './AuthNavigator';
 import { OnboardingNavigator } from './OnboardingNavigator';
@@ -10,6 +11,8 @@ import { ActivityIndicator, View, Text, TouchableOpacity, Alert } from 'react-na
 import { getOnboardingStatus } from '../utils/helpers';
 import { useColorScheme } from '../hooks/useColorScheme';
 
+import { tokens } from '../design-system/tokens';
+
 import SelectDateScreen from '../features/appointments/screens/SelectDateScreen';
 import ChooseTimeScreen from '../features/appointments/screens/ChooseTimeScreen';
 import ConfirmAppointmentScreen from '../features/appointments/screens/ConfirmAppointmentScreen';
@@ -18,6 +21,8 @@ import MentorDetailScreen from '../features/mentors/screens/MentorDetailScreen';
 import SettingsScreen from '../features/profile/screens/SettingsScreen';
 import { MentorNavigator } from './MentorNavigator';
 import { useProfile } from '../features/profile/hooks/useProfile';
+import { EditProfileScreen } from '../features/profile/screens/EditProfileScreen';
+import { NotificationsScreen } from '../features/notifications/screens/NotificationsScreen';
 
 import { AdminNavigator } from './AdminNavigator';
 import { PendingApprovalScreen } from '../features/auth/screens/PendingApprovalScreen';
@@ -49,6 +54,11 @@ import { VideoCallWaitingRoomScreen } from '../features/appointments/screens/Vid
 import { VideoCallScreen } from '../features/appointments/screens/VideoCallScreen';
 import { PostSessionFeedbackScreen } from '../features/appointments/screens/PostSessionFeedbackScreen';
 import { MentorPaymentDashboardScreen } from '../features/mentor/screens/MentorPaymentDashboardScreen';
+import { ResourcesScreen } from '../features/mentor/screens/ResourcesScreen';
+import { CrisisResourcesScreen } from '../features/resources/screens/CrisisResourcesScreen';
+import { navigationRef, onNavigationStateChange, onUnhandledAction } from './navigationErrorHandler';
+import { reportError } from '../services/rollbar';
+import { ErrorBoundary } from '../components/ErrorBoundary';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -77,6 +87,12 @@ export const AppNavigator = () => {
         };
         checkOnboarding();
     }, []);
+
+    useEffect(() => {
+        if (!authLoading) {
+            initializeGoogleSignIn();
+        }
+    }, [authLoading]);
 
     const isLoading = authLoading || (user && profileLoading) || isOnboardingCompleted === null;
 
@@ -107,17 +123,18 @@ export const AppNavigator = () => {
         }
     }, []);
 
+
     if (isLoading) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
-                <ActivityIndicator size="large" color="#30bae8" />
+                <ActivityIndicator size="large" color={tokens.colors.primary.light} />
                 <View style={{ marginTop: 20, alignItems: 'center' }}>
-                    <ActivityIndicator size="small" color="#000" />
+                    <ActivityIndicator size="small" color={tokens.colors.text.primary.light} />
                     {/* Debug Reset Button */}
                     <Text style={{ marginTop: 20, marginBottom: 10, color: 'gray' }}>Taking longer than expected?</Text>
                     <TouchableOpacity
                         onPress={handleResetSession}
-                        style={{ paddingHorizontal: 20, paddingVertical: 10, backgroundColor: '#EF4444', borderRadius: 8 }}
+                        style={{ paddingHorizontal: 20, paddingVertical: 10, backgroundColor: tokens.colors.status.error, borderRadius: tokens.borderRadius.md }}
                     >
                         <Text style={{ color: 'white', fontWeight: 'bold' }}>Reset Session</Text>
                     </TouchableOpacity>
@@ -126,8 +143,20 @@ export const AppNavigator = () => {
         );
     }
 
+
+
     return (
-        <NavigationContainer theme={isDark ? DarkTheme : DefaultTheme}>
+        <NavigationContainer
+            theme={isDark ? DarkTheme : DefaultTheme}
+            ref={navigationRef}
+            onStateChange={onNavigationStateChange}
+            onUnhandledAction={onUnhandledAction}
+            // @ts-ignore: onError is not standard in types for react-navigation v6 but requested verbatim
+            onError={(err: any) => {
+                reportError(err, 'Navigation:Error');
+                console.error('Navigation error:', err);
+            }}
+        >
             <Stack.Navigator
                 screenOptions={{
                     headerShown: false,
@@ -168,6 +197,12 @@ export const AppNavigator = () => {
                             }}
                         />
                         <Stack.Screen
+                            name="EditProfile"
+                            component={EditProfileScreen}
+                            options={{ presentation: 'modal' }}
+                        />
+                        <Stack.Screen name="Notifications" component={NotificationsScreen} />
+                        <Stack.Screen
                             name="MenteeDetail"
                             component={MenteeDetailScreen}
                             options={{ presentation: 'card' }}
@@ -194,8 +229,16 @@ export const AppNavigator = () => {
                         />
                         <Stack.Screen
                             name="SoapNoteEditor"
-                            component={require('../features/mentor/screens/SoapNoteEditorScreen').default}
-                        />
+                        >
+                            {(props) => {
+                                const SoapNoteEditor = require('../features/mentor/screens/SoapNoteEditorScreen').default;
+                                return (
+                                    <ErrorBoundary>
+                                        <SoapNoteEditor {...props} />
+                                    </ErrorBoundary>
+                                );
+                            }}
+                        </Stack.Screen>
 
                         {/* Admin Routes */}
                         <Stack.Screen name="PendingApprovals" component={PendingApprovalsScreen} />
@@ -217,7 +260,9 @@ export const AppNavigator = () => {
                         <Stack.Screen name="PendingMentorRequests" component={PendingMentorRequestsScreen} />
 
                         {/* Payment & Video Flow */}
-                        <Stack.Screen name="PaymentCheckout" component={PaymentCheckoutScreen} />
+                        <Stack.Screen name="PaymentCheckout">
+                            {props => <ErrorBoundary><PaymentCheckoutScreen {...props} /></ErrorBoundary>}
+                        </Stack.Screen>
                         <Stack.Screen
                             name="UPIPaymentProcessing"
                             component={UPIPaymentProcessingScreen}
@@ -238,9 +283,10 @@ export const AppNavigator = () => {
                         />
                         <Stack.Screen
                             name="VideoCall"
-                            component={VideoCallScreen}
                             options={{ headerShown: false, gestureEnabled: false }}
-                        />
+                        >
+                            {props => <ErrorBoundary><VideoCallScreen {...props} /></ErrorBoundary>}
+                        </Stack.Screen>
                         <Stack.Screen
                             name="PostSessionFeedback"
                             component={PostSessionFeedbackScreen}
@@ -249,6 +295,9 @@ export const AppNavigator = () => {
 
                         {/* Mentor Earnings */}
                         <Stack.Screen name="MentorPaymentDashboard" component={MentorPaymentDashboardScreen} />
+                        <Stack.Screen name="Resources" component={ResourcesScreen} />
+                        <Stack.Screen name="CrisisResources" component={CrisisResourcesScreen} />
+                        <Stack.Screen name="RollbarDebug" component={require('../features/debug/screens/RollbarDebugScreen').default} />
                     </>
                 ) : (
                     <>

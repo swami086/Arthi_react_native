@@ -46,15 +46,32 @@ export const HomeScreen = () => {
                         {user?.email?.split('@')[0]}
                     </Text>
                 </MotiView>
-                <MotiView
-                    from={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: 300, type: 'spring' }}
-                >
-                    <TouchableOpacity className="w-10 h-10 rounded-full bg-gray-200 justify-center items-center">
-                        <Icon name="bell-outline" size={20} color="#000" />
-                    </TouchableOpacity>
-                </MotiView>
+                <View className="flex-row gap-3">
+                    <MotiView
+                        from={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ delay: 300, type: 'spring' }}
+                    >
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('CrisisResources' as any)}
+                            className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 justify-center items-center border border-red-200 dark:border-red-800"
+                        >
+                            <Icon name="phone-alert" size={20} color="#EF4444" />
+                        </TouchableOpacity>
+                    </MotiView>
+                    <MotiView
+                        from={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ delay: 300, type: 'spring' }}
+                    >
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('Notifications')}
+                            className="w-10 h-10 rounded-full bg-gray-200 justify-center items-center"
+                        >
+                            <Icon name="bell-outline" size={20} color="#000" />
+                        </TouchableOpacity>
+                    </MotiView>
+                </View>
             </View>
 
             {requests.length > 0 && (

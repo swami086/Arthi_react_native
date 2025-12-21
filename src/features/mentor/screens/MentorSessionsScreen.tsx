@@ -101,9 +101,10 @@ export default function MentorSessionsScreen() {
             </SafeAreaView>
 
             <TouchableOpacity
-                className="absolute bottom-6 right-6 bg-indigo-600 w-14 h-14 rounded-full items-center justify-center shadow-lg z-50 pointer-events-auto"
-                style={{ elevation: 5 }}
+                className="absolute bottom-6 right-6 bg-indigo-600 w-14 h-14 rounded-full items-center justify-center shadow-lg"
+                style={{ elevation: 5, zIndex: 100 }}
                 onPress={() => setShowAddModal(true)}
+                activeOpacity={0.8}
             >
                 <Icon name="plus" size={24} color="white" />
             </TouchableOpacity>

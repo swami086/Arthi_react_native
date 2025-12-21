@@ -9,6 +9,42 @@ export type Json =
 export interface Database {
     public: {
         Tables: {
+            notifications: {
+                Row: {
+                    id: string
+                    user_id: string
+                    title: string
+                    message: string
+                    type: 'appointment' | 'message' | 'system' | 'payment'
+                    is_read: boolean
+                    created_at: string
+                    related_entity_id: string | null
+                    metadata: Json | null
+                }
+                Insert: {
+                    id?: string
+                    user_id: string
+                    title: string
+                    message: string
+                    type: 'appointment' | 'message' | 'system' | 'payment'
+                    is_read?: boolean
+                    created_at?: string
+                    related_entity_id?: string | null
+                    metadata?: Json | null
+                }
+                Update: {
+                    id?: string
+                    user_id?: string
+                    title?: string
+                    message?: string
+                    type?: 'appointment' | 'message' | 'system' | 'payment'
+                    is_read?: boolean
+                    created_at?: string
+                    related_entity_id?: string | null
+                    metadata?: Json | null
+                }
+            }
+
             profiles: {
                 Row: {
                     user_id: string
@@ -33,6 +69,7 @@ export interface Database {
                     mentor_bio_extended: string | null
                     certifications: string[] | null
                     is_super_admin: boolean
+                    hourly_rate: number | null
                 }
                 Insert: {
                     user_id: string
@@ -57,6 +94,7 @@ export interface Database {
                     mentor_bio_extended?: string | null
                     certifications?: string[] | null
                     is_super_admin?: boolean
+                    hourly_rate?: number | null
                 }
                 Update: {
                     user_id?: string
@@ -81,6 +119,7 @@ export interface Database {
                     mentor_bio_extended?: string | null
                     certifications?: string[] | null
                     is_super_admin?: boolean
+                    hourly_rate?: number | null
                 }
             }
             mentor_mentee_relationships: {
@@ -227,7 +266,7 @@ export interface Database {
                 Row: {
                     id: string
                     mentor_id: string
-                    mentee_id: string
+                    mentee_id: string | null
                     start_time: string
                     end_time: string
                     status: 'pending' | 'confirmed' | 'completed' | 'cancelled'
@@ -239,11 +278,13 @@ export interface Database {
                     payment_required: boolean
                     payment_status: string
                     video_room_id: string | null
+                    session_type: 'private' | 'public'
+                    title: string | null
                 }
                 Insert: {
                     id?: string
                     mentor_id: string
-                    mentee_id: string
+                    mentee_id?: string | null
                     start_time: string
                     end_time: string
                     status?: 'pending' | 'confirmed' | 'completed' | 'cancelled'
@@ -255,11 +296,13 @@ export interface Database {
                     payment_required?: boolean
                     payment_status?: string
                     video_room_id?: string | null
+                    session_type?: 'private' | 'public'
+                    title?: string | null
                 }
                 Update: {
                     id?: string
                     mentor_id?: string
-                    mentee_id?: string
+                    mentee_id?: string | null
                     start_time?: string
                     end_time?: string
                     status?: 'pending' | 'confirmed' | 'completed' | 'cancelled'
@@ -271,6 +314,8 @@ export interface Database {
                     payment_required?: boolean
                     payment_status?: string
                     video_room_id?: string | null
+                    session_type?: 'private' | 'public'
+                    title?: string | null
                 }
             }
             messages: {
@@ -471,7 +516,7 @@ export interface Database {
                     appointment_id: string
                     room_name: string
                     room_url: string
-                    provider: 'daily' | 'agora'
+                    provider: 'daily' | 'agora' | 'google_meet'
                     daily_room_id: string | null
                     mentor_token: string | null
                     mentee_token: string | null
@@ -481,6 +526,8 @@ export interface Database {
                     duration_minutes: number | null
                     recording_enabled: boolean
                     recording_url: string | null
+                    google_meet_space_name?: string | null
+                    google_meet_code?: string | null
                     metadata: Json | null
                     created_at: string
                     updated_at: string
@@ -490,7 +537,7 @@ export interface Database {
                     appointment_id: string
                     room_name: string
                     room_url: string
-                    provider?: 'daily' | 'agora'
+                    provider?: 'daily' | 'agora' | 'google_meet'
                     daily_room_id?: string | null
                     mentor_token?: string | null
                     mentee_token?: string | null
@@ -500,6 +547,8 @@ export interface Database {
                     duration_minutes?: number | null
                     recording_enabled?: boolean
                     recording_url?: string | null
+                    google_meet_space_name?: string | null
+                    google_meet_code?: string | null
                     metadata?: Json | null
                     created_at?: string
                     updated_at?: string
@@ -509,7 +558,7 @@ export interface Database {
                     appointment_id?: string
                     room_name?: string
                     room_url?: string
-                    provider?: 'daily' | 'agora'
+                    provider?: 'daily' | 'agora' | 'google_meet'
                     daily_room_id?: string | null
                     mentor_token?: string | null
                     mentee_token?: string | null
@@ -519,6 +568,8 @@ export interface Database {
                     duration_minutes?: number | null
                     recording_enabled?: boolean
                     recording_url?: string | null
+                    google_meet_space_name?: string | null
+                    google_meet_code?: string | null
                     metadata?: Json | null
                     created_at?: string
                     updated_at?: string

@@ -20,7 +20,7 @@ export const StatCard: React.FC<StatCardProps> = ({ title, value, icon, iconColo
                 </View>
                 {growth && (
                     <View className="flex-row items-center bg-green-50 dark:bg-green-900/30 px-2 py-1 rounded-full">
-                        <MaterialCommunityIcons name="arrow-up-right" size={12} color="green" />
+                        <MaterialCommunityIcons name="arrow-top-right" size={12} color="green" />
                         <Text className="text-green-700 dark:text-green-400 text-xs font-bold ml-1">{growth}</Text>
                     </View>
                 )}

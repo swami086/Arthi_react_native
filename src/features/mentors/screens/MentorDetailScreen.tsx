@@ -130,6 +130,12 @@ const MentorDetailScreen = () => {
                             <MaterialCommunityIcons name="briefcase-outline" size={16} color={isDark ? "#60A5FA" : "#30bae8"} />
                             <Text className="ml-1 font-bold text-gray-800 dark:text-gray-200">8 yrs</Text>
                         </View>
+                        <View className="flex-row items-center bg-green-50 dark:bg-green-900/30 px-2 py-1 rounded-full border border-green-200 dark:border-green-800">
+                            <MaterialCommunityIcons name="currency-usd" size={16} color="#10B981" />
+                            <Text className="ml-1 font-bold text-gray-800 dark:text-gray-200">
+                                ${mentor?.hourly_rate || 50}/hr
+                            </Text>
+                        </View>
                     </View>
                 </Animated.View>
 

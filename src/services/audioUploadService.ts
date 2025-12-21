@@ -2,6 +2,8 @@ import { Alert } from 'react-native';
 import * as FileSystem from 'expo-file-system/legacy';
 import { decode } from 'base64-arraybuffer';
 import { supabase } from '../api/supabase';
+import { reportError } from './rollbar';
+
 
 const MAX_FILE_SIZE_MB = 25; // Whisper API limit
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
@@ -61,6 +63,7 @@ export const uploadAudioToSupabase = async (
 
     if (dbError || !recording) {
       console.error('DB Insert Error', dbError);
+      reportError(dbError, 'audioUploadService:uploadAudioToSupabase:dbInsert');
       Alert.alert('Error', 'Failed to initialize recording upload.');
       return null;
     }
@@ -89,6 +92,7 @@ export const uploadAudioToSupabase = async (
 
     if (storageError) {
       console.error('Storage Upload Error', storageError);
+      reportError(storageError, 'audioUploadService:uploadAudioToSupabase:storageUpload');
       Alert.alert('Upload Failed', 'Could not upload audio file.');
       // Cleanup DB entry?
       return null;
@@ -116,6 +120,7 @@ export const uploadAudioToSupabase = async (
     };
   } catch (error) {
     console.error('Error uploading audio:', error);
+    reportError(error, 'audioUploadService:uploadAudioToSupabase');
     Alert.alert('Upload Error', 'An unexpected error occurred during upload');
     return null;
   }
@@ -131,11 +136,13 @@ export const deleteRecordingFromStorage = async (
 
     if (error) {
       console.error('Error deleting from storage:', error);
+      reportError(error, 'audioUploadService:deleteRecordingFromStorage');
       return false;
     }
     return true;
   } catch (error) {
     console.error('Error deleting recording:', error);
+    reportError(error, 'audioUploadService:deleteRecordingFromStorage');
     return false;
   }
 };

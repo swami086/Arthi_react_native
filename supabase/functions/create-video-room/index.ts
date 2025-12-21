@@ -1,4 +1,5 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import { reportError, reportInfo } from '../_shared/rollbar.ts';
 
 const DAILY_API_KEY = Deno.env.get('DAILY_API_KEY')!;
 
@@ -31,10 +32,15 @@ serve(async (req) => {
         // Store in database
         // (Database update logic usually goes here)
 
+        // (Database update logic usually goes here)
+
+        reportInfo('Daily.co room created', 'create-video-room', { appointmentId, roomName: room.name });
+
         return new Response(JSON.stringify({ videoRoom: room }), {
             headers: { 'Content-Type': 'application/json' },
         });
     } catch (error: any) {
+        reportError(error, 'create-video-room', { appointmentId: (req as any).appointmentId });
         return new Response(JSON.stringify({ error: error.message }), {
             status: 400,
             headers: { 'Content-Type': 'application/json' },

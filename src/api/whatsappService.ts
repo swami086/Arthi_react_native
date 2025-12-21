@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { reportError } from '../services/rollbar';
 import { WhatsAppMessage } from './types';
 
 export interface SendWhatsAppParams {
@@ -22,6 +23,7 @@ export const sendWhatsAppMessage = async (params: SendWhatsAppParams): Promise<b
         return data.success;
     } catch (error) {
         console.error('Error sending WhatsApp message:', error);
+        reportError(error, 'whatsappService:sendWhatsAppMessage');
         throw error;
     }
 };
@@ -104,6 +106,7 @@ export const getWhatsAppMessages = async (userId: string): Promise<WhatsAppMessa
         return data;
     } catch (error) {
         console.error('Error fetching WhatsApp messages:', error);
+        reportError(error, 'whatsappService:getWhatsAppMessages');
         return [];
     }
 };

@@ -4,6 +4,8 @@ import { LoginScreen } from '../features/auth/screens/LoginScreen';
 import { SignUpScreen } from '../features/auth/screens/SignUpScreen';
 import { AuthStackParamList } from './types';
 
+import { ForgotPasswordScreen } from '../features/auth/screens/ForgotPasswordScreen';
+
 const Stack = createStackNavigator<AuthStackParamList>();
 
 export const AuthNavigator = () => {
@@ -11,6 +13,7 @@ export const AuthNavigator = () => {
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />
+            <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
         </Stack.Navigator>
     );
 };

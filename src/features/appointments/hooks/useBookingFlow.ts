@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { parse, isValid } from 'date-fns';
 import { TimeSlot, generateTimeSlots, filterAvailableSlots } from '../utils/timeSlots';
 import { supabase } from '../../../api/supabase';
+import { reportError } from '../../../services/rollbar';
 
 /**
  * Hook to manage the booking flow logic.
@@ -49,6 +50,7 @@ export const useBookingFlow = () => {
             return availableSlots;
         } catch (err: any) {
             console.error('Error fetching slots:', err);
+            reportError(err, 'useBookingFlow:getAvailableTimeSlots');
             setError(err.message);
             return [];
         } finally {
@@ -67,6 +69,7 @@ export const useBookingFlow = () => {
         date: string;
         time: string;
         endTime: string;
+        price: number;
         notes?: string;
     }) => {
         setLoading(true);
@@ -95,21 +98,63 @@ export const useBookingFlow = () => {
                 throw new Error('Failed to parse appointment date/time');
             }
 
-            const { data, error: insertError } = await supabase.from('appointments').insert([
+            // 1. Create Appointment first
+            const { data: appointment, error: insertError } = await supabase.from('appointments').insert([
                 {
                     mentor_id: appointmentData.mentorId,
                     mentee_id: user.id,
                     start_time: startDateTime.toISOString(),
                     end_time: endDateTime.toISOString(),
                     status: 'pending',
-                    notes: appointmentData.notes
+                    price: appointmentData.price,
+                    notes: appointmentData.notes,
+                    meeting_link: null, // Will be updated after video room creation
+                    video_room_id: null
                 }
             ]).select().single();
 
             if (insertError) throw insertError;
-            return data;
+
+            // 2. Create Video Room (Simulating Google Meet creation or using Edge Function in future)
+            const meetCode = `${Math.random().toString(36).substring(2, 5)}-${Math.random().toString(36).substring(2, 6)}-${Math.random().toString(36).substring(2, 5)}`;
+            const meetLink = `https://meet.google.com/${meetCode}`;
+
+            const { data: videoRoom, error: videoError } = await supabase.from('video_rooms').insert({
+                appointment_id: appointment.id,
+                room_name: `Session-${appointment.id.substring(0, 8)}`,
+                room_url: meetLink,
+                provider: 'google_meet',
+                google_meet_code: meetCode,
+                status: 'created',
+                created_at: new Date().toISOString(),
+                recording_enabled: false
+            }).select().single();
+
+            if (videoError) {
+                console.error("Failed to create video room", videoError);
+                // Don't fail the whole booking, but log it. 
+                // However, we should try to update the appointment with just the link if room creation fails?
+                // For now, throw to ensure integrity.
+                throw videoError;
+            }
+
+            // 3. Update Appointment with Video Room details
+            const { data: updatedAppointment, error: updateError } = await supabase
+                .from('appointments')
+                .update({
+                    meeting_link: meetLink,
+                    video_room_id: videoRoom.id
+                })
+                .eq('id', appointment.id)
+                .select()
+                .single();
+
+            if (updateError) throw updateError;
+
+            return updatedAppointment;
         } catch (err: any) {
             console.error('Booking error:', err);
+            reportError(err, 'useBookingFlow:createAppointment');
             setError(err.message || 'Failed to create appointment');
             throw err;
         } finally {

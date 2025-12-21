@@ -1,5 +1,6 @@
 import { supabase } from './supabase';
 import { VideoRoom } from './types';
+import { reportError } from '../services/rollbar';
 
 /**
  * Create Daily.co video room for appointment
@@ -15,6 +16,7 @@ export const createVideoRoom = async (appointmentId: string): Promise<VideoRoom>
         return data.videoRoom;
     } catch (error) {
         console.error('Error creating video room:', error);
+        reportError(error, 'videoService:createVideoRoom');
         throw error;
     }
 };
@@ -34,6 +36,7 @@ export const getVideoRoom = async (appointmentId: string): Promise<VideoRoom | n
         return data;
     } catch (error) {
         console.error('Error fetching video room:', error);
+        reportError(error, 'videoService:getVideoRoom');
         return null;
     }
 };
@@ -55,6 +58,7 @@ export const generateMeetingToken = async (
         return data.token;
     } catch (error) {
         console.error('Error generating meeting token:', error);
+        reportError(error, 'videoService:generateMeetingToken');
         throw error;
     }
 };
@@ -89,6 +93,7 @@ export const updateVideoRoomStatus = async (
         return true;
     } catch (error) {
         console.error('Error updating video room status:', error);
+        reportError(error, 'videoService:updateVideoRoomStatus');
         return false;
     }
 };
@@ -106,6 +111,44 @@ export const deleteVideoRoom = async (roomId: string): Promise<boolean> => {
         return true;
     } catch (error) {
         console.error('Error deleting video room:', error);
+        reportError(error, 'videoService:deleteVideoRoom');
         return false;
+    }
+};
+
+export const createGoogleMeetRoom = async (
+    appointmentId: string,
+    userId: string,
+    userEmail: string,
+    userName: string,
+    userRole: 'mentor' | 'mentee',
+    accessToken?: string
+): Promise<VideoRoom> => {
+    try {
+        const { data, error } = await supabase.functions.invoke(
+            'create-google-meet-room',
+            {
+                body: {
+                    appointmentId,
+                    userId,
+                    userEmail,
+                    userName,
+                    userRole,
+                    googleAccessToken: accessToken,
+                },
+            }
+        );
+
+        if (error) throw error;
+
+        if (data.error) {
+            throw new Error(`Edge Function Error: ${data.error} ${data.details || ''}`);
+        }
+
+        return data.videoRoom;
+    } catch (error) {
+        console.error('Error creating Google Meet room:', error);
+        reportError(error, 'videoService:createGoogleMeetRoom');
+        throw error;
     }
 };

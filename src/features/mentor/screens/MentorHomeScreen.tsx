@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StatusBar } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StatusBar, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -19,6 +19,7 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../navigation/types';
+import { tokens } from '../../../design-system/tokens';
 
 type MentorHomeNavigationProp = CompositeNavigationProp<
     BottomTabNavigationProp<MentorTabParamList, 'Home'>,
@@ -57,35 +58,44 @@ export default function MentorHomeScreen() {
         ? mentees.find(m => m.mentee_id === upcomingAppointment.mentee_id)?.avatar_url
         : null;
 
-    const handleFindMentee = () => navigation.navigate('MenteeDiscovery');
+    const handleFindMentee = () => navigation.navigate('MenteeDiscovery', { autoOpenAddModal: true });
     const handleAddSession = () => navigation.navigate('Sessions');
     const handleMessage = () => navigation.navigate('Mentees');
-    const handleResources = () => alert('Resources feature coming soon!');
+    const handleResources = () => navigation.navigate('Resources');
     const handleNotes = () => navigation.navigate('Mentees');
     const handleEarnings = () => navigation.navigate('MentorPaymentDashboard');
 
     return (
-        <View className="flex-1 bg-gray-50 dark:bg-background-dark">
+        <View className="flex-1 bg-background dark:bg-background-dark">
             <SafeAreaView className="flex-1" edges={['top']}>
                 <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
-                <View className="px-6 py-4 flex-row justify-between items-center bg-white dark:bg-gray-800 shadow-sm border-b border-gray-100 dark:border-gray-700">
+                <View className="px-6 py-4 flex-row justify-between items-center bg-surface dark:bg-surface-dark border-b border-border dark:border-border-dark h-[72px]">
                     <View>
-                        <Text className="text-text-sub-light dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Mentor Portal</Text>
-                        <Text className="text-xl font-bold text-text-main-light dark:text-white">
+                        <Text className="text-text-secondary dark:text-text-secondary-dark text-xs font-bold uppercase tracking-wider font-primary">Mentor Portal</Text>
+                        <Text className="text-xl font-bold text-text-primary dark:text-text-primary-dark font-primary mt-0.5">
                             Hello, {profile?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'Mentor'} 👋
                         </Text>
                     </View>
                     <View className="flex-row gap-2">
-                        <TouchableOpacity className="p-2 bg-gray-50 dark:bg-gray-700 rounded-full relative">
-                            <MaterialCommunityIcons name="bell-outline" size={20} color={isDark ? "#fff" : "#666"} />
-                            <View className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-gray-800" />
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('Notifications')}
+                            className="w-10 h-10 items-center justify-center rounded-full bg-background dark:bg-background-dark relative"
+                        >
+                            <MaterialCommunityIcons name="bell-outline" size={20} color={isDark ? tokens.colors.text.primary.dark : tokens.colors.text.primary.light} />
+                            <View className="absolute top-2 right-2 w-2 h-2 bg-status-error rounded-full border border-surface dark:border-surface-dark" />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('CrisisResources' as any)}
+                            className="w-10 h-10 items-center justify-center rounded-full bg-status-error/10 border border-status-error/20"
+                        >
+                            <MaterialCommunityIcons name="phone-alert" size={20} color={tokens.colors.status.error} />
                         </TouchableOpacity>
                         <TouchableOpacity
                             onPress={() => navigation.navigate('Settings')}
-                            className="p-2 bg-gray-50 dark:bg-gray-700 rounded-full"
+                            className="w-10 h-10 items-center justify-center rounded-full bg-background dark:bg-background-dark"
                         >
-                            <MaterialCommunityIcons name="cog-outline" size={20} color={isDark ? "#fff" : "#666"} />
+                            <MaterialCommunityIcons name="cog-outline" size={20} color={isDark ? tokens.colors.text.primary.dark : tokens.colors.text.primary.light} />
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -109,13 +119,13 @@ export default function MentorHomeScreen() {
                         <CardSkeleton />
                     </View>
                 ) : (
-                    <ScrollView className="flex-1 p-6" showsVerticalScrollIndicator={false}>
+                    <ScrollView className="flex-1 p-6" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
                         <View className="flex-row mb-6">
                             <StatCard
                                 title="Total Mentees"
                                 value={stats?.total_mentees || 0}
                                 icon="account-group"
-                                iconColor={isDark ? "#38BDF8" : "#30bae8"}
+                                iconColor={tokens.colors.primary.light}
                                 growth="+2"
                                 growthLabel="This month"
                             />
@@ -124,24 +134,24 @@ export default function MentorHomeScreen() {
                                 title="Sessions Done"
                                 value={stats?.total_sessions || 0}
                                 icon="calendar-check"
-                                iconColor={isDark ? "#34D399" : "#10B981"}
+                                iconColor={tokens.colors.status.success}
                             />
                         </View>
 
                         <View className="mb-8">
-                            <Text className="text-lg font-bold text-gray-900 dark:text-white mb-4">Quick Actions</Text>
-                            <ScrollView horizontal showsHorizontalScrollIndicator={false} className="pl-1">
-                                <QuickActionButton icon="account-plus" label="Add Mentee" color={isDark ? "#0EA5E9" : "#30bae8"} onPress={handleFindMentee} />
-                                <QuickActionButton icon="calendar-plus" label="Add Session" color={isDark ? "#7C3AED" : "#8B5CF6"} onPress={handleAddSession} />
-                                <QuickActionButton icon="cash-multiple" label="Earnings" color={isDark ? "#10B981" : "#059669"} onPress={handleEarnings} />
-                                <QuickActionButton icon="message-text" label="Message" color={isDark ? "#D97706" : "#F59E0B"} onPress={handleMessage} />
-                                <QuickActionButton icon="notebook" label="Notes" color={isDark ? "#059669" : "#10B981"} onPress={handleNotes} />
-                                <QuickActionButton icon="book-open-page-variant" label="Resources" color={isDark ? "#DB2777" : "#EC4899"} onPress={handleResources} />
+                            <Text className="text-lg font-bold text-text-primary dark:text-text-primary-dark mb-4 font-primary">Quick Actions</Text>
+                            <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-ml-1 pl-1" contentContainerStyle={{ gap: 4 }}>
+                                <QuickActionButton icon="account-plus" label="Add Mentee" color={tokens.colors.primary.light} onPress={handleFindMentee} />
+                                <QuickActionButton icon="calendar-plus" label="Add Session" color={tokens.colors.secondary.light} onPress={handleAddSession} />
+                                <QuickActionButton icon="cash-multiple" label="Earnings" color={tokens.colors.status.success} onPress={handleEarnings} />
+                                <QuickActionButton icon="message-text" label="Message" color={tokens.colors.status.warning} onPress={handleMessage} />
+                                <QuickActionButton icon="notebook" label="Notes" color={tokens.colors.status.success} onPress={handleNotes} />
+                                <QuickActionButton icon="book-open-page-variant" label="Resources" color={tokens.colors.accent.pink} onPress={handleResources} />
                             </ScrollView>
                         </View>
 
                         <View className="mb-8">
-                            <Text className="text-lg font-bold text-gray-900 dark:text-white mb-4">Up Next</Text>
+                            <Text className="text-lg font-bold text-text-primary dark:text-text-primary-dark mb-4 font-primary">Up Next</Text>
                             {upcomingAppointment ? (
                                 <SessionCard
                                     title="Mentoring Session"
@@ -155,36 +165,37 @@ export default function MentorHomeScreen() {
                                     onPress={() => navigation.navigate('SessionDetail', { appointmentId: upcomingAppointment.id })}
                                 />
                             ) : (
-                                <View className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-dashed border-gray-300 dark:border-gray-700 items-center">
-                                    <Text className="text-gray-400 dark:text-gray-500">No upcoming sessions</Text>
+                                <View className="bg-surface dark:bg-surface-elevated-dark p-6 rounded-2xl border border-dashed border-border dark:border-border-dark items-center">
+                                    <Text className="text-text-secondary dark:text-text-secondary-dark font-primary">No upcoming sessions</Text>
                                 </View>
                             )}
                         </View>
 
                         <View className="mb-8">
                             <View className="flex-row justify-between items-center mb-4">
-                                <Text className="text-lg font-bold text-gray-900 dark:text-white">Recent Messages</Text>
+                                <Text className="text-lg font-bold text-text-primary dark:text-text-primary-dark font-primary">Recent Messages</Text>
                                 <TouchableOpacity onPress={() => navigation.navigate('Mentees')}>
-                                    <Text className="text-primary font-bold text-sm">View All</Text>
+                                    <Text className="text-primary dark:text-primary-light font-bold text-sm font-primary">View All</Text>
                                 </TouchableOpacity>
                             </View>
                             {conversations.length > 0 ? conversations.slice(0, 3).map((conv, idx) => (
-                                <TouchableOpacity key={idx} className="bg-white dark:bg-gray-800 p-4 rounded-xl mb-2 flex-row items-center border border-gray-100 dark:border-gray-700">
-                                    <View className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full mr-3 items-center justify-center overflow-hidden">
+                                <TouchableOpacity key={idx} className="bg-surface dark:bg-surface-elevated-dark p-4 rounded-xl mb-2 flex-row items-center border border-border dark:border-border-dark shadow-sm">
+                                    <View className="w-10 h-10 bg-background dark:bg-background-dark rounded-full mr-3 items-center justify-center overflow-hidden border border-border dark:border-border-dark">
                                         {conv.otherUser?.avatar_url ? (
-                                            // simple image if avatar
-                                            <Text>Img</Text>
+                                            <Image source={{ uri: conv.otherUser.avatar_url }} className="w-full h-full" />
                                         ) : (
-                                            <Text className="font-bold text-gray-500 dark:text-gray-400">{conv.otherUser?.full_name?.charAt(0) || 'U'}</Text>
+                                            <Text className="font-bold text-text-secondary dark:text-text-secondary-dark font-primary">{conv.otherUser?.full_name?.charAt(0) || 'U'}</Text>
                                         )}
                                     </View>
                                     <View className="flex-1">
-                                        <Text className="font-bold text-gray-900 dark:text-white">{conv.otherUser?.full_name || 'Unknown'}</Text>
-                                        <Text className="text-gray-500 dark:text-gray-400 text-xs" numberOfLines={1}>{conv.lastMessage?.content}</Text>
+                                        <Text className="font-bold text-text-primary dark:text-text-primary-dark font-primary block">{conv.otherUser?.full_name || 'Unknown'}</Text>
+                                        <Text className="text-text-secondary dark:text-text-secondary-dark text-xs font-primary mt-0.5" numberOfLines={1}>{conv.lastMessage?.content}</Text>
                                     </View>
                                 </TouchableOpacity>
                             )) : (
-                                <Text className="text-gray-400 dark:text-gray-500">No recent messages</Text>
+                                <View className="bg-surface dark:bg-surface-elevated-dark p-6 rounded-2xl border border-dashed border-border dark:border-border-dark items-center">
+                                    <Text className="text-text-secondary dark:text-text-secondary-dark font-primary">No recent messages</Text>
+                                </View>
                             )}
                         </View>
                     </ScrollView>

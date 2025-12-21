@@ -13,6 +13,7 @@ import { FilterChip } from '../../../components/FilterChip';
 import { ErrorBanner } from '../../../components/ErrorBanner';
 import { ListSkeleton } from '../../../components/LoadingSkeleton';
 import { ErrorBoundary } from '../../../components/ErrorBoundary';
+import { tokens } from '../../../design-system/tokens';
 
 type MenteesScreenNavigationProp = StackNavigationProp<RootStackParamList>;
 
@@ -35,7 +36,7 @@ export default function MenteesScreen() {
         <MenteeCard
             name={item.full_name || 'Unknown'}
             status={item.status || 'Inactive'}
-            statusColor={item.status === 'Active' ? '#10B981' : '#9CA3AF'}
+            statusColor={item.status === 'Active' ? tokens.colors.status.success : tokens.colors.text.disabled.light}
             avatar={item.avatar_url}
             nextInfo={
                 item.last_activity_type === 'message'
@@ -50,22 +51,23 @@ export default function MenteesScreen() {
     ), [navigation]);
 
     const renderEmpty = useCallback(() => (
-        <View className="items-center justify-center py-20">
-            <Text className="text-gray-400 text-lg">No mentees found</Text>
+        <View className="items-center justify-center py-20 gap-4">
+            <MaterialCommunityIcons name="account-search-outline" size={64} color={isDark ? tokens.colors.text.disabled.dark : tokens.colors.text.disabled.light} />
+            <Text className="text-text-secondary dark:text-text-secondary-dark text-lg font-primary">No mentees found</Text>
         </View>
-    ), []);
+    ), [isDark]);
 
     return (
-        <View key={isDark ? 'dark' : 'light'} className="flex-1 bg-background-light dark:bg-background-dark">
+        <View key={isDark ? 'dark' : 'light'} className="flex-1 bg-background dark:bg-background-dark">
             <SafeAreaView className="flex-1" edges={['top']}>
                 <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
-                <View className="px-6 py-4 flex-row justify-between items-center bg-surface-light dark:bg-surface-dark border-b border-gray-100 dark:border-gray-800">
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <MaterialCommunityIcons name="arrow-left" size={24} color={isDark ? "#fff" : "#333"} />
+                <View className="px-6 py-4 flex-row justify-between items-center bg-surface dark:bg-surface-dark border-b border-border dark:border-border-dark h-[72px]">
+                    <TouchableOpacity onPress={() => navigation.goBack()} className="w-10 h-10 items-center justify-center rounded-full bg-background dark:bg-background-dark">
+                        <MaterialCommunityIcons name="arrow-left" size={24} color={isDark ? tokens.colors.text.primary.dark : tokens.colors.text.primary.light} />
                     </TouchableOpacity>
-                    <Text className="text-xl font-bold text-text-main-light dark:text-text-main-dark">My Mentees</Text>
-                    <TouchableOpacity>
-                        <MaterialCommunityIcons name="magnify" size={24} color={isDark ? "#fff" : "#333"} />
+                    <Text className="text-xl font-bold text-text-primary dark:text-text-primary-dark font-primary">My Mentees</Text>
+                    <TouchableOpacity className="w-10 h-10 items-center justify-center rounded-full bg-background dark:bg-background-dark">
+                        <MaterialCommunityIcons name="magnify" size={24} color={isDark ? tokens.colors.text.primary.dark : tokens.colors.text.primary.light} />
                     </TouchableOpacity>
                 </View>
 
@@ -77,35 +79,35 @@ export default function MenteesScreen() {
                     />
                 )}
 
-                <View className="px-6 py-4">
-                    <View className="bg-surface-light dark:bg-gray-800 p-3 rounded-xl flex-row items-center border border-gray-200 dark:border-gray-700 mb-4">
-                        <MaterialCommunityIcons name="magnify" size={20} color={isDark ? "#9CA3AF" : "#9CA3AF"} />
+                <View className="px-6 py-4 gap-4">
+                    <View className="bg-surface dark:bg-surface-elevated-dark p-3 rounded-xl flex-row items-center border border-border dark:border-border-dark">
+                        <MaterialCommunityIcons name="magnify" size={20} color={tokens.colors.text.secondary.light} />
                         <TextInput
-                            className="flex-1 ml-2 text-text-main-light dark:text-text-main-dark"
+                            className="flex-1 ml-2 text-text-primary dark:text-text-primary-dark font-primary text-base"
                             placeholder="Search mentees..."
-                            placeholderTextColor={isDark ? "#6B7280" : "#9CA3AF"}
+                            placeholderTextColor={tokens.colors.text.disabled.light}
                             value={searchQuery}
                             onChangeText={setSearchQuery}
                         />
                     </View>
 
-                    <View className="flex-row gap-2 mb-2">
+                    <View className="flex-row gap-2">
                         <FilterChip label="All" isSelected={activeFilter === 'All'} onPress={() => setActiveFilter('All')} />
                         <FilterChip label="Active" isSelected={activeFilter === 'Active'} onPress={() => setActiveFilter('Active')} />
                         <FilterChip label="Pending" isSelected={activeFilter === 'Pending'} onPress={() => setActiveFilter('Pending')} />
                     </View>
 
-                    <View className="flex-row justify-between items-center mb-2">
-                        <Text className="text-gray-500 dark:text-gray-400 text-xs font-bold">Showing {filteredMentees.length} mentees</Text>
-                        <TouchableOpacity className="flex-row items-center">
-                            <Text className="text-gray-500 dark:text-gray-400 text-xs mr-1">Sort by: Recent</Text>
-                            <MaterialCommunityIcons name="chevron-down" size={14} color="#6B7280" />
+                    <View className="flex-row justify-between items-center mt-2">
+                        <Text className="text-text-secondary dark:text-text-secondary-dark text-sm font-semibold font-primary">Showing {filteredMentees.length} mentees</Text>
+                        <TouchableOpacity className="flex-row items-center bg-surface dark:bg-surface-dark px-3 py-1.5 rounded-full border border-border dark:border-border-dark">
+                            <Text className="text-text-secondary dark:text-text-secondary-dark text-xs mr-1 font-medium font-primary">Sort by: Recent</Text>
+                            <MaterialCommunityIcons name="chevron-down" size={14} color={tokens.colors.text.secondary.light} />
                         </TouchableOpacity>
                     </View>
                 </View>
 
                 {loading ? (
-                    <View className="px-6 flex-1">
+                    <View className="px-6 flex-1 pt-4">
                         <ListSkeleton count={5} />
                     </View>
                 ) : (
@@ -114,7 +116,7 @@ export default function MenteesScreen() {
                             data={filteredMentees}
                             keyExtractor={(item, index) => `${item?.mentee_id || 'mentee'}-${index}`}
                             renderItem={renderMenteeItem}
-                            contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 20 }}
+                            contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 32, gap: 16 }}
                             ListEmptyComponent={renderEmpty}
                         />
                     </ErrorBoundary>

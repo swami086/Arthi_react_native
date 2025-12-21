@@ -4,9 +4,17 @@ import { supabase } from '../../../api/supabase';
 import { Appointment } from '../../../api/types';
 import { useAuth } from '../../auth/hooks/useAuth';
 
+import { Profile } from '../../../api/types';
+import { reportError } from '../../../services/rollbar';
+
+export type AppointmentWithDetails = Appointment & {
+    mentor?: Pick<Profile, 'full_name' | 'avatar_url'>;
+    mentee?: Pick<Profile, 'full_name' | 'avatar_url'>;
+};
+
 export const useAppointments = () => {
     const { user } = useAuth();
-    const [appointments, setAppointments] = useState<Appointment[]>([]);
+    const [appointments, setAppointments] = useState<AppointmentWithDetails[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -16,18 +24,23 @@ export const useAppointments = () => {
             setLoading(true);
             const { data, error: apiError } = await supabase
                 .from('appointments')
-                .select('*')
-                .or(`mentor_id.eq.${user.id},mentee_id.eq.${user.id}`)
+                .select(`
+                    *,
+                    mentor:profiles!mentor_id(full_name, avatar_url),
+                    mentee:profiles!mentee_id(full_name, avatar_url)
+                `)
+                .or(`mentor_id.eq.${user.id},mentee_id.eq.${user.id},session_type.eq.public`)
                 .order('start_time', { ascending: true });
 
             if (apiError) throw apiError;
             if (data) {
                 // Deduplicate appointments by ID to prevent UI key errors
                 const uniqueAppointments = Array.from(new Map(data.map(item => [item.id, item])).values());
-                setAppointments(uniqueAppointments);
+                setAppointments(uniqueAppointments as AppointmentWithDetails[]);
             }
             setError(null);
         } catch (err: any) {
+            reportError(err, 'useAppointments:fetchAppointments');
             setError(err.message || 'Failed to fetch appointments');
         } finally {
             setLoading(false);

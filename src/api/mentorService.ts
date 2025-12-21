@@ -1,11 +1,13 @@
 import { supabase } from './supabase';
 import { MenteeGoal, MentorNote, MentorStats, MenteeWithActivity, Appointment } from './types';
 import { generateDailyMeetLink } from '../utils/meetingLink';
+import { reportError } from '../services/rollbar';
 
 export const getMentorStats = async (mentorId: string): Promise<MentorStats | null> => {
     const { data, error } = await supabase.rpc('get_mentor_stats', { mentor_user_id: mentorId });
     if (error) {
         console.error('Error fetching mentor stats:', error);
+        reportError(error, 'getMentorStats');
         return null;
     }
     return data as MentorStats;
@@ -15,6 +17,7 @@ export const getMenteeList = async (mentorId: string): Promise<MenteeWithActivit
     const { data, error } = await supabase.rpc('get_mentee_list_for_mentor', { mentor_user_id: mentorId });
     if (error) {
         console.error('Error fetching mentee list:', error);
+        reportError(error, 'getMenteeList');
         return [];
     }
     return data as MenteeWithActivity[];
@@ -29,6 +32,7 @@ export const getMenteeProfile = async (menteeId: string) => {
 
     if (profileError) {
         console.error('Error fetching mentee profile:', profileError);
+        reportError(profileError, 'getMenteeProfile');
         return null;
     }
 
@@ -287,11 +291,13 @@ export const getMentorMenteeRelationships = async (mentorId: string) => {
 
 export const createSession = async (
     mentorId: string,
-    menteeId: string,
+    menteeId: string | null,
     startTime: Date,
     durationMinutes: number,
     notes?: string,
-    price?: number
+    price?: number,
+    sessionType: 'private' | 'public' = 'private',
+    title?: string
 ) => {
     const endTime = new Date(startTime.getTime() + durationMinutes * 60000);
 
@@ -311,7 +317,9 @@ export const createSession = async (
         price: price || 0,
         payment_required: (price ?? 0) > 0,
         payment_status: (price ?? 0) > 0 ? 'pending' : 'not_required',
-        video_room_id: null
+        video_room_id: null,
+        session_type: sessionType,
+        title: title ?? (sessionType === 'public' ? 'Public Session' : null)
     };
 
     const appointment = await createAppointment(appointmentData);
@@ -329,6 +337,7 @@ export const createSession = async (
                 .eq('id', appointment.id);
         } catch (error) {
             console.error('Error generating meeting link:', error);
+            reportError(error, 'createSession:generateDailyMeetLink');
             // Appointment still exists but without a link yet
         }
     }
@@ -362,4 +371,23 @@ export const checkAppointmentConflict = async (
 
     if (error) throw error;
     return data && data.length > 0;
+};
+
+export const createManagedMentee = async (mentorId: string, email: string, fullName: string) => {
+    const { data, error } = await supabase.functions.invoke('create-managed-mentee', {
+        body: { mentor_id: mentorId, email, full_name: fullName }
+    });
+
+    if (error) {
+        console.error("Function Invoke Error", error);
+        reportError(error, 'createManagedMentee:invoke');
+        throw error;
+    }
+
+    // Check for application level error from the function
+    if (data && data.error) {
+        throw new Error(data.error);
+    }
+
+    return data;
 };

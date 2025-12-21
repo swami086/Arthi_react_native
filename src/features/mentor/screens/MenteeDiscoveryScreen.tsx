@@ -1,26 +1,47 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image, TextInput, Alert } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Image, TextInput, Alert, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, RouteProp, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ErrorBoundary } from '../../../components/ErrorBoundary';
 import { useAuth } from '../../auth/hooks/useAuth';
+import { useColorScheme } from '../../../hooks/useColorScheme';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { searchAvailableMentees } from '../../../api/mentorService';
 import { createRelationship } from '../../../api/relationshipService';
+import { createManagedMentee } from '../../../api/mentorService';
 import { Profile } from '../../../api/types';
 import { Button } from '../../../components/Button';
+import { Input } from '../../../components/Input';
 import { RootStackParamList } from '../../../navigation/types';
 
 export const MenteeDiscoveryScreen = () => {
     const { user } = useAuth();
+    const { isDark } = useColorScheme();
     const navigation = useNavigation<StackNavigationProp<RootStackParamList, 'MenteeDiscovery'>>();
+    const route = useRoute<RouteProp<RootStackParamList, 'MenteeDiscovery'>>();
     const [query, setQuery] = useState('');
     const [mentees, setMentees] = useState<Profile[]>([]);
     const [loading, setLoading] = useState(false);
     const [inviting, setInviting] = useState<string | null>(null);
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [skippedMentees, setSkippedMentees] = useState<Set<string>>(new Set());
+
+    // Manual Add State
+    const [showAddModal, setShowAddModal] = useState(route.params?.autoOpenAddModal === true);
+
+    // Check for auto-open param to handle any edge cases where it might be updated after mount
+    React.useEffect(() => {
+        if (route.params?.autoOpenAddModal) {
+            setShowAddModal(true);
+            // Clear param so it doesn't reopen if we swipe back/close
+            navigation.setParams({ autoOpenAddModal: undefined });
+        }
+    }, [route.params?.autoOpenAddModal]);
+
+    const [newMenteeName, setNewMenteeName] = useState('');
+    const [newMenteeEmail, setNewMenteeEmail] = useState('');
+    const [addingMentee, setAddingMentee] = useState(false);
 
     const CATEGORIES = ['All', 'Academic', 'Anxiety & Stress', 'Career Prep', 'Creative Arts'];
 
@@ -64,6 +85,28 @@ export const MenteeDiscoveryScreen = () => {
             newSet.add(menteeId);
             return newSet;
         });
+    };
+
+    const handleAddManualMentee = async () => {
+        if (!user?.id) return;
+        if (!newMenteeName || !newMenteeEmail) {
+            Alert.alert("Error", "Please provide both name and email.");
+            return;
+        }
+
+        setAddingMentee(true);
+        try {
+            const result = await createManagedMentee(user.id, newMenteeEmail, newMenteeName);
+            Alert.alert("Success", result.message);
+            setShowAddModal(false);
+            setNewMenteeName('');
+            setNewMenteeEmail('');
+            // Optionally navigate to Mentee List or refresh
+        } catch (error: any) {
+            Alert.alert("Error", error.message || "Failed to add mentee");
+        } finally {
+            setAddingMentee(false);
+        }
     };
 
     const getMatchPercentage = (mentee: Profile) => {
@@ -166,6 +209,14 @@ export const MenteeDiscoveryScreen = () => {
 
     const renderHeader = () => (
         <View>
+            <TouchableOpacity
+                onPress={() => setShowAddModal(true)}
+                className="bg-primary/10 p-3 rounded-lg flex-row items-center justify-center mb-4 border border-primary/20"
+            >
+                <Icon name="account-plus" size={20} color="#30bae8" />
+                <Text className="text-primary font-bold ml-2">Add Mentee Manually</Text>
+            </TouchableOpacity>
+
             {/* Search Bar */}
             <View className="flex-row gap-2 mt-2 items-center mb-4">
                 <View className="bg-gray-100 dark:bg-gray-700 rounded-lg flex-row items-center px-3 py-2 flex-1 h-12">
@@ -239,10 +290,63 @@ export const MenteeDiscoveryScreen = () => {
         <SafeAreaView className="flex-1 bg-background-light dark:bg-background-dark">
             <View className="px-6 py-4 bg-white dark:bg-gray-800 shadow-sm z-10 flex-row items-center">
                 <TouchableOpacity onPress={() => navigation.goBack()} className="mr-3">
-                    <Icon name="arrow-left" size={24} color="#333" />
+                    <Icon name="arrow-left" size={24} color={isDark ? '#fff' : '#333'} />
                 </TouchableOpacity>
                 <Text className="text-xl font-bold text-text-main-light dark:text-white">Find Mentees</Text>
             </View>
+
+            <Modal
+                transparent
+                visible={showAddModal}
+                animationType="slide"
+                onRequestClose={() => setShowAddModal(false)}
+            >
+                <View className="flex-1 justify-center items-center bg-black/50 p-4">
+                    <View className="bg-white dark:bg-gray-800 rounded-2xl p-6 w-full max-w-sm shadow-xl">
+                        <Text className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Add Mentee Manually</Text>
+                        <Text className="text-gray-500 mb-6 text-sm">
+                            Enter the details below to instantly add a mentee to your roster.
+                        </Text>
+
+                        <View className="mb-4">
+                            <Input
+                                label="Full Name"
+                                placeholder="e.g. John Doe"
+                                value={newMenteeName}
+                                onChangeText={setNewMenteeName}
+                            />
+                        </View>
+
+                        <View className="mb-6">
+                            <Input
+                                label="Email Address"
+                                placeholder="e.g. john@example.com"
+                                value={newMenteeEmail}
+                                onChangeText={setNewMenteeEmail}
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                            />
+                        </View>
+
+                        <View className="flex-row gap-3">
+                            <View className="flex-1">
+                                <Button
+                                    title="Cancel"
+                                    variant="outline"
+                                    onPress={() => setShowAddModal(false)}
+                                />
+                            </View>
+                            <View className="flex-1">
+                                <Button
+                                    title="Add Mentee"
+                                    onPress={handleAddManualMentee}
+                                    loading={addingMentee}
+                                />
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
 
             <ErrorBoundary>
                 <FlatList

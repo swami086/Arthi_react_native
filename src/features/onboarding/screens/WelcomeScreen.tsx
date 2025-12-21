@@ -49,12 +49,12 @@ export const WelcomeScreen = () => {
                     {/* @ts-ignore */}
                     <MotiView from={itemVariants.initial} animate={itemVariants.animate} className="mb-8 w-full px-4 items-center mt-4">
                         <View className="w-full aspect-square rounded-[32px] overflow-hidden shadow-2xl shadow-primary/20">
-                           <Image
-                             source={{ uri: "https://lh3.googleusercontent.com/aida-public/AB6AXuAeii2IgyATXOOrSDdedqXOSd8WlrRVLLL29GRV7d0237RECOVtWzAkg0Ypw1AXqWhrXniFxY_uFCZozdHDdPdmZpah9EdnyjMerN9vZgjUxH9SHD9sfeNcJLVC3rdYNZ4DUX2O3lAiNnrbq2kFfmubOM1OUVfFl2ad8ZOctwADy0kuuOA67OuHZGO8XBOlKHr0ChTkPI_GXPpjmBnAJOS_T96UjVW4qoYwObSCcGtA0nogkBTgwJM4MGrFghDQbFgjuamgFkljSaan" }} // Using the image from SafetyScreen or similar placeholder as designed
-                             className="w-full h-full"
-                             resizeMode="cover"
-                           />
-                           <View className="absolute inset-0 bg-primary/10" />
+                            <Image
+                                source={{ uri: "https://lh3.googleusercontent.com/aida-public/AB6AXuAeii2IgyATXOOrSDdedqXOSd8WlrRVLLL29GRV7d0237RECOVtWzAkg0Ypw1AXqWhrXniFxY_uFCZozdHDdPdmZpah9EdnyjMerN9vZgjUxH9SHD9sfeNcJLVC3rdYNZ4DUX2O3lAiNnrbq2kFfmubOM1OUVfFl2ad8ZOctwADy0kuuOA67OuHZGO8XBOlKHr0ChTkPI_GXPpjmBnAJOS_T96UjVW4qoYwObSCcGtA0nogkBTgwJM4MGrFghDQbFgjuamgFkljSaan" }} // Using the image from SafetyScreen or similar placeholder as designed
+                                className="w-full h-full"
+                                resizeMode="cover"
+                            />
+                            <View className="absolute inset-0 bg-primary/10" />
                         </View>
                     </MotiView>
 
@@ -86,7 +86,7 @@ export const WelcomeScreen = () => {
                         onPress={() => navigation.navigate('Features')}
                         className="w-full h-14"
                         variant="primary"
-                        icon="arrow-forward"
+                        icon="arrow-right"
                         iconPosition="right"
                         title="Next"
                     />

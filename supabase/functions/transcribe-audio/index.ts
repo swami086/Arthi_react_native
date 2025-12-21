@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { corsHeaders } from '../_shared/cors.ts'
+import { reportError, reportInfo } from '../_shared/rollbar.ts'
 
 console.log("Transcribe Audio Function Up and Running!")
 
@@ -103,7 +104,9 @@ serve(async (req) => {
 
         if (openAIData.error || !openAIResponse.ok) {
             console.error('OpenAI Error Details:', openAIData);
-            throw new Error(`OpenAI Error: ${openAIData.error?.message || openAIResponse.statusText}`)
+            const err = new Error(`OpenAI Error: ${openAIData.error?.message || openAIResponse.statusText}`);
+            reportError(err, 'transcribe-audio:openai', { recording_id });
+            throw err;
         }
 
         const transcriptText = openAIData.text
@@ -139,6 +142,8 @@ serve(async (req) => {
             .update({ recording_status: 'completed' })
             .eq('id', recording_id)
 
+        reportInfo('Transcription completed', 'transcribe-audio', { recording_id, wordCount: transcript.word_count })
+
         return new Response(
             JSON.stringify({ transcript }),
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -146,6 +151,7 @@ serve(async (req) => {
 
     } catch (error) {
         console.error("Transcription Error:", error);
+        reportError(error, 'transcribe-audio', { recording_id: (req as any).recording_id, test_url: (req as any).test_url });
         return new Response(
             JSON.stringify({ error: error.message }),
             { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

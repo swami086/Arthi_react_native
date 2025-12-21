@@ -1,11 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
-import { View, Text, Modal, TouchableOpacity, TextInput, Alert, ScrollView, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, TextInput, Alert, ScrollView, ActivityIndicator, StyleSheet, useColorScheme as useRNColorScheme } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Icon from 'react-native-vector-icons/Feather';
 import { getMenteeList, createSession, checkAppointmentConflict } from '../../../api/mentorService';
 import { MenteeWithActivity } from '../../../api/types';
-import { supabase } from '../../../api/supabase';
-import { useColorScheme } from '../../../hooks/useColorScheme';
+import { tokens } from '../../../design-system/tokens';
 
 interface AddSessionModalProps {
     visible: boolean;
@@ -23,7 +23,12 @@ export const AddSessionModal: React.FC<AddSessionModalProps> = ({ visible, onClo
     const [duration, setDuration] = useState<number>(45);
     const [notes, setNotes] = useState('');
     const [submitting, setSubmitting] = useState(false);
-    const { isDark } = useColorScheme();
+    const [sessionType, setSessionType] = useState<'private' | 'public'>('private');
+    const [sessionTitle, setSessionTitle] = useState('');
+
+    // Simple color scheme check
+    const colorScheme = useRNColorScheme();
+    const isDark = colorScheme === 'dark';
 
     useEffect(() => {
         if (visible) {
@@ -44,8 +49,18 @@ export const AddSessionModal: React.FC<AddSessionModalProps> = ({ visible, onClo
     };
 
     const handleCreate = async () => {
-        if (!selectedMentee || !selectedDate || !selectedTime) {
-            Alert.alert('Missing Fields', 'Please select a mentee, date, and time.');
+        if (sessionType === 'private' && !selectedMentee) {
+            Alert.alert('Missing Fields', 'Please select a mentee for a private session.');
+            return;
+        }
+
+        if (sessionType === 'public' && !sessionTitle.trim()) {
+            Alert.alert('Missing Fields', 'Please enter a title for the public session.');
+            return;
+        }
+
+        if (!selectedDate || !selectedTime) {
+            Alert.alert('Missing Fields', 'Please select a date and time.');
             return;
         }
 
@@ -63,9 +78,18 @@ export const AddSessionModal: React.FC<AddSessionModalProps> = ({ visible, onClo
                 return;
             }
 
-            await createSession(mentorId, selectedMentee, sessionStart, duration, notes);
+            await createSession(
+                mentorId,
+                sessionType === 'public' ? null : selectedMentee,
+                sessionStart,
+                duration,
+                notes,
+                0, // price for now
+                sessionType,
+                sessionTitle
+            );
 
-            Alert.alert('Success', 'Session created successfully!');
+            Alert.alert('Success', `${sessionType === 'public' ? 'Public' : 'Private'} session created and broadcasted!`);
             onSuccess();
             onClose();
             resetForm();
@@ -83,6 +107,8 @@ export const AddSessionModal: React.FC<AddSessionModalProps> = ({ visible, onClo
         setSelectedTime('09:00');
         setNotes('');
         setDuration(45);
+        setSessionType('private');
+        setSessionTitle('');
     };
 
     const timeSlots = [
@@ -91,37 +117,195 @@ export const AddSessionModal: React.FC<AddSessionModalProps> = ({ visible, onClo
         '15:30', '16:00', '16:30', '17:00'
     ];
 
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            backgroundColor: isDark ? '#111827' : 'white',
+            padding: 20,
+            paddingTop: 50,
+        },
+        header: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 20,
+        },
+        title: {
+            fontSize: 24,
+            fontWeight: 'bold',
+            color: isDark ? 'white' : '#111827',
+        },
+        closeButton: {
+            padding: 8,
+            backgroundColor: isDark ? '#1f2937' : '#f3f4f6',
+            borderRadius: 9999,
+        },
+        sectionTitle: {
+            fontSize: 14,
+            fontWeight: 'bold',
+            color: isDark ? '#d1d5db' : '#374151',
+            marginBottom: 8,
+            textTransform: 'uppercase',
+            letterSpacing: 0.5,
+        },
+        segmentedControl: {
+            flexDirection: 'row',
+            backgroundColor: isDark ? '#1f2937' : '#f3f4f6',
+            padding: 4,
+            borderRadius: 12,
+            marginBottom: 24,
+        },
+        segmentOption: {
+            flex: 1,
+            paddingVertical: 12,
+            borderRadius: 8,
+            alignItems: 'center',
+            flexDirection: 'row',
+            justifyContent: 'center',
+        },
+        segmentOptionActive: {
+            backgroundColor: isDark ? '#374151' : 'white',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.05,
+            shadowRadius: 1,
+            elevation: 1,
+        },
+        segmentText: {
+            fontWeight: '600',
+            marginLeft: 8,
+            color: '#6b7280',
+        },
+        segmentTextActive: {
+            color: isDark ? '#818cf8' : '#4f46e5',
+        },
+        input: {
+            borderWidth: 1,
+            borderColor: isDark ? '#374151' : '#e5e7eb',
+            borderRadius: 12,
+            padding: 16,
+            marginBottom: 24,
+            backgroundColor: isDark ? '#1f2937' : '#f9fafb',
+            color: isDark ? 'white' : '#111827',
+            fontSize: 16,
+        },
+        menteeCard: {
+            marginRight: 12,
+            padding: 16,
+            borderRadius: 12,
+            borderWidth: 2,
+            backgroundColor: isDark ? '#1f2937' : 'white',
+            borderColor: isDark ? '#374151' : '#e5e7eb',
+            flexDirection: 'row',
+            alignItems: 'center',
+        },
+        menteeCardSelected: {
+            backgroundColor: isDark ? 'rgba(79, 70, 229, 0.2)' : '#eef2ff',
+            borderColor: '#6366f1',
+        },
+        menteeAvatar: {
+            width: 32,
+            height: 32,
+            borderRadius: 16,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginRight: 8,
+            backgroundColor: isDark ? '#374151' : '#e5e7eb',
+        },
+        menteeAvatarSelected: {
+            backgroundColor: '#6366f1',
+        },
+        timeSlot: {
+            marginRight: 8,
+            paddingHorizontal: 16,
+            paddingVertical: 8,
+            borderRadius: 9999,
+            borderWidth: 1,
+        },
+        createButton: {
+            paddingVertical: 16,
+            borderRadius: 12,
+            alignItems: 'center',
+            backgroundColor: '#4f46e5',
+            marginTop: 20,
+        },
+    });
+
     return (
         <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
-            <View className="flex-1 bg-white dark:bg-gray-900 p-4">
-                <View className="flex-row justify-between items-center mb-4 mt-4">
-                    <Text className="text-xl font-bold text-gray-900 dark:text-white">Add New Session</Text>
-                    <TouchableOpacity onPress={onClose}>
-                        <Icon name="x" size={24} color={isDark ? "#fff" : "#666"} />
+            <View style={styles.container}>
+                <View style={styles.header}>
+                    <Text style={styles.title}>Add New Session</Text>
+                    <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+                        <Icon name="x" size={20} color={isDark ? "#fff" : "#666"} />
                     </TouchableOpacity>
                 </View>
 
-                <ScrollView contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
+                <ScrollView contentContainerStyle={{ paddingBottom: 60 }} showsVerticalScrollIndicator={false}>
+
+                    {/* Session Type Segmented Control */}
+                    <Text style={styles.sectionTitle}>Session Type</Text>
+                    <View style={styles.segmentedControl}>
+                        <TouchableOpacity
+                            onPress={() => setSessionType('private')}
+                            style={[styles.segmentOption, sessionType === 'private' && styles.segmentOptionActive]}
+                        >
+                            <Icon name="user" size={16} color={sessionType === 'private' ? '#6366f1' : '#9ca3af'} />
+                            <Text style={[styles.segmentText, sessionType === 'private' && styles.segmentTextActive]}>Private</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => setSessionType('public')}
+                            style={[styles.segmentOption, sessionType === 'public' && styles.segmentOptionActive]}
+                        >
+                            <Icon name="rss" size={16} color={sessionType === 'public' ? '#6366f1' : '#9ca3af'} />
+                            <Text style={[styles.segmentText, sessionType === 'public' && styles.segmentTextActive]}>Public (Broadcast)</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    {/* Session Title */}
+                    {(sessionType === 'public' || sessionTitle.length > 0) && (
+                        <View>
+                            <Text style={styles.sectionTitle}>Session Title</Text>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="e.g. Weekly Group Mentorship or Career Q&A"
+                                value={sessionTitle}
+                                onChangeText={setSessionTitle}
+                                placeholderTextColor={isDark ? "#4b5563" : "#9ca3af"}
+                            />
+                        </View>
+                    )}
 
                     {/* Mentee Selection */}
-                    <Text className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Select Mentee</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 }}>
+                        <Text style={styles.sectionTitle}>
+                            {sessionType === 'public' ? 'Select Mentees (Optional)' : 'Select Mentee*'}
+                        </Text>
+                        {sessionType === 'public' && (
+                            <Text style={{ fontSize: 12, color: '#6b7280', fontStyle: 'italic' }}>Broadcasts to all if none selected</Text>
+                        )}
+                    </View>
+
                     {loadingMentees ? (
-                        <ActivityIndicator size="small" color={isDark ? "#fff" : "#000"} />
+                        <ActivityIndicator size="small" color={isDark ? "#818cf8" : "#6366f1"} style={{ marginBottom: 24 }} />
                     ) : mentees.length === 0 ? (
-                        <View className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg mb-4 border border-dashed border-gray-300 dark:border-gray-700">
-                            <Text className="text-gray-500 dark:text-gray-400 text-center italic">
-                                No active mentees found. Connect with a mentee to schedule a session.
+                        <View style={{ padding: 16, backgroundColor: isDark ? '#1f2937' : '#f9fafb', borderRadius: 12, marginBottom: 24, borderWidth: 1, borderColor: isDark ? '#374151' : '#e5e7eb', borderStyle: 'dashed' }}>
+                            <Text style={{ textAlign: 'center', color: isDark ? '#9ca3af' : '#6b7280', fontStyle: 'italic' }}>
+                                {sessionType === 'private' ? 'No active mentees found. Connect with a mentee first.' : 'No active mentees found. Session will be broadcasted to global feed.'}
                             </Text>
                         </View>
                     ) : (
-                        <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-4">
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 24 }}>
                             {Array.from(new Map(mentees.map(m => [m.mentee_id, m])).values()).map((mentee) => (
                                 <TouchableOpacity
                                     key={mentee.mentee_id}
-                                    onPress={() => setSelectedMentee(mentee.mentee_id)}
-                                    className={`mr-3 p-3 rounded-lg border ${selectedMentee !== null && selectedMentee === mentee.mentee_id ? 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-500' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700'}`}
+                                    onPress={() => setSelectedMentee(selectedMentee === mentee.mentee_id ? null : mentee.mentee_id)}
+                                    style={[styles.menteeCard, selectedMentee === mentee.mentee_id && styles.menteeCardSelected]}
                                 >
-                                    <Text className={`font-medium ${selectedMentee !== null && selectedMentee === mentee.mentee_id ? 'text-indigo-700 dark:text-indigo-300' : 'text-gray-700 dark:text-gray-300'}`}>
+                                    <View style={[styles.menteeAvatar, selectedMentee === mentee.mentee_id && styles.menteeAvatarSelected]}>
+                                        <Icon name="user" size={14} color={selectedMentee === mentee.mentee_id ? "#fff" : "#9ca3af"} />
+                                    </View>
+                                    <Text style={{ fontWeight: 'bold', color: selectedMentee === mentee.mentee_id ? (isDark ? '#818cf8' : '#4f46e5') : (isDark ? '#d1d5db' : '#374151') }}>
                                         {mentee.full_name || 'Unknown'}
                                     </Text>
                                 </TouchableOpacity>
@@ -130,7 +314,7 @@ export const AddSessionModal: React.FC<AddSessionModalProps> = ({ visible, onClo
                     )}
 
                     {/* Date Selection */}
-                    <Text className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Date</Text>
+                    <Text style={styles.sectionTitle}>Date</Text>
                     <Calendar
                         onDayPress={(day: any) => setSelectedDate(day.dateString)}
                         markedDates={{
@@ -148,54 +332,63 @@ export const AddSessionModal: React.FC<AddSessionModalProps> = ({ visible, onClo
                     />
 
                     {/* Time Selection */}
-                    <Text className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Time</Text>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-4">
+                    <Text style={styles.sectionTitle}>Time</Text>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 16 }}>
                         {timeSlots.map(time => (
                             <TouchableOpacity
                                 key={time}
                                 onPress={() => setSelectedTime(time)}
-                                className={`mr-2 px-4 py-2 rounded-full border ${selectedTime === time ? 'bg-indigo-600 border-indigo-600' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700'}`}
+                                style={[
+                                    styles.timeSlot,
+                                    { backgroundColor: selectedTime === time ? '#4f46e5' : (isDark ? '#1f2937' : 'white') },
+                                    { borderColor: selectedTime === time ? '#4f46e5' : (isDark ? '#374151' : '#e5e7eb') }
+                                ]}
                             >
-                                <Text className={`${selectedTime === time ? 'text-white' : 'text-gray-700 dark:text-gray-300'}`}>{time}</Text>
+                                <Text style={{ color: selectedTime === time ? 'white' : (isDark ? '#d1d5db' : '#374151') }}>{time}</Text>
                             </TouchableOpacity>
                         ))}
                     </ScrollView>
 
                     {/* Duration Selection */}
-                    <Text className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Duration</Text>
-                    <View className="flex-row mb-4">
+                    <Text style={styles.sectionTitle}>Duration</Text>
+                    <View style={{ flexDirection: 'row', marginBottom: 16 }}>
                         {[30, 45, 60].map(d => (
                             <TouchableOpacity
                                 key={d}
                                 onPress={() => setDuration(d)}
-                                className={`mr-2 px-4 py-2 rounded-full border ${duration === d ? 'bg-indigo-600 border-indigo-600' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700'}`}
+                                style={[
+                                    styles.timeSlot,
+                                    { backgroundColor: duration === d ? '#4f46e5' : (isDark ? '#1f2937' : 'white') },
+                                    { borderColor: duration === d ? '#4f46e5' : (isDark ? '#374151' : '#e5e7eb') }
+                                ]}
                             >
-                                <Text className={`${duration === d ? 'text-white' : 'text-gray-700 dark:text-gray-300'}`}>{d} min</Text>
+                                <Text style={{ color: duration === d ? 'white' : (isDark ? '#d1d5db' : '#374151') }}>{d} min</Text>
                             </TouchableOpacity>
                         ))}
                     </View>
 
                     {/* Notes */}
-                    <Text className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Notes</Text>
+                    <Text style={styles.sectionTitle}>Notes</Text>
                     <TextInput
-                        className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 h-24 text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 mb-6"
+                        style={[styles.input, { height: 100 }]}
                         multiline
                         textAlignVertical="top"
                         placeholder="Add session agenda or notes..."
                         value={notes}
                         onChangeText={setNotes}
+                        placeholderTextColor={isDark ? "#4b5563" : "#9ca3af"}
                     />
 
                     {/* Action Button */}
                     <TouchableOpacity
                         onPress={handleCreate}
                         disabled={submitting}
-                        className={`py-4 rounded-xl items-center ${submitting ? 'bg-indigo-400' : 'bg-indigo-600'}`}
+                        style={[styles.createButton, { opacity: submitting ? 0.7 : 1 }]}
                     >
                         {submitting ? (
                             <ActivityIndicator color="white" />
                         ) : (
-                            <Text className="text-white font-bold text-lg">Create Session</Text>
+                            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 18 }}>Create Session</Text>
                         )}
                     </TouchableOpacity>
 
