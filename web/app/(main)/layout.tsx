@@ -50,7 +50,10 @@ export default async function MainLayout({
                 </main>
             </div>
         );
-    } catch (error) {
+    } catch (error: any) {
+        if (error?.message === 'NEXT_REDIRECT' || error?.digest?.startsWith('NEXT_REDIRECT')) {
+            throw error;
+        }
         reportError(error, 'main_layout.render');
         return (
             <div className="min-h-screen flex items-center justify-center p-6">

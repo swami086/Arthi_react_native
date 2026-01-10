@@ -226,6 +226,13 @@ export const AppointmentsScreen = ({ navigation }: { navigation: any }) => {
                         keyExtractor={(item) => item.id}
                         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 100 }}
                         renderItem={activeTab === 'upcoming' ? renderUpcomingCard : renderPastCard}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={loading}
+                                onRefresh={refreshAppointments}
+                                tintColor="#30bae8"
+                            />
+                        }
                         ListEmptyComponent={
                             <View style={{ padding: 40, alignItems: 'center' }}>
                                 <Text style={{ color: isDark ? '#aaa' : '#666' }}>No sessions found.</Text>

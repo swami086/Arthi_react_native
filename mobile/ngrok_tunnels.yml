@@ -1,6 +1,6 @@
 version: "2"
 authtoken: 36Gzv9o2xysgESsuhERXJftPwTv_3qqrULXdQ7vvYS2zRMCeF
 tunnels:
-  gkg_mcp:
+  rollbar_mcp:
     proto: http
-    addr: 27495
+    addr: 27496

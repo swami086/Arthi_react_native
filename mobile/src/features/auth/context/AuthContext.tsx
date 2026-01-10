@@ -216,6 +216,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return () => subscription.unsubscribe();
     }, []);
 
+    // Rollbar User Tracking
+    useEffect(() => {
+        if (user) {
+            setRollbarUser(user.id, user.email, user.email?.split('@')[0]);
+        } else {
+            clearRollbarUser();
+        }
+    }, [user]);
+
     const signIn = async (email: string, password: string) => {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (data.user && !error) {

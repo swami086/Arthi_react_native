@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from 'react';
+import { AppState, AppStateStatus } from 'react-native';
 // @ts-ignore
 import { Client, Configuration } from 'rollbar-react-native';
 // @ts-ignore
-import { ROLLBAR_ACCESS_TOKEN, ROLLBAR_ENVIRONMENT, TRACE_SAMPLE_RATE } from '@env';
+import { ROLLBAR_ACCESS_TOKEN, ROLLBAR_ENVIRONMENT, TRACE_SAMPLE_RATE, EXPO_PUBLIC_CODE_VERSION } from '@env';
 
 // Basic UUID-like generator for browser/mobile environment
 const generateUUID = () => {
@@ -17,6 +18,10 @@ let currentTraceId = generateUUID();
 let currentSpanId: string | null = null;
 let spanStack: string[] = [];
 
+const MAX_TIMERS = 1000;
+const TIMER_TTL = 60000; // 1 minute
+const MAX_SPAN_DEPTH = 20;
+
 export const getTraceId = () => currentTraceId;
 export const getSpanId = () => currentSpanId;
 
@@ -24,20 +29,48 @@ export const resetTraceId = () => {
     currentTraceId = generateUUID();
     currentSpanId = null;
     spanStack = [];
-    timers.clear();
+    clearAllTimers();
     return currentTraceId;
 };
 
-const timers = new Map<string, number>();
+const timers = new Map<string, { startTime: number, timeoutId: any }>();
+
+export const clearAllTimers = () => {
+    timers.forEach(t => clearTimeout(t.timeoutId));
+    timers.clear();
+};
 
 export const startTimer = (name: string) => {
-    timers.set(name, Date.now());
+    // Cleanup if too many timers
+    if (timers.size >= MAX_TIMERS) {
+        const oldestKey = timers.keys().next().value;
+        if (oldestKey) {
+            const timer = timers.get(oldestKey);
+            if (timer) clearTimeout(timer.timeoutId);
+            timers.delete(oldestKey);
+        }
+    }
+
+    // Auto-cleanup after TTL
+    const timeoutId = setTimeout(() => {
+        const current = timers.get(name);
+        if (current && current.timeoutId === timeoutId) {
+            timers.delete(name);
+            reportWarning(`Timer "${name}" auto-cleaned after ${TIMER_TTL}ms`, 'TimerCleanup');
+        }
+    }, TIMER_TTL);
+
+    timers.set(name, { startTime: Date.now(), timeoutId });
 };
 
 export const endTimer = (name: string, context?: string, metadata?: Record<string, any>) => {
-    const start = timers.get(name);
-    if (!start) return;
-    const duration = Date.now() - start;
+    const timerData = timers.get(name);
+    if (!timerData) return;
+
+    const { startTime, timeoutId } = timerData;
+    clearTimeout(timeoutId);
+
+    const duration = Date.now() - startTime;
     timers.delete(name);
 
     reportInfo(`Timer: ${name} took ${duration}ms`, context || 'Performance', {
@@ -55,6 +88,11 @@ export const generateSpanId = () => {
 };
 
 export const startSpan = (name: string) => {
+    if (spanStack.length >= MAX_SPAN_DEPTH) {
+        reportWarning(`Span stack overflow prevented for span "${name}"`, 'DistributedTracing');
+        return 'overflow-span-id';
+    }
+
     const spanId = generateSpanId();
     if (currentSpanId) {
         spanStack.push(currentSpanId);
@@ -84,22 +122,53 @@ export const withRollbarSpan = (spanName: string, headers: Record<string, string
 };
 
 const rollbarConfig = {
-    accessToken: ROLLBAR_ACCESS_TOKEN || '952d416d0aa146639af1a0d99e7d2592',
+    accessToken: ROLLBAR_ACCESS_TOKEN,
     captureUncaught: true,
     captureUnhandledRejections: true,
     logLevel: 'debug',
+
+    // ADD THESE:
+    autoInstrument: true,  // Enable automatic telemetry
+    maxTelemetryEvents: 50,
+    includeItemsInTelemetry: true,
+    scrubTelemetryInputs: true,  // Privacy compliance
+    captureEmail: true,  // If privacy policy allows
+    captureUsername: true,
+
     payload: {
         environment: ROLLBAR_ENVIRONMENT || (__DEV__ ? 'development' : 'production'),
         client: {
             javascript: {
                 source_map_enabled: true,
-                code_version: '1.0.0',
+                code_version: EXPO_PUBLIC_CODE_VERSION || (__DEV__ ? 'development' : 'unknown'),
             },
         },
     },
     enabled: !!ROLLBAR_ACCESS_TOKEN,
-    captureIp: false, // Privacy compliance
+    captureIp: false,
     scrubFields: ['password', 'token', 'access_token', 'secret', 'credit_card', 'cvv', 'card_number'],
+
+    checkIgnore: function (isUncaught, args, payload) {
+        const error = args[0];
+
+        // Ignore known third-party errors
+        if (error?.message?.includes('Network request failed')) {
+            return true;  // User offline, not actionable
+        }
+
+        // Ignore development-only errors
+        if (__DEV__ && error?.message?.includes('HMR')) {
+            return true;
+        }
+
+        return false;
+    },
+
+    ignoredMessages: [
+        'Network request failed',
+        /ResizeObserver loop/i,
+        'Non-Error promise rejection captured',
+    ],
 };
 
 // @ts-ignore
@@ -255,6 +324,12 @@ export const reportWarning = (message: string, context?: string, metadata?: obje
     }
 };
 
+export const addBreadcrumb = (message: string, category: string, level: 'info' | 'warning' | 'error' = 'info', metadata?: any) => {
+    if (rollbarConfig.enabled) {
+        rollbar.info(`[${category}] ${message}`, { ...sanitizeMetadata(metadata), breadcrumb: true });
+    }
+};
+
 export const setRollbarUser = (userId: string, email?: string, username?: string, metadata?: object) => {
     if (!rollbarConfig.enabled) return;
 
@@ -266,6 +341,28 @@ export const clearRollbarUser = () => {
 
     rollbar.setPerson({});
 };
+
+// Lifecycle Management for App
+export const registerRollbarLifecycle = () => {
+    const handleAppStateChange = (nextAppState: AppStateStatus) => {
+        if (nextAppState === 'background' || nextAppState === 'inactive') {
+            // App going to background/termination
+            clearAllTimers();
+            resetTraceId();
+
+            // Check for unclosed spans
+            if (spanStack.length > 0) {
+                reportWarning(`${spanStack.length} unclosed spans detected on background`, 'Lifecycle');
+            }
+        }
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+    return () => {
+        subscription.remove();
+    };
+};
+
 
 // HOC for performance tracking
 export const withRollbarPerformance = (WrappedComponent: any, screenName: string) => {

@@ -1,24 +1,31 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { reportError } from '@/lib/rollbar-utils';
+import { logToLocal } from '@/lib/local-logger'; // Import logger
 
 export default function TestRollbarPage() {
-  const [error, setError] = useState<string | null>(null);
+  return (
+    <div className="p-8 space-y-4">
+      <h1 className="text-2xl font-bold">Rollbar & Local Logs Test</h1>
+      <div className="flex gap-4">
+        <Button onClick={() => {
+          console.log('Test error triggered');
+          try {
+            throw new Error('Test error from button click');
+          } catch (e) {
+            reportError(e);
+          }
+        }}>
+          Trigger Rollbar Error
+        </Button>
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch('/api/test-rollbar');
-      if (!res.ok) {
-        const { error } = await res.json();
-        setError(error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (error) {
-    throw new Error(error);
-  }
-
-  return <div>Loading...</div>;
+        <Button variant="outline" onClick={() => {
+          logToLocal('This is a test log from the browser!', 'info');
+          alert('Log sent to browser.log');
+        }}>
+          Log to Local File
+        </Button>
+      </div>
+    </div>
+  );
 }

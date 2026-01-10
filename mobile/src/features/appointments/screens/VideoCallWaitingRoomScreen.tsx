@@ -8,7 +8,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useCameraPermissions, CameraView } from 'expo-camera';
 import { Audio } from 'expo-av';
 import { useAuth } from '../../auth/hooks/useAuth';
-import { createGoogleMeetRoom } from '../../../api/videoService';
+import { createVideoRoom, generateMeetingToken } from '../../../api/videoService';
 // import { signInWithGoogle } from '../../../services/googleSignInService';
 import { supabase } from '../../../api/supabase';
 import { useColorScheme } from '../../../hooks/useColorScheme';
@@ -74,25 +74,16 @@ export const VideoCallWaitingRoomScreen = () => {
         try {
             if (!user) return;
             setIsLoading(true);
-            let accessToken = null;
-            try {
-                // const result = await signInWithGoogle();
-                // if (result) accessToken = result.accessToken;
-            } catch (error) {
-                console.warn('Google Sign-In skipped');
-            }
 
-            const videoRoom = await createGoogleMeetRoom(
-                appointmentId,
+            // 1. Create or get existing room
+            const videoRoom = await createVideoRoom(appointmentId);
+
+            // 2. Generate Daily.co token matching role
+            const token = await generateMeetingToken(
+                videoRoom.room_name,
                 user.id,
-                user.email || '',
-                (user as any).full_name || 'User',
-                user.role as 'therapist' | 'patient',
-                accessToken || undefined
+                user.role as 'therapist' | 'patient'
             );
-
-            // Here we could update the appointment/room with recording_enabled = true if needed
-            // But for now we just proceed as the check is client-side enforced for UI flow.
 
             if (isMounted.current) {
                 console.log('[VideoCallWaitingRoom] Attempting navigation to VideoCall');
@@ -101,18 +92,15 @@ export const VideoCallWaitingRoomScreen = () => {
                         appointmentId,
                         roomId: videoRoom.id,
                         meetingUrl: videoRoom.room_url,
-                        googleMeetCode: videoRoom.google_meet_code || videoRoom.room_name,
-                        token: accessToken || undefined,
+                        googleMeetCode: videoRoom.room_name, // Reuse room name as code
+                        token: token,
                     });
                 } catch (navError) {
                     console.warn('[VideoCallWaitingRoom] Navigation failed (likely unmounted):', navError);
                 }
-            } else {
-                console.log('[VideoCallWaitingRoom] Skipped navigation - component unmounted');
             }
         } catch (error: any) {
             console.error('[VideoCallWaitingRoom] Join error:', error);
-            // Only alert if mounted
             if (isMounted.current) {
                 Alert.alert('Error', 'Failed to join meeting.');
             }

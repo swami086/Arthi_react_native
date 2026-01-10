@@ -44,13 +44,8 @@ export default function FeaturesClient() {
     };
 
     React.useEffect(() => {
-        const completed = localStorage.getItem('onboarding_completed');
-        if (completed === 'true') {
-            router.push('/login');
-            return;
-        }
         reportInfo('Onboarding features page viewed', 'onboarding.features');
-    }, [router]);
+    }, []);
 
 
     return (

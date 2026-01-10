@@ -60,7 +60,11 @@ export function withErrorHandling<T, Args extends any[]>(
             endSpan();
 
             // Handle Next.js Redirects (which throws errors)
-            if (error?.digest?.startsWith('NEXT_REDIRECT') || error.message === 'NEXT_REDIRECT') {
+            if (
+                error?.digest?.startsWith('NEXT_REDIRECT') ||
+                error?.message === 'NEXT_REDIRECT' ||
+                (typeof error?.message === 'string' && error.message.includes('NEXT_REDIRECT'))
+            ) {
                 throw error;
             }
 

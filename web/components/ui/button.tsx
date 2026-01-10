@@ -5,6 +5,8 @@ import { motion, HTMLMotionProps } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+import { Slot } from '@radix-ui/react-slot';
+
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'transparent' | 'error' | 'link';
 type ButtonSize = 'sm' | 'md' | 'lg' | 'icon';
 
@@ -15,6 +17,7 @@ interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'> {
     leftIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
     children?: React.ReactNode;
+    asChild?: boolean;
 }
 
 const variants: Record<ButtonVariant, string> = {
@@ -35,7 +38,24 @@ const sizes: Record<ButtonSize, string> = {
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-    ({ className, variant = 'primary', size = 'md', isLoading = false, leftIcon, rightIcon, children, disabled, ...props }, ref) => {
+    ({ className, variant = 'primary', size = 'md', isLoading = false, leftIcon, rightIcon, children, disabled, asChild = false, ...props }, ref) => {
+        if (asChild) {
+            return (
+                <Slot
+                    ref={ref as any}
+                    className={cn(
+                        'relative inline-flex items-center justify-center font-black uppercase tracking-[0.15em] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-50 disabled:cursor-not-allowed',
+                        variants[variant],
+                        sizes[size],
+                        className
+                    )}
+                    {...(props as any)}
+                >
+                    {children}
+                </Slot>
+            );
+        }
+
         return (
             <motion.button
                 ref={ref}

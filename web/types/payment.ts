@@ -50,7 +50,7 @@ export type PaymentWithAppointment = DBPayment & {
         id: string;
         start_time: string;
         end_time: string;
-        mentor: {
+        therapist: {
             full_name: string | null;
             avatar_url: string | null;
             specialization: string | null;
@@ -58,7 +58,7 @@ export type PaymentWithAppointment = DBPayment & {
     } | null;
 };
 
-export interface MentorEarnings {
+export interface TherapistEarnings {
     total: number;
     thisMonth: number;
     lastMonth: number;
@@ -72,8 +72,8 @@ export interface EarningsChartData {
     data: number[];
 }
 
-export type PaymentWithMentee = DBPayment & {
-    mentee?: {
+export type PaymentWithPatient = DBPayment & {
+    patient?: {
         full_name: string | null;
         avatar_url: string | null;
     } | null;

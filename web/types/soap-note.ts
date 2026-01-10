@@ -6,7 +6,7 @@ export interface SoapNote {
     assessment: string;
     plan: string;
     is_finalized: boolean;
-    edited_by_mentor: boolean;
+    edited_by_therapist: boolean;
     created_at: string;
     updated_at: string;
 }

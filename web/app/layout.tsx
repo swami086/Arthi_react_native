@@ -4,7 +4,7 @@ import { generateOrganizationSchema } from '@/lib/schemas';
 import { Manrope, Plus_Jakarta_Sans } from 'next/font/google';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { ErrorBoundary } from '@/components/error-boundary';
-import RollbarProvider from '@/components/providers/RollbarProvider';
+import RollbarProvider from '@/components/providers/rollbar-provider';
 import { AuthProvider } from '@/components/providers/auth-provider';
 import { WebVitalsProvider } from '@/components/providers/web-vitals-provider';
 import { AnalyticsProvider } from '@/components/providers/analytics-provider';
@@ -53,20 +53,20 @@ export default function RootLayout({
       <body
         className={`${manrope.variable} ${plusJakarta.variable} font-primary antialiased`}
       >
-        <RollbarProvider>
-          <WebVitalsProvider>
-            <AnalyticsProvider>
-              <ThemeProvider>
-                <AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <RollbarProvider>
+              <WebVitalsProvider>
+                <AnalyticsProvider>
                   <ErrorBoundary>
                     {children}
                     <Toaster richColors position="top-right" />
                   </ErrorBoundary>
-                </AuthProvider>
-              </ThemeProvider>
-            </AnalyticsProvider>
-          </WebVitalsProvider>
-        </RollbarProvider>
+                </AnalyticsProvider>
+              </WebVitalsProvider>
+            </RollbarProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

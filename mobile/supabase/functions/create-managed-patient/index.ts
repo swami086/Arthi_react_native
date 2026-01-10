@@ -164,16 +164,15 @@ serve(async (req) => {
         await reportError(error, 'create-managed-patient', {
             trace_id: traceId,
             span_id: spanId
-        });
-        // Return 200 with error details so frontend can display the message
+        }, traceId, spanId);
+
         return new Response(
             JSON.stringify({
-                success: false,
-                error: error.message || 'Unknown server error',
-                details: JSON.stringify(error)
+                error: 'Internal server error',
+                trace_id: traceId
             }),
             {
-                status: 200, // Changed from 400 to 200 to allow client to read body
+                status: 500,
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' }
             }
         )

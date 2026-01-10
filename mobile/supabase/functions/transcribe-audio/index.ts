@@ -174,10 +174,17 @@ serve(async (req) => {
         await reportError(error, 'transcribe-audio', {
             trace_id: traceId,
             span_id: spanId
-        });
+        }, traceId, spanId);
+
         return new Response(
-            JSON.stringify({ error: error.message }),
-            { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            JSON.stringify({
+                error: 'Internal server error',
+                trace_id: traceId
+            }),
+            {
+                status: 500,
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            }
         )
     }
 })

@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient } from '@/lib/supabase/server';
+import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { withErrorHandling } from '@/lib/server-action-wrapper';
@@ -73,26 +73,10 @@ export const signUpWithEmail = withErrorHandling(
             throw new Error('Failed to create user account');
         }
 
-        // Create profile
-        const { error: profileError } = await (supabase.from('profiles') as any)
-            .insert({
-                user_id: authData.user.id,
-                full_name: userData.fullName,
-                role: userData.role,
-                approval_status: userData.role === 'therapist' ? 'pending' : null,
-            });
+        // Profile is created automatically via database trigger (handle_new_user)
 
-        if (profileError) {
-            // Note: We don't rollback user creation here, but we fail the action
-            // In a real app we might want to delete the user or use a transaction
-            throw new Error('Failed to create user profile');
-        }
-
-        if (userData.role === 'therapist') {
-            redirect('/pending-approval');
-        } else {
-            redirect('/home');
-        }
+        // Redirect to onboarding
+        redirect('/onboarding/welcome');
 
         revalidatePath('/', 'layout');
         return true;

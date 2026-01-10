@@ -16,5 +16,7 @@ build
 coverage
 
 mcpjungle.db
+*.log
+web/*.log
+mobile/*.log
 mcpjungle.log
-*.plist

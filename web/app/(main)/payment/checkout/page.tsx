@@ -68,7 +68,10 @@ export default async function PaymentCheckoutPage({ searchParams }: CheckoutPage
                 <PaymentCheckoutClient appointment={appointment} user={clientUser} />
             </div>
         );
-    } catch (err) {
+    } catch (err: any) {
+        if (err?.message === 'NEXT_REDIRECT' || err?.digest?.startsWith('NEXT_REDIRECT')) {
+            throw err;
+        }
         reportError(err, 'PaymentCheckoutPage');
         redirect('/appointments');
     }

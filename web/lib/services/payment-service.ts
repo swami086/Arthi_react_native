@@ -1,4 +1,5 @@
 import { createClient } from '../supabase/server';
+import { Payment as DBPayment, TablesUpdate } from '../../types/database';
 import { PaymentWithAppointment, PaymentOrderData, PaymentVerification, TherapistEarnings, PaymentWithPatient } from '../../types/payment';
 import { reportError, withRollbarTrace, startTimer, endTimer } from '../rollbar-utils';
 
@@ -136,10 +137,10 @@ export const paymentService = {
     async updatePaymentStatus(paymentId: string, status: string, razorpayData?: any): Promise<void> {
         const supabase = await createClient();
         try {
-            const { error } = await (supabase
-                .from('payments') as any)
+            const { error } = await supabase
+                .from('payments')
                 .update({
-                    status: status as any,
+                    status: status as TablesUpdate<'payments'>['status'],
                     ...razorpayData,
                     updated_at: new Date().toISOString()
                 })
@@ -159,8 +160,7 @@ export const paymentService = {
         const supabase = await createClient();
         startTimer('therapist_earnings_fetch');
         try {
-            let query = (supabase
-                .from('payments') as any)
+            let query = supabase.from('payments')
                 .select('amount, therapist_payout, status, created_at')
                 .eq('therapist_id', therapistId);
 
@@ -181,7 +181,7 @@ export const paymentService = {
             let pending = 0;
             let available = 0;
 
-            const paymentData = (data || []) as any[];
+            const paymentData = (data || []) as DBPayment[];
 
             paymentData.forEach(payment => {
                 const payout = payment.therapist_payout || (payment.amount * 0.9);
@@ -219,8 +219,7 @@ export const paymentService = {
     async getTherapistTransactions(therapistId: string, limit = 10, offset = 0): Promise<PaymentWithPatient[]> {
         const supabase = await createClient();
         try {
-            const { data, error } = await (supabase
-                .from('payments') as any)
+            const { data, error } = await supabase.from('payments')
                 .select(`
                     *,
                     patient: profiles!payments_patient_id_fkey(full_name, avatar_url),
@@ -244,8 +243,7 @@ export const paymentService = {
     async getTherapistPaymentBreakdown(therapistId: string) {
         const supabase = await createClient();
         try {
-            const { data, error } = await (supabase
-                .from('payments') as any)
+            const { data, error } = await supabase.from('payments')
                 .select(`
                     id,
                     amount,

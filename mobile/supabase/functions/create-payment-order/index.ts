@@ -54,11 +54,16 @@ serve(async (req) => {
     } catch (error: any) {
         await reportError(error, 'create-payment-order', {
             appointmentId: appointmentIdVal,
-            amount: amountVal
+            amount: amountVal,
+            trace_id: traceId,
+            span_id: spanId
         }, traceId, spanId);
 
-        return new Response(JSON.stringify({ error: error.message }), {
-            status: 400,
+        return new Response(JSON.stringify({
+            error: 'Internal server error',
+            trace_id: traceId
+        }), {
+            status: 500,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
     }

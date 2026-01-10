@@ -24,7 +24,7 @@ export default function SafetyClient() {
             const result = await setOnboardingCompleted();
             if (result.success) {
                 localStorage.setItem('onboarding_completed', 'true');
-                router.push('/signup');
+                router.push('/home');
             } else {
                 throw new Error(result.error);
             }
@@ -40,13 +40,8 @@ export default function SafetyClient() {
     };
 
     React.useEffect(() => {
-        const completed = localStorage.getItem('onboarding_completed');
-        if (completed === 'true') {
-            router.push('/signup');
-            return;
-        }
         reportInfo('Onboarding safety page viewed', 'onboarding.safety');
-    }, [router]);
+    }, []);
 
 
     return (

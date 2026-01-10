@@ -19,6 +19,13 @@ These migrations transform SafeSpaceApp from a single-tenant to a multi-tenant w
 12. **016_restore_practice_schema.sql** - Restores/Creates practice tables and columns if missing
 13. **017_fix_rls_and_triggers.sql** - Updates RLS to include practice_id checks and ensures triggers are active
 14. **018_soap_notes_therapist_id_fix.sql** - Renames mentor_id to therapist_id in soap_notes
+15. **019_fix_profile_insert_policy.sql** - Fixes profile creation RLS during signup
+16. **020_enable_rls_missing_tables.sql** - Enables RLS on all remaining tables
+17. **021_consolidate_duplicate_policies.sql** - Consolidates duplicate RLS policies
+18. **022_add_missing_indexes.sql** - Adds missing foreign key indexes
+19. **023_fix_function_search_path.sql** - Hardens function security (SECURITY DEFINER + search_path)
+20. **024_remove_unused_indexes.sql** - Removes unused indexes
+21. **025_add_auth_trigger.sql** - Adds auth trigger for profile creation
 
 ## Applying Migrations
 

@@ -1,0 +1,44 @@
+name: Deploy Supabase Edge Functions
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'mobile/supabase/functions/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+      ROLLBAR_POST_SERVER_ITEM_TOKEN: ${{ secrets.ROLLBAR_POST_SERVER_ITEM_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+
+      - name: Deploy and Upload Sourcemaps
+        run: |
+          # Loop through changed functions or all functions
+          # For simplicity, we deploy all for now or the user can customize.
+          # Note: We are in 'mobile' directory now.
+          for dir in supabase/functions/*/ ; do
+            FUNCTION_NAME=$(basename "$dir")
+            if [[ "$FUNCTION_NAME" != "_shared" && "$FUNCTION_NAME" != "dist" ]]; then
+              echo "Deploying $FUNCTION_NAME..."
+              ./scripts/deploy-function-with-sourcemaps.sh "$FUNCTION_NAME" "$PROJECT_ID"
+            fi
+          done

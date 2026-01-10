@@ -56,7 +56,10 @@ export default async function TherapistsPage() {
                 </ErrorBoundary>
             </div>
         );
-    } catch (error) {
+    } catch (error: any) {
+        if (error?.message === 'NEXT_REDIRECT' || error?.digest?.startsWith('NEXT_REDIRECT')) {
+            throw error;
+        }
         reportError(error, 'therapists_page.server_fetch');
         throw error;
     }

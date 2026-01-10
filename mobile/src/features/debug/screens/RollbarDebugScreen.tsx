@@ -6,6 +6,10 @@ import { supabase } from '../../../api/supabase';
 import { tokens } from '../../../design-system/tokens';
 
 export const RollbarDebugScreen = () => {
+    if (!__DEV__) {
+        return null;
+    }
+
     const [lastAction, setLastAction] = useState<string | null>(null);
     const [buggyState, setBuggyState] = useState(false);
 

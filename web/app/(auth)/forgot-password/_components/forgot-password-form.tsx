@@ -47,7 +47,10 @@ export default function ForgotPasswordForm() {
             reportInfo('Password reset email requested', 'auth.forgot', { email: data.email });
             toast.success('Reset link sent to your email');
             setIsSuccess(true);
-        } catch (error) {
+        } catch (error: any) {
+            if (error?.message === 'NEXT_REDIRECT' || error?.digest?.startsWith('NEXT_REDIRECT')) {
+                throw error;
+            }
             reportError(error, 'auth.forgot.submit');
             setError('root', { message: 'An unexpected error occurred' });
         } finally {

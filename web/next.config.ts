@@ -18,6 +18,9 @@ const nextConfig: NextConfig = {
       },
     ],
     formats: ['image/avif', 'image/webp'],
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   experimental: {
     optimizePackageImports: ['lucide-react'],
@@ -32,9 +35,9 @@ const nextConfig: NextConfig = {
     if (!dev && !isServer) {
       config.plugins.push(
         new RollbarSourceMapPlugin({
-          accessToken: process.env.ROLLBAR_SERVER_TOKEN,
-          version: process.env.NEXT_PUBLIC_ROLLBAR_CODE_VERSION || '1.0.0',
-          publicPath: 'https://safespace-web.vercel.app/_next/', // Replace with your actual domain
+          accessToken: process.env.ROLLBAR_POST_SERVER_ITEM_TOKEN,
+          version: process.env.VERCEL_GIT_COMMIT_SHA || process.env.NEXT_PUBLIC_ROLLBAR_CODE_VERSION || '1.0.0',
+          publicPath: 'https://safespace-web.vercel.app/_next/',
         })
       );
     }

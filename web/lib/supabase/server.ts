@@ -7,7 +7,11 @@ export async function createClient() {
 
     return createServerClient<Database>(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        (() => {
+            const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+            if (!key) throw new Error("Missing NEXT_PUBLIC_SUPABASE_ANON_KEY environment variable");
+            return key;
+        })(),
         {
             cookies: {
                 get(name: string) {
@@ -37,6 +41,6 @@ import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 export function createAdminClient() {
     return createSupabaseClient<Database>(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 }

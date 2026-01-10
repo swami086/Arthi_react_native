@@ -16,6 +16,10 @@ export default function WelcomeClient() {
     const router = useRouter();
     const [isSkipping, setIsSkipping] = React.useState(false);
 
+    React.useEffect(() => {
+        console.log('WelcomeClient mounted');
+    }, []);
+
     const handleNext = () => {
         addBreadcrumb('Navigating to features page', 'onboarding.welcome', 'info');
         router.push('/onboarding/features');
@@ -41,13 +45,8 @@ export default function WelcomeClient() {
     };
 
     React.useEffect(() => {
-        const completed = localStorage.getItem('onboarding_completed');
-        if (completed === 'true') {
-            router.push('/login');
-            return;
-        }
         reportInfo('Onboarding welcome page viewed', 'onboarding.welcome');
-    }, [router]);
+    }, []);
 
 
     return (

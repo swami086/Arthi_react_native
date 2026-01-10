@@ -2,7 +2,7 @@ import { updateSession } from '@/lib/supabase/middleware';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const publicRoutes = ['/', '/login', '/signup', '/forgot-password', '/onboarding', '/api/test-rollbar', '/auth/callback'];
+const publicRoutes = ['/', '/login', '/signup', '/forgot-password', '/onboarding', '/api/test-rollbar', '/auth/callback', '/api/local-log'];
 
 export async function middleware(request: NextRequest) {
     const { supabase, response, user } = await updateSession(request);
@@ -44,8 +44,8 @@ export async function middleware(request: NextRequest) {
         .eq('user_id', user.id)
         .single();
 
-    // Handle pending mentor approval
-    if (profile?.role === 'mentor' && profile?.approval_status === 'pending') {
+    // Handle pending therapist approval
+    if (profile?.role === 'therapist' && profile?.approval_status === 'pending') {
         if (path !== '/pending-approval' && !path.startsWith('/onboarding')) {
             const url = request.nextUrl.clone();
             url.pathname = '/pending-approval';
@@ -55,15 +55,15 @@ export async function middleware(request: NextRequest) {
     }
 
     // Role-based routing
-    if (profile?.role === 'mentee' && path.startsWith('/mentor')) {
+    if (profile?.role === 'patient' && path.startsWith('/therapist')) {
         const url = request.nextUrl.clone();
         url.pathname = '/home';
         return NextResponse.redirect(url, { headers: response.headers });
     }
 
-    if (profile?.role === 'mentor' && !path.startsWith('/mentor') && !path.startsWith('/profile') && !path.startsWith('/onboarding')) {
+    if (profile?.role === 'therapist' && !path.startsWith('/therapist') && !path.startsWith('/profile') && !path.startsWith('/onboarding')) {
         const url = request.nextUrl.clone();
-        url.pathname = '/mentor/home';
+        url.pathname = '/therapist/home';
         return NextResponse.redirect(url, { headers: response.headers });
     }
 

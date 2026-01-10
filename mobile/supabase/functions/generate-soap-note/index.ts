@@ -167,15 +167,15 @@ serve(async (req) => {
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         )
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("SOAP Gen Error:", error);
         await reportError(error, 'generate-soap-note', {
             trace_id: traceId,
             span_id: spanId
         });
         return new Response(
-            JSON.stringify({ error: error.message }),
-            { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            JSON.stringify({ error: 'Internal server error' }),
+            { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         )
     }
 })

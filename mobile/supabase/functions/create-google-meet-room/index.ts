@@ -102,17 +102,10 @@ serve(async (req) => {
         );
     } catch (error: any) {
         console.error('Error creating Google Meet room:', error);
-        await reportError(error, 'create-google-meet-room', {}, traceId, spanId);
-        // Return 200 with error details to bypass FunctionsHttpError shielding
-        return new Response(
-            JSON.stringify({
-                error: error.message,
-                details: error.toString()
-            }),
-            {
-                status: 200,
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            }
-        );
+        await reportError(error, 'create-google-meet-room', { trace_id: traceId, span_id: spanId });
+        return new Response(JSON.stringify({ error: 'Internal server error' }), {
+            status: 500,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
     }
 });

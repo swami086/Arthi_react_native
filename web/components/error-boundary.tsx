@@ -20,11 +20,30 @@ export class ErrorBoundary extends Component<Props, State> {
     }
 
     static getDerivedStateFromError(error: Error): State {
+        // Ignore NEXT_REDIRECT errors to allow Next.js usage of exceptions for control flow
+        if (
+            error.message === 'NEXT_REDIRECT' ||
+            (error as any).digest?.startsWith('NEXT_REDIRECT')
+        ) {
+            // Re-throw to let Next.js handle the redirect
+            throw error;
+        }
         return { hasError: true, error };
     }
 
     componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-        rollbar.error(error, errorInfo);
+        // Don't log NEXT_REDIRECT errors to Rollbar
+        if (
+            error.message === 'NEXT_REDIRECT' ||
+            (error as any).digest?.startsWith('NEXT_REDIRECT')
+        ) {
+            return;
+        }
+
+        rollbar.error(error, {
+            componentStack: errorInfo.componentStack,
+            errorBoundary: true,
+        });
     }
 
     render() {

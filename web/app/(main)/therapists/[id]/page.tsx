@@ -11,10 +11,16 @@ import { generateTherapistSchema } from '@/lib/schemas';
 
 export const revalidate = 300; // ISR
 
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+
 export async function generateStaticParams() {
-    const supabase = createAdminClient();
+    // Fallback to anon client for build time if admin client fails
+    const supabase = createSupabaseClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
     try {
-        const therapists = await getTherapists(supabase);
+        const therapists = await getTherapists(supabase as any);
         return therapists.map((therapist) => ({
             id: therapist.user_id,
         }));
@@ -26,7 +32,11 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
     const { id } = await params;
-    const supabase = createAdminClient();
+
+    const supabase = createSupabaseClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
     try {
         const therapist = await getTherapistById(supabase, id);
         if (!therapist) {

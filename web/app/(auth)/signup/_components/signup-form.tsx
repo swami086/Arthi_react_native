@@ -72,7 +72,14 @@ export default function SignUpForm() {
             reportInfo('New user signed up', 'auth.signup', { email: data.email, role: data.role });
 
             // Navigation is handled by server action redirect
-        } catch (error) {
+        } catch (error: any) {
+            // Next.js redirection works by throwing an error
+            if (error?.message === 'NEXT_REDIRECT' || error?.digest?.startsWith('NEXT_REDIRECT')) {
+                endTimer('signup.submission', 'auth.signup', { email: data.email, outcome: 'redirect' });
+                // We must rethrow to allow Next.js to handle the navigation
+                throw error;
+            }
+
             reportError(error, 'auth.signup.submit');
             toast.error('An unexpected error occurred');
             setError('root', { message: 'An unexpected error occurred' });

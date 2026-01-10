@@ -295,7 +295,7 @@ export const AppNavigator = () => {
                     <Stack.Screen name="TherapistPaymentDashboard" component={TherapistPaymentDashboardScreen} />
                     <Stack.Screen name="Resources" component={ResourcesScreen} />
                     <Stack.Screen name="CrisisResources" component={CrisisResourcesScreen} />
-                    <Stack.Screen name="RollbarDebug" component={require('../features/debug/screens/RollbarDebugScreen').default} />
+                    {__DEV__ && <Stack.Screen name="RollbarDebug" component={require('../features/debug/screens/RollbarDebugScreen').default} />}
                 </>
             ) : (
                 <>

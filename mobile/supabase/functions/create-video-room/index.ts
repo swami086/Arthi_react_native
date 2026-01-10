@@ -72,9 +72,16 @@ serve(async (req) => {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
     } catch (error: any) {
-        await reportError(error, 'create-video-room', {}, traceId, spanId);
-        return new Response(JSON.stringify({ error: error.message }), {
-            status: 400,
+        await reportError(error, 'create-video-room', {
+            trace_id: traceId,
+            span_id: spanId
+        }, traceId, spanId);
+
+        return new Response(JSON.stringify({
+            error: 'Internal server error',
+            trace_id: traceId
+        }), {
+            status: 500,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
     }

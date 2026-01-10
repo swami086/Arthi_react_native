@@ -2,13 +2,19 @@ import { MetadataRoute } from 'next';
 import { createAdminClient } from '@/lib/supabase/server';
 import { getTherapists } from '@/lib/services/therapist-service';
 
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://safespace.app';
-    const supabase = createAdminClient();
+    // Fallback to anon client for sitemap generation if admin key is missing
+    const supabase = createSupabaseClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
 
     let therapistUrls: MetadataRoute.Sitemap = [];
     try {
-        const therapists = await getTherapists(supabase);
+        const therapists = await getTherapists(supabase as any);
         therapistUrls = therapists.map((therapist) => ({
             url: `${siteUrl}/therapists/${therapist.user_id}`,
             lastModified: new Date(),

@@ -53,7 +53,8 @@ export default function LoginForm() {
             // but we keep loading till page changes
         } catch (error: any) {
             if (error?.message === 'NEXT_REDIRECT' || error?.digest?.startsWith('NEXT_REDIRECT')) {
-                return;
+                // We must rethrow to allow Next.js to handle the navigation
+                throw error;
             }
             reportError(error, 'auth.login.submit');
             toast.error('An unexpected error occurred');
