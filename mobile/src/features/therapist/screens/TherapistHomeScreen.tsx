@@ -155,7 +155,7 @@ export function TherapistHomeScreen() {
                             <Text className="text-lg font-bold text-text-primary dark:text-text-primary-dark mb-4 font-primary">Up Next</Text>
                             {upcomingAppointment ? (
                                 <SessionCard
-                                    title="Therapisting Session"
+                                    title="Therapy Session"
                                     date={new Date(upcomingAppointment.start_time).toLocaleDateString()}
                                     duration={new Date(upcomingAppointment.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     status={upcomingAppointment.status}

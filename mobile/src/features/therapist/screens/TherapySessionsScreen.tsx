@@ -115,7 +115,7 @@ const CustomSessionCard = ({ item, onPress }: { item: any, onPress: () => void }
     );
 };
 
-function TherapistSessionsScreen() {
+function TherapySessionsScreen() {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const { user } = useAuth();
     const { isDark } = useColorScheme();
@@ -260,4 +260,4 @@ function TherapistSessionsScreen() {
     );
 };
 
-export default withRollbarPerformance(TherapistSessionsScreen, 'TherapistSessions');
+export default withRollbarPerformance(TherapySessionsScreen, 'TherapySessions');

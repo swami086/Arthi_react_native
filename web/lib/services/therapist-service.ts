@@ -110,10 +110,9 @@ export async function searchAvailablePatients(supabase: SupabaseClient, query: s
         let builder = supabase
             .from('profiles')
             .select(`
-                id,
+                user_id,
                 full_name,
                 avatar_url,
-                email,
                 role
             `)
             .eq('role', 'patient');
@@ -128,6 +127,7 @@ export async function searchAvailablePatients(supabase: SupabaseClient, query: s
 
         return data.map(m => ({
             ...m,
+            email: 'hidden@example.com', // Email is not exposed in public profile search
             matchPercentage: Math.floor(Math.random() * (98 - 70) + 70)
         }));
 

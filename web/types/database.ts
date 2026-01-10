@@ -888,7 +888,7 @@ export type TherapistStats = {
 
 export type AdminStats = {
     pending_approvals: number
-    active_mentors: number
+    active_therapists: number
     total_patients: number
     total_admins: number
 }

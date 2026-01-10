@@ -1,3 +1,8 @@
+-- Drop conflicting policies first
+DROP POLICY IF EXISTS "Users can read mentor profiles" ON profiles;
+DROP POLICY IF EXISTS "Mentors can read their mentees" ON profiles;
+DROP POLICY IF EXISTS "Users can view own payments" ON payments;
+
 -- Rename tables
 ALTER TABLE mentor_mentee_relationships RENAME TO therapist_patient_relationships;
 ALTER TABLE mentee_referrals RENAME TO patient_referrals;
@@ -38,34 +43,25 @@ ALTER TABLE reviews RENAME COLUMN mentee_id TO patient_id;
 -- Rename columns in payments
 ALTER TABLE payments RENAME COLUMN mentor_id TO therapist_id;
 ALTER TABLE payments RENAME COLUMN mentee_id TO patient_id;
-ALTER TABLE payments RENAME COLUMN mentor_payout TO therapist_payout;
 
 -- Rename columns in video_rooms
 ALTER TABLE video_rooms RENAME COLUMN mentor_token TO therapist_token;
 ALTER TABLE video_rooms RENAME COLUMN mentee_token TO patient_token;
 
--- Rename columns in soap_notes
-ALTER TABLE soap_notes RENAME COLUMN edited_by_mentor TO edited_by_therapist;
-
 -- Update profiles role enum values (requires recreating the enum)
--- First, drop the cast if it exists (implicit in column usage, but clean up is hard)
--- We will convert to text, update, then back to enum.
+ALTER TABLE profiles DROP CONSTRAINT IF EXISTS profiles_role_check;
 ALTER TABLE profiles ALTER COLUMN role TYPE TEXT;
 UPDATE profiles SET role = 'therapist' WHERE role = 'mentor';
 UPDATE profiles SET role = 'patient' WHERE role = 'mentee';
-
--- Drop old type if checking dependent objects allows, otherwise we might need to create new type
-DROP TYPE IF EXISTS user_role CASCADE;
 CREATE TYPE user_role AS ENUM ('therapist', 'patient', 'admin');
 ALTER TABLE profiles ALTER COLUMN role TYPE user_role USING role::user_role;
 
 -- Update admin_actions action_type enum
+ALTER TABLE admin_actions DROP CONSTRAINT IF EXISTS admin_actions_action_type_check;
 ALTER TABLE admin_actions ALTER COLUMN action_type TYPE TEXT;
 UPDATE admin_actions SET action_type = 'approve_therapist' WHERE action_type = 'approve_mentor';
 UPDATE admin_actions SET action_type = 'reject_therapist' WHERE action_type = 'reject_mentor';
 UPDATE admin_actions SET action_type = 'assign_patient' WHERE action_type = 'assign_mentee';
-
-DROP TYPE IF EXISTS admin_action_type CASCADE;
 CREATE TYPE admin_action_type AS ENUM ('create_admin', 'approve_therapist', 'reject_therapist', 'assign_patient');
 ALTER TABLE admin_actions ALTER COLUMN action_type TYPE admin_action_type USING action_type::admin_action_type;
 

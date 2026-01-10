@@ -4,12 +4,12 @@ export type Profile = Database['public']['Tables']['profiles']['Row'];
 
 export interface AdminStats {
     pending_approvals: number;
-    active_mentors: number;
-    total_mentees: number;
+    active_therapists: number;
+    total_patients: number;
     total_admins: number;
 }
 
-export type AdminActionType = 'create_admin' | 'approve_mentor' | 'reject_mentor' | 'assign_mentee';
+export type AdminActionType = 'create_admin' | 'approve_therapist' | 'reject_therapist' | 'assign_patient';
 
 export interface AdminAction {
     id: string;
