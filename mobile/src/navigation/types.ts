@@ -18,15 +18,15 @@ export type OnboardingStackParamList = {
 
 export type MainTabParamList = {
     Home: undefined;
-    Mentors: undefined;
+    Therapists: undefined;
     Appointments: undefined;
     Messages: undefined;
     Profile: undefined;
 };
 
-export type MentorTabParamList = {
+export type TherapistTabParamList = {
     Home: undefined;
-    Mentees: undefined;
+    Patients: undefined;
     Sessions: undefined;
     Profile: undefined;
     Settings: undefined;
@@ -34,8 +34,8 @@ export type MentorTabParamList = {
 
 export type AdminTabParamList = {
     Dashboard: undefined;
-    Mentors: undefined;
-    Mentees: undefined;
+    Therapists: undefined;
+    Patients: undefined;
     Admins: undefined;
     Settings: undefined;
 };
@@ -45,7 +45,7 @@ export type RootStackParamList = {
     Onboarding: { screen: keyof OnboardingStackParamList } | undefined;
     Auth: { screen: keyof AuthStackParamList } | undefined;
     Main: { screen: keyof MainTabParamList } | undefined;
-    MentorMain: { screen: keyof MentorTabParamList } | undefined;
+    TherapistMain: { screen: keyof TherapistTabParamList } | undefined;
     AdminMain: { screen: keyof AdminTabParamList } | undefined;
 
     // Appointment Flow
@@ -97,9 +97,9 @@ export type RootStackParamList = {
     EditProfile: undefined;
     Notifications: undefined;
 
-    // Mentor/Mentee Details
-    MentorDetail: { mentorId: string; mentorName: string; mentorAvatar?: string; mentorBio?: string; mentorExpertise?: string[] };
-    MenteeDetail: { menteeId: string; menteeName: string; menteeAvatar?: string };
+    // Therapist/Patient Details
+    TherapistDetail: { mentorId: string; mentorName: string; mentorAvatar?: string; mentorBio?: string; mentorExpertise?: string[] };
+    PatientDetail: { menteeId: string; menteeName: string; menteeAvatar?: string };
     SessionDetail: { appointmentId: string };
     AddNote: { menteeId: string };
     AddGoal: { menteeId: string };
@@ -118,21 +118,21 @@ export type RootStackParamList = {
     // Admin Screens
     PendingApproval: undefined; // For pending message
     PendingApprovals: undefined; // Admin list
-    MentorReview: { mentor: Profile };
+    TherapistReview: { mentor: Profile };
     ManageAdmins: undefined;
     CreateAdmin: undefined;
-    AdminMentors: undefined;
-    AdminMentees: undefined;
+    AdminTherapists: undefined;
+    AdminPatients: undefined;
 
-    // Mentor Screens
-    MenteeDiscovery: { autoOpenAddModal?: boolean } | undefined;
+    // Therapist Screens
+    PatientDiscovery: { autoOpenAddModal?: boolean } | undefined;
 
-    PendingMentorRequests: undefined;
+    PendingTherapistRequests: undefined;
 
-    ReferMentee: { menteeId: string };
+    ReferPatient: { menteeId: string };
     ReferralsManagement: undefined;
-    MenteeOnboarding: { menteeId?: string };
-    MentorPaymentDashboard: undefined;
+    PatientOnboarding: { menteeId?: string };
+    TherapistPaymentDashboard: undefined;
     Resources: undefined;
     CrisisResources: undefined;
     RollbarDebug: undefined;

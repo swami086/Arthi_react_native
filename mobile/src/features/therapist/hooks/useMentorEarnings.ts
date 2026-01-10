@@ -3,7 +3,7 @@ import { supabase } from '../../../api/supabase';
 import { Payment } from '../../../api/types';
 import { startOfMonth, subMonths, format } from 'date-fns';
 
-export const useMentorEarnings = () => {
+export const useTherapistEarnings = () => {
     const [earnings, setEarnings] = useState({
         total: 0,
         thisMonth: 0,

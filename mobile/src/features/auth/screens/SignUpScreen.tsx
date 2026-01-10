@@ -159,7 +159,7 @@ export const SignUpScreen = () => {
                                 }`}
                             >
                                 <Icon name="account-school" size={24} color={role === 'mentee' ? 'white' : '#94aeb8'} style={{marginBottom: 4}} />
-                                <Text className={`font-bold ${role === 'mentee' ? 'text-white' : 'text-text-sub-light dark:text-text-sub-dark'}`}>Mentee</Text>
+                                <Text className={`font-bold ${role === 'mentee' ? 'text-white' : 'text-text-sub-light dark:text-text-sub-dark'}`}>Patient</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={() => setRole('mentor')}
@@ -170,13 +170,13 @@ export const SignUpScreen = () => {
                                 }`}
                             >
                                 <Icon name="human-male-board" size={24} color={role === 'mentor' ? 'white' : '#94aeb8'} style={{marginBottom: 4}} />
-                                <Text className={`font-bold ${role === 'mentor' ? 'text-white' : 'text-text-sub-light dark:text-text-sub-dark'}`}>Mentor</Text>
+                                <Text className={`font-bold ${role === 'mentor' ? 'text-white' : 'text-text-sub-light dark:text-text-sub-dark'}`}>Therapist</Text>
                             </TouchableOpacity>
                         </View>
                         {role === 'mentor' && (
                             <View className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl mt-1 border border-blue-100 dark:border-blue-800">
                                 <Text className="text-blue-700 dark:text-blue-300 text-xs leading-relaxed font-medium">
-                                    Note: Mentor accounts require admin approval before you can access the platform.
+                                    Note: Therapist accounts require admin approval before you can access the platform.
                                 </Text>
                             </View>
                         )}

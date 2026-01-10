@@ -46,7 +46,7 @@ export const AppointmentSummaryCard: React.FC<AppointmentSummaryCardProps> = ({
                     <View className="flex-row flex-wrap">
                         <View className="bg-primary/10 px-2 py-1 rounded-md self-start">
                              <Text className="text-primary dark:text-primary-dark text-xs font-bold uppercase tracking-wider">
-                                {mentorExpertise || 'Mentor'}
+                                {mentorExpertise || 'Therapist'}
                             </Text>
                         </View>
                     </View>

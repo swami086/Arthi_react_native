@@ -218,20 +218,20 @@ export default function SessionDetailScreen() {
             <ScrollView className="px-4" showsVerticalScrollIndicator={false}>
                 <Text className="text-lg font-bold mb-4 font-['Manrope']">Session Information</Text>
 
-                {/* Mentor Card */}
+                {/* Therapist Card */}
                 <View className="bg-white rounded-[24px] p-4 flex-row items-center mb-4 shadow-sm border border-gray-50">
                     <View className="flex-1">
-                        <Text className="text-[#a0aec0] text-xs font-medium uppercase tracking-wider mb-1">Mentor</Text>
+                        <Text className="text-[#a0aec0] text-xs font-medium uppercase tracking-wider mb-1">Therapist</Text>
                         <Text className="text-lg font-bold text-[#1a202c]">{mentor?.full_name || 'Dr. Anya Sharma'}</Text>
                         <Text className="text-[#4a5568] text-sm">Psychologist</Text>
                     </View>
                     <Image source={{ uri: ASSETS.OVERVIEW.MENTOR }} className="w-[100px] h-[64px] rounded-lg" resizeMode="cover" />
                 </View>
 
-                {/* Mentee Card */}
+                {/* Patient Card */}
                 <View className="bg-white rounded-[24px] p-4 flex-row items-center mb-4 shadow-sm border border-gray-50">
                     <View className="flex-1">
-                        <Text className="text-[#a0aec0] text-xs font-medium uppercase tracking-wider mb-1">Mentee</Text>
+                        <Text className="text-[#a0aec0] text-xs font-medium uppercase tracking-wider mb-1">Patient</Text>
                         <Text className="text-lg font-bold text-[#1a202c]">{mentee?.full_name || 'Ethan Carter'}</Text>
                         <Text className="text-[#4a5568] text-sm">Student</Text>
                     </View>
@@ -399,7 +399,7 @@ export default function SessionDetailScreen() {
                     <View className="flex-row items-center gap-4 bg-[#1a2b33] p-4 rounded-xl">
                         <Image source={{ uri: ASSETS.DARK.MENTEE }} className="w-12 h-12 rounded-full" />
                         <View>
-                            <Text className="text-[#94bac7] text-sm">Mentee</Text>
+                            <Text className="text-[#94bac7] text-sm">Patient</Text>
                             <Text className="text-white font-bold text-base">{mentee?.full_name || 'Alex'}</Text>
                         </View>
                     </View>

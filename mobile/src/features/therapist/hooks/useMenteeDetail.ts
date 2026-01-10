@@ -1,21 +1,21 @@
 import { useEffect, useState, useCallback } from 'react';
-import { getMenteeProfile } from '../../../api/mentorService';
-import { Profile, MenteeGoal, MentorNote } from '../../../api/types';
+import { getPatientProfile } from '../../../api/mentorService';
+import { Profile, PatientGoal, TherapistNote } from '../../../api/types';
 import { supabase } from '../../../api/supabase';
 
-export const useMenteeDetail = (menteeId: string) => {
-    const [mentee, setMentee] = useState<Profile | null>(null);
-    const [goals, setGoals] = useState<MenteeGoal[]>([]);
-    const [notes, setNotes] = useState<MentorNote[]>([]);
+export const usePatientDetail = (menteeId: string) => {
+    const [mentee, setPatient] = useState<Profile | null>(null);
+    const [goals, setGoals] = useState<PatientGoal[]>([]);
+    const [notes, setNotes] = useState<TherapistNote[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     const fetchDetail = useCallback(async () => {
         try {
             setLoading(true);
-            const data = await getMenteeProfile(menteeId);
+            const data = await getPatientProfile(menteeId);
             if (data) {
-                setMentee(data.profile);
+                setPatient(data.profile);
                 setGoals(data.goals);
                 setNotes(data.notes);
             }

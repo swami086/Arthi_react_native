@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useAllMentees } from '../hooks/useAllMentees';
+import { useAllPatients } from '../hooks/useAllPatients';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 import { useNavigation } from '@react-navigation/native';
 
-export const AdminMenteesScreen = () => {
-    const { mentees, loading, fetchMentees } = useAllMentees();
+export const AdminPatientsScreen = () => {
+    const { mentees, loading, fetchPatients } = useAllPatients();
     const navigation = useNavigation<any>();
     const [search, setSearch] = useState('');
 
-    const filteredMentees = mentees.filter(m =>
+    const filteredPatients = mentees.filter(m =>
         m.full_name?.toLowerCase().includes(search.toLowerCase())
     );
 
@@ -29,7 +29,7 @@ export const AdminMenteesScreen = () => {
                 </View>
                 <View className="flex-1">
                     <Text className="font-bold text-lg text-text-main-light dark:text-white">{item.full_name}</Text>
-                    <Text className="text-sm text-text-sub-light dark:text-gray-400">Mentee</Text>
+                    <Text className="text-sm text-text-sub-light dark:text-gray-400">Patient</Text>
                 </View>
                 <TouchableOpacity className="p-2 bg-gray-100 dark:bg-gray-700 rounded-full">
                     <Icon name="dots-vertical" size={20} color="#666" />
@@ -50,7 +50,7 @@ export const AdminMenteesScreen = () => {
                         <TouchableOpacity onPress={() => navigation.goBack()} className="mr-4">
                             <Icon name="arrow-left" size={24} color="#4e8597" />
                         </TouchableOpacity>
-                        <Text className="text-xl font-bold text-text-main-light dark:text-white">All Mentees</Text>
+                        <Text className="text-xl font-bold text-text-main-light dark:text-white">All Patients</Text>
                     </View>
                     <View className="bg-gray-100 dark:bg-gray-700 rounded-lg flex-row items-center px-3 py-2">
                         <Icon name="magnify" size={20} color="#999" />
@@ -66,12 +66,12 @@ export const AdminMenteesScreen = () => {
             </MotiView>
 
             <FlatList
-                data={filteredMentees}
+                data={filteredPatients}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => `${item.user_id}-${index}`}
                 contentContainerStyle={{ padding: 24 }}
                 refreshing={loading}
-                onRefresh={fetchMentees}
+                onRefresh={fetchPatients}
             />
         </SafeAreaView>
     );

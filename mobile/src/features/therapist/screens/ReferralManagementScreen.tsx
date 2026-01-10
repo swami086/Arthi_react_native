@@ -36,7 +36,7 @@ export const ReferralManagementScreen = () => {
                 </View>
             </View>
 
-            <Text className="text-sm font-semibold mb-1 text-text-main-light dark:text-gray-300">Mentee: {item.mentee_name || 'Mentee'}</Text>
+            <Text className="text-sm font-semibold mb-1 text-text-main-light dark:text-gray-300">Patient: {item.mentee_name || 'Patient'}</Text>
             <Text className="text-xs text-text-sub-light dark:text-gray-400 italic mb-3">"{item.referral_reason}"</Text>
 
             {viewMode === 'received' && item.status === 'pending' && (

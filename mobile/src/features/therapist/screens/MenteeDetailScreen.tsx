@@ -4,21 +4,21 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { RootStackParamList } from '../../../navigation/types';
-import { useMenteeDetail } from '../hooks/useMenteeDetail';
+import { usePatientDetail } from '../hooks/usePatientDetail';
 import { GradientAvatar } from '../../../components/GradientAvatar';
 import { TagPill } from '../../../components/TagPill';
 import { GoalProgress } from '../../../components/GoalProgress';
 import { ErrorBanner } from '../../../components/ErrorBanner';
 import { LoadingSkeleton } from '../../../components/LoadingSkeleton';
 
-type MenteeDetailRouteProp = RouteProp<RootStackParamList, 'MenteeDetail'>;
+type PatientDetailRouteProp = RouteProp<RootStackParamList, 'PatientDetail'>;
 
-export default function MenteeDetailScreen() {
+export default function PatientDetailScreen() {
     const navigation = useNavigation<any>();
-    const route = useRoute<MenteeDetailRouteProp>();
+    const route = useRoute<PatientDetailRouteProp>();
     const { menteeId, menteeName, menteeAvatar } = route.params;
 
-    const { mentee, goals, notes, loading, error, refetch } = useMenteeDetail(menteeId);
+    const { mentee, goals, notes, loading, error, refetch } = usePatientDetail(menteeId);
 
     return (
         <View className="flex-1 bg-gray-50">
@@ -28,7 +28,7 @@ export default function MenteeDetailScreen() {
                     <TouchableOpacity onPress={() => navigation.goBack()} className="mr-4">
                         <MaterialCommunityIcons name="arrow-left" size={24} color="#333" />
                     </TouchableOpacity>
-                    <Text className="text-xl font-bold text-gray-900">Mentee Profile</Text>
+                    <Text className="text-xl font-bold text-gray-900">Patient Profile</Text>
                 </View>
 
                 {error && (

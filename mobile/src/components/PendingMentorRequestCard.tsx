@@ -2,14 +2,14 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-interface PendingMentorRequestCardProps {
+interface PendingTherapistRequestCardProps {
     request: any;
     onAccept: (id: string) => void;
     onDecline: (id: string) => void;
     isProcessing: boolean;
 }
 
-export const PendingMentorRequestCard = ({ request, onAccept, onDecline, isProcessing }: PendingMentorRequestCardProps) => {
+export const PendingTherapistRequestCard = ({ request, onAccept, onDecline, isProcessing }: PendingTherapistRequestCardProps) => {
     const mentor = request.mentor;
 
     return (
@@ -29,14 +29,14 @@ export const PendingMentorRequestCard = ({ request, onAccept, onDecline, isProce
                 <View className="flex-1">
                     <View className="flex-row justify-between items-center">
                         <Text className="font-bold text-lg text-text-main-light dark:text-white">
-                            {mentor?.full_name || 'Unknown Mentor'}
+                            {mentor?.full_name || 'Unknown Therapist'}
                         </Text>
                         <Text className="text-xs text-text-sub-light dark:text-gray-400">
                             {new Date(request.created_at).toLocaleDateString()}
                         </Text>
                     </View>
                     <Text className="text-sm text-text-sub-light dark:text-gray-400">
-                        {mentor?.specialization || 'Mentor'}
+                        {mentor?.specialization || 'Therapist'}
                     </Text>
                 </View>
             </View>

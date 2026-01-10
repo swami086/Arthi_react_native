@@ -3,8 +3,8 @@ import { View, Text, FlatList, TouchableOpacity, ScrollView, StatusBar } from 'r
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useMentors } from '../hooks/useMentors';
-import { MentorCard } from '../../../components/MentorCard';
+import { useTherapists } from '../hooks/useTherapists';
+import { TherapistCard } from '../../../components/TherapistCard';
 import { FilterChip } from '../../../components/FilterChip';
 import { LoadingSkeleton, ListSkeleton } from '../../../components/LoadingSkeleton';
 import { Input } from '../../../components/Input';
@@ -17,8 +17,8 @@ const FILTERS = ['All Filters', 'Confidence', 'Anxiety', 'Career', 'School Stres
 
 import { withRollbarPerformance } from '../../../services/rollbar';
 
-export const MentorsScreen = () => {
-    const { mentors, loading, error } = useMentors();
+export const TherapistsScreen = () => {
+    const { mentors, loading, error } = useTherapists();
     const { isDark } = useColorScheme();
     const navigation = useNavigation<MainTabCompositeProp>();
 
@@ -27,7 +27,7 @@ export const MentorsScreen = () => {
     const [searchQuery, setSearchQuery] = useState('');
 
     // Filter logic
-    const filteredMentors = mentors.filter(m => {
+    const filteredTherapists = mentors.filter(m => {
         if (selectedFilter === 'All Filters') return true;
         return true;
     });
@@ -41,7 +41,7 @@ export const MentorsScreen = () => {
         >
             {/* Top Bar */}
             <View className="flex-row items-center justify-between mb-6">
-                <Text className="text-xl font-bold text-gray-900 dark:text-white">Find a Mentor</Text>
+                <Text className="text-xl font-bold text-gray-900 dark:text-white">Find a Therapist</Text>
                 <TouchableOpacity className="p-2">
                     <MaterialCommunityIcons name="magnify" size={24} color={isDark ? "#fff" : "#333"} />
                 </TouchableOpacity>
@@ -77,7 +77,7 @@ export const MentorsScreen = () => {
             {/* List Meta */}
             <View className="flex-row justify-between items-center mb-2">
                 <Text className="text-gray-500 dark:text-gray-400 font-medium">
-                    Showing <Text className="font-bold text-gray-900 dark:text-white">{filteredMentors.length}</Text> mentors
+                    Showing <Text className="font-bold text-gray-900 dark:text-white">{filteredTherapists.length}</Text> mentors
                 </Text>
                 <TouchableOpacity className="flex-row items-center">
                     <Text className="text-gray-600 dark:text-gray-400 font-medium mr-1">Sort by</Text>
@@ -93,16 +93,16 @@ export const MentorsScreen = () => {
             animate={{ opacity: 1, translateY: 0 }}
             transition={{ delay: index * 100, type: 'spring' }}
         >
-            <MentorCard
-                name={item.full_name || 'Mentor'}
+            <TherapistCard
+                name={item.full_name || 'Therapist'}
                 role="Licensed Therapist" // Placeholder
                 imageUrl={item.avatar_url || undefined}
                 bio={item.bio || ''}
                 expertise={['Anxiety', 'Depression', 'Coping']} // Placeholder
                 isOnline={Math.random() > 0.5} // Random status for demo
-                onPress={() => navigation.navigate('MentorDetail', {
+                onPress={() => navigation.navigate('TherapistDetail', {
                     mentorId: item.user_id,
-                    mentorName: item.full_name || 'Mentor',
+                    mentorName: item.full_name || 'Therapist',
                     mentorAvatar: item.avatar_url || undefined,
                     mentorBio: item.bio || undefined,
                     mentorExpertise: ['Anxiety', 'Depression', 'Coping']
@@ -137,7 +137,7 @@ export const MentorsScreen = () => {
                 ) : (
                     <ErrorBoundary>
                         <FlatList
-                            data={filteredMentors}
+                            data={filteredTherapists}
                             renderItem={renderItem}
                             keyExtractor={(item, index) => `${item?.user_id || 'mentor'}-${index}`}
                             ListHeaderComponent={renderHeader}
@@ -152,4 +152,4 @@ export const MentorsScreen = () => {
     );
 };
 
-export default withRollbarPerformance(MentorsScreen, 'Mentors');
+export default withRollbarPerformance(TherapistsScreen, 'Therapists');

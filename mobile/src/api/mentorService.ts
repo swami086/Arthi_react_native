@@ -1,10 +1,10 @@
 import { supabase } from './supabase';
-import { MenteeGoal, MentorNote, MentorStats, MenteeWithActivity, Appointment } from './types';
+import { PatientGoal, TherapistNote, TherapistStats, PatientWithActivity, Appointment } from './types';
 import { generateDailyMeetLink } from '../utils/meetingLink';
 import { reportError, withRollbarTrace, startSpan, endSpan, startTimer, endTimer, withRollbarSpan, getTraceId } from '../services/rollbar';
 
-export const getMentorStats = async (mentorId: string): Promise<MentorStats | null> => {
-    startSpan('api.mentor.getMentorStats');
+export const getTherapistStats = async (mentorId: string): Promise<TherapistStats | null> => {
+    startSpan('api.mentor.getTherapistStats');
     startTimer('mentor_stats_fetch');
     try {
         const { data, error } = await supabase
@@ -12,22 +12,22 @@ export const getMentorStats = async (mentorId: string): Promise<MentorStats | nu
             .rpc('get_mentor_stats', { mentor_user_id: mentorId });
 
         if (error) {
-            reportError(error, 'mentorService:getMentorStats', { mentorId });
+            reportError(error, 'mentorService:getTherapistStats', { mentorId });
             return null;
         }
 
-        endTimer('mentor_stats_fetch', 'mentorService:getMentorStats', { mentorId });
-        return data as MentorStats;
+        endTimer('mentor_stats_fetch', 'mentorService:getTherapistStats', { mentorId });
+        return data as TherapistStats;
     } catch (error) {
-        reportError(error, 'mentorService:getMentorStats', { mentorId });
+        reportError(error, 'mentorService:getTherapistStats', { mentorId });
         return null;
     } finally {
         endSpan();
     }
 };
 
-export const getMenteeList = async (mentorId: string): Promise<MenteeWithActivity[]> => {
-    startSpan('api.mentor.getMenteeList');
+export const getPatientList = async (mentorId: string): Promise<PatientWithActivity[]> => {
+    startSpan('api.mentor.getPatientList');
     startTimer('mentee_list_fetch');
     try {
         const { data, error } = await supabase
@@ -35,25 +35,25 @@ export const getMenteeList = async (mentorId: string): Promise<MenteeWithActivit
             .rpc('get_mentee_list_for_mentor', { mentor_user_id: mentorId });
 
         if (error) {
-            reportError(error, 'mentorService:getMenteeList', { mentorId });
+            reportError(error, 'mentorService:getPatientList', { mentorId });
             return [];
         }
 
-        endTimer('mentee_list_fetch', 'mentorService:getMenteeList', {
+        endTimer('mentee_list_fetch', 'mentorService:getPatientList', {
             mentorId,
             menteeCount: data?.length || 0
         });
-        return data as MenteeWithActivity[];
+        return data as PatientWithActivity[];
     } catch (error) {
-        reportError(error, 'mentorService:getMenteeList', { mentorId });
+        reportError(error, 'mentorService:getPatientList', { mentorId });
         return [];
     } finally {
         endSpan();
     }
 };
 
-export const getMenteeProfile = async (menteeId: string) => {
-    startSpan('api.mentor.getMenteeProfile');
+export const getPatientProfile = async (menteeId: string) => {
+    startSpan('api.mentor.getPatientProfile');
     try {
         const { data: profile, error: profileError } = await supabase
             .from('profiles')
@@ -65,7 +65,7 @@ export const getMenteeProfile = async (menteeId: string) => {
             .single();
 
         if (profileError) {
-            reportError(profileError, 'mentorService:getMenteeProfile', { menteeId });
+            reportError(profileError, 'mentorService:getPatientProfile', { menteeId });
             return null;
         }
 
@@ -77,7 +77,7 @@ export const getMenteeProfile = async (menteeId: string) => {
             .headers(withRollbarTrace());
 
         if (goalsError) {
-            reportError(goalsError, 'mentorService:getMenteeProfile:goals', { menteeId });
+            reportError(goalsError, 'mentorService:getPatientProfile:goals', { menteeId });
         }
 
         const { data: notes, error: notesError } = await supabase
@@ -88,7 +88,7 @@ export const getMenteeProfile = async (menteeId: string) => {
             .headers(withRollbarTrace());
 
         if (notesError) {
-            reportError(notesError, 'mentorService:getMenteeProfile:notes', { menteeId });
+            reportError(notesError, 'mentorService:getPatientProfile:notes', { menteeId });
         }
 
         return {
@@ -97,15 +97,15 @@ export const getMenteeProfile = async (menteeId: string) => {
             notes: notes || []
         };
     } catch (error) {
-        reportError(error, 'mentorService:getMenteeProfile', { menteeId });
+        reportError(error, 'mentorService:getPatientProfile', { menteeId });
         return null;
     } finally {
         endSpan();
     }
 };
 
-export const createMentorNote = async (note: Omit<MentorNote, 'id' | 'created_at' | 'updated_at'>) => {
-    startSpan('api.mentor.createMentorNote');
+export const createTherapistNote = async (note: Omit<TherapistNote, 'id' | 'created_at' | 'updated_at'>) => {
+    startSpan('api.mentor.createTherapistNote');
     try {
         const { data, error } = await supabase
             .from('mentor_notes')
@@ -117,7 +117,7 @@ export const createMentorNote = async (note: Omit<MentorNote, 'id' | 'created_at
             .single();
 
         if (error) {
-            reportError(error, 'mentorService:createMentorNote', {
+            reportError(error, 'mentorService:createTherapistNote', {
                 menteeId: note.mentee_id
             });
             throw error;
@@ -125,15 +125,15 @@ export const createMentorNote = async (note: Omit<MentorNote, 'id' | 'created_at
 
         return data;
     } catch (error) {
-        reportError(error, 'mentorService:createMentorNote');
+        reportError(error, 'mentorService:createTherapistNote');
         throw error;
     } finally {
         endSpan();
     }
 };
 
-export const updateMentorNote = async (noteId: string, updates: Partial<MentorNote>) => {
-    startSpan('api.mentor.updateMentorNote');
+export const updateTherapistNote = async (noteId: string, updates: Partial<TherapistNote>) => {
+    startSpan('api.mentor.updateTherapistNote');
     try {
         const { data, error } = await supabase
             .from('mentor_notes')
@@ -146,21 +146,21 @@ export const updateMentorNote = async (noteId: string, updates: Partial<MentorNo
             .single();
 
         if (error) {
-            reportError(error, 'mentorService:updateMentorNote', { noteId });
+            reportError(error, 'mentorService:updateTherapistNote', { noteId });
             throw error;
         }
 
         return data;
     } catch (error) {
-        reportError(error, 'mentorService:updateMentorNote', { noteId });
+        reportError(error, 'mentorService:updateTherapistNote', { noteId });
         throw error;
     } finally {
         endSpan();
     }
 };
 
-export const deleteMentorNote = async (noteId: string) => {
-    startSpan('api.mentor.deleteMentorNote');
+export const deleteTherapistNote = async (noteId: string) => {
+    startSpan('api.mentor.deleteTherapistNote');
     try {
         const { error } = await supabase
             .from('mentor_notes')
@@ -170,19 +170,19 @@ export const deleteMentorNote = async (noteId: string) => {
             .headers(withRollbarTrace());
 
         if (error) {
-            reportError(error, 'mentorService:deleteMentorNote', { noteId });
+            reportError(error, 'mentorService:deleteTherapistNote', { noteId });
             throw error;
         }
     } catch (error) {
-        reportError(error, 'mentorService:deleteMentorNote', { noteId });
+        reportError(error, 'mentorService:deleteTherapistNote', { noteId });
         throw error;
     } finally {
         endSpan();
     }
 };
 
-export const createMenteeGoal = async (goal: Omit<MenteeGoal, 'id' | 'created_at' | 'updated_at'>) => {
-    startSpan('api.mentor.createMenteeGoal');
+export const createPatientGoal = async (goal: Omit<PatientGoal, 'id' | 'created_at' | 'updated_at'>) => {
+    startSpan('api.mentor.createPatientGoal');
     try {
         const { data, error } = await supabase
             .from('mentee_goals')
@@ -194,7 +194,7 @@ export const createMenteeGoal = async (goal: Omit<MenteeGoal, 'id' | 'created_at
             .single();
 
         if (error) {
-            reportError(error, 'mentorService:createMenteeGoal', {
+            reportError(error, 'mentorService:createPatientGoal', {
                 menteeId: goal.mentee_id
             });
             throw error;
@@ -202,15 +202,15 @@ export const createMenteeGoal = async (goal: Omit<MenteeGoal, 'id' | 'created_at
 
         return data;
     } catch (error) {
-        reportError(error, 'mentorService:createMenteeGoal');
+        reportError(error, 'mentorService:createPatientGoal');
         throw error;
     } finally {
         endSpan();
     }
 };
 
-export const updateMenteeGoal = async (goalId: string, updates: Partial<MenteeGoal>) => {
-    startSpan('api.mentor.updateMenteeGoal');
+export const updatePatientGoal = async (goalId: string, updates: Partial<PatientGoal>) => {
+    startSpan('api.mentor.updatePatientGoal');
     try {
         const { data, error } = await supabase
             .from('mentee_goals')
@@ -223,13 +223,13 @@ export const updateMenteeGoal = async (goalId: string, updates: Partial<MenteeGo
             .single();
 
         if (error) {
-            reportError(error, 'mentorService:updateMenteeGoal', { goalId });
+            reportError(error, 'mentorService:updatePatientGoal', { goalId });
             throw error;
         }
 
         return data;
     } catch (error) {
-        reportError(error, 'mentorService:updateMenteeGoal', { goalId });
+        reportError(error, 'mentorService:updatePatientGoal', { goalId });
         throw error;
     } finally {
         endSpan();
@@ -254,7 +254,7 @@ export const updateAppointmentStatus = async (appointmentId: string, status: str
 
 // New functions
 
-export const searchAvailableMentees = async (mentorId: string, searchQuery: string, category?: string) => {
+export const searchAvailablePatients = async (mentorId: string, searchQuery: string, category?: string) => {
     // 1. Fetch all profiles with role 'mentee'
     let query = supabase
         .from('profiles')
@@ -268,7 +268,7 @@ export const searchAvailableMentees = async (mentorId: string, searchQuery: stri
         query = query.contains('expertise_areas', [category]);
     }
 
-    const { data: allMentees, error: menteesError } = await query;
+    const { data: allPatients, error: menteesError } = await query;
 
     if (menteesError) throw menteesError;
 
@@ -281,14 +281,14 @@ export const searchAvailableMentees = async (mentorId: string, searchQuery: stri
 
     if (relError) throw relError;
 
-    const excludedMenteeIds = new Set(existingRelationships?.map(r => r.mentee_id) || []);
+    const excludedPatientIds = new Set(existingRelationships?.map(r => r.mentee_id) || []);
 
     // 3. Filter out existing relationships and apply search query
-    let availableMentees = (allMentees || []).filter(m => !excludedMenteeIds.has(m.user_id));
+    let availablePatients = (allPatients || []).filter(m => !excludedPatientIds.has(m.user_id));
 
     if (searchQuery) {
         const lowerQuery = searchQuery.toLowerCase();
-        availableMentees = availableMentees.filter(m =>
+        availablePatients = availablePatients.filter(m =>
             (m.full_name?.toLowerCase().includes(lowerQuery)) ||
             (m.bio?.toLowerCase().includes(lowerQuery)) ||
             (m.specialization?.toLowerCase().includes(lowerQuery)) ||
@@ -298,10 +298,10 @@ export const searchAvailableMentees = async (mentorId: string, searchQuery: stri
 
     // 4. sort by some mechanic, e.g. those with most matching interests (simple logic for now)
     // could be improved with a match score
-    return availableMentees;
+    return availablePatients;
 };
 
-export const inviteMentee = async (mentorId: string, menteeEmail: string, message?: string) => {
+export const invitePatient = async (mentorId: string, menteeEmail: string, message?: string) => {
     // Generate a random token
     const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     const expiresAt = new Date();
@@ -323,7 +323,7 @@ export const inviteMentee = async (mentorId: string, menteeEmail: string, messag
     return data;
 };
 
-export const addMenteeToRoster = async (mentorId: string, menteeId: string, notes?: string) => {
+export const addPatientToRoster = async (mentorId: string, menteeId: string, notes?: string) => {
     const { data, error } = await supabase
         .from('mentor_mentee_relationships')
         .insert({
@@ -340,7 +340,7 @@ export const addMenteeToRoster = async (mentorId: string, menteeId: string, note
     return data;
 };
 
-export const removeMenteeFromRoster = async (relationshipId: string, reason?: string) => {
+export const removePatientFromRoster = async (relationshipId: string, reason?: string) => {
     const { data, error } = await supabase
         .from('mentor_mentee_relationships')
         .update({
@@ -356,7 +356,7 @@ export const removeMenteeFromRoster = async (relationshipId: string, reason?: st
     return data;
 };
 
-export const deactivateMenteeRelationship = async (mentorId: string, menteeId: string) => {
+export const deactivatePatientRelationship = async (mentorId: string, menteeId: string) => {
     // Find all active/pending relationships (handling potential duplicates)
     const { data: rels, error: fetchError } = await supabase
         .from('mentor_mentee_relationships')
@@ -374,19 +374,19 @@ export const deactivateMenteeRelationship = async (mentorId: string, menteeId: s
 
     // Deactivate all found relationships found to ensure clean state
     const results = await Promise.all(rels.map(rel =>
-        removeMenteeFromRoster(rel.id, 'Removed by mentor')
+        removePatientFromRoster(rel.id, 'Removed by mentor')
     ));
 
     return results[0];
 };
 
-export const referMenteeToMentor = async (menteeId: string, fromMentorId: string, toMentorId: string, reason: string, notes?: string) => {
+export const referPatientToTherapist = async (menteeId: string, fromTherapistId: string, toTherapistId: string, reason: string, notes?: string) => {
     const { data, error } = await supabase
         .from('mentee_referrals')
         .insert({
             mentee_id: menteeId,
-            referring_mentor_id: fromMentorId,
-            referred_to_mentor_id: toMentorId,
+            referring_mentor_id: fromTherapistId,
+            referred_to_mentor_id: toTherapistId,
             referral_reason: reason,
             referral_notes: notes
         })
@@ -433,7 +433,7 @@ export const respondToReferral = async (referralId: string, status: 'accepted' |
     return data;
 };
 
-export const getMentorMenteeRelationships = async (mentorId: string) => {
+export const getTherapistPatientRelationships = async (mentorId: string) => {
     const { data, error } = await supabase
         .rpc('get_mentor_relationships', { mentor_id_input: mentorId });
 
@@ -525,15 +525,15 @@ export const checkAppointmentConflict = async (
     return data && data.length > 0;
 };
 
-export const createManagedMentee = async (mentorId: string, email: string, fullName: string) => {
+export const createManagedPatient = async (mentorId: string, email: string, fullName: string) => {
     const { data, error } = await supabase.functions.invoke('create-managed-mentee', {
         body: { mentor_id: mentorId, email, full_name: fullName },
-        headers: withRollbarSpan('createManagedMentee')
+        headers: withRollbarSpan('createManagedPatient')
     });
 
     if (error) {
         console.error("Function Invoke Error", error);
-        reportError(error, 'createManagedMentee:invoke', { trace_id: getTraceId() });
+        reportError(error, 'createManagedPatient:invoke', { trace_id: getTraceId() });
         endSpan();
         throw error;
     }
@@ -542,7 +542,7 @@ export const createManagedMentee = async (mentorId: string, email: string, fullN
 
     // Check for application level error from the function
     if (data && data.error) {
-        reportError(new Error(data.error), 'createManagedMentee:app_error', { trace_id: getTraceId() });
+        reportError(new Error(data.error), 'createManagedPatient:app_error', { trace_id: getTraceId() });
         throw new Error(data.error);
     }
 

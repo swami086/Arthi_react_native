@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react';
-import { getAllMentors } from '../../../api/adminService';
+import { getAllTherapists } from '../../../api/adminService';
 import { Profile } from '../../../api/types';
 
-export const useAllMentors = () => {
-    const [mentors, setMentors] = useState<Profile[]>([]);
+export const useAllTherapists = () => {
+    const [mentors, setTherapists] = useState<Profile[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchMentors = async () => {
+    const fetchTherapists = async () => {
         setLoading(true);
         setError(null);
         try {
-            const data = await getAllMentors();
-            setMentors(data);
+            const data = await getAllTherapists();
+            setTherapists(data);
         } catch (err: any) {
             console.error(err);
             setError(err.message || "Failed to fetch mentors");
@@ -22,8 +22,8 @@ export const useAllMentors = () => {
     };
 
     useEffect(() => {
-        fetchMentors();
+        fetchTherapists();
     }, []);
 
-    return { mentors, loading, error, fetchMentors };
+    return { mentors, loading, error, fetchTherapists };
 };

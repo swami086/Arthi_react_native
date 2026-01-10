@@ -13,7 +13,7 @@ import { useColorScheme } from '../../../hooks/useColorScheme';
 
 import { withRollbarPerformance } from '../../../services/rollbar';
 
-const MentorProfileScreen = () => {
+const TherapistProfileScreen = () => {
     const navigation = useNavigation<any>();
     const { isDark } = useColorScheme();
     const { user, profile, refreshProfile, signOut } = useAuth();
@@ -123,7 +123,7 @@ const MentorProfileScreen = () => {
                             </View>
                         </TouchableOpacity>
                         <Text className="text-2xl font-bold text-text-main-light dark:text-white mt-3">{profile?.full_name}</Text>
-                        <Text className="text-primary font-medium">{profile?.specialization || 'Mentor'}</Text>
+                        <Text className="text-primary font-medium">{profile?.specialization || 'Therapist'}</Text>
                     </View>
                 </View>
 
@@ -194,4 +194,4 @@ const MentorProfileScreen = () => {
         </SafeAreaView>
     );
 };
-export default withRollbarPerformance(MentorProfileScreen, 'MentorProfile');
+export default withRollbarPerformance(TherapistProfileScreen, 'TherapistProfile');

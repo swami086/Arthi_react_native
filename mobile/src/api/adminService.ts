@@ -2,14 +2,14 @@ import { supabase } from './supabase';
 import { reportError, withRollbarTrace, startSpan, endSpan } from '../services/rollbar';
 import { Profile, AdminAction } from './types';
 
-export const getPendingMentors = async () => {
-    startSpan('api.admin.getPendingMentors');
+export const getPendingTherapists = async () => {
+    startSpan('api.admin.getPendingTherapists');
     try {
         const { data, error } = await supabase
             .rpc('get_pending_mentors');
 
         if (error) {
-            reportError(error, 'adminService:getPendingMentors', {
+            reportError(error, 'adminService:getPendingTherapists', {
                 operation: 'fetch_pending_mentors'
             });
             throw error;
@@ -17,14 +17,14 @@ export const getPendingMentors = async () => {
 
         return data as Profile[];
     } catch (error) {
-        reportError(error, 'adminService:getPendingMentors');
+        reportError(error, 'adminService:getPendingTherapists');
         throw error;
     } finally {
         endSpan();
     }
 };
 
-export const approveMentor = async (mentorId: string, adminId: string, notes?: string) => {
+export const approveTherapist = async (mentorId: string, adminId: string, notes?: string) => {
     // Start a transaction if possible, or sequence of ops
     const { error: updateError } = await supabase
         .from('profiles')
@@ -40,7 +40,7 @@ export const approveMentor = async (mentorId: string, adminId: string, notes?: s
     await logAdminAction(adminId, 'approve_mentor', mentorId, { notes });
 };
 
-export const rejectMentor = async (mentorId: string, adminId: string, reason: string) => {
+export const rejectTherapist = async (mentorId: string, adminId: string, reason: string) => {
     const { error: updateError } = await supabase
         .from('profiles')
         .update({
@@ -56,7 +56,7 @@ export const rejectMentor = async (mentorId: string, adminId: string, reason: st
     await logAdminAction(adminId, 'reject_mentor', mentorId, { reason });
 };
 
-export const getAllMentors = async (status?: string) => {
+export const getAllTherapists = async (status?: string) => {
     let query = supabase
         .from('profiles')
         .select('*')
@@ -71,7 +71,7 @@ export const getAllMentors = async (status?: string) => {
     return data as Profile[];
 };
 
-export const getAllMentees = async () => {
+export const getAllPatients = async () => {
     const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -81,7 +81,7 @@ export const getAllMentees = async () => {
     return data as Profile[];
 };
 
-export const getMentorDetails = async (mentorId: string) => {
+export const getTherapistDetails = async (mentorId: string) => {
     const { data, error } = await supabase
         .from('profiles')
         .select('*')

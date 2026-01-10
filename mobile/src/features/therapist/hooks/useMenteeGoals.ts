@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../../api/supabase';
-import { createMenteeGoal, updateMenteeGoal as apiUpdateGoal } from '../../../api/mentorService';
-import { MenteeGoal } from '../../../api/types';
+import { createPatientGoal, updatePatientGoal as apiUpdateGoal } from '../../../api/mentorService';
+import { PatientGoal } from '../../../api/types';
 
-export const useMenteeGoals = (menteeId: string) => {
-    const [goals, setGoals] = useState<MenteeGoal[]>([]);
+export const usePatientGoals = (menteeId: string) => {
+    const [goals, setGoals] = useState<PatientGoal[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -30,10 +30,10 @@ export const useMenteeGoals = (menteeId: string) => {
         fetchGoals();
     }, [fetchGoals]);
 
-    const createGoal = async (goal: Omit<MenteeGoal, 'id' | 'created_at' | 'updated_at'>) => {
+    const createGoal = async (goal: Omit<PatientGoal, 'id' | 'created_at' | 'updated_at'>) => {
         try {
             setLoading(true);
-            await createMenteeGoal(goal);
+            await createPatientGoal(goal);
             await fetchGoals();
         } catch (err: any) {
             setError(err.message);
@@ -43,7 +43,7 @@ export const useMenteeGoals = (menteeId: string) => {
         }
     };
 
-    const updateGoal = async (goalId: string, updates: Partial<MenteeGoal>) => {
+    const updateGoal = async (goalId: string, updates: Partial<PatientGoal>) => {
         try {
             setLoading(true);
             await apiUpdateGoal(goalId, updates);

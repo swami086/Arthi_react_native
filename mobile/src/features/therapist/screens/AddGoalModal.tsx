@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../../navigation/types';
-import { useMenteeGoals } from '../hooks/useMenteeGoals';
+import { usePatientGoals } from '../hooks/usePatientGoals';
 import { useAuth } from '../../auth/hooks/useAuth';
 import Slider from '@react-native-community/slider';
 import { useColorScheme } from '../../../hooks/useColorScheme';
@@ -15,7 +15,7 @@ export default function AddGoalModal() {
     const { menteeId } = route.params;
     const { user } = useAuth();
     const { isDark } = useColorScheme();
-    const { createGoal, loading, error } = useMenteeGoals(menteeId);
+    const { createGoal, loading, error } = usePatientGoals(menteeId);
 
     const [title, setTitle] = useState('');
     const [progress, setProgress] = useState(0);

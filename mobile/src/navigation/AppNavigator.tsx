@@ -17,9 +17,9 @@ import SelectDateScreen from '../features/appointments/screens/SelectDateScreen'
 import ChooseTimeScreen from '../features/appointments/screens/ChooseTimeScreen';
 import ConfirmAppointmentScreen from '../features/appointments/screens/ConfirmAppointmentScreen';
 import { ChatDetailScreen } from '../features/messages/screens/ChatDetailScreen';
-import MentorDetailScreen from '../features/mentors/screens/MentorDetailScreen';
+import TherapistDetailScreen from '../features/mentors/screens/TherapistDetailScreen';
 import SettingsScreen from '../features/profile/screens/SettingsScreen';
-import { MentorNavigator } from './MentorNavigator';
+import { TherapistNavigator } from './TherapistNavigator';
 import { useProfile } from '../features/profile/hooks/useProfile';
 import { EditProfileScreen } from '../features/profile/screens/EditProfileScreen';
 import { NotificationsScreen } from '../features/notifications/screens/NotificationsScreen';
@@ -27,23 +27,23 @@ import { NotificationsScreen } from '../features/notifications/screens/Notificat
 import { AdminNavigator } from './AdminNavigator';
 import { PendingApprovalScreen } from '../features/auth/screens/PendingApprovalScreen';
 import { PendingApprovalsScreen } from '../features/admin/screens/PendingApprovalsScreen';
-import { MentorReviewScreen } from '../features/admin/screens/MentorReviewScreen';
+import { TherapistReviewScreen } from '../features/admin/screens/TherapistReviewScreen';
 import { ManageAdminsScreen } from '../features/admin/screens/ManageAdminsScreen';
 import { CreateAdminModal } from '../features/admin/screens/CreateAdminModal';
-import { AdminMentorsScreen } from '../features/admin/screens/AdminMentorsScreen';
+import { AdminTherapistsScreen } from '../features/admin/screens/AdminTherapistsScreen';
 
-import { AdminMenteesScreen } from '../features/admin/screens/AdminMenteesScreen';
+import { AdminPatientsScreen } from '../features/admin/screens/AdminPatientsScreen';
 
-// Mentor specific screens
-import MenteeDetailScreen from '../features/mentor/screens/MenteeDetailScreen';
+// Therapist specific screens
+import PatientDetailScreen from '../features/mentor/screens/PatientDetailScreen';
 import SessionDetailScreen from '../features/mentor/screens/SessionDetailScreen';
 import AddNoteModal from '../features/mentor/screens/AddNoteModal';
 import AddGoalModal from '../features/mentor/screens/AddGoalModal';
-import { MenteeDiscoveryScreen } from '../features/mentor/screens/MenteeDiscoveryScreen';
-import { ReferMenteeScreen } from '../features/mentor/screens/ReferMenteeScreen';
+import { PatientDiscoveryScreen } from '../features/mentor/screens/PatientDiscoveryScreen';
+import { ReferPatientScreen } from '../features/mentor/screens/ReferPatientScreen';
 import { ReferralManagementScreen } from '../features/mentor/screens/ReferralManagementScreen';
-import { MenteeOnboardingScreen } from '../features/mentor/screens/MenteeOnboardingScreen';
-import { PendingMentorRequestsScreen } from '../features/profile/screens/PendingMentorRequestsScreen';
+import { PatientOnboardingScreen } from '../features/mentor/screens/PatientOnboardingScreen';
+import { PendingTherapistRequestsScreen } from '../features/profile/screens/PendingTherapistRequestsScreen';
 
 // Payment & Video Screens
 import { PaymentCheckoutScreen } from '../features/appointments/screens/PaymentCheckoutScreen';
@@ -53,7 +53,7 @@ import { PaymentHistoryScreen } from '../features/appointments/screens/PaymentHi
 import { VideoCallWaitingRoomScreen } from '../features/appointments/screens/VideoCallWaitingRoomScreen';
 import { VideoCallScreen } from '../features/appointments/screens/VideoCallScreen';
 import { PostSessionFeedbackScreen } from '../features/appointments/screens/PostSessionFeedbackScreen';
-import { MentorPaymentDashboardScreen } from '../features/mentor/screens/MentorPaymentDashboardScreen';
+import { TherapistPaymentDashboardScreen } from '../features/mentor/screens/TherapistPaymentDashboardScreen';
 import { ResourcesScreen } from '../features/mentor/screens/ResourcesScreen';
 import { CrisisResourcesScreen } from '../features/resources/screens/CrisisResourcesScreen';
 import { navigationRef, onNavigationStateChange, onUnhandledAction } from './navigationErrorHandler';
@@ -160,7 +160,7 @@ export const AppNavigator = () => {
                         <Stack.Screen name="AdminMain" component={AdminNavigator} />
                     ) : profile?.role === 'mentor' ? (
                         profile?.approval_status === 'approved' ? (
-                            <Stack.Screen name="MentorMain" component={MentorNavigator} />
+                            <Stack.Screen name="TherapistMain" component={TherapistNavigator} />
                         ) : (
                             <Stack.Screen name="PendingApproval" component={PendingApprovalScreen} />
                         )
@@ -172,8 +172,8 @@ export const AppNavigator = () => {
                     <Stack.Screen name="ConfirmAppointment" component={ConfirmAppointmentScreen} />
                     <Stack.Screen name="ChatDetail" component={ChatDetailScreen} />
                     <Stack.Screen
-                        name="MentorDetail"
-                        component={MentorDetailScreen}
+                        name="TherapistDetail"
+                        component={TherapistDetailScreen}
                         options={{ presentation: 'card' }}
                     />
                     <Stack.Screen
@@ -191,8 +191,8 @@ export const AppNavigator = () => {
                     />
                     <Stack.Screen name="Notifications" component={NotificationsScreen} />
                     <Stack.Screen
-                        name="MenteeDetail"
-                        component={MenteeDetailScreen}
+                        name="PatientDetail"
+                        component={PatientDetailScreen}
                         options={{ presentation: 'card' }}
                     />
                     <Stack.Screen
@@ -230,22 +230,22 @@ export const AppNavigator = () => {
 
                     {/* Admin Routes */}
                     <Stack.Screen name="PendingApprovals" component={PendingApprovalsScreen} />
-                    <Stack.Screen name="MentorReview" component={MentorReviewScreen} />
+                    <Stack.Screen name="TherapistReview" component={TherapistReviewScreen} />
                     <Stack.Screen name="ManageAdmins" component={ManageAdminsScreen} />
                     <Stack.Screen
                         name="CreateAdmin"
                         component={CreateAdminModal}
                         options={{ presentation: 'modal' }}
                     />
-                    <Stack.Screen name="AdminMentors" component={AdminMentorsScreen} />
-                    <Stack.Screen name="AdminMentees" component={AdminMenteesScreen} />
+                    <Stack.Screen name="AdminTherapists" component={AdminTherapistsScreen} />
+                    <Stack.Screen name="AdminPatients" component={AdminPatientsScreen} />
 
-                    {/* Mentor Specific Routes */}
-                    <Stack.Screen name="MenteeDiscovery" component={MenteeDiscoveryScreen} />
-                    <Stack.Screen name="ReferMentee" component={ReferMenteeScreen} />
+                    {/* Therapist Specific Routes */}
+                    <Stack.Screen name="PatientDiscovery" component={PatientDiscoveryScreen} />
+                    <Stack.Screen name="ReferPatient" component={ReferPatientScreen} />
                     <Stack.Screen name="ReferralsManagement" component={ReferralManagementScreen} />
-                    <Stack.Screen name="MenteeOnboarding" component={MenteeOnboardingScreen} />
-                    <Stack.Screen name="PendingMentorRequests" component={PendingMentorRequestsScreen} />
+                    <Stack.Screen name="PatientOnboarding" component={PatientOnboardingScreen} />
+                    <Stack.Screen name="PendingTherapistRequests" component={PendingTherapistRequestsScreen} />
 
                     {/* Payment & Video Flow */}
                     <Stack.Screen name="PaymentCheckout">
@@ -291,8 +291,8 @@ export const AppNavigator = () => {
                         options={{ gestureEnabled: false }}
                     />
 
-                    {/* Mentor Earnings */}
-                    <Stack.Screen name="MentorPaymentDashboard" component={MentorPaymentDashboardScreen} />
+                    {/* Therapist Earnings */}
+                    <Stack.Screen name="TherapistPaymentDashboard" component={TherapistPaymentDashboardScreen} />
                     <Stack.Screen name="Resources" component={ResourcesScreen} />
                     <Stack.Screen name="CrisisResources" component={CrisisResourcesScreen} />
                     <Stack.Screen name="RollbarDebug" component={require('../features/debug/screens/RollbarDebugScreen').default} />

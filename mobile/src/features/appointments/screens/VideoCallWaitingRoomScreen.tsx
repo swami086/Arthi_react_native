@@ -220,7 +220,7 @@ export const VideoCallWaitingRoomScreen = () => {
                         </View>
                         <View className="flex-1 justify-center">
                             <Text className="text-text-main-light dark:text-text-main-dark text-base font-bold leading-tight">
-                                {appointment?.mentor?.full_name || 'Mentor'}
+                                {appointment?.mentor?.full_name || 'Therapist'}
                             </Text>
                             <View className="flex-row items-center gap-2 mt-1">
                                 <View className={`px-2 py-0.5 rounded-md ${appointment?.session_type === 'public' ? 'bg-indigo-100' : 'bg-primary/10'}`}>

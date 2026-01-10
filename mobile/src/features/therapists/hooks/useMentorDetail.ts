@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../../api/supabase';
 import { Profile } from '../../../api/types';
 
-interface MentorReview {
+interface TherapistReview {
     id: string;
     mentee_id: string;
     mentor_id: string;
@@ -15,18 +15,18 @@ interface MentorReview {
     };
 }
 
-interface UseMentorDetailReturn {
+interface UseTherapistDetailReturn {
     mentor: Profile | null;
-    reviews: MentorReview[];
+    reviews: TherapistReview[];
     availability: any[]; // refine type based on db
     loading: boolean;
     error: string | null;
     refetch: () => void;
 }
 
-export const useMentorDetail = (mentorId: string): UseMentorDetailReturn => {
-    const [mentor, setMentor] = useState<Profile | null>(null);
-    const [reviews, setReviews] = useState<MentorReview[]>([]);
+export const useTherapistDetail = (mentorId: string): UseTherapistDetailReturn => {
+    const [mentor, setTherapist] = useState<Profile | null>(null);
+    const [reviews, setReviews] = useState<TherapistReview[]>([]);
     const [availability, setAvailability] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -37,7 +37,7 @@ export const useMentorDetail = (mentorId: string): UseMentorDetailReturn => {
         setError(null);
 
         try {
-            // Fetch Mentor Profile
+            // Fetch Therapist Profile
             const { data: mentorData, error: mentorError } = await supabase
                 .from('profiles')
                 .select('*')
@@ -45,7 +45,7 @@ export const useMentorDetail = (mentorId: string): UseMentorDetailReturn => {
                 .single();
 
             if (mentorError) throw mentorError;
-            setMentor(mentorData);
+            setTherapist(mentorData);
 
             // Fetch Reviews
             // Assuming we have a join relation or we just fetch raw and fetch user names

@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useAllMentors } from '../hooks/useAllMentors';
+import { useAllTherapists } from '../hooks/useAllTherapists';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 import { useNavigation } from '@react-navigation/native';
 import { useColorScheme } from '../../../hooks/useColorScheme';
 import { StatusBar } from 'react-native';
 
-export const AdminMentorsScreen = () => {
-    const { mentors, loading, fetchMentors } = useAllMentors();
+export const AdminTherapistsScreen = () => {
+    const { mentors, loading, fetchTherapists } = useAllTherapists();
     const navigation = useNavigation<any>();
     const { isDark } = useColorScheme();
     const [search, setSearch] = useState('');
 
-    const filteredMentors = mentors.filter(m =>
+    const filteredTherapists = mentors.filter(m =>
         m.full_name?.toLowerCase().includes(search.toLowerCase())
     );
 
@@ -25,7 +25,7 @@ export const AdminMentorsScreen = () => {
             transition={{ delay: index * 100, type: 'timing', duration: 350 }}
         >
             <TouchableOpacity
-                onPress={() => navigation.navigate('MentorReview', { mentor: item })}
+                onPress={() => navigation.navigate('TherapistReview', { mentor: item })}
                 className="bg-white dark:bg-gray-800 p-4 rounded-xl mb-3 shadow-sm flex-row items-center"
             >
                 <View className="h-12 w-12 bg-gray-200 rounded-full overflow-hidden mr-3">
@@ -61,7 +61,7 @@ export const AdminMentorsScreen = () => {
                         <TouchableOpacity onPress={() => navigation.goBack()} className="mr-4">
                             <Icon name="arrow-left" size={24} color={isDark ? "#fff" : "#4e8597"} />
                         </TouchableOpacity>
-                        <Text className="text-xl font-bold text-text-main-light dark:text-white">All Mentors</Text>
+                        <Text className="text-xl font-bold text-text-main-light dark:text-white">All Therapists</Text>
                     </View>
                     <View className="bg-gray-100 dark:bg-gray-700 rounded-lg flex-row items-center px-3 py-2">
                         <Icon name="magnify" size={20} color={isDark ? "#999" : "#999"} />
@@ -77,12 +77,12 @@ export const AdminMentorsScreen = () => {
             </MotiView>
 
             <FlatList
-                data={filteredMentors}
+                data={filteredTherapists}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => `${item.user_id}-${index}`}
                 contentContainerStyle={{ padding: 24 }}
                 refreshing={loading}
-                onRefresh={fetchMentors}
+                onRefresh={fetchTherapists}
             />
         </SafeAreaView>
     );

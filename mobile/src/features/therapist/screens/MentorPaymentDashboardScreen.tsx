@@ -5,15 +5,15 @@ import { useNavigation } from '@react-navigation/native';
 import { Button } from '../../../components/Button';
 import { EarningsCard } from '../../../components/EarningsCard';
 import { PaymentCard } from '../../../components/PaymentCard';
-import { useMentorEarnings } from '../hooks/useMentorEarnings';
+import { useTherapistEarnings } from '../hooks/useTherapistEarnings';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LineChart } from 'react-native-chart-kit';
 import { useColorScheme } from '../../../hooks/useColorScheme';
 import { MotiView } from 'moti';
 
-export const MentorPaymentDashboardScreen = () => {
+export const TherapistPaymentDashboardScreen = () => {
     const navigation = useNavigation();
-    const { earnings, transactions, chartData, loading, refreshing, onRefresh } = useMentorEarnings();
+    const { earnings, transactions, chartData, loading, refreshing, onRefresh } = useTherapistEarnings();
     const { isDark } = useColorScheme();
     const screenWidth = Dimensions.get('window').width;
 

@@ -38,7 +38,7 @@ const RESOURCES: Resource[] = [
     },
     {
         id: '3',
-        title: 'Mentorship Best Practices',
+        title: 'Therapistship Best Practices',
         description: 'Key principles for effective mentorship and building trust.',
         category: 'Article',
         url: 'https://screens.safespace.com/mentorship-best-practices',
@@ -47,7 +47,7 @@ const RESOURCES: Resource[] = [
     },
     {
         id: '4',
-        title: 'Self-Care for Mentors',
+        title: 'Self-Care for Therapists',
         description: 'Strategies to prevent burnout and maintain your own well-being.',
         category: 'Article',
         url: 'https://screens.safespace.com/self-care',

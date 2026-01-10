@@ -28,7 +28,7 @@ const FIGMA_ASSETS = {
 };
 
 const CustomSessionCard = ({ item, onPress }: { item: any, onPress: () => void }) => {
-    const menteeName = item.mentee?.full_name || 'Mentee';
+    const menteeName = item.mentee?.full_name || 'Patient';
     const status = item.status || 'pending';
 
     const getAccentColor = () => {
@@ -82,7 +82,7 @@ const CustomSessionCard = ({ item, onPress }: { item: any, onPress: () => void }
                                 className="w-full h-full"
                             />
                         </View>
-                        <Text className="text-white text-base font-semibold">with Mentee {menteeName.split(' ')[0]}</Text>
+                        <Text className="text-white text-base font-semibold">with Patient {menteeName.split(' ')[0]}</Text>
                     </View>
 
                     <TouchableOpacity
@@ -102,7 +102,7 @@ const CustomSessionCard = ({ item, onPress }: { item: any, onPress: () => void }
                     </TouchableOpacity>
                 </View>
 
-                {/* Mentee Image on Right */}
+                {/* Patient Image on Right */}
                 <View className="w-32 h-32 mr-4 rounded-3xl overflow-hidden self-center border-4 border-[#243333] shadow-lg">
                     <Image
                         source={{ uri: item.mentee?.avatar_url || FIGMA_ASSETS.mentee2 }}
@@ -115,7 +115,7 @@ const CustomSessionCard = ({ item, onPress }: { item: any, onPress: () => void }
     );
 };
 
-function MentorSessionsScreen() {
+function TherapistSessionsScreen() {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const { user } = useAuth();
     const { isDark } = useColorScheme();
@@ -260,4 +260,4 @@ function MentorSessionsScreen() {
     );
 };
 
-export default withRollbarPerformance(MentorSessionsScreen, 'MentorSessions');
+export default withRollbarPerformance(TherapistSessionsScreen, 'TherapistSessions');

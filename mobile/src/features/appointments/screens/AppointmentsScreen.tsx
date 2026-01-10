@@ -98,7 +98,7 @@ export const AppointmentsScreen = ({ navigation }: { navigation: any }) => {
                         </View>
                         <View>
                             <Text className="text-text-main-light dark:text-text-main-dark font-bold text-base leading-tight">
-                                {item.mentor?.full_name || "Mentor Name"}
+                                {item.mentor?.full_name || "Therapist Name"}
                             </Text>
                             <View className="flex-row items-center mt-1">
                                 <View className={`px-2 py-0.5 rounded-full mr-2 ${item.session_type === 'public' ? 'bg-indigo-100 dark:bg-indigo-900/30' : 'bg-gray-100 dark:bg-gray-700'}`}>
@@ -170,7 +170,7 @@ export const AppointmentsScreen = ({ navigation }: { navigation: any }) => {
                         </View>
                         <View className="flex-1">
                             <Text className="text-text-main-light dark:text-text-main-dark font-semibold text-base mb-0.5">
-                                {item.mentor?.full_name || "Mentor Name"}
+                                {item.mentor?.full_name || "Therapist Name"}
                             </Text>
                             <Text className="text-text-sub-light dark:text-text-sub-dark text-xs">
                                 {startTime.toLocaleDateString()} • {startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

@@ -1,30 +1,30 @@
 import { useState, useEffect } from 'react';
-import { getRelationshipsByMentee } from '../../../api/relationshipService';
+import { getRelationshipsByPatient } from '../../../api/relationshipService';
 import { useAuth } from '../../auth/hooks/useAuth';
 
-export const useMyMentors = () => {
+export const useMyTherapists = () => {
     const { user } = useAuth();
-    const [mentors, setMentors] = useState<any[]>([]);
+    const [mentors, setTherapists] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchMentors = async () => {
+    const fetchTherapists = async () => {
         if (!user) return;
         setLoading(true);
         setError(null);
         try {
-            const relationships = await getRelationshipsByMentee(user.id);
+            const relationships = await getRelationshipsByPatient(user.id);
             // Relationship returns { ..., mentor: policies }
             // Mapped to flat structure if needed or keep as is.
             // Screen expects: { id, name, role, avatar }
             const formatted = relationships.map((r: any) => ({
                 id: r.mentor.user_id,
                 name: r.mentor.full_name,
-                role: r.mentor.specialization || 'Mentor',
+                role: r.mentor.specialization || 'Therapist',
                 avatar: r.mentor.avatar_url,
                 relationshipId: r.id
             }));
-            setMentors(formatted);
+            setTherapists(formatted);
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -33,8 +33,8 @@ export const useMyMentors = () => {
     };
 
     useEffect(() => {
-        fetchMentors();
+        fetchTherapists();
     }, [user]);
 
-    return { mentors, loading, error, refetch: fetchMentors };
+    return { mentors, loading, error, refetch: fetchTherapists };
 };

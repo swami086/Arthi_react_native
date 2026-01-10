@@ -832,11 +832,11 @@ export type Appointment = Tables<'appointments'>
 export type Message = Tables<'messages'>
 export type Review = Tables<'reviews'>
 export type FocusArea = Tables<'focus_areas'>
-export type MenteeGoal = Tables<'mentee_goals'>
-export type MentorNote = Tables<'mentor_notes'>
-export type MentorMenteeRelationship = Tables<'mentor_mentee_relationships'>
-export type MenteeReferral = Tables<'mentee_referrals'>
-export type MenteeInvitation = Tables<'mentee_invitations'>
+export type PatientGoal = Tables<'mentee_goals'>
+export type TherapistNote = Tables<'mentor_notes'>
+export type TherapistPatientRelationship = Tables<'mentor_mentee_relationships'>
+export type PatientReferral = Tables<'mentee_referrals'>
+export type PatientInvitation = Tables<'mentee_invitations'>
 export type AdminAction = Tables<'admin_actions'>
 export type Payment = Tables<'payments'>
 export type VideoRoom = Tables<'video_rooms'>
@@ -849,7 +849,7 @@ export type SessionRecording = Tables<'session_recordings'>
 export type Transcript = Tables<'transcripts'>
 export type SoapNote = Tables<'soap_notes'>
 
-export type MentorStats = {
+export type TherapistStats = {
     total_mentees: number
     total_sessions: number
     upcoming_sessions: number
@@ -863,7 +863,7 @@ export type AdminStats = {
     total_admins: number
 }
 
-export type MenteeWithActivity = {
+export type PatientWithActivity = {
     mentee_id: string
     full_name: string | null
     avatar_url: string | null

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { getPendingMentors, approveMentor, rejectMentor } from '../../../api/adminService';
+import { getPendingTherapists, approveTherapist, rejectTherapist } from '../../../api/adminService';
 import { Profile } from '../../../api/types';
 
-export const usePendingMentors = (adminId?: string) => {
-    const [pendingMentors, setPendingMentors] = useState<Profile[]>([]);
+export const usePendingTherapists = (adminId?: string) => {
+    const [pendingTherapists, setPendingTherapists] = useState<Profile[]>([]);
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -12,8 +12,8 @@ export const usePendingMentors = (adminId?: string) => {
         setLoading(true);
         setError(null);
         try {
-            const data = await getPendingMentors();
-            setPendingMentors(data);
+            const data = await getPendingTherapists();
+            setPendingTherapists(data);
         } catch (err: any) {
             console.error(err);
             setError(err.message || 'Failed to fetch pending mentors');
@@ -31,8 +31,8 @@ export const usePendingMentors = (adminId?: string) => {
         setActionLoading(mentorId);
         setError(null);
         try {
-            await approveMentor(mentorId, adminId, notes);
-            setPendingMentors(prev => prev.filter(p => p.user_id !== mentorId));
+            await approveTherapist(mentorId, adminId, notes);
+            setPendingTherapists(prev => prev.filter(p => p.user_id !== mentorId));
         } catch (err: any) {
             console.error(err);
             setError(err.message || 'Failed to approve mentor');
@@ -46,8 +46,8 @@ export const usePendingMentors = (adminId?: string) => {
         setActionLoading(mentorId);
         setError(null);
         try {
-            await rejectMentor(mentorId, adminId, reason);
-            setPendingMentors(prev => prev.filter(p => p.user_id !== mentorId));
+            await rejectTherapist(mentorId, adminId, reason);
+            setPendingTherapists(prev => prev.filter(p => p.user_id !== mentorId));
         } catch (err: any) {
             console.error(err);
             setError(err.message || 'Failed to reject mentor');
@@ -57,7 +57,7 @@ export const usePendingMentors = (adminId?: string) => {
     };
 
     return {
-        pendingMentors,
+        pendingTherapists,
         loading,
         actionLoading,
         error,

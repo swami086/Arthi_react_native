@@ -37,7 +37,7 @@ export const updateAppointmentStatus = async (
         if (updateError) throw updateError;
 
         console.log(`[appointmentService] Sending notification and WhatsApp...`);
-        // 3. Send Notification to Mentor (if status changed by mentee)
+        // 3. Send Notification to Therapist (if status changed by mentee)
         // In this app context, assume if mentee confirms/declines, it's a mentee action
         const menteeName = (appointment.mentee as any)?.full_name || 'A mentee';
         const mentorId = appointment.mentor_id;
@@ -71,7 +71,7 @@ export const updateAppointmentStatus = async (
             }
         });
 
-        // 4. (Optional) Send WhatsApp Notification to Mentor if they have a phone number
+        // 4. (Optional) Send WhatsApp Notification to Therapist if they have a phone number
         const mentor = appointment.mentor as Profile;
         if (mentor?.phone_number) {
             try {

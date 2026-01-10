@@ -108,7 +108,7 @@ export const usePayment = () => {
                         })
                         .eq('id', payment.appointment_id);
 
-                    // Notify Mentee
+                    // Notify Patient
                     await NotificationService.createNotification(
                         payment.mentee_id,
                         'Payment Successful',
@@ -117,7 +117,7 @@ export const usePayment = () => {
                         payment.appointment_id
                     );
 
-                    // Notify Mentor
+                    // Notify Therapist
                     await NotificationService.createNotification(
                         payment.mentor_id,
                         'New Appointment',

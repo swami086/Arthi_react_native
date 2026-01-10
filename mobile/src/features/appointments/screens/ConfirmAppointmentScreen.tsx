@@ -8,7 +8,7 @@ import { MotiView } from 'moti';
 import { RootStackParamList, RootNavigationProp } from '../../../navigation/types';
 import { useBookingFlow } from '../hooks/useBookingFlow';
 import { useColorScheme } from '../../../hooks/useColorScheme';
-import { useMentorDetail } from '../../mentors/hooks/useMentorDetail';
+import { useTherapistDetail } from '../../mentors/hooks/useTherapistDetail';
 
 type ConfirmAppointmentRouteProp = RouteProp<RootStackParamList, 'ConfirmAppointment'>;
 
@@ -20,7 +20,7 @@ export default function ConfirmAppointmentScreen() {
 
     const [notes, setNotes] = useState('');
     const { loading, createAppointment } = useBookingFlow();
-    const { mentor } = useMentorDetail(mentorId);
+    const { mentor } = useTherapistDetail(mentorId);
 
     // Use mentor's hourly rate or default to 500
     const sessionPrice = mentor?.hourly_rate ?? 500;
@@ -130,7 +130,7 @@ export default function ConfirmAppointmentScreen() {
                 </View>
 
                 <View className="p-4 gap-6">
-                    {/* Mentor Card */}
+                    {/* Therapist Card */}
                     <View className="bg-surface-light dark:bg-surface-dark p-5 rounded-xl shadow-[0_2px_12px_rgba(0,0,0,0.04)] dark:shadow-none dark:border dark:border-white/5">
                         <View className="flex-row items-start justify-between gap-4">
                             <View className="flex-row gap-4 flex-1">
@@ -143,7 +143,7 @@ export default function ConfirmAppointmentScreen() {
                                         {mentorName}
                                     </Text>
                                     <Text className="text-primary text-sm font-medium leading-normal mb-1">
-                                        Mentoring Session
+                                        Therapisting Session
                                     </Text>
                                     <View className="self-start px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-700">
                                         <Text className="text-xs text-slate-600 dark:text-slate-300">

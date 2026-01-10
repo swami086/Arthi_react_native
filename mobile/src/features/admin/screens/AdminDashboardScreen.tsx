@@ -84,11 +84,11 @@ export const AdminDashboardScreen = () => {
                         style={{ width: '50%' }}
                     >
                         <StatCard
-                            title="Active Mentors"
+                            title="Active Therapists"
                             value={stats?.active_mentors}
                             icon="account-tie"
                             color="bg-purple-100"
-                            onPress={() => navigation.navigate('Mentors')}
+                            onPress={() => navigation.navigate('Therapists')}
                         />
                     </MotiView>
                     <MotiView
@@ -98,11 +98,11 @@ export const AdminDashboardScreen = () => {
                         style={{ width: '50%' }}
                     >
                         <StatCard
-                            title="Total Mentees"
+                            title="Total Patients"
                             value={stats?.total_mentees}
                             icon="account-school"
                             color="bg-green-100"
-                            onPress={() => navigation.navigate('Mentees')}
+                            onPress={() => navigation.navigate('Patients')}
                         />
                     </MotiView>
                     <MotiView

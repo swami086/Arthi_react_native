@@ -16,7 +16,7 @@ export const FeaturesScreen = () => {
         {
             id: 1,
             icon: 'groups',
-            title: 'Connect with Mentors',
+            title: 'Connect with Therapists',
             description: 'Real people ready to listen, not just analyze your situation.',
         },
         {

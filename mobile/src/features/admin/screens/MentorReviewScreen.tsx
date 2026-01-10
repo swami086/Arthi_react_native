@@ -4,9 +4,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useAuth } from '../../auth/hooks/useAuth';
-import { approveMentor, rejectMentor } from '../../../api/adminService';
+import { approveTherapist, rejectTherapist } from '../../../api/adminService';
 
-export const MentorReviewScreen = () => {
+export const TherapistReviewScreen = () => {
     const route = useRoute<any>();
     const navigation = useNavigation<any>();
     const { mentor } = route.params;
@@ -17,8 +17,8 @@ export const MentorReviewScreen = () => {
         if (!user?.id) return;
         setActionLoading(true);
         try {
-            await approveMentor(mentor.user_id, user.id);
-            Alert.alert("Success", "Mentor approved successfully", [
+            await approveTherapist(mentor.user_id, user.id);
+            Alert.alert("Success", "Therapist approved successfully", [
                 { text: "OK", onPress: () => navigation.goBack() }
             ]);
         } catch (error: any) {
@@ -42,8 +42,8 @@ export const MentorReviewScreen = () => {
                         if (!reason) return;
                         setActionLoading(true);
                         try {
-                            await rejectMentor(mentor.user_id, user.id, reason);
-                            Alert.alert("Success", "Mentor rejected", [
+                            await rejectTherapist(mentor.user_id, user.id, reason);
+                            Alert.alert("Success", "Therapist rejected", [
                                 { text: "OK", onPress: () => navigation.goBack() }
                             ]);
                         } catch (error: any) {
@@ -64,7 +64,7 @@ export const MentorReviewScreen = () => {
                 <TouchableOpacity onPress={() => navigation.goBack()} className="mr-4">
                     <Icon name="arrow-left" size={24} color="#4e8597" />
                 </TouchableOpacity>
-                <Text className="text-xl font-bold text-text-main-light dark:text-white">Review Mentor</Text>
+                <Text className="text-xl font-bold text-text-main-light dark:text-white">Review Therapist</Text>
             </View>
 
             <ScrollView contentContainerStyle={{ padding: 24 }}>

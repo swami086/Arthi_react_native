@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Modal, TouchableOpacity, TextInput, Alert, ScrollView, ActivityIndicator, StyleSheet, useColorScheme as useRNColorScheme } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Icon from 'react-native-vector-icons/Feather';
-import { getMenteeList, createSession, checkAppointmentConflict } from '../../../api/mentorService';
-import { MenteeWithActivity } from '../../../api/types';
+import { getPatientList, createSession, checkAppointmentConflict } from '../../../api/mentorService';
+import { PatientWithActivity } from '../../../api/types';
 import { tokens } from '../../../design-system/tokens';
 
 interface AddSessionModalProps {
@@ -15,9 +15,9 @@ interface AddSessionModalProps {
 }
 
 export const AddSessionModal: React.FC<AddSessionModalProps> = ({ visible, onClose, onSuccess, mentorId }) => {
-    const [mentees, setMentees] = useState<MenteeWithActivity[]>([]);
-    const [loadingMentees, setLoadingMentees] = useState(false);
-    const [selectedMentee, setSelectedMentee] = useState<string | null>(null);
+    const [mentees, setPatients] = useState<PatientWithActivity[]>([]);
+    const [loadingPatients, setLoadingPatients] = useState(false);
+    const [selectedPatient, setSelectedPatient] = useState<string | null>(null);
     const [selectedDate, setSelectedDate] = useState<string>('');
     const [selectedTime, setSelectedTime] = useState<string>('09:00');
     const [duration, setDuration] = useState<number>(45);
@@ -32,24 +32,24 @@ export const AddSessionModal: React.FC<AddSessionModalProps> = ({ visible, onClo
 
     useEffect(() => {
         if (visible) {
-            fetchMentees();
+            fetchPatients();
         }
     }, [visible]);
 
-    const fetchMentees = async () => {
-        setLoadingMentees(true);
+    const fetchPatients = async () => {
+        setLoadingPatients(true);
         try {
-            const data = await getMenteeList(mentorId);
-            setMentees(data);
+            const data = await getPatientList(mentorId);
+            setPatients(data);
         } catch (error) {
             Alert.alert('Error', 'Failed to load mentees');
         } finally {
-            setLoadingMentees(false);
+            setLoadingPatients(false);
         }
     };
 
     const handleCreate = async () => {
-        if (sessionType === 'private' && !selectedMentee) {
+        if (sessionType === 'private' && !selectedPatient) {
             Alert.alert('Missing Fields', 'Please select a mentee for a private session.');
             return;
         }
@@ -80,7 +80,7 @@ export const AddSessionModal: React.FC<AddSessionModalProps> = ({ visible, onClo
 
             await createSession(
                 mentorId,
-                sessionType === 'public' ? null : selectedMentee,
+                sessionType === 'public' ? null : selectedPatient,
                 sessionStart,
                 duration,
                 notes,
@@ -102,7 +102,7 @@ export const AddSessionModal: React.FC<AddSessionModalProps> = ({ visible, onClo
     };
 
     const resetForm = () => {
-        setSelectedMentee(null);
+        setSelectedPatient(null);
         setSelectedDate('');
         setSelectedTime('09:00');
         setNotes('');
@@ -268,7 +268,7 @@ export const AddSessionModal: React.FC<AddSessionModalProps> = ({ visible, onClo
                             <Text style={styles.sectionTitle}>Session Title</Text>
                             <TextInput
                                 style={styles.input}
-                                placeholder="e.g. Weekly Group Mentorship or Career Q&A"
+                                placeholder="e.g. Weekly Group Therapistship or Career Q&A"
                                 value={sessionTitle}
                                 onChangeText={setSessionTitle}
                                 placeholderTextColor={isDark ? "#4b5563" : "#9ca3af"}
@@ -276,17 +276,17 @@ export const AddSessionModal: React.FC<AddSessionModalProps> = ({ visible, onClo
                         </View>
                     )}
 
-                    {/* Mentee Selection */}
+                    {/* Patient Selection */}
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 }}>
                         <Text style={styles.sectionTitle}>
-                            {sessionType === 'public' ? 'Select Mentees (Optional)' : 'Select Mentee*'}
+                            {sessionType === 'public' ? 'Select Patients (Optional)' : 'Select Patient*'}
                         </Text>
                         {sessionType === 'public' && (
                             <Text style={{ fontSize: 12, color: '#6b7280', fontStyle: 'italic' }}>Broadcasts to all if none selected</Text>
                         )}
                     </View>
 
-                    {loadingMentees ? (
+                    {loadingPatients ? (
                         <ActivityIndicator size="small" color={isDark ? "#818cf8" : "#6366f1"} style={{ marginBottom: 24 }} />
                     ) : mentees.length === 0 ? (
                         <View style={{ padding: 16, backgroundColor: isDark ? '#1f2937' : '#f9fafb', borderRadius: 12, marginBottom: 24, borderWidth: 1, borderColor: isDark ? '#374151' : '#e5e7eb', borderStyle: 'dashed' }}>
@@ -299,13 +299,13 @@ export const AddSessionModal: React.FC<AddSessionModalProps> = ({ visible, onClo
                             {Array.from(new Map(mentees.map(m => [m.mentee_id, m])).values()).map((mentee) => (
                                 <TouchableOpacity
                                     key={mentee.mentee_id}
-                                    onPress={() => setSelectedMentee(selectedMentee === mentee.mentee_id ? null : mentee.mentee_id)}
-                                    style={[styles.menteeCard, selectedMentee === mentee.mentee_id && styles.menteeCardSelected]}
+                                    onPress={() => setSelectedPatient(selectedPatient === mentee.mentee_id ? null : mentee.mentee_id)}
+                                    style={[styles.menteeCard, selectedPatient === mentee.mentee_id && styles.menteeCardSelected]}
                                 >
-                                    <View style={[styles.menteeAvatar, selectedMentee === mentee.mentee_id && styles.menteeAvatarSelected]}>
-                                        <Icon name="user" size={14} color={selectedMentee === mentee.mentee_id ? "#fff" : "#9ca3af"} />
+                                    <View style={[styles.menteeAvatar, selectedPatient === mentee.mentee_id && styles.menteeAvatarSelected]}>
+                                        <Icon name="user" size={14} color={selectedPatient === mentee.mentee_id ? "#fff" : "#9ca3af"} />
                                     </View>
-                                    <Text style={{ fontWeight: 'bold', color: selectedMentee === mentee.mentee_id ? (isDark ? '#818cf8' : '#4f46e5') : (isDark ? '#d1d5db' : '#374151') }}>
+                                    <Text style={{ fontWeight: 'bold', color: selectedPatient === mentee.mentee_id ? (isDark ? '#818cf8' : '#4f46e5') : (isDark ? '#d1d5db' : '#374151') }}>
                                         {mentee.full_name || 'Unknown'}
                                     </Text>
                                 </TouchableOpacity>

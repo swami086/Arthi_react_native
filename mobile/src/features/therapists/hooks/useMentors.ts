@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../../../api/supabase';
 import { Profile } from '../../../api/types';
 
-export const useMentors = () => {
-    const [mentors, setMentors] = useState<Profile[]>([]);
+export const useTherapists = () => {
+    const [mentors, setTherapists] = useState<Profile[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchMentors = async () => {
+    const fetchTherapists = async () => {
         setLoading(true);
         const { data, error } = await supabase
             .from('profiles')
@@ -15,13 +15,13 @@ export const useMentors = () => {
             .eq('role', 'mentor');
 
         if (error) setError(error.message);
-        if (data) setMentors(data);
+        if (data) setTherapists(data);
         setLoading(false);
     };
 
     useEffect(() => {
-        fetchMentors();
+        fetchTherapists();
     }, []);
 
-    return { mentors, loading, error, refetch: fetchMentors };
+    return { mentors, loading, error, refetch: fetchTherapists };
 };

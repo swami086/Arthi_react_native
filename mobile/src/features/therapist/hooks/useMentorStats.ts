@@ -1,11 +1,11 @@
 import { useEffect, useState, useCallback } from 'react';
-import { getMentorStats } from '../../../api/mentorService';
-import { MentorStats } from '../../../api/types';
+import { getTherapistStats } from '../../../api/mentorService';
+import { TherapistStats } from '../../../api/types';
 import { useAuth } from '../../auth/hooks/useAuth';
 
-export const useMentorStats = () => {
+export const useTherapistStats = () => {
     const { user } = useAuth();
-    const [stats, setStats] = useState<MentorStats | null>(null);
+    const [stats, setStats] = useState<TherapistStats | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -13,7 +13,7 @@ export const useMentorStats = () => {
         if (!user) return;
         try {
             setLoading(true);
-            const data = await getMentorStats(user.id);
+            const data = await getTherapistStats(user.id);
             if (data) {
                 setStats(data);
             }

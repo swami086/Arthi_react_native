@@ -5,7 +5,7 @@ import { GradientAvatar } from './GradientAvatar';
 import { TagPill } from './TagPill';
 import { MotiView } from 'moti';
 
-interface MentorCardProps {
+interface TherapistCardProps {
     name: string;
     role: string;
     imageUrl?: string;
@@ -18,7 +18,7 @@ interface MentorCardProps {
 
 
 
-export const MentorCard: React.FC<MentorCardProps> = ({
+export const TherapistCard: React.FC<TherapistCardProps> = ({
     name,
     role,
     imageUrl,
@@ -54,7 +54,7 @@ export const MentorCard: React.FC<MentorCardProps> = ({
                     <View className="flex-row justify-between items-start">
                         <View>
                             <Text className="text-primary font-bold text-xs uppercase tracking-wider mb-1">
-                                {role || 'Mentor'}
+                                {role || 'Therapist'}
                             </Text>
                             <Text className="text-lg font-bold text-gray-900 dark:text-white mb-1 leading-6">
                                 {name}

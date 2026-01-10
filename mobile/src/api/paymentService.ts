@@ -166,7 +166,7 @@ export const requestRefund = async (paymentId: string, reason: string): Promise<
 /**
  * Get mentor earnings summary
  */
-export const getMentorEarnings = async (
+export const getTherapistEarnings = async (
     mentorId: string,
     startDate?: string,
     endDate?: string
@@ -182,7 +182,7 @@ export const getMentorEarnings = async (
         return data;
     } catch (error) {
         console.error('Error fetching mentor earnings:', error);
-        reportError(error, 'paymentService:getMentorEarnings');
+        reportError(error, 'paymentService:getTherapistEarnings');
         throw error;
     }
 };

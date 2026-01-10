@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'reac
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { RootStackParamList } from '../../../navigation/types';
-import { useMentorNotes } from '../hooks/useMentorNotes';
+import { useTherapistNotes } from '../hooks/useTherapistNotes';
 import { useAuth } from '../../auth/hooks/useAuth';
 import { useColorScheme } from '../../../hooks/useColorScheme';
 
@@ -15,7 +15,7 @@ export default function AddNoteModal() {
     const { menteeId } = route.params;
     const { user } = useAuth();
     const { isDark } = useColorScheme();
-    const { createNote, loading, error } = useMentorNotes(menteeId);
+    const { createNote, loading, error } = useTherapistNotes(menteeId);
 
     const [content, setContent] = useState('');
     const [isPrivate, setIsPrivate] = useState(true);

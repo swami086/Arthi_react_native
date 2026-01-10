@@ -4,7 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { GradientAvatar } from './GradientAvatar';
 import { tokens } from '../design-system/tokens';
 
-interface MenteeCardProps {
+interface PatientCardProps {
     name: string;
     age?: number | null;
     education?: string | null;
@@ -17,7 +17,7 @@ interface MenteeCardProps {
     onRemove?: () => void;
 }
 
-export const MenteeCard: React.FC<MenteeCardProps> = ({
+export const PatientCard: React.FC<PatientCardProps> = ({
     name, age, education, avatar, status, statusColor, nextInfo, onMessage, onViewProfile, onRemove
 }) => {
     return (

@@ -12,8 +12,8 @@ interface AuthContextType {
     role: 'mentor' | 'mentee' | 'admin' | null;
     isAdmin: boolean;
     isSuperAdmin: boolean;
-    isMentor: boolean;
-    isMentee: boolean;
+    isTherapist: boolean;
+    isPatient: boolean;
     loading: boolean;
     signIn: (email: string, password: string) => Promise<{ error: any }>;
     signUp: (email: string, password: string, userData: any) => Promise<{ error: any }>;
@@ -30,8 +30,8 @@ export const AuthContext = createContext<AuthContextType>({
     role: null,
     isAdmin: false,
     isSuperAdmin: false,
-    isMentor: false,
-    isMentee: false,
+    isTherapist: false,
+    isPatient: false,
     loading: true,
     signIn: async () => ({ error: null }),
     signUp: async () => ({ error: null }),
@@ -51,8 +51,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const isAdmin = role === 'admin';
     const isSuperAdmin = !!profile?.is_super_admin;
-    const isMentor = role === 'mentor';
-    const isMentee = role === 'mentee';
+    const isTherapist = role === 'mentor';
+    const isPatient = role === 'mentee';
 
     const fetchProfile = async (userId: string) => {
         console.log('fetchProfile: fetching for', userId);
@@ -286,8 +286,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             role,
             isAdmin,
             isSuperAdmin,
-            isMentor,
-            isMentee,
+            isTherapist,
+            isPatient,
             loading,
             signIn,
             signUp,

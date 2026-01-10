@@ -3,43 +3,43 @@ import { View, Text, FlatList, TouchableOpacity, Image, TextInput, Alert } from 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useAllMentors } from '../../admin/hooks/useAllMentors'; // Reusing admin hook
+import { useAllTherapists } from '../../admin/hooks/useAllTherapists'; // Reusing admin hook
 import { useAuth } from '../../auth/hooks/useAuth';
-import { referMenteeToMentor } from '../../../api/mentorService';
+import { referPatientToTherapist } from '../../../api/mentorService';
 import { Button } from '../../../components/Button';
 
-export const ReferMenteeScreen = () => {
+export const ReferPatientScreen = () => {
     const route = useRoute<any>();
     const navigation = useNavigation<any>();
     const { menteeId } = route.params;
     const { user } = useAuth();
-    const { mentors, loading, fetchMentors } = useAllMentors();
+    const { mentors, loading, fetchTherapists } = useAllTherapists();
     const [search, setSearch] = useState('');
     const [referring, setReferring] = useState<string | null>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [referralReason, setReferralReason] = useState('');
-    const [targetMentorId, setTargetMentorId] = useState<string | null>(null);
+    const [targetTherapistId, setTargetTherapistId] = useState<string | null>(null);
 
     // Filter out self and apply search
-    const filteredMentors = mentors.filter(m =>
+    const filteredTherapists = mentors.filter(m =>
         m.user_id !== user?.id &&
         (m.full_name?.toLowerCase().includes(search.toLowerCase()) ||
             m.specialization?.toLowerCase().includes(search.toLowerCase()))
     );
 
     const openReferralModal = (id: string) => {
-        setTargetMentorId(id);
+        setTargetTherapistId(id);
         setReferralReason('');
         setIsModalVisible(true);
     };
 
     const confirmReferral = async () => {
-        if (!user?.id || !targetMentorId) return;
+        if (!user?.id || !targetTherapistId) return;
         setIsModalVisible(false);
-        setReferring(targetMentorId);
+        setReferring(targetTherapistId);
 
         try {
-            await referMenteeToMentor(menteeId, user.id, targetMentorId, referralReason || 'No reason provided');
+            await referPatientToTherapist(menteeId, user.id, targetTherapistId, referralReason || 'No reason provided');
             Alert.alert("Success", "Referral sent successfully", [
                 { text: "OK", onPress: () => navigation.goBack() }
             ]);
@@ -47,7 +47,7 @@ export const ReferMenteeScreen = () => {
             Alert.alert("Error", error.message);
         } finally {
             setReferring(null);
-            setTargetMentorId(null);
+            setTargetTherapistId(null);
         }
     };
 
@@ -78,7 +78,7 @@ export const ReferMenteeScreen = () => {
                     <TouchableOpacity onPress={() => navigation.goBack()} className="mr-4">
                         <Icon name="arrow-left" size={24} color="#4e8597" />
                     </TouchableOpacity>
-                    <Text className="text-xl font-bold text-text-main-light dark:text-white">Refer Mentee</Text>
+                    <Text className="text-xl font-bold text-text-main-light dark:text-white">Refer Patient</Text>
                 </View>
                 <View className="bg-gray-100 dark:bg-gray-700 rounded-lg flex-row items-center px-3 py-2">
                     <Icon name="magnify" size={20} color="#999" />
@@ -93,12 +93,12 @@ export const ReferMenteeScreen = () => {
             </View>
 
             <FlatList
-                data={filteredMentors}
+                data={filteredTherapists}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => `${item.user_id}-${index}`}
                 contentContainerStyle={{ padding: 24 }}
                 refreshing={loading}
-                onRefresh={fetchMentors}
+                onRefresh={fetchTherapists}
             />
 
             {/* Referral Reason Modal */}

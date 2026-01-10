@@ -51,7 +51,7 @@ export const PaymentSuccessScreen = () => {
     };
 
     // Derived values
-    const mentorName = details?.mentor?.full_name || 'Mentor';
+    const mentorName = details?.mentor?.full_name || 'Therapist';
     const mentorAvatar = details?.mentor?.avatar_url || 'https://via.placeholder.com/150';
     const startTimeResult = details && details.start_time && !isNaN(new Date(details.start_time).getTime())
         ? new Date(details.start_time)

@@ -64,7 +64,7 @@ export const WelcomeScreen = () => {
                         from={itemVariants.initial} animate={itemVariants.animate}
                         className="text-text-main-light dark:text-text-main-dark tracking-tight text-[32px] font-extrabold leading-tight text-center pb-3"
                     >
-                        Mentoring, <Text className="text-primary dark:text-primary-dark">Not Therapy</Text>
+                        Therapisting, <Text className="text-primary dark:text-primary-dark">Not Therapy</Text>
                     </MotiText>
 
                     {/* Body Text */}

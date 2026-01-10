@@ -5,28 +5,28 @@ import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../navigation/types';
-import { MenteeWithActivity } from '../../../api/types';
-import { useMenteeList } from '../hooks/useMenteeList';
+import { PatientWithActivity } from '../../../api/types';
+import { usePatientList } from '../hooks/usePatientList';
 import { useColorScheme } from '../../../hooks/useColorScheme';
-import { MenteeCard } from '../../../components/MenteeCard';
+import { PatientCard } from '../../../components/PatientCard';
 import { FilterChip } from '../../../components/FilterChip';
 import { ErrorBanner } from '../../../components/ErrorBanner';
 import { ListSkeleton } from '../../../components/LoadingSkeleton';
 import { ErrorBoundary } from '../../../components/ErrorBoundary';
 import { tokens } from '../../../design-system/tokens';
 
-type MenteesScreenNavigationProp = StackNavigationProp<RootStackParamList>;
+type PatientsScreenNavigationProp = StackNavigationProp<RootStackParamList>;
 
 import { withRollbarPerformance } from '../../../services/rollbar';
 
-function MenteesScreen() {
-    const navigation = useNavigation<MenteesScreenNavigationProp>();
-    const { mentees, loading, error, refetch, removeMentee } = useMenteeList();
+function PatientsScreen() {
+    const navigation = useNavigation<PatientsScreenNavigationProp>();
+    const { mentees, loading, error, refetch, removePatient } = usePatientList();
     const { isDark } = useColorScheme();
     const [searchQuery, setSearchQuery] = useState('');
     const [activeFilter, setActiveFilter] = useState('All');
 
-    const filteredMentees = mentees.filter(mentee => {
+    const filteredPatients = mentees.filter(mentee => {
         // Exclude removed mentees from the list completely
         if (mentee.relationship_status === 'inactive' || mentee.relationship_status === 'declined') return false;
 
@@ -41,7 +41,7 @@ function MenteesScreen() {
 
     const handleRemove = useCallback((menteeId: string, name: string) => {
         Alert.alert(
-            'Remove Mentee',
+            'Remove Patient',
             `Are you sure you want to remove ${name} from your mentees? This action cannot be undone.`,
             [
                 { text: 'Cancel', style: 'cancel' },
@@ -50,8 +50,8 @@ function MenteesScreen() {
                     style: 'destructive',
                     onPress: async () => {
                         try {
-                            if (removeMentee) {
-                                await removeMentee(menteeId);
+                            if (removePatient) {
+                                await removePatient(menteeId);
                             }
                         } catch (e: any) {
                             Alert.alert('Error', e.message || 'Failed to remove mentee');
@@ -60,10 +60,10 @@ function MenteesScreen() {
                 }
             ]
         );
-    }, [removeMentee]);
+    }, [removePatient]);
 
-    const renderMenteeItem = useCallback(({ item }: { item: MenteeWithActivity }) => (
-        <MenteeCard
+    const renderPatientItem = useCallback(({ item }: { item: PatientWithActivity }) => (
+        <PatientCard
             name={item.full_name || 'Unknown'}
             status={item.status || 'Inactive'}
             statusColor={item.status === 'Active' ? tokens.colors.status.success : tokens.colors.text.disabled.light}
@@ -75,9 +75,9 @@ function MenteesScreen() {
                         ? `Session: ${new Date(item.last_appointment_date).toLocaleDateString()}`
                         : 'No recent activity'
             }
-            onMessage={() => navigation.navigate('ChatDetail', { otherUserId: item.mentee_id, otherUserName: item.full_name || 'Mentee' })}
-            onViewProfile={() => navigation.navigate('MenteeDetail', { menteeId: item.mentee_id, menteeName: item.full_name || 'Mentee', menteeAvatar: item.avatar_url || undefined })}
-            onRemove={() => handleRemove(item.mentee_id, item.full_name || 'Mentee')}
+            onMessage={() => navigation.navigate('ChatDetail', { otherUserId: item.mentee_id, otherUserName: item.full_name || 'Patient' })}
+            onViewProfile={() => navigation.navigate('PatientDetail', { menteeId: item.mentee_id, menteeName: item.full_name || 'Patient', menteeAvatar: item.avatar_url || undefined })}
+            onRemove={() => handleRemove(item.mentee_id, item.full_name || 'Patient')}
         />
     ), [navigation, handleRemove]);
 
@@ -96,9 +96,9 @@ function MenteesScreen() {
                     <TouchableOpacity onPress={() => navigation.goBack()} className="w-10 h-10 items-center justify-center rounded-full bg-background dark:bg-background-dark">
                         <MaterialCommunityIcons name="arrow-left" size={24} color={isDark ? tokens.colors.text.primary.dark : tokens.colors.text.primary.light} />
                     </TouchableOpacity>
-                    <Text className="text-xl font-bold text-text-primary dark:text-text-primary-dark font-primary">My Mentees</Text>
+                    <Text className="text-xl font-bold text-text-primary dark:text-text-primary-dark font-primary">My Patients</Text>
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('MenteeDiscovery')}
+                        onPress={() => navigation.navigate('PatientDiscovery')}
                         className="w-10 h-10 items-center justify-center rounded-full bg-background dark:bg-background-dark"
                     >
                         <MaterialCommunityIcons name="account-plus" size={24} color={isDark ? tokens.colors.text.primary.dark : tokens.colors.text.primary.light} />
@@ -132,7 +132,7 @@ function MenteesScreen() {
                     </View>
 
                     <View className="flex-row justify-between items-center mt-2">
-                        <Text className="text-text-secondary dark:text-text-secondary-dark text-sm font-semibold font-primary">Showing {filteredMentees.length} mentees</Text>
+                        <Text className="text-text-secondary dark:text-text-secondary-dark text-sm font-semibold font-primary">Showing {filteredPatients.length} mentees</Text>
                         <TouchableOpacity className="flex-row items-center bg-surface dark:bg-surface-dark px-3 py-1.5 rounded-full border border-border dark:border-border-dark">
                             <Text className="text-text-secondary dark:text-text-secondary-dark text-xs mr-1 font-medium font-primary">Sort by: Recent</Text>
                             <MaterialCommunityIcons name="chevron-down" size={14} color={tokens.colors.text.secondary.light} />
@@ -147,9 +147,9 @@ function MenteesScreen() {
                 ) : (
                     <ErrorBoundary>
                         <FlatList
-                            data={filteredMentees}
+                            data={filteredPatients}
                             keyExtractor={(item, index) => `${item?.mentee_id || 'mentee'}-${index}`}
-                            renderItem={renderMenteeItem}
+                            renderItem={renderPatientItem}
                             contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 32, gap: 16 }}
                             ListEmptyComponent={renderEmpty}
                         />
@@ -160,4 +160,4 @@ function MenteesScreen() {
     );
 };
 
-export default withRollbarPerformance(MenteesScreen, 'MentorMentees');
+export default withRollbarPerformance(PatientsScreen, 'TherapistPatients');

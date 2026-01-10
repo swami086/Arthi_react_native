@@ -6,19 +6,19 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { RootStackParamList } from '../../../navigation/types';
 import { BottomActionBar } from '../../../components/BottomActionBar';
-import { useMentorDetail } from '../hooks/useMentorDetail';
+import { useTherapistDetail } from '../hooks/useTherapistDetail';
 import Animated, { useSharedValue, useAnimatedStyle, useAnimatedScrollHandler, interpolate, Extrapolate } from 'react-native-reanimated';
 import { MotiView } from 'moti';
 import { useColorScheme } from '../../../hooks/useColorScheme';
 
-type MentorDetailRouteProp = RouteProp<RootStackParamList, 'MentorDetail'>;
+type TherapistDetailRouteProp = RouteProp<RootStackParamList, 'TherapistDetail'>;
 
-const MentorDetailScreen = () => {
+const TherapistDetailScreen = () => {
     const navigation = useNavigation<any>();
-    const route = useRoute<MentorDetailRouteProp>();
+    const route = useRoute<TherapistDetailRouteProp>();
     const { mentorId, mentorName, mentorAvatar, mentorBio, mentorExpertise } = route.params;
     const { isDark } = useColorScheme();
-    const { mentor, reviews, availability, loading } = useMentorDetail(mentorId);
+    const { mentor, reviews, availability, loading } = useTherapistDetail(mentorId);
 
     const [isOnline, setIsOnline] = useState(true); // Mock status
     const [isFavorite, setIsFavorite] = useState(false);
@@ -82,7 +82,7 @@ const MentorDetailScreen = () => {
                     <TouchableOpacity onPress={() => navigation.goBack()} className="p-2 rounded-full bg-gray-50 dark:bg-gray-800">
                         <MaterialCommunityIcons name="arrow-left" size={24} color={isDark ? "#fff" : "#333"} />
                     </TouchableOpacity>
-                    <Text className="text-lg font-bold text-gray-900 dark:text-white">Mentor Profile</Text>
+                    <Text className="text-lg font-bold text-gray-900 dark:text-white">Therapist Profile</Text>
                     <TouchableOpacity onPress={() => setIsFavorite(!isFavorite)} className="p-2">
                         <MaterialCommunityIcons
                             name={isFavorite ? "heart" : "heart-outline"}
@@ -222,4 +222,4 @@ const MentorDetailScreen = () => {
     );
 };
 
-export default MentorDetailScreen;
+export default TherapistDetailScreen;

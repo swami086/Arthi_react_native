@@ -7,25 +7,25 @@ import { ErrorBoundary } from '../../../components/ErrorBoundary';
 import { useAuth } from '../../auth/hooks/useAuth';
 import { useColorScheme } from '../../../hooks/useColorScheme';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { searchAvailableMentees } from '../../../api/mentorService';
+import { searchAvailablePatients } from '../../../api/mentorService';
 import { createRelationship } from '../../../api/relationshipService';
-import { createManagedMentee } from '../../../api/mentorService';
+import { createManagedPatient } from '../../../api/mentorService';
 import { Profile } from '../../../api/types';
 import { Button } from '../../../components/Button';
 import { Input } from '../../../components/Input';
 import { RootStackParamList } from '../../../navigation/types';
 
-export const MenteeDiscoveryScreen = () => {
+export const PatientDiscoveryScreen = () => {
     const { user } = useAuth();
     const { isDark } = useColorScheme();
-    const navigation = useNavigation<StackNavigationProp<RootStackParamList, 'MenteeDiscovery'>>();
-    const route = useRoute<RouteProp<RootStackParamList, 'MenteeDiscovery'>>();
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList, 'PatientDiscovery'>>();
+    const route = useRoute<RouteProp<RootStackParamList, 'PatientDiscovery'>>();
     const [query, setQuery] = useState('');
-    const [mentees, setMentees] = useState<Profile[]>([]);
+    const [mentees, setPatients] = useState<Profile[]>([]);
     const [loading, setLoading] = useState(false);
     const [inviting, setInviting] = useState<string | null>(null);
     const [selectedCategory, setSelectedCategory] = useState('All');
-    const [skippedMentees, setSkippedMentees] = useState<Set<string>>(new Set());
+    const [skippedPatients, setSkippedPatients] = useState<Set<string>>(new Set());
 
     // Manual Add State
     const [showAddModal, setShowAddModal] = useState(route.params?.autoOpenAddModal === true);
@@ -39,9 +39,9 @@ export const MenteeDiscoveryScreen = () => {
         }
     }, [route.params?.autoOpenAddModal]);
 
-    const [newMenteeName, setNewMenteeName] = useState('');
-    const [newMenteeEmail, setNewMenteeEmail] = useState('');
-    const [addingMentee, setAddingMentee] = useState(false);
+    const [newPatientName, setNewPatientName] = useState('');
+    const [newPatientEmail, setNewPatientEmail] = useState('');
+    const [addingPatient, setAddingPatient] = useState(false);
 
     const CATEGORIES = ['All', 'Academic', 'Anxiety & Stress', 'Career Prep', 'Creative Arts'];
 
@@ -49,9 +49,9 @@ export const MenteeDiscoveryScreen = () => {
         if (!user?.id) return;
         setLoading(true);
         try {
-            const results = await searchAvailableMentees(user.id, query, selectedCategory);
+            const results = await searchAvailablePatients(user.id, query, selectedCategory);
             const uniqueResults = Array.from(new Map(results.map((r: Profile) => [r.user_id, r])).values());
-            setMentees(uniqueResults);
+            setPatients(uniqueResults);
         } catch (error) {
             console.error(error);
             Alert.alert("Error", "Failed to fetch mentees");
@@ -71,7 +71,7 @@ export const MenteeDiscoveryScreen = () => {
         try {
             await createRelationship(user.id, menteeId, user.id, 'pending', 'Self-initiated invite');
             Alert.alert("Success", "Request sent to mentee.");
-            setMentees(prev => prev.filter(m => m.user_id !== menteeId));
+            setPatients(prev => prev.filter(m => m.user_id !== menteeId));
         } catch (error: any) {
             Alert.alert("Error", error.message);
         } finally {
@@ -80,32 +80,32 @@ export const MenteeDiscoveryScreen = () => {
     };
 
     const handleSkip = (menteeId: string) => {
-        setSkippedMentees(prev => {
+        setSkippedPatients(prev => {
             const newSet = new Set(prev);
             newSet.add(menteeId);
             return newSet;
         });
     };
 
-    const handleAddManualMentee = async () => {
+    const handleAddManualPatient = async () => {
         if (!user?.id) return;
-        if (!newMenteeName || !newMenteeEmail) {
+        if (!newPatientName || !newPatientEmail) {
             Alert.alert("Error", "Please provide both name and email.");
             return;
         }
 
-        setAddingMentee(true);
+        setAddingPatient(true);
         try {
-            const result = await createManagedMentee(user.id, newMenteeEmail, newMenteeName);
+            const result = await createManagedPatient(user.id, newPatientEmail, newPatientName);
             Alert.alert("Success", result.message);
             setShowAddModal(false);
-            setNewMenteeName('');
-            setNewMenteeEmail('');
-            // Optionally navigate to Mentee List or refresh
+            setNewPatientName('');
+            setNewPatientEmail('');
+            // Optionally navigate to Patient List or refresh
         } catch (error: any) {
             Alert.alert("Error", error.message || "Failed to add mentee");
         } finally {
-            setAddingMentee(false);
+            setAddingPatient(false);
         }
     };
 
@@ -131,9 +131,9 @@ export const MenteeDiscoveryScreen = () => {
         </TouchableOpacity>
     );
 
-    const renderMenteeCard = ({ item, index, isTop = false }: { item: Profile, index: number, isTop?: boolean }) => {
+    const renderPatientCard = ({ item, index, isTop = false }: { item: Profile, index: number, isTop?: boolean }) => {
         const menteeId = item.user_id;
-        if (skippedMentees.has(menteeId)) return null;
+        if (skippedPatients.has(menteeId)) return null;
 
         const matchPercentage = getMatchPercentage(item);
 
@@ -164,7 +164,7 @@ export const MenteeDiscoveryScreen = () => {
                             {item.full_name}
                         </Text>
                         <Text className="text-sm text-text-sub-light dark:text-gray-400 mb-1">
-                            {item.specialization || 'General'} • {item.role === 'mentee' ? 'Mentee' : 'User'}
+                            {item.specialization || 'General'} • {item.role === 'mentee' ? 'Patient' : 'User'}
                         </Text>
                     </View>
                 </View>
@@ -196,7 +196,7 @@ export const MenteeDiscoveryScreen = () => {
                         <Text className="text-gray-500 font-medium">Skip</Text>
                     </TouchableOpacity>
                     <Button
-                        title="Invite Mentee"
+                        title="Invite Patient"
                         onPress={() => handleConnect(menteeId)}
                         loading={inviting === menteeId}
                         className="flex-1 py-2 rounded-lg items-center justify-center"
@@ -214,7 +214,7 @@ export const MenteeDiscoveryScreen = () => {
                 className="bg-primary/10 p-3 rounded-lg flex-row items-center justify-center mb-4 border border-primary/20"
             >
                 <Icon name="account-plus" size={20} color="#30bae8" />
-                <Text className="text-primary font-bold ml-2">Add Mentee Manually</Text>
+                <Text className="text-primary font-bold ml-2">Add Patient Manually</Text>
             </TouchableOpacity>
 
             {/* Search Bar */}
@@ -255,12 +255,12 @@ export const MenteeDiscoveryScreen = () => {
             </View>
 
             {/* Top Recommendation Section */}
-            {!query && mentees.length > 0 && !skippedMentees.has(mentees[0].user_id) && (
+            {!query && mentees.length > 0 && !skippedPatients.has(mentees[0].user_id) && (
                 <View className="mb-6">
                     <Text className="text-lg font-bold text-text-main-light dark:text-white mb-3">
                         Top Recommendation
                     </Text>
-                    {renderMenteeCard({ item: mentees[0], index: 0, isTop: true })}
+                    {renderPatientCard({ item: mentees[0], index: 0, isTop: true })}
                 </View>
             )}
 
@@ -270,9 +270,9 @@ export const MenteeDiscoveryScreen = () => {
         </View>
     );
 
-    const filteredMentees = mentees.filter(m => !skippedMentees.has(m.user_id));
+    const filteredPatients = mentees.filter(m => !skippedPatients.has(m.user_id));
     // Exclude top recommendation from main list if it's shown separately
-    const listData = filteredMentees;
+    const listData = filteredPatients;
 
     const renderEmptyComponent = useCallback(() => (
         <View className="items-center justify-center mt-10">
@@ -292,7 +292,7 @@ export const MenteeDiscoveryScreen = () => {
                 <TouchableOpacity onPress={() => navigation.goBack()} className="mr-3">
                     <Icon name="arrow-left" size={24} color={isDark ? '#fff' : '#333'} />
                 </TouchableOpacity>
-                <Text className="text-xl font-bold text-text-main-light dark:text-white">Find Mentees</Text>
+                <Text className="text-xl font-bold text-text-main-light dark:text-white">Find Patients</Text>
             </View>
 
             <Modal
@@ -303,7 +303,7 @@ export const MenteeDiscoveryScreen = () => {
             >
                 <View className="flex-1 justify-center items-center bg-black/50 p-4">
                     <View className="bg-white dark:bg-gray-800 rounded-2xl p-6 w-full max-w-sm shadow-xl">
-                        <Text className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Add Mentee Manually</Text>
+                        <Text className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Add Patient Manually</Text>
                         <Text className="text-gray-500 mb-6 text-sm">
                             Enter the details below to instantly add a mentee to your roster.
                         </Text>
@@ -312,8 +312,8 @@ export const MenteeDiscoveryScreen = () => {
                             <Input
                                 label="Full Name"
                                 placeholder="e.g. John Doe"
-                                value={newMenteeName}
-                                onChangeText={setNewMenteeName}
+                                value={newPatientName}
+                                onChangeText={setNewPatientName}
                             />
                         </View>
 
@@ -321,8 +321,8 @@ export const MenteeDiscoveryScreen = () => {
                             <Input
                                 label="Email Address"
                                 placeholder="e.g. john@example.com"
-                                value={newMenteeEmail}
-                                onChangeText={setNewMenteeEmail}
+                                value={newPatientEmail}
+                                onChangeText={setNewPatientEmail}
                                 autoCapitalize="none"
                                 keyboardType="email-address"
                             />
@@ -338,9 +338,9 @@ export const MenteeDiscoveryScreen = () => {
                             </View>
                             <View className="flex-1">
                                 <Button
-                                    title="Add Mentee"
-                                    onPress={handleAddManualMentee}
-                                    loading={addingMentee}
+                                    title="Add Patient"
+                                    onPress={handleAddManualPatient}
+                                    loading={addingPatient}
                                 />
                             </View>
                         </View>
@@ -351,7 +351,7 @@ export const MenteeDiscoveryScreen = () => {
             <ErrorBoundary>
                 <FlatList
                     data={listData}
-                    renderItem={({ item, index }) => renderMenteeCard({ item, index })}
+                    renderItem={({ item, index }) => renderPatientCard({ item, index })}
                     keyExtractor={(item, index) => `${item.user_id}-${index}`}
                     contentContainerStyle={{ padding: 24 }}
                     ListHeaderComponent={renderHeader}

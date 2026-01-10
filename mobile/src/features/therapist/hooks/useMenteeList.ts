@@ -1,23 +1,23 @@
 import { useEffect, useState, useCallback } from 'react';
-import { getMenteeList } from '../../../api/mentorService';
-import { MenteeWithActivity } from '../../../api/types';
+import { getPatientList } from '../../../api/mentorService';
+import { PatientWithActivity } from '../../../api/types';
 import { useAuth } from '../../auth/hooks/useAuth';
 import { supabase } from '../../../api/supabase';
 
-export const useMenteeList = () => {
+export const usePatientList = () => {
     const { user } = useAuth();
-    const [mentees, setMentees] = useState<MenteeWithActivity[]>([]);
+    const [mentees, setPatients] = useState<PatientWithActivity[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchMentees = useCallback(async () => {
+    const fetchPatients = useCallback(async () => {
         if (!user) return;
         try {
             setLoading(true);
-            const data = await getMenteeList(user.id);
+            const data = await getPatientList(user.id);
             // Deduplicate by mentee_id to prevent UI errors
-            const uniqueMentees = Array.from(new Map(data.map(item => [item.mentee_id, item])).values());
-            setMentees(uniqueMentees);
+            const uniquePatients = Array.from(new Map(data.map(item => [item.mentee_id, item])).values());
+            setPatients(uniquePatients);
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -26,34 +26,34 @@ export const useMenteeList = () => {
     }, [user]);
 
     useEffect(() => {
-        fetchMentees();
+        fetchPatients();
 
         const subscription = supabase
             .channel('mentee_list_updates')
             .on(
                 'postgres_changes',
                 { event: '*', schema: 'public', table: 'appointments' },
-                () => fetchMentees()
+                () => fetchPatients()
             )
             .on(
                 'postgres_changes',
                 { event: '*', schema: 'public', table: 'messages' },
-                () => fetchMentees()
+                () => fetchPatients()
             )
             .subscribe();
 
         return () => {
             subscription.unsubscribe();
         };
-    }, [fetchMentees]);
+    }, [fetchPatients]);
 
     return {
-        mentees, loading, error, refetch: fetchMentees, removeMentee: async (menteeId: string) => {
+        mentees, loading, error, refetch: fetchPatients, removePatient: async (menteeId: string) => {
             if (!user) return;
             try {
-                await import('../../../api/mentorService').then(m => m.deactivateMenteeRelationship(user.id, menteeId));
+                await import('../../../api/mentorService').then(m => m.deactivatePatientRelationship(user.id, menteeId));
                 // Optimistic update or refetch
-                fetchMentees();
+                fetchPatients();
             } catch (e) {
                 console.error(e);
                 throw e;

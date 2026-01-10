@@ -2,8 +2,8 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AdminDashboardScreen } from '../features/admin/screens/AdminDashboardScreen';
-import { AdminMentorsScreen } from '../features/admin/screens/AdminMentorsScreen';
-import { AdminMenteesScreen } from '../features/admin/screens/AdminMenteesScreen';
+import { AdminTherapistsScreen } from '../features/admin/screens/AdminTherapistsScreen';
+import { AdminPatientsScreen } from '../features/admin/screens/AdminPatientsScreen';
 import { ManageAdminsScreen } from '../features/admin/screens/ManageAdminsScreen';
 import SettingsScreen from '../features/profile/screens/SettingsScreen';
 import { AdminTabParamList } from './types';
@@ -41,20 +41,20 @@ export const AdminNavigator = () => {
                 }}
             />
             <Tab.Screen
-                name="Mentors"
-                component={AdminMentorsScreen}
+                name="Therapists"
+                component={AdminTherapistsScreen}
                 options={{
-                    tabBarLabel: 'Mentors',
+                    tabBarLabel: 'Therapists',
                     tabBarIcon: ({ color, size }) => (
                         <Icon name="account-tie" color={color} size={size} />
                     ),
                 }}
             />
             <Tab.Screen
-                name="Mentees"
-                component={AdminMenteesScreen}
+                name="Patients"
+                component={AdminPatientsScreen}
                 options={{
-                    tabBarLabel: 'Mentees',
+                    tabBarLabel: 'Patients',
                     tabBarIcon: ({ color, size }) => (
                         <Icon name="account-school" color={color} size={size} />
                     ),

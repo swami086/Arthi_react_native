@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../../api/supabase';
-import { createMentorNote, updateMentorNote as apiUpdateNote, deleteMentorNote as apiDeleteNote } from '../../../api/mentorService';
-import { MentorNote } from '../../../api/types';
+import { createTherapistNote, updateTherapistNote as apiUpdateNote, deleteTherapistNote as apiDeleteNote } from '../../../api/mentorService';
+import { TherapistNote } from '../../../api/types';
 
-export const useMentorNotes = (menteeId: string) => {
-    const [notes, setNotes] = useState<MentorNote[]>([]);
+export const useTherapistNotes = (menteeId: string) => {
+    const [notes, setNotes] = useState<TherapistNote[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -33,7 +33,7 @@ export const useMentorNotes = (menteeId: string) => {
     const createNote = async (noteContent: string, isPrivate: boolean, mentorId: string) => {
         try {
             setLoading(true);
-            await createMentorNote({
+            await createTherapistNote({
                 mentee_id: menteeId,
                 mentor_id: mentorId,
                 note_content: noteContent,
@@ -48,7 +48,7 @@ export const useMentorNotes = (menteeId: string) => {
         }
     };
 
-    const updateNote = async (noteId: string, updates: Partial<MentorNote>) => {
+    const updateNote = async (noteId: string, updates: Partial<TherapistNote>) => {
         try {
             setLoading(true);
             await apiUpdateNote(noteId, updates);
