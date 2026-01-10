@@ -1,7 +1,7 @@
-# Database Migrations for Multi-Tenant Architecture
+# Database Migrations for Multi-Tenant Architecture & Rebranding
 
 ## Overview
-These migrations transform SafeSpaceApp from a single-tenant to a multi-tenant white-label SaaS platform.
+These migrations transform SafeSpaceApp from a single-tenant to a multi-tenant white-label SaaS platform (TherapyFlow AI) and handle the terminology rebranding from Mentor/Mentee to Therapist/Patient.
 
 ## Migration Files
 
@@ -9,6 +9,13 @@ These migrations transform SafeSpaceApp from a single-tenant to a multi-tenant w
 2. **002_add_practice_columns.sql** - Adds multi-tenant columns to existing tables
 3. **003_enable_rls_policies.sql** - Implements Row-Level Security for data isolation
 4. **004_create_practice_triggers.sql** - Auto-populates practice_id fields
+5. **009_rebrand_mentor_to_therapist.sql** - Initial rebranding: Renames core tables and columns, updates ENUMs
+6. **010_update_rls_policies.sql** - Updates RLS policies to use new "therapist/patient" terminology
+7. **011_update_functions.sql** - Updates RPC functions (get_therapist_stats, etc.)
+8. **012_update_triggers.sql** - Updates triggers for rebranded tables
+9. **013_update_admin_stats_function.sql** - Updates admin stats RPC
+10. **014_complete_rebranding.sql** - Completes rebranding for remaining tables (session_recordings, soap_notes, etc.) and updates their RLS policies
+11. **015_update_practice_triggers.sql** - Updates appointment triggers to use therapist_id
 
 ## Applying Migrations
 
@@ -18,18 +25,15 @@ These migrations transform SafeSpaceApp from a single-tenant to a multi-tenant w
 # Apply all migrations
 supabase db push
 
-# Or apply individually
-supabase db execute --file supabase/migrations/001_create_practice_tables.sql
-supabase db execute --file supabase/migrations/002_add_practice_columns.sql
-supabase db execute --file supabase/migrations/003_enable_rls_policies.sql
-supabase db execute --file supabase/migrations/004_create_practice_triggers.sql
+# Or apply by pushing local changes
+# Note: Ensure you are in the correct directory
 ```
 
 ### Using Supabase Dashboard
 
 1. Navigate to SQL Editor in Supabase Dashboard
 2. Copy contents of each migration file
-3. Execute in order (001 → 002 → 003 → 004)
+3. Execute in order
 
 ## Verification
 
@@ -41,11 +45,11 @@ SELECT table_name FROM information_schema.tables
 WHERE table_schema = 'public' 
 AND table_name IN ('practices', 'practice_settings', 'practice_branding', 'practice_invite_codes');
 
--- Check practice_id columns added
+-- Check for rebranded columns
 SELECT column_name, data_type 
 FROM information_schema.columns 
-WHERE table_name IN ('profiles', 'appointments', 'session_recordings', 'transcripts', 'soap_notes')
-AND column_name = 'practice_id';
+WHERE table_name IN ('session_recordings', 'soap_notes', 'appointments')
+AND column_name IN ('therapist_id', 'patient_id', 'edited_by_therapist');
 
 -- Check RLS enabled
 SELECT tablename, rowsecurity 
@@ -61,34 +65,7 @@ WHERE trigger_schema = 'public';
 
 ## Rollback (Emergency Only)
 
-If you need to rollback:
-
-```sql
--- Drop triggers
-DROP TRIGGER IF EXISTS trigger_set_appointment_practice_id ON appointments;
-DROP TRIGGER IF EXISTS trigger_set_recording_practice_id ON session_recordings;
-DROP TRIGGER IF EXISTS trigger_set_transcript_practice_id ON transcripts;
-DROP TRIGGER IF EXISTS trigger_set_soap_note_practice_id ON soap_notes;
-
--- Drop functions
-DROP FUNCTION IF EXISTS set_appointment_practice_id();
-DROP FUNCTION IF EXISTS set_recording_practice_id();
-DROP FUNCTION IF EXISTS set_transcript_practice_id();
-DROP FUNCTION IF EXISTS set_soap_note_practice_id();
-
--- Remove practice_id columns
-ALTER TABLE profiles DROP COLUMN IF EXISTS practice_id, DROP COLUMN IF EXISTS practice_role;
-ALTER TABLE appointments DROP COLUMN IF EXISTS practice_id;
-ALTER TABLE session_recordings DROP COLUMN IF EXISTS practice_id;
-ALTER TABLE transcripts DROP COLUMN IF EXISTS practice_id;
-ALTER TABLE soap_notes DROP COLUMN IF EXISTS practice_id;
-
--- Drop practice tables
-DROP TABLE IF EXISTS practice_invite_codes;
-DROP TABLE IF EXISTS practice_branding;
-DROP TABLE IF EXISTS practice_settings;
-DROP TABLE IF EXISTS practices;
-```
+If you need to rollback, check the `*_rollback.sql` files (if created) or manually reverse the `ALTER TABLE` and `CREATE POLICY` statements.
 
 ## Important Notes
 
