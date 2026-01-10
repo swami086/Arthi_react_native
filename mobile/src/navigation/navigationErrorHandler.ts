@@ -1,5 +1,5 @@
 import { createNavigationContainerRef, NavigationState } from '@react-navigation/native';
-import rollbar, { reportError, reportInfo, getTraceId } from '../services/rollbar';
+import rollbar, { getTraceId } from '../services/rollbar';
 
 // Global navigation reference
 export const navigationRef = createNavigationContainerRef();
@@ -24,20 +24,25 @@ export const onNavigationStateChange = (state: NavigationState | undefined) => {
     try {
         if (!state) return;
 
-        // Use the passed state object directly to find the active route.
-        // This is safer than navigationRef.getCurrentRoute() because it doesn't 
-        // rely on internal React Context that might be in flux.
         const activeRouteName = getRouteName(state);
 
         if (activeRouteName) {
-            reportInfo(`Navigated to: ${activeRouteName}`, 'Navigation', {
+            rollbar.info(`Navigated to: ${activeRouteName}`, {
                 screen: activeRouteName,
                 trace_id: getTraceId()
             });
+            rollbar.addBreadcrumb({
+                category: 'navigation',
+                message: `Navigated to ${activeRouteName}`,
+                level: 'info',
+            });
+            rollbar.addBreadcrumb({
+                category: 'navigation',
+                message: `Navigated to ${activeRouteName}`,
+                level: 'info',
+            });
         }
     } catch (error) {
-        // Prevent navigation tracking from crashing the app.
-        // Only report if it's not the already-known 'navigation context' error to avoid loops.
         const errorMessage = error instanceof Error ? error.message : String(error);
         if (!errorMessage.includes('navigation context')) {
             reportError(error, 'navigationErrorHandler:onNavigationStateChange');
@@ -51,5 +56,10 @@ export const onNavigationStateChange = (state: NavigationState | undefined) => {
  */
 export const onUnhandledAction = (action: any) => {
     reportError(new Error(`Unhandled Navigation Action: ${action.type}`), 'navigationErrorHandler:onUnhandledAction');
+    rollbar.addBreadcrumb({
+        category: 'navigation',
+        message: `Unhandled action: ${action.type}`,
+        level: 'warning',
+    });
     console.warn('Unhandled navigation action', action);
 };

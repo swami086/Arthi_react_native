@@ -11,18 +11,17 @@ export async function register() {
       environment: process.env.NEXT_PUBLIC_ROLLBAR_ENVIRONMENT || process.env.NODE_ENV,
       captureUncaught: true,
       captureUnhandledRejections: true,
-      checkIgnore: (isUncaught, args, payload) => {
-        const message = ((payload as any).body.message?.body || '').toString();
+      checkIgnore: (isUncaught, args, payload: { body?: { message?: { body?: string } } }) => {
+        const message = (payload?.body?.message?.body || '').toString();
         if (message.includes('NEXT_REDIRECT')) return true;
         return false;
       },
-      transform: (payload) => {
-        const p = payload as any;
-        if (p.data.person) {
-          p.data.person = sanitizeMetadata(p.data.person);
+      transform: (payload: { data?: { person?: unknown; custom?: unknown } }) => {
+        if (payload?.data?.person) {
+          payload.data.person = sanitizeMetadata(payload.data.person);
         }
-        if (p.data.custom) {
-          p.data.custom = sanitizeMetadata(p.data.custom);
+        if (payload?.data?.custom) {
+          payload.data.custom = sanitizeMetadata(payload.data.custom);
         }
       }
     });

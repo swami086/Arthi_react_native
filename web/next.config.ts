@@ -1,5 +1,5 @@
 import type { NextConfig } from 'next';
-const RollbarSourceMapPlugin = require('rollbar-sourcemap-webpack-plugin');
+import RollbarSourceMapPlugin from 'rollbar-sourcemap-webpack-plugin';
 
 const nextConfig: NextConfig = {
   images: {
