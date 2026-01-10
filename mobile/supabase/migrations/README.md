@@ -16,6 +16,8 @@ These migrations transform SafeSpaceApp from a single-tenant to a multi-tenant w
 9. **013_update_admin_stats_function.sql** - Updates admin stats RPC
 10. **014_complete_rebranding.sql** - Completes rebranding for remaining tables (session_recordings, soap_notes, etc.) and updates their RLS policies
 11. **015_update_practice_triggers.sql** - Updates appointment triggers to use therapist_id
+12. **016_restore_practice_schema.sql** - Restores/Creates practice tables and columns if missing
+13. **017_fix_rls_and_triggers.sql** - Updates RLS to include practice_id checks and ensures triggers are active
 
 ## Applying Migrations
 
