@@ -18,6 +18,7 @@ These migrations transform SafeSpaceApp from a single-tenant to a multi-tenant w
 11. **015_update_practice_triggers.sql** - Updates appointment triggers to use therapist_id
 12. **016_restore_practice_schema.sql** - Restores/Creates practice tables and columns if missing
 13. **017_fix_rls_and_triggers.sql** - Updates RLS to include practice_id checks and ensures triggers are active
+14. **018_soap_notes_therapist_id_fix.sql** - Renames mentor_id to therapist_id in soap_notes
 
 ## Applying Migrations
 
