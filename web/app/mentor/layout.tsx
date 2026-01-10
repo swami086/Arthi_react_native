@@ -2,13 +2,13 @@ export const dynamic = 'force-dynamic';
 
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
-import { MentorSidebar } from './_components/MentorSidebar';
+import { TherapistSidebar } from './_components/TherapistSidebar';
 import { AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { RollbarProvider } from '@/components/providers/rollbar-provider';
 import { MessageListener } from '@/components/messaging/message-listener';
 
-export default async function MentorLayout({
+export default async function TherapistLayout({
     children,
 }: {
     children: React.ReactNode;
@@ -23,23 +23,23 @@ export default async function MentorLayout({
         redirect('/login');
     }
 
-    // Verify mentor role (basic check, middleware should also handle)
+    // Verify therapist role (basic check, middleware should also handle)
     const { data: profile } = await (supabase
         .from('profiles') as any)
         .select('role, full_name, email')
         .eq('id', user.id)
         .single();
 
-    if (profile?.role !== 'mentor') {
+    if (profile?.role !== 'therapist') {
         redirect('/unauthorized'); // Or appropriate path
     }
 
     return (
         <RollbarProvider>
             <div className="flex h-screen bg-gray-50 dark:bg-black overflow-hidden">
-                <MentorSidebar
+                <TherapistSidebar
                     userEmail={user.email}
-                    userName={profile.full_name || 'Mentor'}
+                    userName={profile.full_name || 'Therapist'}
                 />
                 <MessageListener />
 

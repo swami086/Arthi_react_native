@@ -25,8 +25,8 @@ export async function initiateRecording(appointmentId: string) {
             return { error: 'Appointment not found', status: 404 };
         }
 
-        // Verify mentor ownership
-        if (appointment.mentor_id !== user.id) {
+        // Verify therapist ownership
+        if (appointment.therapist_id !== user.id) {
             return { error: 'Not authorized for this session', status: 403 };
         }
 

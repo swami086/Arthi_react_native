@@ -62,7 +62,7 @@ export const getVideoRoom = async (appointmentId: string): Promise<VideoRoom | n
 export const generateMeetingToken = async (
     roomName: string,
     userId: string,
-    role: 'mentor' | 'mentee'
+    role: 'therapist' | 'patient'
 ): Promise<string> => {
     startTimer('video_token_generation');
     try {
@@ -159,7 +159,7 @@ export const createGoogleMeetRoom = async (
     userId: string,
     userEmail: string,
     userName: string,
-    userRole: 'mentor' | 'mentee',
+    userRole: 'therapist' | 'patient',
     accessToken?: string
 ): Promise<VideoRoom> => {
     try {

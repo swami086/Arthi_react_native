@@ -53,7 +53,7 @@ export default async function AdminLayout({
                 />
 
                 <div className="flex-1 flex flex-col overflow-hidden">
-                    {/* Admin Specific Header can go here if needed, or share same structure as mentor */}
+                    {/* Admin Specific Header can go here if needed, or share same structure as therapist */}
                     <header className="h-20 border-b bg-white dark:bg-gray-950 dark:border-gray-800 flex items-center justify-between px-8 shadow-sm z-10 lg:static fixed w-full top-0 left-0 hidden lg:flex">
                         <div className="flex flex-col">
                             <h1 className="text-xl font-black text-gray-900 dark:text-gray-100 flex items-center gap-2">

@@ -16,7 +16,7 @@ import { cn } from '@/lib/utils'; // Assuming generic utility
 import { addBreadcrumb } from '@/lib/rollbar-utils';
 
 interface ChooseTimeClientProps {
-    mentor: any;
+    therapist: any;
     dateStr: string;
     initialTime?: string;
     initialEndTime?: string;
@@ -25,13 +25,13 @@ interface ChooseTimeClientProps {
 type TimeOfDay = 'morning' | 'afternoon' | 'evening';
 
 export default function ChooseTimeClient({
-    mentor,
+    therapist,
     dateStr,
     initialTime,
     initialEndTime
 }: ChooseTimeClientProps) {
     const router = useRouter();
-    const { goToConfirmation } = useBookingFlow(mentor.user_id);
+    const { goToConfirmation } = useBookingFlow(therapist.user_id);
 
     const [allSlots, setAllSlots] = useState<TimeSlot[]>([]);
     const [filteredSlots, setFilteredSlots] = useState<TimeSlot[]>([]);
@@ -46,7 +46,7 @@ export default function ChooseTimeClient({
         async function loadSlots() {
             setLoading(true);
             try {
-                const result = await getAvailableTimeSlots(mentor.user_id, dateStr);
+                const result = await getAvailableTimeSlots(therapist.user_id, dateStr);
                 if (result.success && result.data) {
                     setAllSlots(result.data);
 
@@ -83,7 +83,7 @@ export default function ChooseTimeClient({
             }
         }
         loadSlots();
-    }, [mentor.user_id, dateStr, initialTime]);
+    }, [therapist.user_id, dateStr, initialTime]);
 
     useEffect(() => {
         // Filter slots based on timeOfDay
@@ -115,7 +115,7 @@ export default function ChooseTimeClient({
     const handleNext = () => {
         if (selectedSlot) {
             addBreadcrumb('Navigating to Step 3', 'booking.choose_time', 'info', {
-                mentorId: mentor.user_id,
+                therapistId: therapist.user_id,
                 date: dateStr,
                 time: selectedSlot.time
             });

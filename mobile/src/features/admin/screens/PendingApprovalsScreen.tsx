@@ -1,35 +1,35 @@
 import React from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, Alert, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { usePendingMentors } from '../hooks/usePendingMentors';
+import { usePendingTherapists } from '../hooks/usePendingTherapists';
 import { useAuth } from '../../auth/hooks/useAuth';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 
 export const PendingApprovalsScreen = () => {
     const { user } = useAuth();
-    const { pendingMentors, loading, fetchPending, handleApprove, handleReject, actionLoading, error } = usePendingMentors(user?.id);
+    const { pendingTherapists, loading, fetchPending, handleApprove, handleReject, actionLoading, error } = usePendingTherapists(user?.id);
     const navigation = useNavigation<any>();
 
     const [modalVisible, setModalVisible] = React.useState(false);
     const [actionType, setActionType] = React.useState<'approve' | 'reject' | null>(null);
-    const [selectedMentor, setSelectedMentor] = React.useState<{ id: string, name: string } | null>(null);
+    const [selectedTherapist, setSelectedTherapist] = React.useState<{ id: string, name: string } | null>(null);
     const [inputReason, setInputReason] = React.useState('');
 
-    const openActionModal = (mentor: { user_id: string, full_name: string }, type: 'approve' | 'reject') => {
-        setSelectedMentor({ id: mentor.user_id, name: mentor.full_name });
+    const openActionModal = (therapist: { user_id: string, full_name: string }, type: 'approve' | 'reject') => {
+        setSelectedTherapist({ id: therapist.user_id, name: therapist.full_name });
         setActionType(type);
         setInputReason('');
         setModalVisible(true);
     };
 
     const confirmAction = () => {
-        if (!selectedMentor || !actionType) return;
+        if (!selectedTherapist || !actionType) return;
         setModalVisible(false);
         if (actionType === 'approve') {
-            handleApprove(selectedMentor.id, inputReason); // Reason acts as notes for approval
+            handleApprove(selectedTherapist.id, inputReason); // Reason acts as notes for approval
         } else {
-            handleReject(selectedMentor.id, inputReason || 'No reason provided');
+            handleReject(selectedTherapist.id, inputReason || 'No reason provided');
         }
     };
 
@@ -52,7 +52,7 @@ export const PendingApprovalsScreen = () => {
 
             <View className="flex-row justify-end space-x-2 mt-2">
                 <TouchableOpacity
-                    onPress={() => navigation.navigate('MentorReview', { mentor: item })} // Detail view
+                    onPress={() => navigation.navigate('TherapistReview', { therapist: item })} // Detail view
                     className="bg-gray-100 dark:bg-gray-700 px-4 py-2 rounded-lg mr-2"
                 >
                     <Text className="text-gray-700 dark:text-gray-300 font-semibold">Review</Text>
@@ -91,7 +91,7 @@ export const PendingApprovalsScreen = () => {
             )}
 
             <FlatList
-                data={pendingMentors}
+                data={pendingTherapists}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => `${item.user_id}-${index}`}
                 contentContainerStyle={{ padding: 24 }}
@@ -110,12 +110,12 @@ export const PendingApprovalsScreen = () => {
                 <View className="absolute inset-0 bg-black/50 justify-center items-center p-4 z-50">
                     <View className="bg-white dark:bg-gray-800 p-6 rounded-xl w-full max-w-sm">
                         <Text className="text-lg font-bold mb-4 text-text-main-light dark:text-white">
-                            {actionType === 'approve' ? 'Approve Mentor' : 'Reject Mentor'}
+                            {actionType === 'approve' ? 'Approve Therapist' : 'Reject Therapist'}
                         </Text>
                         <Text className="text-sm text-gray-500 mb-2">
                             {actionType === 'approve'
-                                ? `Add approval notes for ${selectedMentor?.name} (optional):`
-                                : `Reason for rejecting ${selectedMentor?.name}:`
+                                ? `Add approval notes for ${selectedTherapist?.name} (optional):`
+                                : `Reason for rejecting ${selectedTherapist?.name}:`
                             }
                         </Text>
                         <TextInput

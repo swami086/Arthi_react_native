@@ -2,13 +2,13 @@ export const dynamic = 'force-dynamic';
 
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
-import { getPendingMentorRequests } from '@/app/actions/relationships';
+import { getPendingTherapistRequests } from '@/app/actions/relationships';
 import PendingRequestsClient from './_components/pending-requests-client';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Mentor Requests | SafeSpace',
-    description: 'Manage pending mentor connection requests.',
+    title: 'Therapist Requests | SafeSpace',
+    description: 'Manage pending therapist connection requests.',
 };
 
 export default async function PendingRequestsPage() {
@@ -21,7 +21,7 @@ export default async function PendingRequestsPage() {
     }
 
     // Fetch pending requests
-    const requests = await getPendingMentorRequests(user.id);
+    const requests = await getPendingTherapistRequests(user.id);
 
     return (
         <PendingRequestsClient

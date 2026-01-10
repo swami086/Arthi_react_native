@@ -3,19 +3,19 @@
 
 
 import { useState } from 'react';
-import { useMenteeList } from '../_hooks/useMenteeList';
-import { MenteeCard } from '../_components/MenteeCard';
+import { usePatientList } from '../_hooks/usePatientList';
+import { PatientCard } from '../_components/PatientCard';
 import { Input } from '@/components/ui/input';
 import { Search, Filter } from 'lucide-react';
 import * as Tabs from '@radix-ui/react-tabs';
 import { Button } from '@/components/ui/button';
 
-export default function MenteesPage() {
-    const { mentees, loading, removeMentee } = useMenteeList();
+export default function PatientsPage() {
+    const { patients, loading, removePatient } = usePatientList();
     const [searchQuery, setSearchQuery] = useState('');
 
     // Filter logic
-    const filteredMentees = mentees.filter(m =>
+    const filteredPatients = patients.filter(m =>
         m.full_name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
@@ -23,11 +23,11 @@ export default function MenteesPage() {
         <div className="space-y-6 max-w-5xl mx-auto">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">My Mentees</h1>
-                    <p className="text-gray-500">Manage your active mentorships and student progress.</p>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">My Patients</h1>
+                    <p className="text-gray-500">Manage your active therapistships and student progress.</p>
                 </div>
                 <Button>
-                    Add New Mentee
+                    Add New Patient
                 </Button>
             </div>
 
@@ -35,7 +35,7 @@ export default function MenteesPage() {
                 <div className="relative flex-1 w-full">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <Input
-                        placeholder="Search mentees..."
+                        placeholder="Search patients..."
                         className="pl-9 bg-gray-50 dark:bg-gray-800 border-0"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
@@ -68,16 +68,16 @@ export default function MenteesPage() {
                             <div key={i} className="h-24 bg-gray-100 dark:bg-gray-800 animate-pulse rounded-xl" />
                         ))}
                     </div>
-                ) : filteredMentees.length === 0 ? (
+                ) : filteredPatients.length === 0 ? (
                     <div className="text-center py-12">
-                        <p className="text-gray-500">No mentees found matching your search.</p>
+                        <p className="text-gray-500">No patients found matching your search.</p>
                     </div>
                 ) : (
-                    filteredMentees.map(mentee => (
-                        <MenteeCard
-                            key={mentee.id}
-                            mentee={mentee}
-                            onRemove={removeMentee}
+                    filteredPatients.map(patient => (
+                        <PatientCard
+                            key={patient.id}
+                            patient={patient}
+                            onRemove={removePatient}
                         />
                     ))
                 )}

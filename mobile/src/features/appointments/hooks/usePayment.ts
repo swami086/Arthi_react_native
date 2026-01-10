@@ -27,10 +27,10 @@ export const usePayment = () => {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error('User not authenticated');
 
-            // Fetch appointment to get mentor_id
+            // Fetch appointment to get therapist_id
             const { data: appointment } = await supabase
                 .from('appointments')
-                .select('mentor_id')
+                .select('therapist_id')
                 .eq('id', appointmentId)
                 .single();
 
@@ -40,8 +40,8 @@ export const usePayment = () => {
                 .from('payments')
                 .insert({
                     appointment_id: appointmentId,
-                    mentee_id: user.id,
-                    mentor_id: appointment.mentor_id,
+                    patient_id: user.id,
+                    therapist_id: appointment.therapist_id,
                     amount,
                     currency,
                     status: 'pending',
@@ -95,7 +95,7 @@ export const usePayment = () => {
                 // Get appointment ID from payment
                 const { data: payment } = await supabase
                     .from('payments')
-                    .select('appointment_id, mentee_id, mentor_id, amount')
+                    .select('appointment_id, patient_id, therapist_id, amount')
                     .eq('id', paymentId)
                     .single();
 
@@ -108,18 +108,18 @@ export const usePayment = () => {
                         })
                         .eq('id', payment.appointment_id);
 
-                    // Notify Mentee
+                    // Notify Patient
                     await NotificationService.createNotification(
-                        payment.mentee_id,
+                        payment.patient_id,
                         'Payment Successful',
                         `Your payment of $${payment.amount} was successful. Appointment confirmed!`,
                         'payment',
                         payment.appointment_id
                     );
 
-                    // Notify Mentor
+                    // Notify Therapist
                     await NotificationService.createNotification(
-                        payment.mentor_id,
+                        payment.therapist_id,
                         'New Appointment',
                         'You have a new confirmed appointment.',
                         'appointment',

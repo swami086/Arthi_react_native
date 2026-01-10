@@ -102,7 +102,7 @@ export default function WelcomeClient() {
                         }}
                         className="text-[32px] font-extrabold leading-tight tracking-tight text-text-primary-light dark:text-text-primary-dark"
                     >
-                        Mentoring, <span className="text-primary dark:text-primary-dark">Not Therapy</span>
+                        Therapisting, <span className="text-primary dark:text-primary-dark">Not Therapy</span>
                     </motion.h1>
                     <motion.p
                         variants={{
@@ -111,7 +111,7 @@ export default function WelcomeClient() {
                         }}
                         className="text-text-secondary-light dark:text-text-secondary-dark text-base font-medium leading-relaxed max-w-[320px] mx-auto"
                     >
-                        Life can be overwhelmed. We provide a judgment-free zone where you can talk to real mentors and build skills for the future.
+                        Life can be overwhelmed. We provide a judgment-free zone where you can talk to real therapists and build skills for the future.
                     </motion.p>
                 </div>
             </motion.div>

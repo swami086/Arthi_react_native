@@ -25,10 +25,10 @@ export const MessagesScreen = () => {
             c.lastMessage?.content?.toLowerCase()?.includes(searchQuery.toLowerCase());
 
         let matchesRole = true;
-        if (profile?.role === 'mentor') {
-            matchesRole = c.otherUser?.role === 'mentee';
-        } else if (profile?.role === 'mentee') {
-            matchesRole = c.otherUser?.role === 'mentor';
+        if (profile?.role === 'therapist') {
+            matchesRole = c.otherUser?.role === 'patient';
+        } else if (profile?.role === 'patient') {
+            matchesRole = c.otherUser?.role === 'therapist';
         }
 
         return matchesSearch && matchesRole;

@@ -30,9 +30,9 @@ export function useUnreadCounts() {
                     .eq('user_id', user.id)
                     .eq('is_read', false),
                 supabase
-                    .from('mentor_mentee_relationships')
+                    .from('therapist_patient_relationships')
                     .select('id', { count: 'exact', head: true })
-                    .eq('mentee_id', user.id)
+                    .eq('patient_id', user.id)
                     .eq('status', 'pending')
             ]);
 
@@ -69,7 +69,7 @@ export function useUnreadCounts() {
             .channel('pending-requests-subscription')
             .on(
                 'postgres_changes',
-                { event: '*', schema: 'public', table: 'mentor_mentee_relationships' },
+                { event: '*', schema: 'public', table: 'therapist_patient_relationships' },
                 () => fetchCounts()
             )
             .subscribe();

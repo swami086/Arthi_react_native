@@ -7,8 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { MessageSquare, User, XCircle } from 'lucide-react';
 import Link from 'next/link';
 
-interface MenteeCardProps {
-    mentee: {
+interface PatientCardProps {
+    patient: {
         id: string;
         full_name: string;
         avatar_url?: string;
@@ -20,7 +20,7 @@ interface MenteeCardProps {
     onRemove?: (id: string) => void;
 }
 
-export function MenteeCard({ mentee, onRemove }: MenteeCardProps) {
+export function PatientCard({ patient, onRemove }: PatientCardProps) {
     return (
         <motion.div
             whileHover={{ scale: 1.01 }}
@@ -28,18 +28,18 @@ export function MenteeCard({ mentee, onRemove }: MenteeCardProps) {
         >
             <div className="flex items-center gap-4">
                 <Avatar className="h-12 w-12">
-                    <AvatarImage src={mentee.avatar_url} />
-                    <AvatarFallback>{mentee.full_name?.substring(0, 2).toUpperCase()}</AvatarFallback>
+                    <AvatarImage src={patient.avatar_url} />
+                    <AvatarFallback>{patient.full_name?.substring(0, 2).toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-white">{mentee.full_name}</h4>
+                    <h4 className="font-semibold text-gray-900 dark:text-white">{patient.full_name}</h4>
                     <div className="flex items-center gap-2 mt-1">
-                        <Badge variant={mentee.status === 'active' ? 'default' : 'secondary'} className="capitalize text-xs">
-                            {mentee.status || 'Active'}
+                        <Badge variant={patient.status === 'active' ? 'default' : 'secondary'} className="capitalize text-xs">
+                            {patient.status || 'Active'}
                         </Badge>
-                        {mentee.next_session && (
+                        {patient.next_session && (
                             <span className="text-xs text-gray-500">
-                                Next: {new Date(mentee.next_session).toLocaleDateString()}
+                                Next: {new Date(patient.next_session).toLocaleDateString()}
                             </span>
                         )}
                     </div>
@@ -47,12 +47,12 @@ export function MenteeCard({ mentee, onRemove }: MenteeCardProps) {
             </div>
 
             <div className="flex items-center gap-2">
-                <Link href={`/mentor/messages?recipient=${mentee.id}`}>
+                <Link href={`/therapist/messages?recipient=${patient.id}`}>
                     <Button variant="ghost" size="icon" className="text-gray-500 hover:text-primary">
                         <MessageSquare className="h-5 w-5" />
                     </Button>
                 </Link>
-                <Link href={`/mentor/mentees/${mentee.id}`}>
+                <Link href={`/therapist/patients/${patient.id}`}>
                     <Button variant="ghost" size="icon" className="text-gray-500 hover:text-primary">
                         <User className="h-5 w-5" />
                     </Button>
@@ -62,7 +62,7 @@ export function MenteeCard({ mentee, onRemove }: MenteeCardProps) {
                         variant="ghost"
                         size="icon"
                         className="text-gray-400 hover:text-red-600"
-                        onClick={() => onRemove(mentee.id)}
+                        onClick={() => onRemove(patient.id)}
                     >
                         <XCircle className="h-5 w-5" />
                     </Button>

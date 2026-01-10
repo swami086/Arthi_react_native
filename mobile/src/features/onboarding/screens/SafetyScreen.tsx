@@ -94,7 +94,7 @@ export const SafetyScreen = () => {
                     {/* Disclaimer */}
                     <View className="px-6 pb-2">
                         <Text className="text-text-sub-light dark:text-gray-500 text-xs text-center leading-relaxed opacity-70">
-                            Note: This platform offers coaching and mentoring, not emergency medical services.
+                            Note: This platform offers coaching and therapisting, not emergency medical services.
                         </Text>
                     </View>
                 </ScrollView>

@@ -6,8 +6,8 @@ export class AudioUploadService {
     async uploadAudioToSupabase(
         blob: Blob,
         appointmentId: string,
-        mentorId: string,
-        menteeId: string,
+        therapistId: string,
+        patientId: string,
         onProgress?: (progress: number) => void
     ): Promise<RecordingUploadResult | null> {
         try {
@@ -24,8 +24,8 @@ export class AudioUploadService {
                 .from('session_recordings') as any)
                 .insert({
                     appointment_id: appointmentId,
-                    mentor_id: mentorId,
-                    mentee_id: menteeId,
+                    therapist_id: therapistId,
+                    patient_id: patientId,
                     recording_url: '', // Will update after upload
                     recording_status: 'processing',
                     consent_captured: true,
@@ -42,7 +42,7 @@ export class AudioUploadService {
             }
 
             // 2. Upload file
-            const fileName = `${mentorId}/${recording.id}.webm`;
+            const fileName = `${therapistId}/${recording.id}.webm`;
             const { error: uploadError } = await supabase.storage
                 .from('session-recordings')
                 .upload(fileName, blob, {
@@ -82,7 +82,7 @@ export class AudioUploadService {
             };
 
         } catch (error) {
-            reportError(error, 'uploadAudioToSupabase', { appointmentId, mentorId });
+            reportError(error, 'uploadAudioToSupabase', { appointmentId, therapistId });
             return null;
         }
     }
@@ -92,7 +92,7 @@ export class AudioUploadService {
             const supabase = createClient();
 
             // Extract path from URL
-            // URL format: .../session-recordings/mentorId/recordingId.webm
+            // URL format: .../session-recordings/therapistId/recordingId.webm
             const path = recordingUrl.split('/session-recordings/').pop();
 
             if (!path) return false;

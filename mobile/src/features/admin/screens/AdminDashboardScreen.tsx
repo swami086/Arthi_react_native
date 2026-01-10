@@ -84,11 +84,11 @@ export const AdminDashboardScreen = () => {
                         style={{ width: '50%' }}
                     >
                         <StatCard
-                            title="Active Mentors"
-                            value={stats?.active_mentors}
+                            title="Active Therapists"
+                            value={stats?.active_therapists}
                             icon="account-tie"
                             color="bg-purple-100"
-                            onPress={() => navigation.navigate('Mentors')}
+                            onPress={() => navigation.navigate('Therapists')}
                         />
                     </MotiView>
                     <MotiView
@@ -98,11 +98,11 @@ export const AdminDashboardScreen = () => {
                         style={{ width: '50%' }}
                     >
                         <StatCard
-                            title="Total Mentees"
-                            value={stats?.total_mentees}
+                            title="Total Patients"
+                            value={stats?.total_patients}
                             icon="account-school"
                             color="bg-green-100"
-                            onPress={() => navigation.navigate('Mentees')}
+                            onPress={() => navigation.navigate('Patients')}
                         />
                     </MotiView>
                     <MotiView
@@ -138,7 +138,7 @@ export const AdminDashboardScreen = () => {
                             </View>
                             <View className="flex-1">
                                 <Text className="text-text-main-light dark:text-white font-bold">Review Applications</Text>
-                                <Text className="text-xs text-text-sub-light dark:text-gray-400">Check pending mentor requests</Text>
+                                <Text className="text-xs text-text-sub-light dark:text-gray-400">Check pending therapist requests</Text>
                             </View>
                             <Icon name="chevron-right" size={20} color="#ccc" />
                         </TouchableOpacity>

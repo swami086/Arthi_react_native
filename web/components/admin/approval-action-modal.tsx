@@ -17,7 +17,7 @@ interface ApprovalActionModalProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     type: 'approve' | 'reject';
-    mentorName: string;
+    therapistName: string;
     onConfirm: (reason: string) => Promise<void>;
     isLoading?: boolean;
 }
@@ -26,7 +26,7 @@ export function ApprovalActionModal({
     open,
     onOpenChange,
     type,
-    mentorName,
+    therapistName,
     onConfirm,
     isLoading
 }: ApprovalActionModalProps) {
@@ -49,12 +49,12 @@ export function ApprovalActionModal({
                     </div>
                     <div>
                         <DialogTitle className="text-2xl font-black text-gray-900 dark:text-white">
-                            {type === 'approve' ? 'Approve Mentor' : 'Reject Application'}
+                            {type === 'approve' ? 'Approve Therapist' : 'Reject Application'}
                         </DialogTitle>
                         <DialogDescription className="text-gray-500 font-bold mt-1">
                             {type === 'approve'
-                                ? `You're about to approve ${mentorName} as an official mentor.`
-                                : `Please provide a reason for rejecting ${mentorName}'s application.`}
+                                ? `You're about to approve ${therapistName} as an official therapist.`
+                                : `Please provide a reason for rejecting ${therapistName}'s application.`}
                         </DialogDescription>
                     </div>
                 </DialogHeader>

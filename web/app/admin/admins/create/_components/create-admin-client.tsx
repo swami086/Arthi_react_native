@@ -97,7 +97,7 @@ export default function CreateAdminClient() {
                 <div>
                     <h4 className="font-black text-primary text-sm uppercase tracking-widest mb-1">Administrative Privileges</h4>
                     <p className="text-gray-600 dark:text-gray-400 text-sm font-bold leading-relaxed">
-                        Administrators can review mentor applications, manage users, and view platform metrics. Super admins have the additional ability to manage the admin team.
+                        Administrators can review therapist applications, manage users, and view platform metrics. Super admins have the additional ability to manage the admin team.
                     </p>
                 </div>
             </motion.div>

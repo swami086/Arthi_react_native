@@ -9,7 +9,7 @@ import rollbar from '@/lib/rollbar';
  */
 export async function refreshEarningsDataAction() {
     try {
-        revalidatePath('/mentor/payments');
+        revalidatePath('/therapist/payments');
         return { success: true };
     } catch (error: any) {
         rollbar.error('Error refreshing earnings data', error);
@@ -20,7 +20,7 @@ export async function refreshEarningsDataAction() {
 /**
  * Generate export data for payment history
  */
-export async function exportPaymentHistoryAction(mentorId: string) {
+export async function exportPaymentHistoryAction(therapistId: string) {
     const supabase = await createClient();
     try {
         const { data, error } = await (supabase.from('payments') as any)
@@ -30,18 +30,18 @@ export async function exportPaymentHistoryAction(mentorId: string) {
                 amount,
                 currency,
                 status,
-                mentee: profiles!payments_mentee_id_fkey(full_name)
+                patient: profiles!payments_patient_id_fkey(full_name)
             `)
-            .eq('mentor_id', mentorId)
+            .eq('therapist_id', therapistId)
             .order('created_at', { ascending: false });
 
         if (error) throw error;
 
-        const headers = ['Date', 'ID', 'Mentee', 'Amount', 'Currency', 'Status'];
+        const headers = ['Date', 'ID', 'Patient', 'Amount', 'Currency', 'Status'];
         const rows = (data || []).map((p: any) => [
             new Date(p.created_at).toLocaleDateString(),
             p.id,
-            p.mentee?.full_name || 'N/A',
+            p.patient?.full_name || 'N/A',
             p.amount,
             p.currency,
             p.status
@@ -49,7 +49,7 @@ export async function exportPaymentHistoryAction(mentorId: string) {
 
         return { success: true, csvData: [headers, ...rows] };
     } catch (error: any) {
-        rollbar.error('Error exporting payment history', error, { mentorId });
+        rollbar.error('Error exporting payment history', error, { therapistId });
         return { success: false, error: error.message };
     }
 }

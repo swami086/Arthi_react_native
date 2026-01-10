@@ -31,12 +31,12 @@ export default async function RecordingPage({ params }: RecordingPageProps) {
     const appointment = appointmentData as any;
 
     if (error || !appointment) {
-        redirect('/mentor/appointments');
+        redirect('/therapist/appointments');
     }
 
-    // Only allow mentor to record
-    if (appointment.mentor_id !== user.id) {
-        redirect('/mentor/dashboard');
+    // Only allow therapist to record
+    if (appointment.therapist_id !== user.id) {
+        redirect('/therapist/dashboard');
     }
 
     // 3. Check for existing recording

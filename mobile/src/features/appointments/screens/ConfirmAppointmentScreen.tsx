@@ -8,28 +8,28 @@ import { MotiView } from 'moti';
 import { RootStackParamList, RootNavigationProp } from '../../../navigation/types';
 import { useBookingFlow } from '../hooks/useBookingFlow';
 import { useColorScheme } from '../../../hooks/useColorScheme';
-import { useMentorDetail } from '../../mentors/hooks/useMentorDetail';
+import { useTherapistDetail } from '../../therapists/hooks/useTherapistDetail';
 
 type ConfirmAppointmentRouteProp = RouteProp<RootStackParamList, 'ConfirmAppointment'>;
 
 export default function ConfirmAppointmentScreen() {
     const navigation = useNavigation<RootNavigationProp>();
     const route = useRoute<ConfirmAppointmentRouteProp>();
-    const { mentorId, mentorName, mentorAvatar, selectedDate, selectedTime, selectedTimeEnd } = route.params;
+    const { therapistId, therapistName, therapistAvatar, selectedDate, selectedTime, selectedTimeEnd } = route.params;
     const { isDark } = useColorScheme();
 
     const [notes, setNotes] = useState('');
     const { loading, createAppointment } = useBookingFlow();
-    const { mentor } = useMentorDetail(mentorId);
+    const { therapist } = useTherapistDetail(therapistId);
 
-    // Use mentor's hourly rate or default to 500
-    const sessionPrice = mentor?.hourly_rate ?? 500;
+    // Use therapist's hourly rate or default to 500
+    const sessionPrice = therapist?.hourly_rate ?? 500;
 
     const handleConfirm = async () => {
         try {
             // Create appointment in pending state
             const appointment = await createAppointment({
-                mentorId,
+                therapistId,
                 date: selectedDate,
                 time: selectedTime,
                 endTime: selectedTimeEnd,
@@ -46,9 +46,9 @@ export default function ConfirmAppointmentScreen() {
             if (sessionPrice > 0) {
                 navigation.navigate('PaymentCheckout', {
                     appointmentId: appointment.id,
-                    mentorId,
-                    mentorName,
-                    mentorAvatar,
+                    therapistId,
+                    therapistName,
+                    therapistAvatar,
                     amount: sessionPrice,
                     selectedDate,
                     selectedTime
@@ -130,20 +130,20 @@ export default function ConfirmAppointmentScreen() {
                 </View>
 
                 <View className="p-4 gap-6">
-                    {/* Mentor Card */}
+                    {/* Therapist Card */}
                     <View className="bg-surface-light dark:bg-surface-dark p-5 rounded-xl shadow-[0_2px_12px_rgba(0,0,0,0.04)] dark:shadow-none dark:border dark:border-white/5">
                         <View className="flex-row items-start justify-between gap-4">
                             <View className="flex-row gap-4 flex-1">
                                 <Image
-                                    source={{ uri: mentorAvatar }}
+                                    source={{ uri: therapistAvatar }}
                                     className="h-16 w-16 rounded-full bg-gray-200"
                                 />
                                 <View className="justify-center flex-1">
                                     <Text className="text-lg font-bold leading-tight text-text-main-light dark:text-text-main-dark mb-0.5">
-                                        {mentorName}
+                                        {therapistName}
                                     </Text>
                                     <Text className="text-primary text-sm font-medium leading-normal mb-1">
-                                        Mentoring Session
+                                        Therapisting Session
                                     </Text>
                                     <View className="self-start px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-700">
                                         <Text className="text-xs text-slate-600 dark:text-slate-300">
@@ -153,7 +153,7 @@ export default function ConfirmAppointmentScreen() {
                                 </View>
                             </View>
                             <TouchableOpacity
-                                onPress={() => navigation.navigate('SelectDate', { mentorId, mentorName, mentorAvatar })}
+                                onPress={() => navigation.navigate('SelectDate', { therapistId, therapistName, therapistAvatar })}
                                 className="flex h-8 w-8 items-center justify-center rounded-full bg-background-light dark:bg-slate-700 active:bg-slate-200 dark:active:bg-slate-600"
                             >
                                 <MaterialIcons name="edit" size={18} color={isDark ? "#e2e8f0" : "#475569"} />
@@ -223,7 +223,7 @@ export default function ConfirmAppointmentScreen() {
                             className="bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-slate-700 p-4 rounded-xl text-text-main-light dark:text-text-main-dark text-sm leading-relaxed min-h-[100px]"
                             value={notes}
                             onChangeText={setNotes}
-                            placeholder="Add any notes for your mentor..."
+                            placeholder="Add any notes for your therapist..."
                             placeholderTextColor={isDark ? "#94aeb8" : "#9ca3af"}
                             multiline
                             textAlignVertical="top"

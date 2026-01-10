@@ -20,20 +20,20 @@ import { Profile } from '@/types/admin';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-interface MentorsListClientProps {
-    initialMentors: Profile[];
+interface TherapistsListClientProps {
+    initialTherapists: Profile[];
 }
 
-export default function MentorsListClient({ initialMentors }: MentorsListClientProps) {
-    const [mentors] = useState<Profile[]>(initialMentors);
+export default function TherapistsListClient({ initialTherapists }: TherapistsListClientProps) {
+    const [therapists] = useState<Profile[]>(initialTherapists);
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState<string>('All');
     const router = useRouter();
 
     const filters = ['All', 'Pending', 'Approved', 'Rejected'];
 
-    const filteredMentors = useMemo(() => {
-        return mentors.filter(m => {
+    const filteredTherapists = useMemo(() => {
+        return therapists.filter(m => {
             const matchesSearch = (m.full_name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
                 (m.specialization || '').toLowerCase().includes(searchTerm.toLowerCase());
 
@@ -42,7 +42,7 @@ export default function MentorsListClient({ initialMentors }: MentorsListClientP
 
             return matchesSearch && matchesStatus;
         });
-    }, [mentors, searchTerm, statusFilter]);
+    }, [therapists, searchTerm, statusFilter]);
 
     return (
         <div className="space-y-8">
@@ -54,10 +54,10 @@ export default function MentorsListClient({ initialMentors }: MentorsListClientP
                     </Button>
                     <div>
                         <h2 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">
-                            All <span className="text-primary">Mentors</span>
+                            All <span className="text-primary">Therapists</span>
                         </h2>
                         <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">
-                            Manage {mentors.length} Verified and Applicant Mentors
+                            Manage {therapists.length} Verified and Applicant Therapists
                         </p>
                     </div>
                 </div>
@@ -66,13 +66,13 @@ export default function MentorsListClient({ initialMentors }: MentorsListClientP
                     <div className="relative w-full md:w-64">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                         <Input
-                            placeholder="Search mentors..."
+                            placeholder="Search therapists..."
                             className="pl-11 h-12 rounded-2xl bg-white dark:bg-gray-950 border-gray-100 dark:border-gray-800 shadow-sm"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
-                    {/* Add New Mentor could go here */}
+                    {/* Add New Therapist could go here */}
                 </div>
             </div>
 
@@ -97,10 +97,10 @@ export default function MentorsListClient({ initialMentors }: MentorsListClientP
             {/* List */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <AnimatePresence mode="popLayout">
-                    {filteredMentors.length > 0 ? (
-                        filteredMentors.map((mentor, index) => (
+                    {filteredTherapists.length > 0 ? (
+                        filteredTherapists.map((therapist, index) => (
                             <motion.div
-                                key={mentor.user_id}
+                                key={therapist.user_id}
                                 layout
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
@@ -108,9 +108,9 @@ export default function MentorsListClient({ initialMentors }: MentorsListClientP
                                 className="bg-white dark:bg-[#1a2c32] rounded-[2.5rem] p-6 border border-gray-100 dark:border-border-dark shadow-sm hover:shadow-xl transition-all group overflow-hidden relative"
                             >
                                 {/* Status Icon Background Decor */}
-                                {mentor.approval_status === 'approved' ? (
+                                {therapist.approval_status === 'approved' ? (
                                     <CheckCircle2 className="absolute -right-4 -bottom-4 h-24 w-24 text-green-500/5 group-hover:text-green-500/10 transition-colors" />
-                                ) : mentor.approval_status === 'rejected' ? (
+                                ) : therapist.approval_status === 'rejected' ? (
                                     <XCircle className="absolute -right-4 -bottom-4 h-24 w-24 text-red-500/5 group-hover:text-red-500/10 transition-colors" />
                                 ) : (
                                     <Clock className="absolute -right-4 -bottom-4 h-24 w-24 text-amber-500/5 group-hover:text-amber-500/10 transition-colors" />
@@ -118,40 +118,40 @@ export default function MentorsListClient({ initialMentors }: MentorsListClientP
 
                                 <div className="flex items-center gap-4 mb-6">
                                     <div className="h-16 w-16 rounded-[1.5rem] bg-primary/10 text-primary flex items-center justify-center font-black text-2xl shrink-0 overflow-hidden">
-                                        {mentor.avatar_url ? (
-                                            <img src={mentor.avatar_url} alt={mentor.full_name || ''} className="h-full w-full object-cover" />
+                                        {therapist.avatar_url ? (
+                                            <img src={therapist.avatar_url} alt={therapist.full_name || ''} className="h-full w-full object-cover" />
                                         ) : (
-                                            mentor.full_name?.charAt(0) || 'M'
+                                            therapist.full_name?.charAt(0) || 'M'
                                         )}
                                     </div>
                                     <div className="flex-1 overflow-hidden">
                                         <h3 className="font-black text-lg text-gray-900 dark:text-white truncate group-hover:text-primary transition-colors">
-                                            {mentor.full_name}
+                                            {therapist.full_name}
                                         </h3>
                                         <p className="text-xs font-bold text-gray-400 uppercase tracking-wider truncate">
-                                            {mentor.specialization || 'General Mentor'}
+                                            {therapist.specialization || 'General Therapist'}
                                         </p>
                                     </div>
                                     <div className={cn(
                                         "h-8 w-8 rounded-full flex items-center justify-center shrink-0",
-                                        mentor.approval_status === 'approved' ? "bg-green-100 text-green-600" :
-                                            mentor.approval_status === 'rejected' ? "bg-red-100 text-red-600" :
+                                        therapist.approval_status === 'approved' ? "bg-green-100 text-green-600" :
+                                            therapist.approval_status === 'rejected' ? "bg-red-100 text-red-600" :
                                                 "bg-amber-100 text-amber-600"
                                     )}>
-                                        {mentor.approval_status === 'approved' ? <CheckCircle2 className="h-4 w-4" /> :
-                                            mentor.approval_status === 'rejected' ? <XCircle className="h-4 w-4" /> :
+                                        {therapist.approval_status === 'approved' ? <CheckCircle2 className="h-4 w-4" /> :
+                                            therapist.approval_status === 'rejected' ? <XCircle className="h-4 w-4" /> :
                                                 <Clock className="h-4 w-4" />}
                                     </div>
                                 </div>
 
                                 <div className="space-y-4 relative z-10">
                                     <div className="flex items-center justify-between text-xs font-bold px-1 text-gray-500">
-                                        <span className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5" /> 12 Mentees</span>
-                                        <span>{mentor.years_of_experience || 0} Years Exp</span>
+                                        <span className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5" /> 12 Patients</span>
+                                        <span>{therapist.years_of_experience || 0} Years Exp</span>
                                     </div>
 
                                     <div className="flex gap-2">
-                                        <Link href={`/admin/mentors/${mentor.user_id}/review`} className="flex-1">
+                                        <Link href={`/admin/therapists/${therapist.user_id}/review`} className="flex-1">
                                             <Button variant="outline" className="w-full h-11 rounded-xl text-xs font-black uppercase tracking-widest border-gray-100 dark:border-gray-800 hover:bg-primary hover:text-white transition-all">
                                                 <FileEdit className="h-3.5 w-3.5 mr-2" />
                                                 View Profile
@@ -166,7 +166,7 @@ export default function MentorsListClient({ initialMentors }: MentorsListClientP
                         ))
                     ) : (
                         <div className="col-span-full py-20 text-center">
-                            <p className="text-gray-400 font-bold uppercase tracking-widest">No mentors found matching your criteria</p>
+                            <p className="text-gray-400 font-bold uppercase tracking-widest">No therapists found matching your criteria</p>
                         </div>
                     )}
                 </AnimatePresence>

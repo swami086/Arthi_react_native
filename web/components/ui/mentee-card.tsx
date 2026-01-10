@@ -11,7 +11,7 @@ function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
 
-interface MenteeCardProps {
+interface PatientCardProps {
     name: string;
     age?: number | null;
     education?: string | null;
@@ -25,7 +25,7 @@ interface MenteeCardProps {
     className?: string;
 }
 
-export const MenteeCard: React.FC<MenteeCardProps> = ({
+export const PatientCard: React.FC<PatientCardProps> = ({
     name,
     age,
     education,

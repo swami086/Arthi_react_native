@@ -24,7 +24,7 @@ export default function AppointmentCard({
     onCancel,
     onConfirm
 }: AppointmentCardProps) {
-    const { mentor, start_time, end_time, status, meeting_link } = appointment;
+    const { therapist, start_time, end_time, status, meeting_link } = appointment;
     const startDate = new Date(start_time);
     const dateStr = format(startDate, 'EEE, MMM d, yyyy');
     const timeStr = `${format(startDate, 'h:mm a')} - ${format(new Date(end_time), 'h:mm a')}`;
@@ -42,13 +42,13 @@ export default function AppointmentCard({
             <div className="flex justify-between items-start mb-3">
                 <div className="flex gap-3">
                     <GradientAvatar
-                        src={mentor.avatar_url}
+                        src={therapist.avatar_url}
                         size={48}
-                        alt={mentor.full_name}
+                        alt={therapist.full_name}
                     />
                     <div>
-                        <h3 className="font-semibold text-foreground">{mentor.full_name}</h3>
-                        <p className="text-sm text-muted-foreground">{mentor.specialization || 'Mentor'}</p>
+                        <h3 className="font-semibold text-foreground">{therapist.full_name}</h3>
+                        <p className="text-sm text-muted-foreground">{therapist.specialization || 'Therapist'}</p>
                     </div>
                 </div>
                 <TagPill

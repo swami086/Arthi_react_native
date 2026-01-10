@@ -1,30 +1,30 @@
 import { useState, useEffect } from 'react';
-import { getRelationshipsByMentee } from '../../../api/relationshipService';
+import { getRelationshipsByPatient } from '../../../api/relationshipService';
 import { useAuth } from '../../auth/hooks/useAuth';
 
-export const useMyMentors = () => {
+export const useMyTherapists = () => {
     const { user } = useAuth();
-    const [mentors, setMentors] = useState<any[]>([]);
+    const [therapists, setTherapists] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchMentors = async () => {
+    const fetchTherapists = async () => {
         if (!user) return;
         setLoading(true);
         setError(null);
         try {
-            const relationships = await getRelationshipsByMentee(user.id);
-            // Relationship returns { ..., mentor: policies }
+            const relationships = await getRelationshipsByPatient(user.id);
+            // Relationship returns { ..., therapist: policies }
             // Mapped to flat structure if needed or keep as is.
             // Screen expects: { id, name, role, avatar }
             const formatted = relationships.map((r: any) => ({
-                id: r.mentor.user_id,
-                name: r.mentor.full_name,
-                role: r.mentor.specialization || 'Mentor',
-                avatar: r.mentor.avatar_url,
+                id: r.therapist.user_id,
+                name: r.therapist.full_name,
+                role: r.therapist.specialization || 'Therapist',
+                avatar: r.therapist.avatar_url,
                 relationshipId: r.id
             }));
-            setMentors(formatted);
+            setTherapists(formatted);
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -33,8 +33,8 @@ export const useMyMentors = () => {
     };
 
     useEffect(() => {
-        fetchMentors();
+        fetchTherapists();
     }, [user]);
 
-    return { mentors, loading, error, refetch: fetchMentors };
+    return { therapists, loading, error, refetch: fetchTherapists };
 };

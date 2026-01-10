@@ -6,11 +6,11 @@ import { Metadata } from 'next';
 import PaymentDashboardClient from './_components/payment-dashboard-client';
 
 export const metadata: Metadata = {
-    title: 'Earnings & Payouts | SafeSpace Mentor',
+    title: 'Earnings & Payouts | SafeSpace Therapist',
     description: 'View your earnings, track payouts, and manage your payment history.',
 };
 
-export default async function MentorPaymentsPage() {
+export default async function TherapistPaymentsPage() {
     const supabase = await createClient();
 
     const {
@@ -21,14 +21,14 @@ export default async function MentorPaymentsPage() {
         redirect('/login');
     }
 
-    // Verify mentor role
+    // Verify therapist role
     const { data: profile } = await (supabase
         .from('profiles')
         .select('role')
         .eq('id', user.id) as any)
         .single();
 
-    if (profile?.role !== 'mentor') {
+    if (profile?.role !== 'therapist') {
         redirect('/unauthorized');
     }
 

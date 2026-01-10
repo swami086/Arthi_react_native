@@ -15,7 +15,7 @@ export function LandingHeader() {
 
     const getHomeLink = () => {
         if (!user) return '/signup';
-        if (profile?.role === 'mentor') return '/mentor/home';
+        if (profile?.role === 'therapist') return '/therapist/home';
         if (profile?.role === 'admin') return '/admin/dashboard';
         return '/home';
     };
@@ -36,7 +36,7 @@ export function LandingHeader() {
 
                         <div className="hidden md:flex items-center gap-8">
                             <Link href="/about" className="text-sm font-semibold hover:text-primary transition-colors">How it works</Link>
-                            <Link href="/mentors" className="text-sm font-semibold hover:text-primary transition-colors">Our Mentors</Link>
+                            <Link href="/therapists" className="text-sm font-semibold hover:text-primary transition-colors">Our Therapists</Link>
                             <Link href="/pricing" className="text-sm font-semibold hover:text-primary transition-colors">Pricing</Link>
                             {user ? (
                                 <Button size="sm" className="rounded-full px-6" onClick={() => router.push(getHomeLink())}>Go to Dashboard</Button>
@@ -66,7 +66,7 @@ export function LandingHeader() {
                 >
                     <div className="flex flex-col gap-6">
                         <Link href="/about" className="text-2xl font-bold text-center py-4 border-b border-gray-100 dark:border-gray-800">How it works</Link>
-                        <Link href="/mentors" className="text-2xl font-bold text-center py-4 border-b border-gray-100 dark:border-gray-800">Our Mentors</Link>
+                        <Link href="/therapists" className="text-2xl font-bold text-center py-4 border-b border-gray-100 dark:border-gray-800">Our Therapists</Link>
                         <Link href="/pricing" className="text-2xl font-bold text-center py-4 border-b border-gray-100 dark:border-gray-800">Pricing</Link>
                         <div className="flex flex-col gap-4 pt-8">
                             {user ? (

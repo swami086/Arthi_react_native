@@ -17,10 +17,10 @@ export const useSessionFeedback = () => {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error('User not authenticated');
 
-            // Get mentor ID from appointment
+            // Get therapist ID from appointment
             const { data: appointment } = await supabase
                 .from('appointments')
-                .select('mentor_id')
+                .select('therapist_id')
                 .eq('id', appointmentId)
                 .single();
 
@@ -30,8 +30,8 @@ export const useSessionFeedback = () => {
             const { error: reviewError } = await supabase
                 .from('reviews')
                 .insert({
-                    mentor_id: appointment.mentor_id,
-                    mentee_id: user.id,
+                    therapist_id: appointment.therapist_id,
+                    patient_id: user.id,
                     appointment_id: appointmentId,
                     rating,
                     comment: feedback || categories?.join(', '),

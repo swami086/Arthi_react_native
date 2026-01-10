@@ -35,7 +35,7 @@ export default async function PaymentSuccessPage({ searchParams }: SuccessPagePr
                     start_time,
                     end_time,
                     status,
-                    mentor:profiles!appointments_mentor_id_fkey(
+                    therapist:profiles!appointments_therapist_id_fkey(
                         full_name,
                         avatar_url,
                         specialization
@@ -52,7 +52,7 @@ export default async function PaymentSuccessPage({ searchParams }: SuccessPagePr
             redirect('/appointments');
         }
 
-        if (payment.mentee_id !== user.id) {
+        if (payment.patient_id !== user.id) {
             redirect('/appointments');
         }
 

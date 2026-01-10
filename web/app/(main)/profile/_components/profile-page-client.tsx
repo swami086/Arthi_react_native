@@ -7,7 +7,7 @@ import { Settings, Edit, MessageSquare, ChevronRight, Plus, Calendar } from 'luc
 import { GradientAvatar } from '@/components/ui/gradient-avatar';
 import { TagPill } from '@/components/ui/tag-pill';
 import { Button } from '@/components/ui/button';
-import { useMyMentors } from '@/hooks/use-my-mentors';
+import { useMyTherapists } from '@/hooks/use-my-therapists';
 import { scaleIn, slideUp, staggerContainer } from '@/lib/animation-variants';
 import { format } from 'date-fns';
 import { addBreadcrumb } from '@/lib/rollbar-utils';
@@ -16,10 +16,10 @@ interface ProfilePageClientProps {
     user: any;
     profile: any;
     upcomingAppointment: any;
-    mentors: any[];
+    therapists: any[];
     stats: {
         totalSessions: number;
-        activeMentors: number;
+        activeTherapists: number;
         upcomingSessions: number;
     };
 }
@@ -28,14 +28,14 @@ export default function ProfilePageClient({
     user,
     profile,
     upcomingAppointment,
-    mentors: initialMentors,
+    therapists: initialTherapists,
     stats
 }: ProfilePageClientProps) {
     const router = useRouter();
-    const { mentors } = useMyMentors(user.id); // Real-time mentors
+    const { therapists } = useMyTherapists(user.id); // Real-time therapists
 
     // Use initial data if real-time hasn't loaded yet
-    const displayMentors = mentors.length > 0 ? mentors : initialMentors;
+    const displayTherapists = therapists.length > 0 ? therapists : initialTherapists;
 
     const handleEditProfile = () => {
         addBreadcrumb('Navigating to edit profile', 'profile', 'info');
@@ -88,7 +88,7 @@ export default function ProfilePageClient({
             <div className="grid grid-cols-3 gap-4">
                 {[
                     { label: 'Sessions', value: stats.totalSessions },
-                    { label: 'Mentors', value: stats.activeMentors },
+                    { label: 'Therapists', value: stats.activeTherapists },
                     { label: 'Upcoming', value: stats.upcomingSessions }
                 ].map((stat, i) => (
                     <motion.div
@@ -118,7 +118,7 @@ export default function ProfilePageClient({
                             <h2 className="text-xl font-bold">
                                 {format(new Date(upcomingAppointment.start_time), 'EEEE, MMM do • h:mm a')}
                             </h2>
-                            <p className="text-white/90">With {upcomingAppointment.mentor?.full_name}</p>
+                            <p className="text-white/90">With {upcomingAppointment.therapist?.full_name}</p>
                         </div>
                         <Button
                             className="bg-white text-blue-600 hover:bg-white/90 font-bold rounded-full px-6"
@@ -140,7 +140,7 @@ export default function ProfilePageClient({
                         <p className="font-semibold text-gray-600 dark:text-gray-400">No upcoming sessions</p>
                         <p className="text-sm text-gray-500">Book your next session to stay on track</p>
                     </div>
-                    <Button variant="outline" onClick={() => router.push('/mentors')}>Find a Mentor</Button>
+                    <Button variant="outline" onClick={() => router.push('/therapists')}>Find a Therapist</Button>
                 </motion.div>
             )}
 
@@ -167,41 +167,41 @@ export default function ProfilePageClient({
                 </div>
             </motion.div>
 
-            {/* My Mentors */}
+            {/* My Therapists */}
             <motion.div variants={slideUp} className="space-y-4">
                 <div className="flex justify-between items-center">
-                    <h3 className="text-lg font-bold">My Mentors</h3>
+                    <h3 className="text-lg font-bold">My Therapists</h3>
                 </div>
                 <div className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide">
-                    {displayMentors.length > 0 ? (
-                        displayMentors.map((rel, i) => (
+                    {displayTherapists.length > 0 ? (
+                        displayTherapists.map((rel, i) => (
                             <div
                                 key={i}
                                 className="flex-shrink-0 w-64 bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm space-y-4"
                             >
                                 <div className="flex items-center gap-3">
                                     <GradientAvatar
-                                        src={rel.mentor?.avatar_url || 'https://via.placeholder.com/150'}
-                                        alt={rel.mentor?.full_name || 'Mentor'}
+                                        src={rel.therapist?.avatar_url || 'https://via.placeholder.com/150'}
+                                        alt={rel.therapist?.full_name || 'Therapist'}
                                         size={48}
                                     />
                                     <div className="min-w-0">
-                                        <p className="font-bold truncate">{rel.mentor?.full_name}</p>
-                                        <p className="text-xs text-gray-500 truncate">{rel.mentor?.specialization}</p>
+                                        <p className="font-bold truncate">{rel.therapist?.full_name}</p>
+                                        <p className="text-xs text-gray-500 truncate">{rel.therapist?.specialization}</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-2">
                                     <Button variant="ghost" size="sm" className="flex-1 bg-gray-50 dark:bg-gray-900 border text-xs gap-1">
                                         <MessageSquare className="h-3.5 w-3.5" /> Chat
                                     </Button>
-                                    <Button variant="ghost" size="sm" className="bg-gray-50 dark:bg-gray-900 border" onClick={() => router.push(`/mentors/${rel.mentor_id}`)}>
+                                    <Button variant="ghost" size="sm" className="bg-gray-50 dark:bg-gray-900 border" onClick={() => router.push(`/therapists/${rel.therapist_id}`)}>
                                         <ChevronRight className="h-4 w-4" />
                                     </Button>
                                 </div>
                             </div>
                         ))
                     ) : (
-                        <p className="text-sm text-gray-500 italic">No active mentors found</p>
+                        <p className="text-sm text-gray-500 italic">No active therapists found</p>
                     )}
                 </div>
             </motion.div>

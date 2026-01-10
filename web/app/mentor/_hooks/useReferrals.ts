@@ -17,7 +17,7 @@ export function useReferrals() {
         if (!user) return;
 
         const [rData, sData] = await Promise.all([
-            getReferrals(supabase, user.id, 'mentor'), // received
+            getReferrals(supabase, user.id, 'therapist'), // received
             getReferrals(supabase, user.id, 'referrer') // sent
         ]);
 

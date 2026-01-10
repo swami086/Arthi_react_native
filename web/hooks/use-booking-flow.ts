@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createAppointment } from '@/app/actions/appointments';
 import { toast } from 'sonner';
 
-export function useBookingFlow(mentorId: string) {
+export function useBookingFlow(therapistId: string) {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
 
@@ -22,7 +22,7 @@ export function useBookingFlow(mentorId: string) {
         const dd = String(date.getDate()).padStart(2, '0');
         const formattedDate = `${yyyy}-${mm}-${dd}`;
 
-        router.push(`/appointments/book/${mentorId}/choose-time?date=${formattedDate}`);
+        router.push(`/appointments/book/${therapistId}/choose-time?date=${formattedDate}`);
     };
 
     const goToConfirmation = (date: string, time: string, endTime: string) => {
@@ -31,7 +31,7 @@ export function useBookingFlow(mentorId: string) {
             time,
             endTime
         });
-        router.push(`/appointments/book/${mentorId}/confirm?${params.toString()}`);
+        router.push(`/appointments/book/${therapistId}/confirm?${params.toString()}`);
     };
 
     const confirmBooking = async (
@@ -40,7 +40,7 @@ export function useBookingFlow(mentorId: string) {
     ) => {
         startTransition(async () => {
             const result = await createAppointment({
-                mentorId,
+                therapistId,
                 ...data
             });
 

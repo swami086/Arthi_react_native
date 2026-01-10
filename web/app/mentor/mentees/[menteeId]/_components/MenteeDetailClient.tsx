@@ -10,14 +10,14 @@ import { AddNoteModal } from '../../../_components/AddNoteModal';
 import { AddGoalModal } from '../../../_components/AddGoalModal';
 import Link from 'next/link';
 
-interface MenteeDetailClientProps {
-    mentee: any;
+interface PatientDetailClientProps {
+    patient: any;
     initialGoals: any[];
     initialNotes: any[];
     initialSessions: any[];
 }
 
-export default function MenteeDetailClient({ mentee, initialGoals, initialNotes, initialSessions }: MenteeDetailClientProps) {
+export default function PatientDetailClient({ patient, initialGoals, initialNotes, initialSessions }: PatientDetailClientProps) {
     const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
     const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
     const [goals, setGoals] = useState(initialGoals);
@@ -33,34 +33,34 @@ export default function MenteeDetailClient({ mentee, initialGoals, initialNotes,
 
     return (
         <div className="space-y-6 max-w-5xl mx-auto">
-            <Link href="/mentor/mentees" className="inline-flex items-center text-sm text-gray-500 hover:text-gray-900 dark:hover:text-gray-100">
-                <ArrowLeft className="mr-1 h-4 w-4" /> Back to Mentees
+            <Link href="/therapist/patients" className="inline-flex items-center text-sm text-gray-500 hover:text-gray-900 dark:hover:text-gray-100">
+                <ArrowLeft className="mr-1 h-4 w-4" /> Back to Patients
             </Link>
 
             {/* Header / Profile */}
             <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                 <div className="flex items-center gap-6">
                     <Avatar className="h-20 w-20 border-4 border-white dark:border-gray-800 shadow-md">
-                        <AvatarImage src={mentee.avatar_url} />
-                        <AvatarFallback className="text-xl">{mentee.full_name?.substring(0, 2).toUpperCase()}</AvatarFallback>
+                        <AvatarImage src={patient.avatar_url} />
+                        <AvatarFallback className="text-xl">{patient.full_name?.substring(0, 2).toUpperCase()}</AvatarFallback>
                     </Avatar>
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{mentee.full_name}</h1>
-                        <p className="text-gray-500">{mentee.email}</p>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{patient.full_name}</h1>
+                        <p className="text-gray-500">{patient.email}</p>
                         <div className="flex gap-2 mt-2">
-                            <span className="px-2 py-0.5 bg-blue-50 text-blue-600 rounded text-xs font-semibold uppercase">{mentee.status}</span>
+                            <span className="px-2 py-0.5 bg-blue-50 text-blue-600 rounded text-xs font-semibold uppercase">{patient.status}</span>
                         </div>
                     </div>
                 </div>
 
                 <div className="flex gap-3">
-                    <Link href={`/session/new?menteeId=${mentee.id}`}>
+                    <Link href={`/session/new?patientId=${patient.id}`}>
                         <Button variant="outline" className="gap-2">
                             <Calendar className="h-4 w-4" />
                             Schedule
                         </Button>
                     </Link>
-                    <Link href={`/mentor/messages?recipient=${mentee.id}`}>
+                    <Link href={`/therapist/messages?recipient=${patient.id}`}>
                         <Button className="gap-2">
                             <MessageSquare className="h-4 w-4" />
                             Message
@@ -98,7 +98,7 @@ export default function MenteeDetailClient({ mentee, initialGoals, initialNotes,
                 {/* Notes Section */}
                 <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-100 dark:border-gray-800 shadow-sm">
                     <div className="flex justify-between items-center mb-6">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Mentor Notes</h3>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Therapist Notes</h3>
                         <Button variant="ghost" size="sm" onClick={() => setIsNoteModalOpen(true)}>
                             <Plus className="h-4 w-4 mr-1" /> Add Note
                         </Button>
@@ -166,7 +166,7 @@ export default function MenteeDetailClient({ mentee, initialGoals, initialNotes,
                                                 </span>
                                             </td>
                                             <td className="px-4 py-3">
-                                                <Link href={`/mentor/sessions/${session.id}`} className="text-primary hover:underline font-medium">
+                                                <Link href={`/therapist/sessions/${session.id}`} className="text-primary hover:underline font-medium">
                                                     View
                                                 </Link>
                                             </td>
@@ -182,14 +182,14 @@ export default function MenteeDetailClient({ mentee, initialGoals, initialNotes,
             <AddNoteModal
                 open={isNoteModalOpen}
                 onOpenChange={setIsNoteModalOpen}
-                menteeId={mentee.id}
+                patientId={patient.id}
                 onSuccess={handleNoteAdded}
             />
 
             <AddGoalModal
                 open={isGoalModalOpen}
                 onOpenChange={setIsGoalModalOpen}
-                menteeId={mentee.id}
+                patientId={patient.id}
                 onSuccess={handleGoalAdded}
             />
         </div>

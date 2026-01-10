@@ -11,7 +11,7 @@ export default async function SoapNotePage({ params }: { params: Promise<{ id: s
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) redirect('/login');
 
-    // Fetch Mentor Profile
+    // Fetch Therapist Profile
     const { data: profileResult } = await supabase
         .from('profiles')
         .select('full_name')
@@ -27,10 +27,10 @@ export default async function SoapNotePage({ params }: { params: Promise<{ id: s
         .maybeSingle();
     const recording = recordingResult as any;
 
-    // Fetch Appointment to get Mentee Reference
+    // Fetch Appointment to get Patient Reference
     const { data: appointmentResult } = await supabase
         .from('appointments')
-        .select('mentee:mentee_id(full_name)')
+        .select('patient:patient_id(full_name)')
         .eq('id', id)
         .single();
     const appointment = appointmentResult as any;
@@ -53,18 +53,18 @@ export default async function SoapNotePage({ params }: { params: Promise<{ id: s
         );
     }
 
-    // Safely extract mentee name (assuming it's an object from the join, or strictly typed)
+    // Safely extract patient name (assuming it's an object from the join, or strictly typed)
     // Supabase JS often returns array or object depending on relation.
     // Based on previous code in other pages, it seems like object.
-    const patientName = Array.isArray(appointment?.mentee)
-        ? appointment?.mentee[0]?.full_name
-        : (appointment?.mentee as any)?.full_name || 'Patient';
+    const patientName = Array.isArray(appointment?.patient)
+        ? appointment?.patient[0]?.full_name
+        : (appointment?.patient as any)?.full_name || 'Patient';
 
     return (
         <SoapEditorClient
             appointmentId={id}
             transcriptId={recording.transcript_id}
-            mentorName={profile?.full_name || 'Mentor'}
+            therapistName={profile?.full_name || 'Therapist'}
             patientName={patientName}
         />
     );

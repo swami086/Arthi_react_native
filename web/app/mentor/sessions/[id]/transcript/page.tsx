@@ -41,7 +41,7 @@ export default async function TranscriptPage({ params }: PageProps) {
         <TranscriptViewerClient
             recordingId={recording.id}
             appointmentId={id}
-            mentorName={profile?.full_name || 'Mentor'}
+            therapistName={profile?.full_name || 'Therapist'}
         />
     );
 }

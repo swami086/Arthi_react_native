@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { reportError } from '@/lib/rollbar-utils';
 import { toast } from 'sonner';
 
-export interface Mentee {
+export interface Patient {
     id: string;
     full_name: string;
     avatar_url?: string;
@@ -14,13 +14,13 @@ export interface Mentee {
     // Add other fields from RPC/query
 }
 
-export function useMenteeList() {
+export function usePatientList() {
     const supabase = createClient();
-    const [mentees, setMentees] = useState<Mentee[]>([]);
+    const [patients, setPatients] = useState<Patient[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchMentees = useCallback(async () => {
+    const fetchPatients = useCallback(async () => {
         try {
             setLoading(true);
             const { data: { user } } = await supabase.auth.getUser();
@@ -28,43 +28,43 @@ export function useMenteeList() {
 
             // Using relationship table or RPC
             const { data, error } = await (supabase
-                .from('mentor_mentee_relationships') as any)
+                .from('therapist_patient_relationships') as any)
                 .select(`
                     id,
                     status,
                     created_at,
-                    mentee:mentee_id(id, full_name, avatar_url, email)
+                    patient:patient_id(id, full_name, avatar_url, email)
                 `)
-                .eq('mentor_id', user.id)
+                .eq('therapist_id', user.id)
                 .eq('status', 'active'); // Filtering for active list
 
             if (error) throw error;
 
             // Transform data
-            const formatted: Mentee[] = data.map((item: any) => ({
-                id: item.mentee.id,
-                full_name: item.mentee.full_name,
-                avatar_url: item.mentee.avatar_url,
-                email: item.mentee.email,
+            const formatted: Patient[] = data.map((item: any) => ({
+                id: item.patient.id,
+                full_name: item.patient.full_name,
+                avatar_url: item.patient.avatar_url,
+                email: item.patient.email,
                 status: item.status,
                 created_at: item.created_at
             }));
 
-            setMentees(formatted);
+            setPatients(formatted);
 
         } catch (err: any) {
-            console.error('Error fetching mentees:', err);
+            console.error('Error fetching patients:', err);
             setError(err.message);
-            reportError(err, 'useMenteeList');
+            reportError(err, 'usePatientList');
         } finally {
             setLoading(false);
         }
     }, [supabase]);
 
-    const removeMentee = async (menteeId: string) => {
+    const removePatient = async (patientId: string) => {
         try {
             // Optimistic update
-            setMentees(prev => prev.filter(m => m.id !== menteeId));
+            setPatients(prev => prev.filter(m => m.id !== patientId));
 
             // Call API/Server Action
             // Doing client-side delete for now as per simple plan, or usually invoke a server action
@@ -72,32 +72,32 @@ export function useMenteeList() {
             if (!user) return;
 
             const { error } = await (supabase
-                .from('mentor_mentee_relationships') as any)
+                .from('therapist_patient_relationships') as any)
                 .update({ status: 'inactive' } as any) // Soft delete
-                .eq('mentor_id', user.id)
-                .eq('mentee_id', menteeId);
+                .eq('therapist_id', user.id)
+                .eq('patient_id', patientId);
 
             if (error) throw error;
-            toast.success('Mentee removed successfully');
+            toast.success('Patient removed successfully');
         } catch (err: any) {
-            toast.error('Failed to remove mentee');
-            reportError(err, 'removeMentee');
-            fetchMentees(); // Revert on error
+            toast.error('Failed to remove patient');
+            reportError(err, 'removePatient');
+            fetchPatients(); // Revert on error
         }
     };
 
     useEffect(() => {
-        fetchMentees();
+        fetchPatients();
         // Subscribe to changes
         // Subscribe to changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
-            fetchMentees();
+            fetchPatients();
         });
 
         // Realtime
-        const channel = supabase.channel('mentee-list-updates')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'mentor_mentee_relationships' }, () => {
-                fetchMentees();
+        const channel = supabase.channel('patient-list-updates')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'therapist_patient_relationships' }, () => {
+                fetchPatients();
             })
             .subscribe();
 
@@ -105,7 +105,7 @@ export function useMenteeList() {
             subscription.unsubscribe();
             supabase.removeChannel(channel);
         };
-    }, [fetchMentees, supabase]);
+    }, [fetchPatients, supabase]);
 
-    return { mentees, loading, error, refetch: fetchMentees, removeMentee };
+    return { patients, loading, error, refetch: fetchPatients, removePatient };
 }

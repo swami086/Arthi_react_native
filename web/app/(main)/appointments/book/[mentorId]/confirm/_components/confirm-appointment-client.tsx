@@ -15,24 +15,24 @@ import { useBookingFlow } from '@/hooks/use-booking-flow';
 import { cn } from '@/lib/utils';
 
 interface ConfirmClientProps {
-    mentor: any;
+    therapist: any;
     dateStr: string;
     time: string;
     endTime: string;
 }
 
 export default function ConfirmAppointmentClient({
-    mentor,
+    therapist,
     dateStr,
     time,
     endTime
 }: ConfirmClientProps) {
     const router = useRouter();
-    const { confirmBooking, isPending } = useBookingFlow(mentor.user_id);
+    const { confirmBooking, isPending } = useBookingFlow(therapist.user_id);
     const [notes, setNotes] = useState('');
 
     const formattedDate = format(new Date(dateStr), 'EEEE, MMMM d, yyyy');
-    const price = mentor.hourly_rate || 0;
+    const price = therapist.hourly_rate || 0;
     const isFree = price === 0;
 
     const handleConfirm = () => {
@@ -71,16 +71,16 @@ export default function ConfirmAppointmentClient({
                     </p>
                 </div>
 
-                {/* Mentor Card */}
+                {/* Therapist Card */}
                 <div className="bg-card border rounded-xl p-4 flex items-center justify-between shadow-sm">
                     <div className="flex items-center gap-3">
-                        <GradientAvatar src={mentor.avatar_url} alt={mentor.full_name} size={64} />
+                        <GradientAvatar src={therapist.avatar_url} alt={therapist.full_name} size={64} />
                         <div>
-                            <h3 className="font-semibold">{mentor.full_name}</h3>
-                            <TagPill label={mentor.specialization || 'Mentor'} color="blue" />
+                            <h3 className="font-semibold">{therapist.full_name}</h3>
+                            <TagPill label={therapist.specialization || 'Therapist'} color="blue" />
                         </div>
                     </div>
-                    <Button variant="ghost" size="sm" onClick={() => router.push(`/appointments/book/${mentor.user_id}/select-date`)}>
+                    <Button variant="ghost" size="sm" onClick={() => router.push(`/appointments/book/${therapist.user_id}/select-date`)}>
                         <Edit2 className="w-4 h-4 text-muted-foreground" />
                     </Button>
                 </div>
@@ -138,7 +138,7 @@ export default function ConfirmAppointmentClient({
 
                 {/* Notes */}
                 <div className="space-y-2">
-                    <label className="text-sm font-medium">Notes for Mentor (Optional)</label>
+                    <label className="text-sm font-medium">Notes for Therapist (Optional)</label>
                     <textarea
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}

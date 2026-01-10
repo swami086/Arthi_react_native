@@ -2,7 +2,7 @@
 
 import { paymentService } from '@/lib/services/payment-service';
 import { createClient } from '@/lib/supabase/server';
-import { MentorEarnings, PaymentWithMentee } from '@/types/payment';
+import { TherapistEarnings, PaymentWithPatient } from '@/types/payment';
 
 async function getAuthenticatedUser() {
     const supabase = await createClient();
@@ -11,19 +11,19 @@ async function getAuthenticatedUser() {
     return user;
 }
 
-export async function getMentorEarningsAction(): Promise<MentorEarnings> {
+export async function getTherapistEarningsAction(): Promise<TherapistEarnings> {
     const user = await getAuthenticatedUser();
-    return paymentService.getMentorEarnings(user.id);
+    return paymentService.getTherapistEarnings(user.id);
 }
 
-export async function getMentorTransactionsAction(limit: number): Promise<PaymentWithMentee[]> {
+export async function getTherapistTransactionsAction(limit: number): Promise<PaymentWithPatient[]> {
     const user = await getAuthenticatedUser();
-    return paymentService.getMentorTransactions(user.id, limit);
+    return paymentService.getTherapistTransactions(user.id, limit);
 }
 
-export async function getMentorPaymentBreakdownAction(): Promise<PaymentWithMentee[]> {
+export async function getTherapistPaymentBreakdownAction(): Promise<PaymentWithPatient[]> {
     const user = await getAuthenticatedUser();
-    return paymentService.getMentorPaymentBreakdown(user.id);
+    return paymentService.getTherapistPaymentBreakdown(user.id);
 }
 
 export async function handlePaymentSuccess(

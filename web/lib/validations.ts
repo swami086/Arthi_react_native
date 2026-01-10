@@ -12,7 +12,7 @@ export const signupSchema = z.object({
     email: z.string().email('Please enter a valid email address'),
     password: z.string().min(8, 'Password must be at least 8 characters'),
     confirmPassword: z.string(),
-    role: z.enum(['mentor', 'mentee']),
+    role: z.enum(['therapist', 'patient']),
     termsAccepted: z.boolean().refine(val => val === true, {
         message: 'You must accept the terms and conditions',
     }),

@@ -205,7 +205,7 @@ export default function EditProfileClient({ user, profile: initialProfile }: Edi
                         />
                     </motion.div>
 
-                    {initialProfile?.role === 'mentor' && (
+                    {initialProfile?.role === 'therapist' && (
                         <>
                             <motion.div variants={slideUp}>
                                 <Input

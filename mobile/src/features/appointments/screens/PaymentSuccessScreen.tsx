@@ -26,7 +26,7 @@ export const PaymentSuccessScreen = () => {
                 .from('appointments')
                 .select(`
                     *,
-                    mentor:profiles!mentor_id(full_name, avatar_url)
+                    therapist:profiles!therapist_id(full_name, avatar_url)
                 `)
                 .eq('id', appointmentId)
                 .single();
@@ -51,8 +51,8 @@ export const PaymentSuccessScreen = () => {
     };
 
     // Derived values
-    const mentorName = details?.mentor?.full_name || 'Mentor';
-    const mentorAvatar = details?.mentor?.avatar_url || 'https://via.placeholder.com/150';
+    const therapistName = details?.therapist?.full_name || 'Therapist';
+    const therapistAvatar = details?.therapist?.avatar_url || 'https://via.placeholder.com/150';
     const startTimeResult = details && details.start_time && !isNaN(new Date(details.start_time).getTime())
         ? new Date(details.start_time)
         : new Date();
@@ -113,13 +113,13 @@ export const PaymentSuccessScreen = () => {
                         <View className="flex-row items-center gap-4 mb-5 border-b border-gray-100 dark:border-white/5 pb-5">
                             <View className="relative h-14 w-14 flex-shrink-0">
                                 <Image
-                                    source={{ uri: mentorAvatar }}
+                                    source={{ uri: therapistAvatar }}
                                     className="h-full w-full rounded-full border border-gray-200 dark:border-white/10"
                                 />
                                 <View className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-white dark:border-surface-dark" />
                             </View>
                             <View className="flex-1">
-                                <Text className="text-lg font-bold text-text-main-light dark:text-text-main-dark">{mentorName}</Text>
+                                <Text className="text-lg font-bold text-text-main-light dark:text-text-main-dark">{therapistName}</Text>
                                 <Text className="text-text-sub-light dark:text-text-sub-dark text-sm">Clinical Psychologist</Text>
                             </View>
                         </View>

@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Save, CheckCircle, RotateCcw, Copy, Download } from 'lucide-react';
 import { SoapNote } from '@/types/soap-note';
-import { SoapSection } from '@/components/mentor/soap-section';
-import { SoapMetadata } from '@/components/mentor/soap-metadata';
-import { ProcessingStatus } from '@/components/mentor/processing-status';
+import { SoapSection } from '@/components/therapist/soap-section';
+import { SoapMetadata } from '@/components/therapist/soap-metadata';
+import { ProcessingStatus } from '@/components/therapist/processing-status';
 import { useSoapNoteStatus } from '@/hooks/use-soap-note-status';
 import { updateSoapNote, finalizeSoapNote, generateSoapNote, regenerateSoapNote } from '@/app/actions/soap';
 import { toast } from 'react-hot-toast';
@@ -27,13 +27,13 @@ function useDebounceValue<T>(value: T, delay: number): T {
 interface SoapEditorClientProps {
     appointmentId: string;
     transcriptId: string;
-    mentorName?: string;
+    therapistName?: string;
     patientName?: string;
 }
 
 const MIN_SECTION_LENGTH = 50;
 
-export default function SoapEditorClient({ appointmentId, transcriptId, mentorName, patientName = 'Patient' }: SoapEditorClientProps) {
+export default function SoapEditorClient({ appointmentId, transcriptId, therapistName, patientName = 'Patient' }: SoapEditorClientProps) {
     const router = useRouter();
     const { soapNote, status, setSoapNote, isSaving, setIsSaving, setStatus, error } = useSoapNoteStatus(appointmentId);
 
@@ -120,7 +120,7 @@ export default function SoapEditorClient({ appointmentId, transcriptId, mentorNa
 
         if (result.success) {
             toast.success('SOAP Note Finalized');
-            router.push(`/mentor/sessions/${appointmentId}`);
+            router.push(`/therapist/sessions/${appointmentId}`);
         } else {
             toast.error(result.error || 'Failed to finalize');
             setStatus('ready');
@@ -233,7 +233,7 @@ export default function SoapEditorClient({ appointmentId, transcriptId, mentorNa
                 updatedAt={soapNote.updated_at}
                 isFinalized={soapNote.is_finalized}
                 wordCounts={wordCounts}
-                mentorName={mentorName}
+                therapistName={therapistName}
             />
 
             <div className="space-y-6">

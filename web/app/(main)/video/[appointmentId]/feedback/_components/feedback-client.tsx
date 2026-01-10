@@ -63,7 +63,7 @@ export default function FeedbackClient({ appointment, user, role }: { appointmen
                 data.rating,
                 fullComment,
                 user.id,
-                role as 'mentor' | 'mentee'
+                role as 'therapist' | 'patient'
             );
 
             if (result.success) {
@@ -91,12 +91,12 @@ export default function FeedbackClient({ appointment, user, role }: { appointmen
             >
                 <div className="text-center mb-8">
                     <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Session Completed!</h1>
-                    <p className="text-slate-500 dark:text-[#94aeb8]">How was your experience with {appointment.mentor.full_name}?</p>
+                    <p className="text-slate-500 dark:text-[#94aeb8]">How was your experience with {appointment.therapist.full_name}?</p>
                 </div>
 
                 <div className="flex justify-center mb-8">
                     <Avatar className="w-20 h-20 border-4 border-white dark:border-[#30bae8]/20 shadow-lg">
-                        <AvatarImage src={appointment.mentor.avatar_url} />
+                        <AvatarImage src={appointment.therapist.avatar_url} />
                         <AvatarFallback>M</AvatarFallback>
                     </Avatar>
                 </div>

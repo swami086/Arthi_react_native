@@ -4,22 +4,22 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MotiView } from 'moti';
 
 interface AppointmentSummaryCardProps {
-    mentorName: string;
-    mentorAvatar?: string;
-    mentorExpertise?: string;
+    therapistName: string;
+    therapistAvatar?: string;
+    therapistExpertise?: string;
     onEdit?: () => void;
 }
 
 export const AppointmentSummaryCard: React.FC<AppointmentSummaryCardProps> = ({
-    mentorName,
-    mentorAvatar,
-    mentorExpertise,
+    therapistName,
+    therapistAvatar,
+    therapistExpertise,
     onEdit
 }) => {
     return (
         <MotiView
             animate={{ scale: 1 }}
-            // Redesign card layout with mentor avatar and details
+            // Redesign card layout with therapist avatar and details
             // Improve shadow and border effects
             className="bg-white dark:bg-surface-dark p-5 rounded-2xl shadow-card mb-6 border border-gray-100 dark:border-gray-700 relative overflow-hidden"
         >
@@ -28,9 +28,9 @@ export const AppointmentSummaryCard: React.FC<AppointmentSummaryCardProps> = ({
                     {/* Update avatar styling with border */}
                     <Image
                         source={
-                            mentorAvatar
-                                ? { uri: mentorAvatar }
-                                : { uri: 'https://ui-avatars.com/api/?name=' + mentorName }
+                            therapistAvatar
+                                ? { uri: therapistAvatar }
+                                : { uri: 'https://ui-avatars.com/api/?name=' + therapistName }
                         }
                         className="w-16 h-16 rounded-full border-2 border-primary/20"
                     />
@@ -38,15 +38,15 @@ export const AppointmentSummaryCard: React.FC<AppointmentSummaryCardProps> = ({
                 </View>
 
                 <View className="flex-1 ml-4 justify-center">
-                    {/* Enhance text hierarchy for mentor name and expertise */}
+                    {/* Enhance text hierarchy for therapist name and expertise */}
                     <Text className="font-bold text-xl text-text-main-light dark:text-text-main-dark mb-1 font-sans leading-tight">
-                        {mentorName}
+                        {therapistName}
                     </Text>
                     {/* Add specialty tag with refined styling */}
                     <View className="flex-row flex-wrap">
                         <View className="bg-primary/10 px-2 py-1 rounded-md self-start">
                              <Text className="text-primary dark:text-primary-dark text-xs font-bold uppercase tracking-wider">
-                                {mentorExpertise || 'Mentor'}
+                                {therapistExpertise || 'Therapist'}
                             </Text>
                         </View>
                     </View>

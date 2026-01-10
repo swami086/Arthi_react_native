@@ -15,19 +15,19 @@ import {
     Mail
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { MentorInfoCard } from '@/components/admin/mentor-info-card';
+import { TherapistInfoCard } from '@/components/admin/therapist-info-card';
 import { ApprovalActionModal } from '@/components/admin/approval-action-modal';
 import { Profile } from '@/types/admin';
 import { useRouter } from 'next/navigation';
-import { approveMentorAction, rejectMentorAction } from '../../../../_actions/adminActions';
+import { approveTherapistAction, rejectTherapistAction } from '../../../../_actions/adminActions';
 import { toast } from 'sonner';
 import { reportError } from '@/lib/rollbar-utils';
 
-interface MentorReviewClientProps {
-    mentor: Profile;
+interface TherapistReviewClientProps {
+    therapist: Profile;
 }
 
-export default function MentorReviewClient({ mentor }: MentorReviewClientProps) {
+export default function TherapistReviewClient({ therapist }: TherapistReviewClientProps) {
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalType, setModalType] = useState<'approve' | 'reject'>('approve');
@@ -42,19 +42,19 @@ export default function MentorReviewClient({ mentor }: MentorReviewClientProps) 
         setIsLoading(true);
         try {
             const res = modalType === 'approve'
-                ? await approveMentorAction(mentor.user_id, details)
-                : await rejectMentorAction(mentor.user_id, details);
+                ? await approveTherapistAction(therapist.user_id, details)
+                : await rejectTherapistAction(therapist.user_id, details);
 
             if (res.success) {
-                toast.success(`Mentor ${modalType === 'approve' ? 'approved' : 'rejected'} successfully`);
+                toast.success(`Therapist ${modalType === 'approve' ? 'approved' : 'rejected'} successfully`);
                 setIsModalOpen(false);
                 router.push('/admin/pending-approvals');
                 router.refresh();
             } else {
-                toast.error(res.error || `Failed to ${modalType} mentor`);
+                toast.error(res.error || `Failed to ${modalType} therapist`);
             }
         } catch (error) {
-            reportError(error, 'MentorReview:confirmAction');
+            reportError(error, 'TherapistReview:confirmAction');
             toast.error('An unexpected error occurred');
         } finally {
             setIsLoading(false);
@@ -73,7 +73,7 @@ export default function MentorReviewClient({ mentor }: MentorReviewClientProps) 
                         variant="outline"
                         className="rounded-2xl h-12 px-6 font-bold border-red-100 text-red-500 hover:bg-red-50 dark:border-red-900/10"
                         onClick={() => handleActionClick('reject')}
-                        disabled={mentor.approval_status === 'rejected'}
+                        disabled={therapist.approval_status === 'rejected'}
                     >
                         <X className="h-4 w-4 mr-2" />
                         Reject Application
@@ -82,10 +82,10 @@ export default function MentorReviewClient({ mentor }: MentorReviewClientProps) 
                         variant="primary"
                         className="rounded-2xl h-12 px-8 font-black shadow-lg shadow-primary/20"
                         onClick={() => handleActionClick('approve')}
-                        disabled={mentor.approval_status === 'approved'}
+                        disabled={therapist.approval_status === 'approved'}
                     >
                         <Check className="h-4 w-4 mr-2" />
-                        Approve Mentor
+                        Approve Therapist
                     </Button>
                 </div>
             </div>
@@ -96,30 +96,30 @@ export default function MentorReviewClient({ mentor }: MentorReviewClientProps) 
                 <div className="px-12 -mt-24 flex flex-col md:flex-row items-end gap-8">
                     <div className="h-48 w-48 rounded-[3rem] p-2 bg-white dark:bg-gray-950 shadow-xl overflow-hidden shrink-0">
                         <div className="h-full w-full rounded-[2.5rem] bg-gray-100 dark:bg-gray-800 flex items-center justify-center font-black text-6xl text-primary overflow-hidden">
-                            {mentor.avatar_url ? (
-                                <img src={mentor.avatar_url} alt={mentor.full_name || ''} className="h-full w-full object-cover" />
+                            {therapist.avatar_url ? (
+                                <img src={therapist.avatar_url} alt={therapist.full_name || ''} className="h-full w-full object-cover" />
                             ) : (
-                                mentor.full_name?.charAt(0) || 'M'
+                                therapist.full_name?.charAt(0) || 'M'
                             )}
                         </div>
                     </div>
                     <div className="pb-4 flex-1">
                         <div className="flex items-center gap-4 mb-2">
                             <h1 className="text-4xl font-black text-gray-900 dark:text-white tracking-tight">
-                                {mentor.full_name}
+                                {therapist.full_name}
                             </h1>
                             <span className={cn(
                                 "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest",
-                                mentor.approval_status === 'approved' ? "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400" :
-                                    mentor.approval_status === 'rejected' ? "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400" :
+                                therapist.approval_status === 'approved' ? "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400" :
+                                    therapist.approval_status === 'rejected' ? "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400" :
                                         "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
                             )}>
-                                {mentor.approval_status || 'Pending'}
+                                {therapist.approval_status || 'Pending'}
                             </span>
                         </div>
                         <p className="text-gray-500 font-bold flex items-center gap-4">
-                            <span className="flex items-center gap-1"><Briefcase className="h-4 w-4 text-primary" /> {mentor.specialization}</span>
-                            <span className="flex items-center gap-1"><Mail className="h-4 w-4 text-primary" /> {mentor.phone_number || 'N/A'}</span>
+                            <span className="flex items-center gap-1"><Briefcase className="h-4 w-4 text-primary" /> {therapist.specialization}</span>
+                            <span className="flex items-center gap-1"><Mail className="h-4 w-4 text-primary" /> {therapist.phone_number || 'N/A'}</span>
                         </p>
                     </div>
                 </div>
@@ -127,38 +127,38 @@ export default function MentorReviewClient({ mentor }: MentorReviewClientProps) 
 
             {/* Detailed Info Cards */}
             <div className="grid grid-cols-1 gap-8 mt-12">
-                <MentorInfoCard
+                <TherapistInfoCard
                     title="Professional Profile"
                     icon={Briefcase}
                     fields={[
-                        { label: 'Specialization', value: mentor.specialization },
-                        { label: 'Years of Experience', value: `${mentor.years_of_experience} years` },
-                        { label: 'Hourly Rate', value: mentor.hourly_rate ? `₹${mentor.hourly_rate}` : 'Not set' },
-                        { label: 'Rating (External)', value: mentor.rating_average ? `${mentor.rating_average} / 5` : 'No ratings yet' },
-                        { label: 'Short Bio', value: mentor.bio, isFullWidth: true },
-                        { label: 'Extended Bio/Statement', value: mentor.mentor_bio_extended, isFullWidth: true },
+                        { label: 'Specialization', value: therapist.specialization },
+                        { label: 'Years of Experience', value: `${therapist.years_of_experience} years` },
+                        { label: 'Hourly Rate', value: therapist.hourly_rate ? `₹${therapist.hourly_rate}` : 'Not set' },
+                        { label: 'Rating (External)', value: therapist.rating_average ? `${therapist.rating_average} / 5` : 'No ratings yet' },
+                        { label: 'Short Bio', value: therapist.bio, isFullWidth: true },
+                        { label: 'Extended Bio/Statement', value: therapist.therapist_bio_extended, isFullWidth: true },
                     ]}
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <MentorInfoCard
+                    <TherapistInfoCard
                         title="Expertise Areas"
                         icon={Award}
                         fields={[
                             {
                                 label: 'Skills & Domains',
-                                value: mentor.expertise_areas?.join(', ') || 'None listed',
+                                value: therapist.expertise_areas?.join(', ') || 'None listed',
                                 isFullWidth: true
                             }
                         ]}
                     />
-                    <MentorInfoCard
+                    <TherapistInfoCard
                         title="Certifications"
                         icon={GraduationCap}
                         fields={[
                             {
                                 label: 'Credentials',
-                                value: mentor.certifications?.join(', ') || 'No certifications added',
+                                value: therapist.certifications?.join(', ') || 'No certifications added',
                                 isFullWidth: true
                             }
                         ]}
@@ -174,9 +174,9 @@ export default function MentorReviewClient({ mentor }: MentorReviewClientProps) 
                         <h3 className="font-black text-xl text-gray-900 dark:text-white uppercase tracking-tight">Verification Documents</h3>
                     </div>
 
-                    {mentor.verification_documents && mentor.verification_documents.length > 0 ? (
+                    {therapist.verification_documents && therapist.verification_documents.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            {mentor.verification_documents.map((doc, idx) => (
+                            {therapist.verification_documents.map((doc, idx) => (
                                 <a
                                     key={idx}
                                     href={doc}
@@ -202,7 +202,7 @@ export default function MentorReviewClient({ mentor }: MentorReviewClientProps) 
                 open={isModalOpen}
                 onOpenChange={setIsModalOpen}
                 type={modalType}
-                mentorName={mentor.full_name || 'Mentor'}
+                therapistName={therapist.full_name || 'Therapist'}
                 onConfirm={handleConfirmAction}
                 isLoading={isLoading}
             />

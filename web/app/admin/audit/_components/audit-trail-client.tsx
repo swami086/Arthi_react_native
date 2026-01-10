@@ -30,7 +30,7 @@ export default function AuditTrailClient({ initialActions }: AuditTrailClientPro
     const [typeFilter, setTypeFilter] = useState('All');
     const router = useRouter();
 
-    const actionTypes = ['All', 'approve_mentor', 'reject_mentor', 'create_admin', 'update_admin_role', 'revoke_admin'];
+    const actionTypes = ['All', 'approve_therapist', 'reject_therapist', 'create_admin', 'update_admin_role', 'revoke_admin'];
 
     const filteredActions = useMemo(() => {
         return actions.filter(action => {
@@ -47,8 +47,8 @@ export default function AuditTrailClient({ initialActions }: AuditTrailClientPro
 
     const getActionIcon = (type: string) => {
         switch (type) {
-            case 'approve_mentor': return <CheckCircle className="h-5 w-5 text-green-500" />;
-            case 'reject_mentor': return <XCircle className="h-5 w-5 text-red-500" />;
+            case 'approve_therapist': return <CheckCircle className="h-5 w-5 text-green-500" />;
+            case 'reject_therapist': return <XCircle className="h-5 w-5 text-red-500" />;
             case 'create_admin': return <UserPlus className="h-5 w-5 text-blue-500" />;
             case 'update_admin_role': return <Shield className="h-5 w-5 text-purple-500" />;
             case 'revoke_admin': return <Trash2 className="h-5 w-5 text-orange-500" />;

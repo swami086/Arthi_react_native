@@ -118,7 +118,7 @@ export const CrisisResourcesScreen = () => {
                         Need to talk to someone?
                     </Text>
                     <Text className="text-gray-600 dark:text-blue-200 leading-5">
-                        SafeSpace mentors are here to listen, but for immediate crisis support, please use the hotlines listed above. Your safety is our top priority.
+                        SafeSpace therapists are here to listen, but for immediate crisis support, please use the hotlines listed above. Your safety is our top priority.
                     </Text>
                 </View>
                 <View className="h-8" />

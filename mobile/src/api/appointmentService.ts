@@ -15,11 +15,11 @@ export const updateAppointmentStatus = async (
     withRollbarSpan('updateAppointmentStatus');
     try {
         console.log(`[appointmentService] Starting updateAppointmentStatus for ${appointmentId} to ${status}`);
-        // 1. Fetch current appointment details to get mentor_id and mentee_id
+        // 1. Fetch current appointment details to get therapist_id and patient_id
         console.log(`[appointmentService] Fetching appointment data...`);
         const { data: appointment, error: fetchError } = await supabase
             .from('appointments')
-            .select('*, mentor:profiles!mentor_id(*), mentee:profiles!mentee_id(*)')
+            .select('*, therapist:profiles!therapist_id(*), patient:profiles!patient_id(*)')
             .eq('id', appointmentId)
             .single();
 
@@ -37,10 +37,10 @@ export const updateAppointmentStatus = async (
         if (updateError) throw updateError;
 
         console.log(`[appointmentService] Sending notification and WhatsApp...`);
-        // 3. Send Notification to Mentor (if status changed by mentee)
-        // In this app context, assume if mentee confirms/declines, it's a mentee action
-        const menteeName = (appointment.mentee as any)?.full_name || 'A mentee';
-        const mentorId = appointment.mentor_id;
+        // 3. Send Notification to Therapist (if status changed by patient)
+        // In this app context, assume if patient confirms/declines, it's a patient action
+        const patientName = (appointment.patient as any)?.full_name || 'A patient';
+        const therapistId = appointment.therapist_id;
 
         const statusText = status === 'confirmed' ? 'confirmed' : (status === 'cancelled' ? 'cancelled' : 'declined');
         const title = `Session ${status.charAt(0).toUpperCase() + status.slice(1)}`;
@@ -57,10 +57,10 @@ export const updateAppointmentStatus = async (
             console.warn('Error formatting date for notification:', e);
         }
 
-        const message = `${menteeName} has ${statusText} the session scheduled for ${sessionDate}.`;
+        const message = `${patientName} has ${statusText} the session scheduled for ${sessionDate}.`;
 
         await sendNotification({
-            user_id: mentorId,
+            user_id: therapistId,
             title,
             message,
             type: 'appointment',
@@ -71,17 +71,17 @@ export const updateAppointmentStatus = async (
             }
         });
 
-        // 4. (Optional) Send WhatsApp Notification to Mentor if they have a phone number
-        const mentor = appointment.mentor as Profile;
-        if (mentor?.phone_number) {
+        // 4. (Optional) Send WhatsApp Notification to Therapist if they have a phone number
+        const therapist = appointment.therapist as Profile;
+        if (therapist?.phone_number) {
             try {
                 await sendWhatsAppMessage({
-                    recipientId: mentorId,
-                    phoneNumber: mentor.phone_number,
+                    recipientId: therapistId,
+                    phoneNumber: therapist.phone_number,
                     messageType: status === 'confirmed' ? 'confirmation' : 'cancellation',
                     appointmentId: appointmentId,
                     templateData: {
-                        menteeName,
+                        patientName,
                         date: new Date(appointment.start_time).toLocaleDateString(),
                         time: new Date(appointment.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                         status: statusText

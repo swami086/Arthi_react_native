@@ -31,10 +31,10 @@ export default async function WaitingRoomPage({ params }: PageProps) {
     const appointment = result.data;
 
     // Access control
-    const isMentor = appointment.mentor_id === user.id;
-    const isMentee = appointment.mentee_id === user.id;
+    const isTherapist = appointment.therapist_id === user.id;
+    const isPatient = appointment.patient_id === user.id;
 
-    if (!isMentor && !isMentee) {
+    if (!isTherapist && !isPatient) {
         // Unauthorized
         redirect('/appointments');
     }
@@ -43,7 +43,7 @@ export default async function WaitingRoomPage({ params }: PageProps) {
         <WaitingRoomClient
             appointment={appointment}
             user={user}
-            role={isMentor ? 'mentor' : 'mentee'}
+            role={isTherapist ? 'therapist' : 'patient'}
         />
     );
 }

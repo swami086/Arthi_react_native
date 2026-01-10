@@ -17,51 +17,51 @@ import { Input } from '@/components/ui/input';
 import { ApprovalActionModal } from '@/components/admin/approval-action-modal';
 import { Profile } from '@/types/admin';
 import Link from 'next/link';
-import { approveMentorAction, rejectMentorAction } from '../../_actions/adminActions';
+import { approveTherapistAction, rejectTherapistAction } from '../../_actions/adminActions';
 import { toast } from 'sonner';
 import { reportError } from '@/lib/rollbar-utils';
 import { useRouter } from 'next/navigation';
 
 interface PendingApprovalsClientProps {
-    initialMentors: Profile[];
+    initialTherapists: Profile[];
 }
 
-export default function PendingApprovalsClient({ initialMentors }: PendingApprovalsClientProps) {
-    const [mentors, setMentors] = useState<Profile[]>(initialMentors);
+export default function PendingApprovalsClient({ initialTherapists }: PendingApprovalsClientProps) {
+    const [therapists, setTherapists] = useState<Profile[]>(initialTherapists);
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedMentor, setSelectedMentor] = useState<Profile | null>(null);
+    const [selectedTherapist, setSelectedTherapist] = useState<Profile | null>(null);
     const [modalType, setModalType] = useState<'approve' | 'reject'>('approve');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isActionLoading, setIsActionLoading] = useState(false);
     const router = useRouter();
 
-    const filteredMentors = mentors.filter(m =>
+    const filteredTherapists = therapists.filter(m =>
         (m.full_name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
         (m.specialization || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const handleActionClick = (mentor: Profile, type: 'approve' | 'reject') => {
-        setSelectedMentor(mentor);
+    const handleActionClick = (therapist: Profile, type: 'approve' | 'reject') => {
+        setSelectedTherapist(therapist);
         setModalType(type);
         setIsModalOpen(true);
     };
 
     const handleConfirmAction = async (details: string) => {
-        if (!selectedMentor) return;
+        if (!selectedTherapist) return;
 
         setIsActionLoading(true);
         try {
-            const userId = selectedMentor.user_id;
+            const userId = selectedTherapist.user_id;
             const res = modalType === 'approve'
-                ? await approveMentorAction(userId, details)
-                : await rejectMentorAction(userId, details);
+                ? await approveTherapistAction(userId, details)
+                : await rejectTherapistAction(userId, details);
 
             if (res.success) {
-                toast.success(`Mentor ${modalType === 'approve' ? 'approved' : 'rejected'} successfully`);
-                setMentors(prev => prev.filter(m => m.user_id !== userId));
+                toast.success(`Therapist ${modalType === 'approve' ? 'approved' : 'rejected'} successfully`);
+                setTherapists(prev => prev.filter(m => m.user_id !== userId));
                 setIsModalOpen(false);
             } else {
-                toast.error(res.error || `Failed to ${modalType} mentor`);
+                toast.error(res.error || `Failed to ${modalType} therapist`);
             }
         } catch (error) {
             reportError(error, 'PendingApprovals:confirmAction');
@@ -84,7 +84,7 @@ export default function PendingApprovalsClient({ initialMentors }: PendingApprov
                             Pending <span className="text-primary">Approvals</span>
                         </h2>
                         <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">
-                            Review and Verify Mentor Applications
+                            Review and Verify Therapist Applications
                         </p>
                     </div>
                 </div>
@@ -103,10 +103,10 @@ export default function PendingApprovalsClient({ initialMentors }: PendingApprov
             {/* Content */}
             <div className="grid grid-cols-1 gap-6">
                 <AnimatePresence mode="popLayout">
-                    {filteredMentors.length > 0 ? (
-                        filteredMentors.map((mentor, index) => (
+                    {filteredTherapists.length > 0 ? (
+                        filteredTherapists.map((therapist, index) => (
                             <motion.div
-                                key={mentor.user_id}
+                                key={therapist.user_id}
                                 layout
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -114,19 +114,19 @@ export default function PendingApprovalsClient({ initialMentors }: PendingApprov
                                 transition={{ delay: index * 0.05 }}
                                 className="bg-white dark:bg-[#1a2c32] rounded-[2rem] p-6 border border-gray-100 dark:border-border-dark shadow-sm hover:shadow-md transition-all group lg:flex items-center gap-8"
                             >
-                                {/* Mentor Info */}
+                                {/* Therapist Info */}
                                 <div className="flex items-center gap-5 flex-1">
                                     <div className="h-16 w-16 rounded-3xl bg-primary/10 text-primary flex items-center justify-center font-black text-2xl overflow-hidden shrink-0">
-                                        {mentor.avatar_url ? (
-                                            <img src={mentor.avatar_url} alt={mentor.full_name || ''} className="h-full w-full object-cover" />
+                                        {therapist.avatar_url ? (
+                                            <img src={therapist.avatar_url} alt={therapist.full_name || ''} className="h-full w-full object-cover" />
                                         ) : (
-                                            mentor.full_name?.charAt(0) || 'M'
+                                            therapist.full_name?.charAt(0) || 'M'
                                         )}
                                     </div>
                                     <div className="overflow-hidden">
                                         <div className="flex items-center gap-2 mb-1">
                                             <h3 className="font-black text-xl text-gray-900 dark:text-white truncate">
-                                                {mentor.full_name}
+                                                {therapist.full_name}
                                             </h3>
                                             <span className="bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400 text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider">
                                                 Pending Review
@@ -134,14 +134,14 @@ export default function PendingApprovalsClient({ initialMentors }: PendingApprov
                                         </div>
                                         <p className="text-sm font-bold text-gray-500 flex items-center gap-2">
                                             <ShieldCheck className="h-4 w-4 text-primary" />
-                                            {mentor.specialization || 'General Mentor'} • {mentor.years_of_experience || 0}y Exp
+                                            {therapist.specialization || 'General Therapist'} • {therapist.years_of_experience || 0}y Exp
                                         </p>
                                     </div>
                                 </div>
 
                                 {/* Actions */}
                                 <div className="flex items-center gap-3 mt-6 lg:mt-0 shrink-0">
-                                    <Link href={`/admin/mentors/${mentor.user_id}/review`}>
+                                    <Link href={`/admin/therapists/${therapist.user_id}/review`}>
                                         <Button variant="ghost" className="rounded-2xl h-14 px-6 font-bold text-gray-500 hover:text-primary hover:bg-primary/5">
                                             Full Review
                                             <ChevronRight className="h-4 w-4 ml-2" />
@@ -150,14 +150,14 @@ export default function PendingApprovalsClient({ initialMentors }: PendingApprov
                                     <Button
                                         variant="outline"
                                         className="rounded-2xl h-14 w-14 border-red-100 text-red-500 hover:bg-red-50 dark:border-red-900/10 dark:hover:bg-red-900/5"
-                                        onClick={() => handleActionClick(mentor, 'reject')}
+                                        onClick={() => handleActionClick(therapist, 'reject')}
                                     >
                                         <X className="h-5 w-5" />
                                     </Button>
                                     <Button
                                         variant="primary"
                                         className="rounded-2xl h-14 px-8 font-black shadow-lg shadow-primary/20"
-                                        onClick={() => handleActionClick(mentor, 'approve')}
+                                        onClick={() => handleActionClick(therapist, 'approve')}
                                     >
                                         <Check className="h-5 w-5 mr-2" />
                                         Approve
@@ -176,7 +176,7 @@ export default function PendingApprovalsClient({ initialMentors }: PendingApprov
                             </div>
                             <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-2">No Pending Applications</h3>
                             <p className="text-gray-500 font-bold max-w-xs">
-                                All mentor applications have been processed. Great job staying on top of the queue!
+                                All therapist applications have been processed. Great job staying on top of the queue!
                             </p>
                         </motion.div>
                     )}
@@ -184,12 +184,12 @@ export default function PendingApprovalsClient({ initialMentors }: PendingApprov
             </div>
 
             {/* Modals */}
-            {selectedMentor && (
+            {selectedTherapist && (
                 <ApprovalActionModal
                     open={isModalOpen}
                     onOpenChange={setIsModalOpen}
                     type={modalType}
-                    mentorName={selectedMentor.full_name || 'Mentor'}
+                    therapistName={selectedTherapist.full_name || 'Therapist'}
                     onConfirm={handleConfirmAction}
                     isLoading={isActionLoading}
                 />

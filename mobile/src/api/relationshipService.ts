@@ -1,10 +1,10 @@
 import { supabase } from './supabase';
-import { MentorMenteeRelationship } from './types';
+import { TherapistPatientRelationship } from './types';
 import { reportError, withRollbarTrace, startSpan, endSpan } from '../services/rollbar';
 
 export const createRelationship = async (
-    mentorId: string,
-    menteeId: string,
+    therapistId: string,
+    patientId: string,
     assignedBy: string,
     status: 'active' | 'inactive' | 'pending' | 'completed' = 'pending',
     notes?: string
@@ -12,10 +12,10 @@ export const createRelationship = async (
     startSpan('api.relationship.create');
     try {
         const { data, error } = await supabase
-            .from('mentor_mentee_relationships')
+            .from('therapist_patient_relationships')
             .insert({
-                mentor_id: mentorId,
-                mentee_id: menteeId,
+                therapist_id: therapistId,
+                patient_id: patientId,
                 status,
                 notes,
                 assigned_by: assignedBy
@@ -26,18 +26,18 @@ export const createRelationship = async (
 
         if (error) {
             reportError(error, 'relationshipService:createRelationship', {
-                mentorId,
-                menteeId,
+                therapistId,
+                patientId,
                 status
             });
             throw error;
         }
 
-        return data as MentorMenteeRelationship;
+        return data as TherapistPatientRelationship;
     } catch (error) {
         reportError(error, 'relationshipService:createRelationship', {
-            mentorId,
-            menteeId
+            therapistId,
+            patientId
         });
         throw error;
     } finally {
@@ -49,7 +49,7 @@ export const updateRelationshipStatus = async (relationshipId: string, status: '
     startSpan('api.relationship.updateStatus');
     try {
         const { data, error } = await supabase
-            .from('mentor_mentee_relationships')
+            .from('therapist_patient_relationships')
             .update({ status, updated_at: new Date().toISOString() })
             .eq('id', relationshipId)
 
@@ -60,7 +60,7 @@ export const updateRelationshipStatus = async (relationshipId: string, status: '
             reportError(error, 'relationshipService:updateRelationshipStatus', { relationshipId, status });
             throw error;
         }
-        return data as MentorMenteeRelationship;
+        return data as TherapistPatientRelationship;
     } catch (error) {
         reportError(error, 'relationshipService:updateRelationshipStatus', { relationshipId });
         throw error;
@@ -69,50 +69,50 @@ export const updateRelationshipStatus = async (relationshipId: string, status: '
     }
 };
 
-export const getRelationshipsByMentor = async (mentorId: string) => {
-    startSpan('api.relationship.getByMentor');
+export const getRelationshipsByTherapist = async (therapistId: string) => {
+    startSpan('api.relationship.getByTherapist');
     try {
         const { data, error } = await supabase
-            .from('mentor_mentee_relationships')
-            .select('*, mentee:profiles!mentee_id(*)')
-            .eq('mentor_id', mentorId)
+            .from('therapist_patient_relationships')
+            .select('*, patient:profiles!patient_id(*)')
+            .eq('therapist_id', therapistId)
             ;
 
         if (error) {
-            reportError(error, 'relationshipService:getRelationshipsByMentor', { mentorId });
+            reportError(error, 'relationshipService:getRelationshipsByTherapist', { therapistId });
             throw error;
         }
         return data;
     } catch (error) {
-        reportError(error, 'relationshipService:getRelationshipsByMentor', { mentorId });
+        reportError(error, 'relationshipService:getRelationshipsByTherapist', { therapistId });
         throw error;
     } finally {
         endSpan();
     }
 };
 
-export const getRelationshipsByMentee = async (menteeId: string) => {
+export const getRelationshipsByPatient = async (patientId: string) => {
     try {
         const { data, error } = await supabase
-            .from('mentor_mentee_relationships')
-            .select('*, mentor:profiles!mentor_id(*)')
-            .eq('mentee_id', menteeId);
+            .from('therapist_patient_relationships')
+            .select('*, therapist:profiles!therapist_id(*)')
+            .eq('patient_id', patientId);
 
         if (error) throw error;
         return data;
     } catch (error) {
-        reportError(error, 'relationshipService:getRelationshipsByMentee');
+        reportError(error, 'relationshipService:getRelationshipsByPatient');
         throw error;
     }
 };
 
-export const checkRelationshipExists = async (mentorId: string, menteeId: string) => {
+export const checkRelationshipExists = async (therapistId: string, patientId: string) => {
     try {
         const { data, error } = await supabase
-            .from('mentor_mentee_relationships')
+            .from('therapist_patient_relationships')
             .select('id')
-            .eq('mentor_id', mentorId)
-            .eq('mentee_id', menteeId)
+            .eq('therapist_id', therapistId)
+            .eq('patient_id', patientId)
             .eq('status', 'active')
             .maybeSingle();
 
@@ -124,38 +124,38 @@ export const checkRelationshipExists = async (mentorId: string, menteeId: string
     }
 };
 
-export const getPendingRelationshipsForMentee = async (menteeId: string) => {
+export const getPendingRelationshipsForPatient = async (patientId: string) => {
     try {
         const { data, error } = await supabase
-            .from('mentor_mentee_relationships')
+            .from('therapist_patient_relationships')
             .select(`
             *,
-            mentor:profiles!mentor_id(*)
+            therapist:profiles!therapist_id(*)
         `)
-            .eq('mentee_id', menteeId)
+            .eq('patient_id', patientId)
             .eq('status', 'pending');
 
         if (error) throw error;
         return data;
     } catch (error) {
-        reportError(error, 'relationshipService:getPendingRelationshipsForMentee');
+        reportError(error, 'relationshipService:getPendingRelationshipsForPatient');
         throw error;
     }
 };
 
-export const acceptMentorRequest = async (relationshipId: string) => {
+export const acceptTherapistRequest = async (relationshipId: string) => {
     try {
         return await updateRelationshipStatus(relationshipId, 'active');
     } catch (error) {
-        reportError(error, 'relationshipService:acceptMentorRequest');
+        reportError(error, 'relationshipService:acceptTherapistRequest');
         throw error;
     }
 };
 
-export const declineMentorRequest = async (relationshipId: string) => {
+export const declineTherapistRequest = async (relationshipId: string) => {
     try {
         const { error } = await supabase
-            .from('mentor_mentee_relationships')
+            .from('therapist_patient_relationships')
             .update({
                 status: 'declined',
                 end_date: new Date().toISOString()
@@ -164,7 +164,7 @@ export const declineMentorRequest = async (relationshipId: string) => {
 
         if (error) throw error;
     } catch (error) {
-        reportError(error, 'relationshipService:declineMentorRequest');
+        reportError(error, 'relationshipService:declineTherapistRequest');
         throw error;
     }
 };

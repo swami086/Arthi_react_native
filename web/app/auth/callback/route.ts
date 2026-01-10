@@ -41,7 +41,7 @@ export async function GET(request: Request) {
 
                 if (profileFetchError && profileFetchError.code === 'PGRST116') {
                     // Profile doesn't exist, create one using metadata
-                    const metadataRole = user.user_metadata.role || 'mentee';
+                    const metadataRole = user.user_metadata.role || 'patient';
                     addBreadcrumb('Creating profile for OAuth user', 'auth.callback', 'info', {
                         userId: user.id,
                         role: metadataRole
@@ -54,7 +54,7 @@ export async function GET(request: Request) {
                             full_name: user.user_metadata.full_name || user.email?.split('@')[0],
                             role: metadataRole,
                             avatar_url: user.user_metadata.avatar_url,
-                            approval_status: metadataRole === 'mentor' ? 'pending' : null,
+                            approval_status: metadataRole === 'therapist' ? 'pending' : null,
                         } as any)
                         .select()
                         .single();
@@ -70,17 +70,17 @@ export async function GET(request: Request) {
                 reportInfo('OAuth login successful', 'auth.callback', { userId: user.id, traceId });
 
                 // Redirect based on role and approval status
-                const role = profile?.role || 'mentee';
+                const role = profile?.role || 'patient';
                 const status = profile?.approval_status;
 
-                if (role === 'mentor' && status === 'pending') {
+                if (role === 'therapist' && status === 'pending') {
                     return NextResponse.redirect(`${origin}/pending-approval`);
-                } else if (role === 'mentor') {
-                    return NextResponse.redirect(`${origin}/mentor/home`);
+                } else if (role === 'therapist') {
+                    return NextResponse.redirect(`${origin}/therapist/home`);
                 } else if (role === 'admin') {
                     return NextResponse.redirect(`${origin}/admin/dashboard`);
                 } else {
-                    // Default to mentee home or next param
+                    // Default to patient home or next param
                     return NextResponse.redirect(`${origin}${next === '/' ? '/home' : next}`);
                 }
             }

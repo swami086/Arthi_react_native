@@ -18,17 +18,17 @@ import { cn } from '@/lib/utils';
 import { addBreadcrumb } from '@/lib/rollbar-utils';
 
 interface SelectDateClientProps {
-    mentor: any; // Type strictly if possible
+    therapist: any; // Type strictly if possible
 }
 
-export default function SelectDateClient({ mentor }: SelectDateClientProps) {
+export default function SelectDateClient({ therapist }: SelectDateClientProps) {
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
     const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
     const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot | null>(null);
     const [loadingSlots, setLoadingSlots] = useState(false);
 
     // Use our booking flow hook
-    const { goToTimeSelection } = useBookingFlow(mentor.user_id);
+    const { goToTimeSelection } = useBookingFlow(therapist.user_id);
     const router = useRouter(); // Backup if needed
 
     useEffect(() => {
@@ -43,7 +43,7 @@ export default function SelectDateClient({ mentor }: SelectDateClientProps) {
         const dateStr = format(date, 'yyyy-MM-dd');
 
         try {
-            const result = await getAvailableTimeSlots(mentor.user_id, dateStr);
+            const result = await getAvailableTimeSlots(therapist.user_id, dateStr);
             if (result.success && result.data) {
                 setAvailableSlots(result.data);
             } else {
@@ -65,14 +65,14 @@ export default function SelectDateClient({ mentor }: SelectDateClientProps) {
             // Let's manually push with slot if selected.
 
             const dateStr = format(selectedDate, 'yyyy-MM-dd');
-            let url = `/appointments/book/${mentor.user_id}/choose-time?date=${dateStr}`;
+            let url = `/appointments/book/${therapist.user_id}/choose-time?date=${dateStr}`;
             if (selectedTimeSlot) {
                 url += `&time=${encodeURIComponent(selectedTimeSlot.time)}&endTime=${encodeURIComponent(selectedTimeSlot.endTime)}`;
             }
             router.push(url);
 
             addBreadcrumb('Navigating to Step 2', 'booking.select_date', 'info', {
-                mentorId: mentor.user_id,
+                therapistId: therapist.user_id,
                 date: dateStr,
                 slot: selectedTimeSlot?.time
             });

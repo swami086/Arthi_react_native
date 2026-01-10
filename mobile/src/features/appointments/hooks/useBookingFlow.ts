@@ -13,14 +13,14 @@ export const useBookingFlow = () => {
     const [error, setError] = useState<string | null>(null);
 
     /**
-     * Fetches and generates available time slots for a given mentor and date.
+     * Fetches and generates available time slots for a given therapist and date.
      * 
-     * @param {string} mentorId - The ID of the mentor.
+     * @param {string} therapistId - The ID of the therapist.
      * @param {string} date - The selected date (YYYY-MM-DD).
      * @param {'morning' | 'afternoon' | 'evening'} [timeOfDay] - Optional filter for time of day.
      * @returns {Promise<TimeSlot[]>} A promise resolving to a list of time slots.
      */
-    const getAvailableTimeSlots = useCallback(async (mentorId: string, date: string, timeOfDay?: 'morning' | 'afternoon' | 'evening') => {
+    const getAvailableTimeSlots = useCallback(async (therapistId: string, date: string, timeOfDay?: 'morning' | 'afternoon' | 'evening') => {
         setLoading(true);
         try {
             // Define the start and end of the selected day
@@ -30,11 +30,11 @@ export const useBookingFlow = () => {
             const endOfDay = new Date(date);
             endOfDay.setHours(23, 59, 59, 999);
 
-            // Fetch existing appointments for the mentor on this date
+            // Fetch existing appointments for the therapist on this date
             const { data: existingAppointments, error: fetchError } = await supabase
                 .from('appointments')
                 .select('start_time, end_time')
-                .eq('mentor_id', mentorId)
+                .eq('therapist_id', therapistId)
                 .gte('start_time', startOfDay.toISOString())
                 .lte('start_time', endOfDay.toISOString());
 
@@ -46,7 +46,7 @@ export const useBookingFlow = () => {
             const dayMid = new Date(date + 'T12:00:00');
 
             const slots = generateTimeSlots(dayMid, timeOfDay);
-            const availableSlots = filterAvailableSlots(mentorId, date, slots, existingAppointments || []);
+            const availableSlots = filterAvailableSlots(therapistId, date, slots, existingAppointments || []);
             return availableSlots;
         } catch (err: any) {
             console.error('Error fetching slots:', err);
@@ -65,7 +65,7 @@ export const useBookingFlow = () => {
      * @returns {Promise<boolean>} True if successful.
      */
     const createAppointment = useCallback(async (appointmentData: {
-        mentorId: string;
+        therapistId: string;
         date: string;
         time: string;
         endTime: string;
@@ -101,8 +101,8 @@ export const useBookingFlow = () => {
             // 1. Create Appointment first
             const { data: appointment, error: insertError } = await supabase.from('appointments').insert([
                 {
-                    mentor_id: appointmentData.mentorId,
-                    mentee_id: user.id,
+                    therapist_id: appointmentData.therapistId,
+                    patient_id: user.id,
                     start_time: startDateTime.toISOString(),
                     end_time: endDateTime.toISOString(),
                     status: 'pending',

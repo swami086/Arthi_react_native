@@ -47,7 +47,7 @@ export const CreateAdminModal = () => {
             <ScrollView contentContainerStyle={{ padding: 24 }}>
                 <View className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl mb-6">
                     <Text className="text-blue-800 dark:text-blue-300 text-sm leading-5">
-                        <Text className="font-bold">Note:</Text> Creating a new admin will grant them full access to the dashboard, including mentor approvals and mentee management.
+                        <Text className="font-bold">Note:</Text> Creating a new admin will grant them full access to the dashboard, including therapist approvals and patient management.
                     </Text>
                 </View>
 

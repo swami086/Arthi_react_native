@@ -92,13 +92,13 @@ export async function createDailyRoom(appointmentId: string) {
 /**
  * Generates a meeting token for a participant
  */
-export async function getDailyRoomToken(roomName: string, userId: string, role: 'mentor' | 'mentee') {
+export async function getDailyRoomToken(roomName: string, userId: string, role: 'therapist' | 'patient') {
     try {
         const payload = {
             properties: {
                 room_name: roomName,
                 user_id: userId,
-                is_owner: role === 'mentor', // Mentors are owners
+                is_owner: role === 'therapist', // Therapists are owners
                 enable_recording_ui: true,
                 enable_screenshare: true,
                 start_video_off: false,
@@ -166,8 +166,8 @@ export async function getAppointmentWithRoom(appointmentId: string) {
             .from('appointments') as any)
             .select(`
                 *,
-                mentee:profiles!mentee_id(*),
-                mentor:profiles!mentor_id(*),
+                patient:profiles!patient_id(*),
+                therapist:profiles!therapist_id(*),
                 video_room:video_rooms(*)
             `)
             .eq('id', appointmentId)
@@ -195,24 +195,24 @@ export async function submitSessionFeedback(
     rating: number,
     feedback: string | undefined,
     userId: string,
-    userRole: 'mentor' | 'mentee'
+    userRole: 'therapist' | 'patient'
 ) {
     try {
         const supabase = await createClient();
 
         // Use userRole to determine correct column (assuming structure logic)
-        // Typically feedback is from mentee to mentor
+        // Typically feedback is from patient to therapist
 
         // Check database schema for reviews. 
-        // reviews table has mentor_id, mentee_id, appointment_id, rating, comment.
+        // reviews table has therapist_id, patient_id, appointment_id, rating, comment.
 
-        // We need to fetch mentor/mentee IDs from appointment if not passed, 
+        // We need to fetch therapist/patient IDs from appointment if not passed, 
         // but let's assume we insert into reviews table.
 
         // First get appointment to identify counterparty
         const { data: appointmentResult } = await (supabase
             .from('appointments') as any)
-            .select('mentor_id, mentee_id')
+            .select('therapist_id, patient_id')
             .eq('id', appointmentId)
             .single();
 
@@ -224,8 +224,8 @@ export async function submitSessionFeedback(
 
         const { error } = await (supabase.from('reviews') as any).insert({
             appointment_id: appointmentId,
-            mentor_id: appointmentAny.mentor_id,
-            mentee_id: appointmentAny.mentee_id!,
+            therapist_id: appointmentAny.therapist_id,
+            patient_id: appointmentAny.patient_id!,
             rating,
             comment: feedback
         } as any);

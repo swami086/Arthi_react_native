@@ -30,7 +30,7 @@ LocaleConfig.defaultLocale = 'en';
 export default function SelectDateScreen() {
     const navigation = useNavigation<RootNavigationProp>();
     const route = useRoute<SelectDateRouteProp>();
-    const { mentorId, mentorName, mentorAvatar } = route.params;
+    const { therapistId, therapistName, therapistAvatar } = route.params;
     const { isDark } = useColorScheme();
 
     const [selectedDate, setSelectedDate] = useState<string>('');
@@ -47,16 +47,16 @@ export default function SelectDateScreen() {
     }, [selectedDate]);
 
     const loadSlots = async (date: string) => {
-        const slots = await getAvailableTimeSlots(mentorId, date);
+        const slots = await getAvailableTimeSlots(therapistId, date);
         setAvailableSlots(slots);
     };
 
     const handleNext = () => {
         if (selectedDate && selectedTimeSlot) {
             navigation.navigate('ChooseTime', {
-                mentorId,
-                mentorName,
-                mentorAvatar,
+                therapistId,
+                therapistName,
+                therapistAvatar,
                 selectedDate,
                 selectedTime: selectedTimeSlot?.time,
                 selectedTimeEnd: selectedTimeSlot?.endTime

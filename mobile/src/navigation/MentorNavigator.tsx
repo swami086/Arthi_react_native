@@ -1,18 +1,18 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import MentorHomeScreen from '../features/mentor/screens/MentorHomeScreen';
-import MenteesScreen from '../features/mentor/screens/MenteesScreen';
-import MentorSessionsScreen from '../features/mentor/screens/MentorSessionsScreen';
-import MentorProfileScreen from '../features/mentor/screens/MentorProfileScreen';
+import TherapistHomeScreen from '../features/therapist/screens/TherapistHomeScreen';
+import PatientsScreen from '../features/therapist/screens/PatientsScreen';
+import TherapistSessionsScreen from '../features/therapist/screens/TherapistSessionsScreen';
+import TherapistProfileScreen from '../features/therapist/screens/TherapistProfileScreen';
 import SettingsScreen from '../features/profile/screens/SettingsScreen';
-import { MentorTabParamList } from './types';
+import { TherapistTabParamList } from './types';
 import { useColorScheme } from '../hooks/useColorScheme';
 import { tokens } from '../design-system/tokens';
 
-const Tab = createBottomTabNavigator<MentorTabParamList>();
+const Tab = createBottomTabNavigator<TherapistTabParamList>();
 
-export const MentorNavigator = () => {
+export const TherapistNavigator = () => {
     const { isDark } = useColorScheme();
 
     return (
@@ -38,7 +38,7 @@ export const MentorNavigator = () => {
         >
             <Tab.Screen
                 name="Home"
-                component={MentorHomeScreen}
+                component={TherapistHomeScreen}
                 options={{
                     tabBarLabel: 'Dashboard',
                     tabBarIcon: ({ color, size }) => (
@@ -47,10 +47,10 @@ export const MentorNavigator = () => {
                 }}
             />
             <Tab.Screen
-                name="Mentees"
-                component={MenteesScreen}
+                name="Patients"
+                component={PatientsScreen}
                 options={{
-                    tabBarLabel: 'Mentees',
+                    tabBarLabel: 'Patients',
                     tabBarIcon: ({ color, size }) => (
                         <Icon name="account-group" color={color} size={size} />
                     ),
@@ -58,7 +58,7 @@ export const MentorNavigator = () => {
             />
             <Tab.Screen
                 name="Sessions"
-                component={MentorSessionsScreen}
+                component={TherapistSessionsScreen}
                 options={{
                     tabBarLabel: 'Sessions',
                     tabBarIcon: ({ color, size }) => (
@@ -68,7 +68,7 @@ export const MentorNavigator = () => {
             />
             <Tab.Screen
                 name="Profile"
-                component={MentorProfileScreen}
+                component={TherapistProfileScreen}
                 options={{
                     tabBarLabel: 'Profile',
                     tabBarIcon: ({ color, size }) => (

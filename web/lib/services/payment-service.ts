@@ -1,5 +1,5 @@
 import { createClient } from '../supabase/server';
-import { PaymentWithAppointment, PaymentOrderData, PaymentVerification, MentorEarnings, PaymentWithMentee } from '../../types/payment';
+import { PaymentWithAppointment, PaymentOrderData, PaymentVerification, TherapistEarnings, PaymentWithPatient } from '../../types/payment';
 import { reportError, withRollbarTrace, startTimer, endTimer } from '../rollbar-utils';
 
 export const paymentService = {
@@ -80,14 +80,14 @@ export const paymentService = {
                         id,
                         start_time,
                         end_time,
-                        mentor: profiles!appointments_mentor_id_fkey(
+                        therapist: profiles!appointments_therapist_id_fkey(
                             full_name,
                             avatar_url,
                             specialization
                         )
                     )
                 `)
-                .or(`mentee_id.eq.${userId},mentor_id.eq.${userId}`)
+                .or(`patient_id.eq.${userId},therapist_id.eq.${userId}`)
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
@@ -112,7 +112,7 @@ export const paymentService = {
                         id,
                         start_time,
                         end_time,
-                        mentor: profiles!appointments_mentor_id_fkey(
+                        therapist: profiles!appointments_therapist_id_fkey(
                             full_name,
                             avatar_url,
                             specialization
@@ -153,16 +153,16 @@ export const paymentService = {
     },
 
     /**
-     * Get earnings summary for a mentor
+     * Get earnings summary for a therapist
      */
-    async getMentorEarnings(mentorId: string, startDate?: string, endDate?: string): Promise<MentorEarnings> {
+    async getTherapistEarnings(therapistId: string, startDate?: string, endDate?: string): Promise<TherapistEarnings> {
         const supabase = await createClient();
-        startTimer('mentor_earnings_fetch');
+        startTimer('therapist_earnings_fetch');
         try {
             let query = (supabase
                 .from('payments') as any)
-                .select('amount, mentor_payout, status, created_at')
-                .eq('mentor_id', mentorId);
+                .select('amount, therapist_payout, status, created_at')
+                .eq('therapist_id', therapistId);
 
             if (startDate) query = query.gte('created_at', startDate);
             if (endDate) query = query.lte('created_at', endDate);
@@ -184,7 +184,7 @@ export const paymentService = {
             const paymentData = (data || []) as any[];
 
             paymentData.forEach(payment => {
-                const payout = payment.mentor_payout || (payment.amount * 0.9);
+                const payout = payment.therapist_payout || (payment.amount * 0.9);
                 const createdAt = new Date(payment.created_at);
 
                 if (payment.status === 'completed') {
@@ -204,44 +204,44 @@ export const paymentService = {
             // Trend is 0 if lastMonth is 0 to avoid Infinity or misleading 100%
             const trend = lastMonth === 0 ? 0 : ((thisMonth - lastMonth) / lastMonth) * 100;
 
-            endTimer('mentor_earnings_fetch', 'paymentService:getMentorEarnings', { mentorId });
+            endTimer('therapist_earnings_fetch', 'paymentService:getTherapistEarnings', { therapistId });
             return { total, thisMonth, lastMonth, pending, available, trend };
         } catch (error) {
-            endTimer('mentor_earnings_fetch', 'paymentService:getMentorEarnings', { error: true, mentorId });
-            reportError(error, 'paymentService:getMentorEarnings');
+            endTimer('therapist_earnings_fetch', 'paymentService:getTherapistEarnings', { error: true, therapistId });
+            reportError(error, 'paymentService:getTherapistEarnings');
             throw error;
         }
     },
 
     /**
-     * Get recent transactions for a mentor
+     * Get recent transactions for a therapist
      */
-    async getMentorTransactions(mentorId: string, limit = 10, offset = 0): Promise<PaymentWithMentee[]> {
+    async getTherapistTransactions(therapistId: string, limit = 10, offset = 0): Promise<PaymentWithPatient[]> {
         const supabase = await createClient();
         try {
             const { data, error } = await (supabase
                 .from('payments') as any)
                 .select(`
                     *,
-                    mentee: profiles!payments_mentee_id_fkey(full_name, avatar_url),
+                    patient: profiles!payments_patient_id_fkey(full_name, avatar_url),
                     appointment: appointments(id, start_time, status)
                 `)
-                .eq('mentor_id', mentorId)
+                .eq('therapist_id', therapistId)
                 .order('created_at', { ascending: false })
                 .range(offset, offset + limit - 1);
 
             if (error) throw error;
-            return data as PaymentWithMentee[];
+            return data as PaymentWithPatient[];
         } catch (error) {
-            reportError(error, 'paymentService:getMentorTransactions', { mentorId });
+            reportError(error, 'paymentService:getTherapistTransactions', { therapistId });
             throw error;
         }
     },
 
     /**
-     * Get detailed payment breakdown for a mentor
+     * Get detailed payment breakdown for a therapist
      */
-    async getMentorPaymentBreakdown(mentorId: string) {
+    async getTherapistPaymentBreakdown(therapistId: string) {
         const supabase = await createClient();
         try {
             const { data, error } = await (supabase
@@ -249,19 +249,19 @@ export const paymentService = {
                 .select(`
                     id,
                     amount,
-                    mentor_payout,
+                    therapist_payout,
                     status,
                     created_at,
-                    mentee: profiles!payments_mentee_id_fkey(id, full_name, avatar_url),
+                    patient: profiles!payments_patient_id_fkey(id, full_name, avatar_url),
                     appointment: appointments(id, start_time, status)
                 `)
-                .eq('mentor_id', mentorId)
+                .eq('therapist_id', therapistId)
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
-            return (data || []) as PaymentWithMentee[];
+            return (data || []) as PaymentWithPatient[];
         } catch (error) {
-            reportError(error, 'paymentService:getMentorPaymentBreakdown', { mentorId });
+            reportError(error, 'paymentService:getTherapistPaymentBreakdown', { therapistId });
             throw error;
         }
     }

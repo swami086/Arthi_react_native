@@ -19,7 +19,7 @@ export function LandingHero() {
 
     const handleCTA = () => {
         if (user) {
-            const homePath = profile?.role === 'mentor' ? '/mentor/home' : profile?.role === 'admin' ? '/admin/dashboard' : '/home';
+            const homePath = profile?.role === 'therapist' ? '/therapist/home' : profile?.role === 'admin' ? '/admin/dashboard' : '/home';
             router.push(homePath);
             return;
         }

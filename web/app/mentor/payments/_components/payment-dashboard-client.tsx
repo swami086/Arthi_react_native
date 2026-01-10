@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useMentorEarnings } from '../../_hooks/useMentorEarnings';
+import { useTherapistEarnings } from '../../_hooks/useTherapistEarnings';
 import { EarningsCard } from '@/components/ui/earnings-card';
 import { PaymentCard } from '@/components/ui/payment-card';
 import {
@@ -37,7 +37,7 @@ interface PaymentDashboardClientProps {
 }
 
 export default function PaymentDashboardClient({ user }: PaymentDashboardClientProps) {
-    const { earnings, transactions, breakdown, chartData, loading, refreshing, onRefresh } = useMentorEarnings();
+    const { earnings, transactions, breakdown, chartData, loading, refreshing, onRefresh } = useTherapistEarnings();
 
     const handleExport = async () => {
         if (!user?.id) return;

@@ -18,11 +18,11 @@ import { Button } from '@/components/ui/button';
 import { QuickActionButton } from '@/components/ui/quick-action-button';
 import { StatCard } from '@/components/ui/stat-card';
 import { SessionCard } from '@/components/ui/session-card';
-import { PendingMentorRequestCard } from '@/components/ui/pending-mentor-request-card';
+import { PendingTherapistRequestCard } from '@/components/ui/pending-therapist-request-card';
 import { NotificationBadge } from '@/components/ui/notification-badge';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
 
-import { usePendingMentorRequests } from '@/hooks/use-pending-mentor-requests';
+import { usePendingTherapistRequests } from '@/hooks/use-pending-therapist-requests';
 import { pageTransition, staggerContainer, scaleIn } from '@/lib/animation-variants';
 import { reportInfo } from '@/lib/rollbar-utils';
 
@@ -35,7 +35,7 @@ interface HomePageClientProps {
     };
     stats: {
         totalSessions: number;
-        activeMentors: number;
+        activeTherapists: number;
         monthSessions: number;
     };
     recentActivity: any[];
@@ -53,9 +53,9 @@ export const HomePageClient: React.FC<HomePageClientProps> = ({
         processingId,
         acceptRequest,
         declineRequest
-    } = usePendingMentorRequests(user.id);
+    } = usePendingTherapistRequests(user.id);
 
-    const handleFindMentor = () => router.push('/mentors');
+    const handleFindTherapist = () => router.push('/therapists');
     const handleBookSession = () => router.push('/appointments');
     const handleEmergency = () => {
         reportInfo('Emergency button clicked', 'home.emergency');
@@ -125,14 +125,14 @@ export const HomePageClient: React.FC<HomePageClientProps> = ({
                                     Pending Requests
                                 </h3>
                                 <p className="text-orange-700/80 dark:text-orange-300/80 text-sm font-medium">
-                                    {requests.length} mentor{requests.length !== 1 ? 's' : ''} waiting for your response
+                                    {requests.length} therapist{requests.length !== 1 ? 's' : ''} waiting for your response
                                 </p>
                             </div>
                             {requests.length > 3 && (
                                 <Button
                                     variant="link"
                                     className="text-orange-600 dark:text-orange-400 font-bold"
-                                    onClick={() => router.push('/mentors/requests')}
+                                    onClick={() => router.push('/therapists/requests')}
                                 >
                                     View All
                                 </Button>
@@ -141,18 +141,18 @@ export const HomePageClient: React.FC<HomePageClientProps> = ({
 
                         <div className="space-y-4">
                             {requests.slice(0, 3).map((request) => (
-                                <PendingMentorRequestCard
+                                <PendingTherapistRequestCard
                                     key={request.id}
                                     request={{
                                         id: request.id,
                                         created_at: request.created_at || new Date().toISOString(), // Add fallback if missing
-                                        mentor: {
-                                            id: request.mentors.id,
-                                            full_name: request.mentors.profiles.full_name || 'Unknown Mentor',
-                                            specialization: request.mentors.profiles.specialization || 'General Mentor',
-                                            avatar_url: request.mentors.profiles.avatar_url,
-                                            expertise_areas: request.mentors.profiles.expertise_areas || [],
-                                            rating: request.mentors.profiles.rating_average || 5.0,
+                                        therapist: {
+                                            id: request.therapists.id,
+                                            full_name: request.therapists.profiles.full_name || 'Unknown Therapist',
+                                            specialization: request.therapists.profiles.specialization || 'General Therapist',
+                                            avatar_url: request.therapists.profiles.avatar_url,
+                                            expertise_areas: request.therapists.profiles.expertise_areas || [],
+                                            rating: request.therapists.profiles.rating_average || 5.0,
                                         },
                                         notes: request.initial_note || 'Hi, I would like to connect properly.',
                                         status: 'pending',
@@ -174,10 +174,10 @@ export const HomePageClient: React.FC<HomePageClientProps> = ({
             >
                 <motion.div variants={scaleIn}>
                     <QuickActionButton
-                        title="Find a Mentor"
+                        title="Find a Therapist"
                         subtitle="Connect with verified experts"
                         icon={Search}
-                        onClick={handleFindMentor}
+                        onClick={handleFindTherapist}
                         color="#3b82f6"
                         delay={0.1}
                     />
@@ -208,8 +208,8 @@ export const HomePageClient: React.FC<HomePageClientProps> = ({
                         growth={stats.monthSessions > 0 ? `${stats.monthSessions} new` : undefined}
                     />
                     <StatCard
-                        title="Active Mentors"
-                        value={stats.activeMentors}
+                        title="Active Therapists"
+                        value={stats.activeTherapists}
                         icon={Users}
                         iconColor="#ec4899"
                     />
@@ -244,12 +244,12 @@ export const HomePageClient: React.FC<HomePageClientProps> = ({
                         recentActivity.map((activity, index) => (
                             <SessionCard
                                 key={activity.id}
-                                title={`${activity.mentors?.profiles?.full_name || 'Session'} session`}
+                                title={`${activity.therapists?.profiles?.full_name || 'Session'} session`}
                                 date={new Date(activity.start_time).toLocaleDateString()}
                                 duration={activity.duration_minutes + ' min'}
                                 status={activity.status}
-                                menteeName={activity.mentors?.profiles?.full_name || 'Mentor'}
-                                menteeAvatar={activity.mentors?.profiles?.avatar_url}
+                                patientName={activity.therapists?.profiles?.full_name || 'Therapist'}
+                                patientAvatar={activity.therapists?.profiles?.avatar_url}
                                 meetingLink={activity.meeting_link}
                                 onClick={() => router.push(`/appointments/${activity.id}`)}
                             />
@@ -261,9 +261,9 @@ export const HomePageClient: React.FC<HomePageClientProps> = ({
                                 variant="outline"
                                 size="sm"
                                 className="mt-4"
-                                onClick={handleFindMentor}
+                                onClick={handleFindTherapist}
                             >
-                                Browse Mentors
+                                Browse Therapists
                             </Button>
                         </div>
                     )}

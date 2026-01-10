@@ -17,20 +17,20 @@ interface SidebarProps {
     userAvatar?: string;
 }
 
-export function MentorSidebar({ userEmail, userName }: SidebarProps) {
+export function TherapistSidebar({ userEmail, userName }: SidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
     const supabase = createClient();
     const { unreadMessages, unreadNotifications } = useUnreadCounts();
 
     const navigation = [
-        { name: 'Dashboard', href: '/mentor/home', icon: Home },
-        { name: 'My Mentees', href: '/mentor/mentees', icon: Users },
-        { name: 'Sessions', href: '/mentor/sessions', icon: Calendar },
-        { name: 'Payments', href: '/mentor/payments', icon: Wallet },
+        { name: 'Dashboard', href: '/therapist/home', icon: Home },
+        { name: 'My Patients', href: '/therapist/patients', icon: Users },
+        { name: 'Sessions', href: '/therapist/sessions', icon: Calendar },
+        { name: 'Payments', href: '/therapist/payments', icon: Wallet },
         { name: 'Messages', href: '/messages', icon: MessageSquare },
         { name: 'Notifications', href: '/notifications', icon: Bell },
-        { name: 'Referrals', href: '/mentor/referrals', icon: Share2 },
+        { name: 'Referrals', href: '/therapist/referrals', icon: Share2 },
     ];
 
     const handleSignOut = async () => {
@@ -97,7 +97,7 @@ export function MentorSidebar({ userEmail, userName }: SidebarProps) {
                     </div>
                     <div className="flex flex-col overflow-hidden">
                         <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                            {userName || 'Mentor'}
+                            {userName || 'Therapist'}
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                             {userEmail}

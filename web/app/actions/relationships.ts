@@ -4,34 +4,34 @@ import { createClient } from '@/lib/supabase/server';
 import { reportError, addBreadcrumb } from '@/lib/rollbar-utils';
 import { revalidatePath } from 'next/cache';
 
-export async function getPendingMentorRequests(menteeId: string) {
+export async function getPendingTherapistRequests(patientId: string) {
     const supabase = await createClient();
 
     try {
         const { data, error } = await supabase
-            .from('mentor_mentee_relationships')
+            .from('therapist_patient_relationships')
             .select(`
                 *,
-                mentor:profiles!mentor_mentee_relationships_mentor_id_fkey(*)
+                therapist:profiles!therapist_patient_relationships_therapist_id_fkey(*)
             `)
-            .eq('mentee_id', menteeId)
+            .eq('patient_id', patientId)
             .eq('status', 'pending');
 
         if (error) throw error;
         return data || [];
     } catch (error) {
-        reportError(error, 'relationships.getPendingRequests', { menteeId });
+        reportError(error, 'relationships.getPendingRequests', { patientId });
         return [];
     }
 }
 
-export async function acceptMentorRequest(relationshipId: string) {
+export async function acceptTherapistRequest(relationshipId: string) {
     const supabase = await createClient();
 
     try {
-        addBreadcrumb('Accepting mentor request', 'relationships.accept', 'info', { relationshipId });
+        addBreadcrumb('Accepting therapist request', 'relationships.accept', 'info', { relationshipId });
 
-        const { error } = await (supabase.from('mentor_mentee_relationships') as any)
+        const { error } = await (supabase.from('therapist_patient_relationships') as any)
             .update({
                 status: 'active',
                 updated_at: new Date().toISOString()
@@ -48,13 +48,13 @@ export async function acceptMentorRequest(relationshipId: string) {
     }
 }
 
-export async function declineMentorRequest(relationshipId: string) {
+export async function declineTherapistRequest(relationshipId: string) {
     const supabase = await createClient();
 
     try {
-        addBreadcrumb('Declining mentor request', 'relationships.decline', 'info', { relationshipId });
+        addBreadcrumb('Declining therapist request', 'relationships.decline', 'info', { relationshipId });
 
-        const { error } = await (supabase.from('mentor_mentee_relationships') as any)
+        const { error } = await (supabase.from('therapist_patient_relationships') as any)
             .update({
                 status: 'declined',
                 updated_at: new Date().toISOString()

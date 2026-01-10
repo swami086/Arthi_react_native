@@ -136,26 +136,26 @@ export async function deleteAvatar(userId: string) {
 }
 
 /**
- * Fetch active mentor relationships
+ * Fetch active therapist relationships
  */
-export async function getMyMentors(userId: string) {
-    addBreadcrumb(`Fetching mentors for user: ${userId}`, 'profile', 'info');
+export async function getMyTherapists(userId: string) {
+    addBreadcrumb(`Fetching therapists for user: ${userId}`, 'profile', 'info');
     const supabase = await createClient();
 
     try {
         const { data, error } = await supabase
-            .from('mentor_mentee_relationships')
+            .from('therapist_patient_relationships')
             .select(`
         *,
-        mentor:profiles!mentor_mentee_relationships_mentor_id_fkey(*)
+        therapist:profiles!therapist_patient_relationships_therapist_id_fkey(*)
       `)
-            .eq('mentee_id', userId)
+            .eq('patient_id', userId)
             .eq('status', 'active');
 
         if (error) throw error;
         return { data, error: null };
     } catch (error: any) {
-        reportError(error, 'getMyMentors', { userId });
+        reportError(error, 'getMyTherapists', { userId });
         return { data: null, error: error.message };
     }
 }
@@ -178,12 +178,12 @@ export async function exportUserData(userId: string) {
             notes
         ] = await Promise.all([
             supabase.from('profiles').select('*').eq('user_id', userId).single(),
-            supabase.from('appointments').select('*').or(`mentor_id.eq.${userId},mentee_id.eq.${userId}`),
+            supabase.from('appointments').select('*').or(`therapist_id.eq.${userId},patient_id.eq.${userId}`),
             supabase.from('messages').select('*').or(`sender_id.eq.${userId},receiver_id.eq.${userId}`),
-            supabase.from('payments').select('*').or(`mentor_id.eq.${userId},mentee_id.eq.${userId}`),
-            supabase.from('mentor_mentee_relationships').select('*').or(`mentor_id.eq.${userId},mentee_id.eq.${userId}`),
-            supabase.from('mentee_goals').select('*').eq('mentee_id', userId),
-            supabase.from('mentor_notes').select('*').or(`mentor_id.eq.${userId},mentee_id.eq.${userId}`)
+            supabase.from('payments').select('*').or(`therapist_id.eq.${userId},patient_id.eq.${userId}`),
+            supabase.from('therapist_patient_relationships').select('*').or(`therapist_id.eq.${userId},patient_id.eq.${userId}`),
+            supabase.from('patient_goals').select('*').eq('patient_id', userId),
+            supabase.from('therapist_notes').select('*').or(`therapist_id.eq.${userId},patient_id.eq.${userId}`)
         ]);
 
         const userData = {

@@ -5,19 +5,19 @@ import * as Dialog from '@radix-ui/react-dialog';
 import * as Switch from '@radix-ui/react-switch';
 import { X, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useMentorNotes } from '../_hooks/useMentorNotes';
+import { useTherapistNotes } from '../_hooks/useTherapistNotes';
 
 interface AddNoteModalProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    menteeId: string;
+    patientId: string;
     onSuccess?: (note: any) => void;
 }
 
-export function AddNoteModal({ open, onOpenChange, menteeId, onSuccess }: AddNoteModalProps) {
+export function AddNoteModal({ open, onOpenChange, patientId, onSuccess }: AddNoteModalProps) {
     const [content, setContent] = useState('');
     const [isPrivate, setIsPrivate] = useState(false);
-    const { createNote, loading } = useMentorNotes(menteeId);
+    const { createNote, loading } = useTherapistNotes(patientId);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -39,7 +39,7 @@ export function AddNoteModal({ open, onOpenChange, menteeId, onSuccess }: AddNot
                     <div className="flex flex-col gap-2">
                         <div className="flex items-center justify-between">
                             <Dialog.Title className="text-lg font-semibold leading-none tracking-tight text-gray-900 dark:text-white">
-                                Add Mentor Note
+                                Add Therapist Note
                             </Dialog.Title>
                             <Dialog.Close asChild>
                                 <button className="opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
@@ -49,7 +49,7 @@ export function AddNoteModal({ open, onOpenChange, menteeId, onSuccess }: AddNot
                             </Dialog.Close>
                         </div>
                         <Dialog.Description className="text-sm text-gray-500">
-                            Add a note about this mentee's progress.
+                            Add a note about this patient's progress.
                         </Dialog.Description>
                     </div>
 

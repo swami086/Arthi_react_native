@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../features/home/screens/HomeScreen';
-import MentorsScreen from '../features/mentors/screens/MentorsScreen';
+import TherapistsScreen from '../features/therapists/screens/TherapistsScreen';
 import { AppointmentsScreen } from '../features/appointments/screens/AppointmentsScreen';
 import MessagesScreen from '../features/messages/screens/MessagesScreen';
 import ProfileScreen from '../features/profile/screens/ProfileScreen';
@@ -38,7 +38,7 @@ export const MainNavigator = () => {
                     let iconName = 'circle';
 
                     if (route.name === 'Home') iconName = 'home-outline';
-                    else if (route.name === 'Mentors') iconName = 'account-search-outline';
+                    else if (route.name === 'Therapists') iconName = 'account-search-outline';
                     else if (route.name === 'Appointments') iconName = 'calendar-outline';
                     else if (route.name === 'Messages') iconName = 'message-outline';
                     else if (route.name === 'Profile') iconName = 'account-outline';
@@ -83,7 +83,7 @@ export const MainNavigator = () => {
             })}
         >
             <Tab.Screen name="Home" component={HomeScreen} />
-            <Tab.Screen name="Mentors" component={MentorsScreen} />
+            <Tab.Screen name="Therapists" component={TherapistsScreen} />
             <Tab.Screen name="Appointments" component={AppointmentsScreen} />
             <Tab.Screen name="Messages" component={MessagesScreen} />
             <Tab.Screen name="Profile" component={ProfileScreen} />

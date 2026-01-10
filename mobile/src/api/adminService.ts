@@ -2,29 +2,29 @@ import { supabase } from './supabase';
 import { reportError, withRollbarTrace, startSpan, endSpan } from '../services/rollbar';
 import { Profile, AdminAction } from './types';
 
-export const getPendingMentors = async () => {
-    startSpan('api.admin.getPendingMentors');
+export const getPendingTherapists = async () => {
+    startSpan('api.admin.getPendingTherapists');
     try {
         const { data, error } = await supabase
-            .rpc('get_pending_mentors');
+            .rpc('get_pending_therapists');
 
         if (error) {
-            reportError(error, 'adminService:getPendingMentors', {
-                operation: 'fetch_pending_mentors'
+            reportError(error, 'adminService:getPendingTherapists', {
+                operation: 'fetch_pending_therapists'
             });
             throw error;
         }
 
         return data as Profile[];
     } catch (error) {
-        reportError(error, 'adminService:getPendingMentors');
+        reportError(error, 'adminService:getPendingTherapists');
         throw error;
     } finally {
         endSpan();
     }
 };
 
-export const approveMentor = async (mentorId: string, adminId: string, notes?: string) => {
+export const approveTherapist = async (therapistId: string, adminId: string, notes?: string) => {
     // Start a transaction if possible, or sequence of ops
     const { error: updateError } = await supabase
         .from('profiles')
@@ -33,14 +33,14 @@ export const approveMentor = async (mentorId: string, adminId: string, notes?: s
             approval_date: new Date().toISOString(),
             approved_by: adminId
         })
-        .eq('user_id', mentorId);
+        .eq('user_id', therapistId);
 
     if (updateError) throw updateError;
 
-    await logAdminAction(adminId, 'approve_mentor', mentorId, { notes });
+    await logAdminAction(adminId, 'approve_therapist', therapistId, { notes });
 };
 
-export const rejectMentor = async (mentorId: string, adminId: string, reason: string) => {
+export const rejectTherapist = async (therapistId: string, adminId: string, reason: string) => {
     const { error: updateError } = await supabase
         .from('profiles')
         .update({
@@ -49,18 +49,18 @@ export const rejectMentor = async (mentorId: string, adminId: string, reason: st
             approval_date: new Date().toISOString(),
             approved_by: adminId
         })
-        .eq('user_id', mentorId);
+        .eq('user_id', therapistId);
 
     if (updateError) throw updateError;
 
-    await logAdminAction(adminId, 'reject_mentor', mentorId, { reason });
+    await logAdminAction(adminId, 'reject_therapist', therapistId, { reason });
 };
 
-export const getAllMentors = async (status?: string) => {
+export const getAllTherapists = async (status?: string) => {
     let query = supabase
         .from('profiles')
         .select('*')
-        .eq('role', 'mentor');
+        .eq('role', 'therapist');
 
     if (status) {
         query = query.eq('approval_status', status);
@@ -71,21 +71,21 @@ export const getAllMentors = async (status?: string) => {
     return data as Profile[];
 };
 
-export const getAllMentees = async () => {
+export const getAllPatients = async () => {
     const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('role', 'mentee');
+        .eq('role', 'patient');
 
     if (error) throw error;
     return data as Profile[];
 };
 
-export const getMentorDetails = async (mentorId: string) => {
+export const getTherapistDetails = async (therapistId: string) => {
     const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('user_id', mentorId)
+        .eq('user_id', therapistId)
         .single();
 
     if (error) throw error;

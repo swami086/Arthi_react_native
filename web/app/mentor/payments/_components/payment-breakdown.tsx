@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { PaymentWithMentee } from '@/types/payment';
+import { PaymentWithPatient } from '@/types/payment';
 import {
     Users,
     Calendar,
@@ -13,11 +13,11 @@ import {
 import { format } from 'date-fns';
 
 interface PaymentBreakdownProps {
-    payments: PaymentWithMentee[];
+    payments: PaymentWithPatient[];
 }
 
 export function PaymentBreakdown({ payments }: PaymentBreakdownProps) {
-    const menteeStats = useMemo(() => {
+    const patientStats = useMemo(() => {
         const stats: Record<string, {
             name: string;
             total: number;
@@ -26,17 +26,17 @@ export function PaymentBreakdown({ payments }: PaymentBreakdownProps) {
         }> = {};
 
         payments.filter(p => p.status === 'completed').forEach(p => {
-            const menteeId = p.mentee_id;
-            if (!stats[menteeId]) {
-                stats[menteeId] = {
-                    name: p.mentee?.full_name || 'Unknown',
+            const patientId = p.patient_id;
+            if (!stats[patientId]) {
+                stats[patientId] = {
+                    name: p.patient?.full_name || 'Unknown',
                     total: 0,
                     count: 0,
-                    avatar: p.mentee?.avatar_url
+                    avatar: p.patient?.avatar_url
                 };
             }
-            stats[menteeId].total += p.mentor_payout || p.amount * 0.9;
-            stats[menteeId].count += 1;
+            stats[patientId].total += p.therapist_payout || p.amount * 0.9;
+            stats[patientId].count += 1;
         });
 
         return Object.values(stats).sort((a, b) => b.total - a.total);
@@ -45,16 +45,16 @@ export function PaymentBreakdown({ payments }: PaymentBreakdownProps) {
     const sessionStats = useMemo(() => {
         return payments.slice(0, 10).map(p => ({
             id: p.id,
-            menteeName: p.mentee?.full_name || 'Unknown',
+            patientName: p.patient?.full_name || 'Unknown',
             startTime: p.appointment?.start_time || p.created_at,
-            amount: p.mentor_payout || p.amount * 0.9,
+            amount: p.therapist_payout || p.amount * 0.9,
             status: p.status
         }));
     }, [payments]);
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
-            {/* Mentee Breakdown */}
+            {/* Patient Breakdown */}
             <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -63,13 +63,13 @@ export function PaymentBreakdown({ payments }: PaymentBreakdownProps) {
                 <div className="flex items-center justify-between mb-6">
                     <h3 className="font-black text-xl text-gray-900 dark:text-white flex items-center gap-2">
                         <Users className="h-5 w-5 text-primary" />
-                        Earnings by Mentee
+                        Earnings by Patient
                     </h3>
                 </div>
 
                 <div className="space-y-4">
-                    {menteeStats.length > 0 ? (
-                        menteeStats.slice(0, 5).map((stat, idx) => (
+                    {patientStats.length > 0 ? (
+                        patientStats.slice(0, 5).map((stat, idx) => (
                             <div key={idx} className="flex items-center justify-between p-4 rounded-2xl bg-gray-50 dark:bg-gray-800/30 group transition-all hover:bg-primary/5">
                                 <div className="flex items-center gap-3">
                                     <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center font-bold text-primary">
@@ -91,7 +91,7 @@ export function PaymentBreakdown({ payments }: PaymentBreakdownProps) {
                         ))
                     ) : (
                         <div className="text-center py-8">
-                            <p className="text-gray-400 font-medium">No mentee data available</p>
+                            <p className="text-gray-400 font-medium">No patient data available</p>
                         </div>
                     )}
                 </div>
@@ -115,7 +115,7 @@ export function PaymentBreakdown({ payments }: PaymentBreakdownProps) {
                         <thead>
                             <tr className="text-left border-b border-gray-50 dark:border-border-dark">
                                 <th className="pb-4 text-[10px] uppercase font-black tracking-widest text-gray-400">Date</th>
-                                <th className="pb-4 text-[10px] uppercase font-black tracking-widest text-gray-400">Mentee</th>
+                                <th className="pb-4 text-[10px] uppercase font-black tracking-widest text-gray-400">Patient</th>
                                 <th className="pb-4 text-right text-[10px] uppercase font-black tracking-widest text-gray-400">Payout</th>
                                 <th className="pb-4 text-right text-[10px] uppercase font-black tracking-widest text-gray-400">Status</th>
                             </tr>
@@ -128,7 +128,7 @@ export function PaymentBreakdown({ payments }: PaymentBreakdownProps) {
                                             {format(new Date(session.startTime), 'MMM d, p')}
                                         </td>
                                         <td className="py-4 font-bold text-sm text-gray-900 dark:text-white">
-                                            {session.menteeName}
+                                            {session.patientName}
                                         </td>
                                         <td className="py-4 text-right font-black tabular-nums text-gray-900 dark:text-white">
                                             ₹{session.amount.toLocaleString()}

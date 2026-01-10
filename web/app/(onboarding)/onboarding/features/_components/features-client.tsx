@@ -14,7 +14,7 @@ const features = [
     {
         id: 1,
         icon: <Users className="w-7 h-7" />,
-        title: 'Connect with Mentors',
+        title: 'Connect with Therapists',
         description: 'Real people ready to listen, not just analyze your situation.'
     },
     {

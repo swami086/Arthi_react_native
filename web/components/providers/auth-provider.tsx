@@ -9,12 +9,12 @@ import { setRollbarUser, clearRollbarUser, addBreadcrumb, reportError } from '@/
 interface AuthContextType {
     user: User | null;
     profile: Profile | null;
-    role: 'mentor' | 'mentee' | 'admin' | null;
+    role: 'therapist' | 'patient' | 'admin' | null;
     isLoading: boolean;
     isAdmin: boolean;
     isSuperAdmin: boolean;
-    isMentor: boolean;
-    isMentee: boolean;
+    isTherapist: boolean;
+    isPatient: boolean;
     refreshProfile: () => Promise<void>;
 }
 
@@ -108,8 +108,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const role = profile?.role as any || null;
     const isAdmin = role === 'admin';
     const isSuperAdmin = isAdmin; // Logic can be updated if superadmin exists
-    const isMentor = role === 'mentor';
-    const isMentee = role === 'mentee';
+    const isTherapist = role === 'therapist';
+    const isPatient = role === 'patient';
 
     const value = {
         user,
@@ -118,8 +118,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isLoading,
         isAdmin,
         isSuperAdmin,
-        isMentor,
-        isMentee,
+        isTherapist,
+        isPatient,
         refreshProfile
     };
 

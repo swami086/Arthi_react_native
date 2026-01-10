@@ -1,15 +1,15 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { MentorEarnings, PaymentWithMentee, EarningsChartData } from '@/types/payment';
+import { TherapistEarnings, PaymentWithPatient, EarningsChartData } from '@/types/payment';
 import { reportError, startTimer, endTimer } from '@/lib/rollbar-utils';
 import { startOfMonth, subMonths, format, eachMonthOfInterval, addMonths } from 'date-fns';
-import { getMentorEarningsAction, getMentorTransactionsAction, getMentorPaymentBreakdownAction } from '@/app/actions/payment';
+import { getTherapistEarningsAction, getTherapistTransactionsAction, getTherapistPaymentBreakdownAction } from '@/app/actions/payment';
 
-export function useMentorEarnings() {
-    const [earnings, setEarnings] = useState<MentorEarnings | null>(null);
-    const [transactions, setTransactions] = useState<PaymentWithMentee[]>([]);
-    const [breakdown, setBreakdown] = useState<PaymentWithMentee[]>([]);
+export function useTherapistEarnings() {
+    const [earnings, setEarnings] = useState<TherapistEarnings | null>(null);
+    const [transactions, setTransactions] = useState<PaymentWithPatient[]>([]);
+    const [breakdown, setBreakdown] = useState<PaymentWithPatient[]>([]);
     const [chartData, setChartData] = useState<EarningsChartData | null>(null);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
@@ -19,20 +19,20 @@ export function useMentorEarnings() {
         if (isRefresh) setRefreshing(true);
         else setLoading(true);
 
-        const timerName = 'useMentorEarnings_fetch';
+        const timerName = 'useTherapistEarnings_fetch';
         startTimer(timerName);
 
         try {
             // 1. Fetch Summary using server action
-            const summary = await getMentorEarningsAction();
+            const summary = await getTherapistEarningsAction();
             setEarnings(summary);
 
             // 2. Fetch Transactions using server action
-            const txs = await getMentorTransactionsAction(10);
+            const txs = await getTherapistTransactionsAction(10);
             setTransactions(txs);
 
             // 3. Fetch Breakdown using server action
-            const breakdownData = await getMentorPaymentBreakdownAction();
+            const breakdownData = await getTherapistPaymentBreakdownAction();
             setBreakdown(breakdownData);
 
             // 4. Generate Chart Data based on breakdown data (full history)
@@ -46,15 +46,15 @@ export function useMentorEarnings() {
                 const mEnd = startOfMonth(addMonths(m, 1));
                 return breakdownData
                     .filter(p => p.status === 'completed' && new Date(p.created_at) >= mStart && new Date(p.created_at) < mEnd)
-                    .reduce((sum, p) => sum + (p.mentor_payout || p.amount * 0.9), 0);
+                    .reduce((sum, p) => sum + (p.therapist_payout || p.amount * 0.9), 0);
             });
 
             setChartData({ labels, data: dataValues });
 
-            endTimer(timerName, 'useMentorEarnings.success');
+            endTimer(timerName, 'useTherapistEarnings.success');
         } catch (error) {
-            reportError(error as any, 'useMentorEarnings:fetchEarningsData');
-            endTimer(timerName, 'useMentorEarnings.error');
+            reportError(error as any, 'useTherapistEarnings:fetchEarningsData');
+            endTimer(timerName, 'useTherapistEarnings.error');
         } finally {
             setLoading(false);
             setRefreshing(false);

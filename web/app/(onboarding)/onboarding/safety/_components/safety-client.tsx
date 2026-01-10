@@ -130,7 +130,7 @@ export default function SafetyClient() {
                     >
                         <AlertTriangle className="w-4 h-4 text-status-warning shrink-0 mt-0.5" />
                         <p className="text-[10px] font-semibold text-status-warning/80 leading-tight">
-                            Note: This platform offers coaching and mentoring, not emergency medical services.
+                            Note: This platform offers coaching and therapisting, not emergency medical services.
                         </p>
                     </motion.div>
                 </motion.div>

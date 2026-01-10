@@ -5,20 +5,20 @@ import { motion } from 'framer-motion';
 import { Users, Calendar, Clock, Star, Plus, MessageSquare, Video, FileText } from 'lucide-react';
 import { StatCard } from '../../_components/StatCard';
 import { QuickActionButton } from '../../_components/QuickActionButton';
-import { useMentorStats, MentorStats } from '../../_hooks/useMentorStats';
+import { useTherapistStats, TherapistStats } from '../../_hooks/useTherapistStats';
 import { createClient } from '@/lib/supabase/client';
 import { format } from 'date-fns';
 import Link from 'next/link';
 
-interface MentorHomeClientProps {
-    initialStats: MentorStats | null;
+interface TherapistHomeClientProps {
+    initialStats: TherapistStats | null;
     initialAppointments: any[];
     initialConversations: any[];
     user: any;
 }
 
-export default function MentorHomeClient({ initialStats, initialAppointments, initialConversations, user }: MentorHomeClientProps) {
-    const { stats, loading } = useMentorStats();
+export default function TherapistHomeClient({ initialStats, initialAppointments, initialConversations, user }: TherapistHomeClientProps) {
+    const { stats, loading } = useTherapistStats();
     // Use initialStats if stats is loading/null, or merge. 
     // Actually hook fetches on mount, so stats will be null initially then populated.
     // If we pass initialData to hook it would be better.
@@ -34,7 +34,7 @@ export default function MentorHomeClient({ initialStats, initialAppointments, in
             <div className="flex justify-between items-center">
                 <div>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                        Welcome back, {user.user_metadata?.full_name?.split(' ')[0] || 'Mentor'}!
+                        Welcome back, {user.user_metadata?.full_name?.split(' ')[0] || 'Therapist'}!
                     </h2>
                     <p className="text-gray-500 dark:text-gray-400">
                         Here's what's happening today.
@@ -50,11 +50,11 @@ export default function MentorHomeClient({ initialStats, initialAppointments, in
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <StatCard
-                    title="Total Mentees"
-                    value={displayStats?.totalMentees || 0}
+                    title="Total Patients"
+                    value={displayStats?.totalPatients || 0}
                     icon={Users}
                     color="text-blue-600"
-                    trend={{ value: displayStats?.menteesTrend || 0, label: "vs last month", direction: (displayStats?.menteesTrend || 0) > 0 ? 'up' : 'neutral' }}
+                    trend={{ value: displayStats?.patientsTrend || 0, label: "vs last month", direction: (displayStats?.patientsTrend || 0) > 0 ? 'up' : 'neutral' }}
                     delay={0}
                 />
                 <StatCard
@@ -88,10 +88,10 @@ export default function MentorHomeClient({ initialStats, initialAppointments, in
                     <div className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-800">
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h3>
                         <div className="flex gap-4 overflow-x-auto pb-2">
-                            <QuickActionButton label="Add Mentee" icon={Plus} href="/mentor/mentees/discovery" color="blue" />
-                            <QuickActionButton label="Schedule" icon={Calendar} href="/mentor/sessions/new" color="purple" />
-                            <QuickActionButton label="Message" icon={MessageSquare} href="/mentor/messages" color="green" />
-                            <QuickActionButton label="Notes" icon={FileText} href="/mentor/mentees" color="orange" />
+                            <QuickActionButton label="Add Patient" icon={Plus} href="/therapist/patients/discovery" color="blue" />
+                            <QuickActionButton label="Schedule" icon={Calendar} href="/therapist/sessions/new" color="purple" />
+                            <QuickActionButton label="Message" icon={MessageSquare} href="/therapist/messages" color="green" />
+                            <QuickActionButton label="Notes" icon={FileText} href="/therapist/patients" color="orange" />
                         </div>
                     </div>
 
@@ -99,7 +99,7 @@ export default function MentorHomeClient({ initialStats, initialAppointments, in
                     <div className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-800">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Upcoming Sessions</h3>
-                            <Link href="/mentor/sessions" className="text-sm text-primary hover:underline">View all</Link>
+                            <Link href="/therapist/sessions" className="text-sm text-primary hover:underline">View all</Link>
                         </div>
 
                         {appointments.length === 0 ? (
@@ -112,10 +112,10 @@ export default function MentorHomeClient({ initialStats, initialAppointments, in
                                     <div key={apt.id} className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors border border-gray-100 dark:border-gray-800">
                                         <div className="flex items-center gap-3">
                                             <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
-                                                {apt.mentee?.full_name?.[0] || 'U'}
+                                                {apt.patient?.full_name?.[0] || 'U'}
                                             </div>
                                             <div>
-                                                <p className="font-medium text-gray-900 dark:text-white">{apt.mentee?.full_name || 'Unknown Mentee'}</p>
+                                                <p className="font-medium text-gray-900 dark:text-white">{apt.patient?.full_name || 'Unknown Patient'}</p>
                                                 <p className="text-xs text-gray-500">
                                                     {format(new Date(apt.start_time), 'h:mm a')} • Video Call
                                                 </p>

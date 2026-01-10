@@ -46,7 +46,7 @@ export const generateTimeSlots = (
 };
 
 export const filterAvailableSlots = (
-    mentorId: string,
+    therapistId: string,
     date: string,
     allSlots: TimeSlot[],
     existingAppointments: { start_time: string; end_time: string }[]

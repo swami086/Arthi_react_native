@@ -9,11 +9,11 @@ interface AuthContextType {
     user: User | null;
     session: Session | null;
     profile: Profile | null;
-    role: 'mentor' | 'mentee' | 'admin' | null;
+    role: 'therapist' | 'patient' | 'admin' | null;
     isAdmin: boolean;
     isSuperAdmin: boolean;
-    isMentor: boolean;
-    isMentee: boolean;
+    isTherapist: boolean;
+    isPatient: boolean;
     loading: boolean;
     signIn: (email: string, password: string) => Promise<{ error: any }>;
     signUp: (email: string, password: string, userData: any) => Promise<{ error: any }>;
@@ -30,8 +30,8 @@ export const AuthContext = createContext<AuthContextType>({
     role: null,
     isAdmin: false,
     isSuperAdmin: false,
-    isMentor: false,
-    isMentee: false,
+    isTherapist: false,
+    isPatient: false,
     loading: true,
     signIn: async () => ({ error: null }),
     signUp: async () => ({ error: null }),
@@ -45,14 +45,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [user, setUser] = useState<User | null>(null);
     const [session, setSession] = useState<Session | null>(null);
     const [profile, setProfile] = useState<Profile | null>(null);
-    const [role, setRole] = useState<'mentor' | 'mentee' | 'admin' | null>(null);
+    const [role, setRole] = useState<'therapist' | 'patient' | 'admin' | null>(null);
     const [loading, setLoading] = useState(true);
     const processingUserId = React.useRef<string | null>(null);
 
     const isAdmin = role === 'admin';
     const isSuperAdmin = !!profile?.is_super_admin;
-    const isMentor = role === 'mentor';
-    const isMentee = role === 'mentee';
+    const isTherapist = role === 'therapist';
+    const isPatient = role === 'patient';
 
     const fetchProfile = async (userId: string) => {
         console.log('fetchProfile: fetching for', userId);
@@ -114,8 +114,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             if (!currentProfile) {
                 console.log('checkAndCreateProfile: creating profile...');
                 // ... (rest of logic)
-                const role = session.user.user_metadata.role || 'mentee';
-                const approvalStatus = role === 'mentor' ? 'pending' : null;
+                const role = session.user.user_metadata.role || 'patient';
+                const approvalStatus = role === 'therapist' ? 'pending' : null;
 
                 const { error: insertError } = await supabase
                     .from('profiles')
@@ -225,7 +225,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const signUp = async (email: string, password: string, userData: any) => {
-        const approvalStatus = userData.role === 'mentor' ? 'pending' : null;
+        const approvalStatus = userData.role === 'therapist' ? 'pending' : null;
 
         const { data: { user }, error } = await supabase.auth.signUp({
             email,
@@ -286,8 +286,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             role,
             isAdmin,
             isSuperAdmin,
-            isMentor,
-            isMentee,
+            isTherapist,
+            isPatient,
             loading,
             signIn,
             signUp,

@@ -53,8 +53,8 @@ export default function NotFound() {
                         <Link href="/home" className="rounded-lg bg-gray-50 p-3 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:bg-gray-700/50 dark:text-gray-300 dark:hover:bg-gray-700">
                             User Dashboard
                         </Link>
-                        <Link href="/mentor/home" className="rounded-lg bg-gray-50 p-3 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:bg-gray-700/50 dark:text-gray-300 dark:hover:bg-gray-700">
-                            Mentor Dashboard
+                        <Link href="/therapist/home" className="rounded-lg bg-gray-50 p-3 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:bg-gray-700/50 dark:text-gray-300 dark:hover:bg-gray-700">
+                            Therapist Dashboard
                         </Link>
                         <Link href="/login" className="rounded-lg bg-gray-50 p-3 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:bg-gray-700/50 dark:text-gray-300 dark:hover:bg-gray-700">
                             Login

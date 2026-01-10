@@ -1,70 +1,70 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getPendingMentorsAction, approveMentorAction, rejectMentorAction } from '../_actions/adminActions';
+import { getPendingTherapistsAction, approveTherapistAction, rejectTherapistAction } from '../_actions/adminActions';
 import { Profile } from '@/types/admin';
 import { reportError } from '@/lib/rollbar-utils';
 import { toast } from 'sonner';
 
-export function usePendingMentors() {
-    const [mentors, setMentors] = useState<Profile[]>([]);
+export function usePendingTherapists() {
+    const [therapists, setTherapists] = useState<Profile[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchMentors = useCallback(async () => {
+    const fetchTherapists = useCallback(async () => {
         try {
             setLoading(true);
-            const res = await getPendingMentorsAction();
+            const res = await getPendingTherapistsAction();
             if (res.success && res.data) {
-                setMentors(res.data);
+                setTherapists(res.data);
             } else {
-                setError(res.error || 'Failed to fetch pending mentors');
+                setError(res.error || 'Failed to fetch pending therapists');
             }
         } catch (err: any) {
             setError(err.message);
-            reportError(err, 'usePendingMentors:fetch');
+            reportError(err, 'usePendingTherapists:fetch');
         } finally {
             setLoading(false);
         }
     }, []);
 
-    const approveMentor = async (mentorId: string, notes?: string) => {
+    const approveTherapist = async (therapistId: string, notes?: string) => {
         try {
             // Optimistic update
-            setMentors(prev => prev.filter(m => m.user_id !== mentorId));
+            setTherapists(prev => prev.filter(m => m.user_id !== therapistId));
 
-            const res = await approveMentorAction(mentorId, notes);
+            const res = await approveTherapistAction(therapistId, notes);
             if (!res.success) {
-                toast.error(res.error || 'Failed to approve mentor');
-                fetchMentors(); // Revert
+                toast.error(res.error || 'Failed to approve therapist');
+                fetchTherapists(); // Revert
             } else {
-                toast.success('Mentor approved successfully');
+                toast.success('Therapist approved successfully');
             }
         } catch (err: any) {
-            reportError(err, 'usePendingMentors:approve');
-            fetchMentors(); // Revert
+            reportError(err, 'usePendingTherapists:approve');
+            fetchTherapists(); // Revert
         }
     };
 
-    const rejectMentor = async (mentorId: string, reason: string) => {
+    const rejectTherapist = async (therapistId: string, reason: string) => {
         try {
             // Optimistic update
-            setMentors(prev => prev.filter(m => m.user_id !== mentorId));
+            setTherapists(prev => prev.filter(m => m.user_id !== therapistId));
 
-            const res = await rejectMentorAction(mentorId, reason);
+            const res = await rejectTherapistAction(therapistId, reason);
             if (!res.success) {
-                toast.error(res.error || 'Failed to reject mentor');
-                fetchMentors(); // Revert
+                toast.error(res.error || 'Failed to reject therapist');
+                fetchTherapists(); // Revert
             } else {
-                toast.success('Mentor rejected successfully');
+                toast.success('Therapist rejected successfully');
             }
         } catch (err: any) {
-            reportError(err, 'usePendingMentors:reject');
-            fetchMentors(); // Revert
+            reportError(err, 'usePendingTherapists:reject');
+            fetchTherapists(); // Revert
         }
     };
 
     useEffect(() => {
-        fetchMentors();
-    }, [fetchMentors]);
+        fetchTherapists();
+    }, [fetchTherapists]);
 
-    return { mentors, loading, error, refetch: fetchMentors, approveMentor, rejectMentor };
+    return { therapists, loading, error, refetch: fetchTherapists, approveTherapist, rejectTherapist };
 }

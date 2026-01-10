@@ -20,7 +20,7 @@ import { reportError } from '@/lib/rollbar-utils';
 
 const navItems = [
     { label: 'Home', path: '/home', icon: Home },
-    { label: 'Mentors', path: '/mentors', icon: Users },
+    { label: 'Therapists', path: '/therapists', icon: Users },
     { label: 'Sessions', path: '/appointments', icon: Calendar },
     { label: 'Messages', path: '/messages', icon: MessageSquare },
     { label: 'Notifications', path: '/notifications', icon: Bell },

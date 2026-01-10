@@ -30,7 +30,7 @@ export default function PaymentHistoryClient() {
 
     const filteredHistory = history.filter(item => {
         const matchesSearch =
-            item.appointment?.mentor?.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.appointment?.therapist?.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
             item.razorpay_payment_id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
             item.id.toLowerCase().includes(searchQuery.toLowerCase());
 
@@ -165,7 +165,7 @@ export default function PaymentHistoryClient() {
                     <AnimatePresence mode="popLayout">
                         {filteredHistory.map((item, index) => {
                             const status = getStatusStyles(item.status);
-                            const mentor = item.appointment?.mentor;
+                            const therapist = item.appointment?.therapist;
 
                             return (
                                 <motion.div
@@ -181,9 +181,9 @@ export default function PaymentHistoryClient() {
                                         <div className="flex gap-4">
                                             <div className="relative w-12 h-12 shrink-0">
                                                 <img
-                                                    alt={mentor?.full_name || 'Mentor'}
+                                                    alt={therapist?.full_name || 'Therapist'}
                                                     className="w-12 h-12 rounded-full object-cover border-2 border-white/5"
-                                                    src={mentor?.avatar_url || 'https://via.placeholder.com/150'}
+                                                    src={therapist?.avatar_url || 'https://via.placeholder.com/150'}
                                                 />
                                                 {item.status === 'completed' && (
                                                     <div className="absolute -bottom-1 -right-1 flex items-center justify-center bg-[#1a2a2e] rounded-full p-0.5">
@@ -193,7 +193,7 @@ export default function PaymentHistoryClient() {
                                             </div>
                                             <div className="flex flex-col justify-center">
                                                 <h3 className="text-base font-bold text-white leading-tight mb-0.5">
-                                                    {mentor?.full_name || 'System Payment'}
+                                                    {therapist?.full_name || 'System Payment'}
                                                 </h3>
                                                 <p className="text-xs font-medium text-gray-400">
                                                     {format(new Date(item.created_at), 'MMM dd, yyyy • h:mm a')}

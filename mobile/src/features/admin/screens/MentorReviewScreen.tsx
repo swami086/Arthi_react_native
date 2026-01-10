@@ -4,12 +4,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useAuth } from '../../auth/hooks/useAuth';
-import { approveMentor, rejectMentor } from '../../../api/adminService';
+import { approveTherapist, rejectTherapist } from '../../../api/adminService';
 
-export const MentorReviewScreen = () => {
+export const TherapistReviewScreen = () => {
     const route = useRoute<any>();
     const navigation = useNavigation<any>();
-    const { mentor } = route.params;
+    const { therapist } = route.params;
     const { user } = useAuth();
     const [actionLoading, setActionLoading] = useState(false);
 
@@ -17,8 +17,8 @@ export const MentorReviewScreen = () => {
         if (!user?.id) return;
         setActionLoading(true);
         try {
-            await approveMentor(mentor.user_id, user.id);
-            Alert.alert("Success", "Mentor approved successfully", [
+            await approveTherapist(therapist.user_id, user.id);
+            Alert.alert("Success", "Therapist approved successfully", [
                 { text: "OK", onPress: () => navigation.goBack() }
             ]);
         } catch (error: any) {
@@ -42,8 +42,8 @@ export const MentorReviewScreen = () => {
                         if (!reason) return;
                         setActionLoading(true);
                         try {
-                            await rejectMentor(mentor.user_id, user.id, reason);
-                            Alert.alert("Success", "Mentor rejected", [
+                            await rejectTherapist(therapist.user_id, user.id, reason);
+                            Alert.alert("Success", "Therapist rejected", [
                                 { text: "OK", onPress: () => navigation.goBack() }
                             ]);
                         } catch (error: any) {
@@ -64,39 +64,39 @@ export const MentorReviewScreen = () => {
                 <TouchableOpacity onPress={() => navigation.goBack()} className="mr-4">
                     <Icon name="arrow-left" size={24} color="#4e8597" />
                 </TouchableOpacity>
-                <Text className="text-xl font-bold text-text-main-light dark:text-white">Review Mentor</Text>
+                <Text className="text-xl font-bold text-text-main-light dark:text-white">Review Therapist</Text>
             </View>
 
             <ScrollView contentContainerStyle={{ padding: 24 }}>
                 <View className="items-center mb-6">
                     <View className="h-24 w-24 bg-gray-200 rounded-full overflow-hidden mb-3">
-                        {mentor.avatar_url ? (
-                            <Image source={{ uri: mentor.avatar_url }} className="h-full w-full" />
+                        {therapist.avatar_url ? (
+                            <Image source={{ uri: therapist.avatar_url }} className="h-full w-full" />
                         ) : (
                             <View className="h-full w-full items-center justify-center bg-gray-300">
                                 <Icon name="account" size={48} color="#666" />
                             </View>
                         )}
                     </View>
-                    <Text className="text-2xl font-bold text-text-main-light dark:text-white">{mentor.full_name}</Text>
-                    <Text className="text-text-sub-light dark:text-gray-400">{mentor.email}</Text>
+                    <Text className="text-2xl font-bold text-text-main-light dark:text-white">{therapist.full_name}</Text>
+                    <Text className="text-text-sub-light dark:text-gray-400">{therapist.email}</Text>
                     <View className="mt-2 bg-yellow-100 px-3 py-1 rounded-full">
-                        <Text className="text-yellow-800 text-xs font-bold uppercase">{mentor.approval_status}</Text>
+                        <Text className="text-yellow-800 text-xs font-bold uppercase">{therapist.approval_status}</Text>
                     </View>
                 </View>
 
                 <View className="bg-white dark:bg-gray-800 rounded-xl p-4 mb-4">
                     <Text className="text-lg font-bold mb-2 text-text-main-light dark:text-white">Professional Info</Text>
-                    <Field label="Specialization" value={mentor.specialization} />
-                    <Field label="Experience" value={mentor.years_of_experience ? `${mentor.years_of_experience} years` : 'N/A'} />
-                    <Field label="Bio" value={mentor.bio} />
-                    <Field label="Detailed Bio" value={mentor.mentor_bio_extended} />
+                    <Field label="Specialization" value={therapist.specialization} />
+                    <Field label="Experience" value={therapist.years_of_experience ? `${therapist.years_of_experience} years` : 'N/A'} />
+                    <Field label="Bio" value={therapist.bio} />
+                    <Field label="Detailed Bio" value={therapist.therapist_bio_extended} />
                 </View>
 
-                {mentor.certifications && mentor.certifications.length > 0 && (
+                {therapist.certifications && therapist.certifications.length > 0 && (
                     <View className="bg-white dark:bg-gray-800 rounded-xl p-4 mb-4">
                         <Text className="text-lg font-bold mb-2 text-text-main-light dark:text-white">Certifications</Text>
-                        {mentor.certifications.map((cert: string, index: number) => (
+                        {therapist.certifications.map((cert: string, index: number) => (
                             <Text key={index} className="text-text-sub-light dark:text-gray-400 mb-1">• {cert}</Text>
                         ))}
                     </View>

@@ -42,43 +42,43 @@ export async function getAdminDashboardData() {
     }
 }
 
-export async function approveMentorAction(mentorId: string, notes?: string) {
-    const spanName = 'adminActions:approveMentorAction';
+export async function approveTherapistAction(therapistId: string, notes?: string) {
+    const spanName = 'adminActions:approveTherapistAction';
     try {
         const admin = await getAdminUser();
         if (!admin) return { success: false, error: 'Unauthorized' };
 
         const supabase = await createClient();
-        await adminService.approveMentor(supabase, mentorId, admin.id, notes);
+        await adminService.approveTherapist(supabase, therapistId, admin.id, notes);
 
         revalidatePath('/admin/pending-approvals');
-        revalidatePath('/admin/mentors');
-        revalidatePath(`/admin/mentors/${mentorId}/review`);
+        revalidatePath('/admin/therapists');
+        revalidatePath(`/admin/therapists/${therapistId}/review`);
 
         return { success: true };
     } catch (error) {
-        reportError(error, spanName, { mentorId, span_name: spanName, traceId: getTraceId() });
-        return { success: false, error: 'Failed to approve mentor' };
+        reportError(error, spanName, { therapistId, span_name: spanName, traceId: getTraceId() });
+        return { success: false, error: 'Failed to approve therapist' };
     }
 }
 
-export async function rejectMentorAction(mentorId: string, reason: string) {
-    const spanName = 'adminActions:rejectMentorAction';
+export async function rejectTherapistAction(therapistId: string, reason: string) {
+    const spanName = 'adminActions:rejectTherapistAction';
     try {
         const admin = await getAdminUser();
         if (!admin) return { success: false, error: 'Unauthorized' };
 
         const supabase = await createClient();
-        await adminService.rejectMentor(supabase, mentorId, admin.id, reason);
+        await adminService.rejectTherapist(supabase, therapistId, admin.id, reason);
 
         revalidatePath('/admin/pending-approvals');
-        revalidatePath('/admin/mentors');
-        revalidatePath(`/admin/mentors/${mentorId}/review`);
+        revalidatePath('/admin/therapists');
+        revalidatePath(`/admin/therapists/${therapistId}/review`);
 
         return { success: true };
     } catch (error) {
-        reportError(error, spanName, { mentorId, span_name: spanName, traceId: getTraceId() });
-        return { success: false, error: 'Failed to reject mentor' };
+        reportError(error, spanName, { therapistId, span_name: spanName, traceId: getTraceId() });
+        return { success: false, error: 'Failed to reject therapist' };
     }
 }
 
@@ -148,48 +148,48 @@ export async function getAdminActionsAction(limit?: number) {
     }
 }
 
-export async function getPendingMentorsAction() {
-    const spanName = 'adminActions:getPendingMentorsAction';
+export async function getPendingTherapistsAction() {
+    const spanName = 'adminActions:getPendingTherapistsAction';
     try {
         const admin = await getAdminUser();
         if (!admin) return { success: false, error: 'Unauthorized' };
 
         const supabase = await createClient();
-        const data = await adminService.getPendingMentors(supabase);
+        const data = await adminService.getPendingTherapists(supabase);
         return { success: true, data };
     } catch (error) {
         reportError(error, spanName, { span_name: spanName, traceId: getTraceId() });
-        return { success: false, error: 'Failed to fetch pending mentors' };
+        return { success: false, error: 'Failed to fetch pending therapists' };
     }
 }
 
-export async function getAllMentorsAction(status?: string) {
-    const spanName = 'adminActions:getAllMentorsAction';
+export async function getAllTherapistsAction(status?: string) {
+    const spanName = 'adminActions:getAllTherapistsAction';
     try {
         const admin = await getAdminUser();
         if (!admin) return { success: false, error: 'Unauthorized' };
 
         const supabase = await createClient();
-        const data = await adminService.getAllMentors(supabase, status);
+        const data = await adminService.getAllTherapists(supabase, status);
         return { success: true, data };
     } catch (error) {
         reportError(error, spanName, { span_name: spanName, traceId: getTraceId() });
-        return { success: false, error: 'Failed to fetch mentors' };
+        return { success: false, error: 'Failed to fetch therapists' };
     }
 }
 
-export async function getAllMenteesAction() {
-    const spanName = 'adminActions:getAllMenteesAction';
+export async function getAllPatientsAction() {
+    const spanName = 'adminActions:getAllPatientsAction';
     try {
         const admin = await getAdminUser();
         if (!admin) return { success: false, error: 'Unauthorized' };
 
         const supabase = await createClient();
-        const data = await adminService.getAllMentees(supabase);
+        const data = await adminService.getAllPatients(supabase);
         return { success: true, data };
     } catch (error) {
         reportError(error, spanName, { span_name: spanName, traceId: getTraceId() });
-        return { success: false, error: 'Failed to fetch mentees' };
+        return { success: false, error: 'Failed to fetch patients' };
     }
 }
 

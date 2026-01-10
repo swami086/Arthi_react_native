@@ -119,20 +119,20 @@ serve(async (req) => {
             throw new Error('Failed to parse AI response as JSON')
         }
 
-        // 3. Get Mentor ID from Appointment
+        // 3. Get Therapist ID from Appointment
         console.log(`Fetching appointment details for: ${appointment_id}`);
         const { data: appointmentData, error: appError } = await supabaseClient
             .from('appointments')
-            .select('mentor_id')
+            .select('therapist_id')
             .eq('id', appointment_id)
             .single()
 
         if (appError || !appointmentData) {
             console.error("Appointment Fetch Error:", appError);
-            throw new Error('Appointment not found or could not verify mentor')
+            throw new Error('Appointment not found or could not verify therapist')
         }
 
-        const mentor_id = appointmentData.mentor_id
+        const therapist_id = appointmentData.therapist_id
 
         // 4. Save SOAP Note
         console.log("Saving SOAP note to DB...");
@@ -141,7 +141,7 @@ serve(async (req) => {
             .insert({
                 transcript_id,
                 appointment_id,
-                mentor_id,
+                therapist_id,
                 subjective: soapContent.subjective,
                 objective: soapContent.objective,
                 assessment: soapContent.assessment,

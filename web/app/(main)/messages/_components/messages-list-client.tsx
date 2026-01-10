@@ -109,7 +109,7 @@ export default function MessagesListClient({ initialConversations }: MessagesLis
                             Silence is golden, but connection is better
                         </h3>
                         <p className="text-gray-500 font-bold max-w-sm mx-auto leading-relaxed">
-                            No conversations found matching your search. Start a new chat with your mentors or mentees to get moving!
+                            No conversations found matching your search. Start a new chat with your therapists or patients to get moving!
                         </p>
                         <Button className="mt-10 rounded-2xl h-15 px-10 font-black gap-3 shadow-lg shadow-primary/20">
                             <Plus className="h-5 w-5" />

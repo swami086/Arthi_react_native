@@ -24,7 +24,7 @@ interface PaymentSuccessClientProps {
 export default function PaymentSuccessClient({ payment }: PaymentSuccessClientProps) {
     const router = useRouter();
     const appointment = payment.appointment;
-    const mentor = appointment?.mentor;
+    const therapist = appointment?.therapist;
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -100,14 +100,14 @@ export default function PaymentSuccessClient({ payment }: PaymentSuccessClientPr
                         <div className="relative h-14 w-14 flex-shrink-0">
                             <img
                                 className="h-full w-full rounded-full object-cover border border-white/10"
-                                src={mentor?.avatar_url || 'https://via.placeholder.com/150'}
-                                alt={mentor?.full_name}
+                                src={therapist?.avatar_url || 'https://via.placeholder.com/150'}
+                                alt={therapist?.full_name}
                             />
                             <div className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full bg-[#10B981] border-2 border-[#1a2a2e]"></div>
                         </div>
                         <div className="flex-1">
-                            <h2 className="text-lg font-bold text-white">{mentor?.full_name}</h2>
-                            <p className="text-[#93bac8] text-sm">{mentor?.specialization}</p>
+                            <h2 className="text-lg font-bold text-white">{therapist?.full_name}</h2>
+                            <p className="text-[#93bac8] text-sm">{therapist?.specialization}</p>
                         </div>
                     </div>
 

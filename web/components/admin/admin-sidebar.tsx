@@ -39,8 +39,8 @@ export function AdminSidebar({ userEmail, userName, isSuperAdmin }: SidebarProps
     const navigation = [
         { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
         { name: 'Pending Approvals', href: '/admin/pending-approvals', icon: Clock },
-        { name: 'Mentors', href: '/admin/mentors', icon: Users },
-        { name: 'Mentees', href: '/admin/mentees', icon: GraduationCap },
+        { name: 'Therapists', href: '/admin/therapists', icon: Users },
+        { name: 'Patients', href: '/admin/patients', icon: GraduationCap },
         { name: 'Admins', href: '/admin/admins', icon: Shield },
         { name: 'Audit Trail', href: '/admin/audit', icon: Activity },
     ];

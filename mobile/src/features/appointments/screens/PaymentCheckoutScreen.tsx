@@ -15,7 +15,7 @@ type PaymentCheckoutRouteProp = RouteProp<RootStackParamList, 'PaymentCheckout'>
 export const PaymentCheckoutScreen = () => {
     const navigation = useNavigation<any>();
     const route = useRoute<PaymentCheckoutRouteProp>();
-    const { appointmentId, mentorName, mentorAvatar, amount, selectedDate, selectedTime } = route.params;
+    const { appointmentId, therapistName, therapistAvatar, amount, selectedDate, selectedTime } = route.params;
     const { initiatePayment, loading } = usePayment();
     const { isDark } = useColorScheme();
     const [promoCode, setPromoCode] = useState('');
@@ -72,11 +72,11 @@ export const PaymentCheckoutScreen = () => {
                     <View className="bg-surface-light dark:bg-surface-dark rounded-2xl p-4 shadow-sm mt-4">
                         <View className="flex-row items-center gap-4 mb-4">
                             <Image
-                                source={{ uri: mentorAvatar }}
+                                source={{ uri: therapistAvatar }}
                                 className="w-16 h-16 rounded-full bg-gray-200 border-2 border-primary/20"
                             />
                             <View>
-                                <Text className="text-base font-bold text-text-main-light dark:text-text-main-dark">{mentorName}</Text>
+                                <Text className="text-base font-bold text-text-main-light dark:text-text-main-dark">{therapistName}</Text>
                                 <Text className="text-sm text-text-sub-light dark:text-text-sub-dark font-medium">Clinical Psychologist</Text>
                                 <View className="flex-row items-center gap-1 mt-1">
                                     <MaterialIcons name="star" size={16} color="#30bae8" />

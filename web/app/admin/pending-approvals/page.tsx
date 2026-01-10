@@ -1,16 +1,16 @@
 export const dynamic = 'force-dynamic';
 
-import { getPendingMentorsAction } from '../_actions/adminActions';
+import { getPendingTherapistsAction } from '../_actions/adminActions';
 import PendingApprovalsClient from './_components/pending-approvals-client';
 
 export default async function PendingApprovalsPage() {
-    const result = await getPendingMentorsAction();
+    const result = await getPendingTherapistsAction();
 
     if (!result.success) {
-        throw new Error(result.error || 'Failed to load pending mentors');
+        throw new Error(result.error || 'Failed to load pending therapists');
     }
 
     return (
-        <PendingApprovalsClient initialMentors={result.data || []} />
+        <PendingApprovalsClient initialTherapists={result.data || []} />
     );
 }

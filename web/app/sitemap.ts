@@ -1,22 +1,22 @@
 import { MetadataRoute } from 'next';
 import { createAdminClient } from '@/lib/supabase/server';
-import { getMentors } from '@/lib/services/mentor-service';
+import { getTherapists } from '@/lib/services/therapist-service';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://safespace.app';
     const supabase = createAdminClient();
 
-    let mentorUrls: MetadataRoute.Sitemap = [];
+    let therapistUrls: MetadataRoute.Sitemap = [];
     try {
-        const mentors = await getMentors(supabase);
-        mentorUrls = mentors.map((mentor) => ({
-            url: `${siteUrl}/mentors/${mentor.user_id}`,
+        const therapists = await getTherapists(supabase);
+        therapistUrls = therapists.map((therapist) => ({
+            url: `${siteUrl}/therapists/${therapist.user_id}`,
             lastModified: new Date(),
             changeFrequency: 'weekly' as const,
             priority: 0.8,
         }));
     } catch (error) {
-        console.error('Failed to fetch mentors for sitemap', error);
+        console.error('Failed to fetch therapists for sitemap', error);
     }
 
     return [
@@ -33,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             priority: 0.8,
         },
         {
-            url: `${siteUrl}/mentors`,
+            url: `${siteUrl}/therapists`,
             lastModified: new Date(),
             changeFrequency: 'daily',
             priority: 0.9,
@@ -56,6 +56,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             changeFrequency: 'monthly',
             priority: 0.6,
         },
-        ...mentorUrls,
+        ...therapistUrls,
     ];
 }

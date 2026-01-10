@@ -5,15 +5,15 @@ import { Alert } from 'react-native';
 import { SessionRecording, Transcript, SoapNote } from './types';
 
 // Update createRecording (around line 15 - adapted for actual line 41)
-export const createRecording = async (appointmentId: string, mentorId: string, menteeId: string) => {
+export const createRecording = async (appointmentId: string, therapistId: string, patientId: string) => {
   startSpan('api.recording.create');
   try {
     const { data, error } = await supabase
       .from('session_recordings')
       .insert({
         appointment_id: appointmentId,
-        mentor_id: mentorId,
-        mentee_id: menteeId,
+        therapist_id: therapistId,
+        patient_id: patientId,
         recording_status: 'pending'
       })
       // @ts-ignore
@@ -24,8 +24,8 @@ export const createRecording = async (appointmentId: string, mentorId: string, m
     if (error) {
       reportError(error, 'recordingService:createRecording', {
         appointmentId,
-        mentorId,
-        menteeId
+        therapistId,
+        patientId
       });
       return null;
     }
@@ -168,7 +168,7 @@ export const updateSoapNote = async (
   try {
     const { data, error } = await supabase
       .from('soap_notes')
-      .update({ ...updates, edited_by_mentor: true, updated_at: new Date().toISOString() })
+      .update({ ...updates, edited_by_therapist: true, updated_at: new Date().toISOString() })
       .eq('id', soapNoteId)
       .select()
       .maybeSingle();

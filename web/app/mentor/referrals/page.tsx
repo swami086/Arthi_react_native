@@ -16,7 +16,7 @@ export default function ReferralsPage() {
         <div className="space-y-6 max-w-4xl mx-auto">
             <div>
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Referrals</h1>
-                <p className="text-gray-500">Manage referral requests from other mentors.</p>
+                <p className="text-gray-500">Manage referral requests from other therapists.</p>
             </div>
 
             <Tabs.Root defaultValue="received" className="w-full">
@@ -79,7 +79,7 @@ function ReferralCard({ referral, type, onAction }: { referral: any, type: 'rece
                     </Badge>
                 </div>
                 <p className="text-sm text-gray-600 dark:text-gray-300">
-                    Mentee: <span className="font-medium">{referral.mentee?.full_name}</span>
+                    Patient: <span className="font-medium">{referral.patient?.full_name}</span>
                 </p>
                 <p className="text-xs text-gray-500 mt-1">
                     {format(new Date(referral.created_at), 'MMM d, yyyy')}

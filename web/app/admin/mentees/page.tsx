@@ -1,16 +1,16 @@
 export const dynamic = 'force-dynamic';
 
-import { getAllMenteesAction } from '../_actions/adminActions';
-import MenteesListClient from './_components/mentees-list-client';
+import { getAllPatientsAction } from '../_actions/adminActions';
+import PatientsListClient from './_components/patients-list-client';
 
-export default async function AllMenteesPage() {
-    const result = await getAllMenteesAction();
+export default async function AllPatientsPage() {
+    const result = await getAllPatientsAction();
 
     if (!result.success) {
-        throw new Error(result.error || 'Failed to load mentees');
+        throw new Error(result.error || 'Failed to load patients');
     }
 
     return (
-        <MenteesListClient initialMentees={result.data || []} />
+        <PatientsListClient initialPatients={result.data || []} />
     );
 }

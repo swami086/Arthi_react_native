@@ -23,12 +23,12 @@ import {
     SessionCard,
     GradientAvatar,
     TagPill,
-    MentorCard,
+    TherapistCard,
     PaymentCard,
     EarningsCard,
-    MenteeCard,
+    PatientCard,
     ConversationCard,
-    PendingMentorRequestCard,
+    PendingTherapistRequestCard,
     MetadataCard,
     QuickActionButton,
     SectionHeader,
@@ -105,7 +105,7 @@ export default function ComponentsShowcase() {
                         <h3 className="text-xl font-black mb-6 uppercase tracking-widest text-primary">Data Streams</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             <StatCard
-                                title="Active Mentees"
+                                title="Active Patients"
                                 value="1248"
                                 icon={Users}
                                 growth="12"
@@ -164,11 +164,11 @@ export default function ComponentsShowcase() {
                         </div>
                     </section>
 
-                    {/* Section: Mentorship Elements */}
+                    {/* Section: Therapistship Elements */}
                     <section>
-                        <h3 className="text-xl font-black mb-6 uppercase tracking-widest text-primary">Mentorship Lattice</h3>
+                        <h3 className="text-xl font-black mb-6 uppercase tracking-widest text-primary">Therapistship Lattice</h3>
                         <div className="space-y-4">
-                            <MenteeCard
+                            <PatientCard
                                 name="Rahul Sharma"
                                 age={24}
                                 education="Masters in Design"
@@ -178,15 +178,15 @@ export default function ComponentsShowcase() {
                                 onMessage={() => { }}
                                 onViewProfile={() => { }}
                             />
-                            <PendingMentorRequestCard
+                            <PendingTherapistRequestCard
                                 request={{
                                     id: '1',
                                     created_at: new Date().toISOString(),
                                     notes: "I want to specialize in UI design and need guidance on portfolio building.",
-                                    mentor: {
+                                    therapist: {
                                         full_name: "Amit Patel",
                                         specialization: "Product Designer",
-                                        expertise_areas: ["UI/UX", "System Design", "Mentorship"]
+                                        expertise_areas: ["UI/UX", "System Design", "Therapistship"]
                                     }
                                 }}
                                 onAccept={() => { }}
@@ -202,7 +202,7 @@ export default function ComponentsShowcase() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white dark:bg-[#1a2c32] p-8 rounded-[40px] shadow-sm border border-gray-100 dark:border-border-dark">
                             <div className="space-y-6">
                                 <Input
-                                    label="Search Mentors"
+                                    label="Search Therapists"
                                     placeholder="Type to search..."
                                     leftIcon={Users}
                                 />
@@ -247,7 +247,7 @@ export default function ComponentsShowcase() {
                                 />
                                 <div className="flex items-center gap-6 mt-4">
                                     <div>
-                                        <span className="text-[10px] font-black uppercase text-gray-400 block mb-2">Mentor Rating</span>
+                                        <span className="text-[10px] font-black uppercase text-gray-400 block mb-2">Therapist Rating</span>
                                         <RatingStars rating={4.5} onRatingChange={() => { }} />
                                     </div>
                                     <div className="flex gap-2">
@@ -261,7 +261,7 @@ export default function ComponentsShowcase() {
 
                     {/* Interactive Cards */}
                     <section className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <MentorCard
+                        <TherapistCard
                             name="Dr. Sarah Johnson"
                             role="Product Strategist"
                             bio="Helping founders scale their startups from 1 to 10. Focused on sustainable growth and lean operations."
@@ -279,8 +279,8 @@ export default function ComponentsShowcase() {
                                 payment_method: 'UPI Pay',
                                 razorpay_payment_id: 'pay_ABC123XYZ789',
                                 appointment_id: 'a1',
-                                mentee_id: 'm1',
-                                mentor_id: 'mt1',
+                                patient_id: 'm1',
+                                therapist_id: 'mt1',
                                 updated_at: new Date().toISOString()
                             } as any}
                         />

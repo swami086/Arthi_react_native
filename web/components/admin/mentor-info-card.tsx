@@ -3,7 +3,7 @@
 import React from 'react';
 import { LucideIcon } from 'lucide-react';
 
-interface MentorInfoCardProps {
+interface TherapistInfoCardProps {
     title: string;
     icon: LucideIcon;
     fields: {
@@ -13,7 +13,7 @@ interface MentorInfoCardProps {
     }[];
 }
 
-export function MentorInfoCard({ title, icon: Icon, fields }: MentorInfoCardProps) {
+export function TherapistInfoCard({ title, icon: Icon, fields }: TherapistInfoCardProps) {
     return (
         <div className="bg-white dark:bg-[#1a2c32] rounded-[2.5rem] p-8 border border-gray-100 dark:border-border-dark shadow-sm">
             <div className="flex items-center gap-3 mb-8">

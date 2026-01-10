@@ -1,16 +1,16 @@
 export const dynamic = 'force-dynamic';
 
-import { getAllMentorsAction } from '../_actions/adminActions';
-import MentorsListClient from './_components/mentors-list-client';
+import { getAllTherapistsAction } from '../_actions/adminActions';
+import TherapistsListClient from './_components/therapists-list-client';
 
-export default async function AllMentorsPage() {
-    const result = await getAllMentorsAction();
+export default async function AllTherapistsPage() {
+    const result = await getAllTherapistsAction();
 
     if (!result.success) {
-        throw new Error(result.error || 'Failed to load mentors');
+        throw new Error(result.error || 'Failed to load therapists');
     }
 
     return (
-        <MentorsListClient initialMentors={result.data || []} />
+        <TherapistsListClient initialTherapists={result.data || []} />
     );
 }

@@ -3,13 +3,13 @@ import { View, Text, FlatList, TouchableOpacity, RefreshControl } from 'react-na
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { usePendingMentorRequests } from '../hooks/usePendingMentorRequests';
-import { PendingMentorRequestCard } from '../../../components/PendingMentorRequestCard';
+import { usePendingTherapistRequests } from '../hooks/usePendingTherapistRequests';
+import { PendingTherapistRequestCard } from '../../../components/PendingTherapistRequestCard';
 import { ErrorBoundary } from '../../../components/ErrorBoundary';
 
-export const PendingMentorRequestsScreen = () => {
+export const PendingTherapistRequestsScreen = () => {
     const navigation = useNavigation();
-    const { requests, loading, processingId, refetch, acceptRequest, declineRequest } = usePendingMentorRequests();
+    const { requests, loading, processingId, refetch, acceptRequest, declineRequest } = usePendingTherapistRequests();
 
     const renderEmpty = () => (
         <View className="items-center justify-center mt-20 px-8">
@@ -20,7 +20,7 @@ export const PendingMentorRequestsScreen = () => {
                 No Pending Requests
             </Text>
             <Text className="text-gray-500 text-center">
-                You don't have any pending mentorship requests at the moment.
+                You don't have any pending therapistship requests at the moment.
             </Text>
         </View>
     );
@@ -48,7 +48,7 @@ export const PendingMentorRequestsScreen = () => {
                 <FlatList
                     data={requests}
                     renderItem={({ item }) => (
-                        <PendingMentorRequestCard
+                        <PendingTherapistRequestCard
                             request={item}
                             onAccept={acceptRequest}
                             onDecline={declineRequest}

@@ -24,7 +24,7 @@ export const usePaymentHistory = () => {
                         end_time
                     )
                 `)
-                .or(`mentee_id.eq.${user.id},mentor_id.eq.${user.id}`)
+                .or(`patient_id.eq.${user.id},therapist_id.eq.${user.id}`)
                 .order('created_at', { ascending: false });
 
             if (error) throw error;

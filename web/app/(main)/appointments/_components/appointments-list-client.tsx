@@ -90,7 +90,7 @@ export default function AppointmentsListClient({ initialAppointments }: Appointm
                     {Object.keys(groupedUpcoming).length === 0 ? (
                         <div className="text-center py-10 text-muted-foreground">
                             <p>No upcoming sessions.</p>
-                            <Button className="mt-4" onClick={() => router.push('/mentors')}>Find a Mentor</Button>
+                            <Button className="mt-4" onClick={() => router.push('/therapists')}>Find a Therapist</Button>
                         </div>
                     ) : (
                         Object.entries(groupedUpcoming).map(([group, appts]) => (

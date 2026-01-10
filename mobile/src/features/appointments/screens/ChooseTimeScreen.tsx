@@ -15,7 +15,7 @@ type ChooseTimeRouteProp = RouteProp<RootStackParamList, 'ChooseTime'>;
 export default function ChooseTimeScreen() {
     const navigation = useNavigation<RootNavigationProp>();
     const route = useRoute<ChooseTimeRouteProp>();
-    const { mentorId, mentorName, mentorAvatar, selectedDate, selectedTime, selectedTimeEnd } = route.params;
+    const { therapistId, therapistName, therapistAvatar, selectedDate, selectedTime, selectedTimeEnd } = route.params;
     const { isDark } = useColorScheme();
 
     // Initialize with pre-selected time if passed
@@ -32,7 +32,7 @@ export default function ChooseTimeScreen() {
     }, [selectedDate, timeOfDay]);
 
     const loadSlots = async () => {
-        const slots = await getAvailableTimeSlots(mentorId, selectedDate, timeOfDay);
+        const slots = await getAvailableTimeSlots(therapistId, selectedDate, timeOfDay);
         setAvailableSlots(slots);
         if (selectedTimeSlot && !slots.some(s => s.time === selectedTimeSlot.time)) {
             setSelectedTimeSlot(null);
@@ -42,9 +42,9 @@ export default function ChooseTimeScreen() {
     const handleNext = () => {
         if (selectedTimeSlot && availableSlots.some(slot => slot.time === selectedTimeSlot.time)) {
             navigation.navigate('ConfirmAppointment', {
-                mentorId,
-                mentorName,
-                mentorAvatar,
+                therapistId,
+                therapistName,
+                therapistAvatar,
                 selectedDate,
                 selectedTime: selectedTimeSlot.time,
                 selectedTimeEnd: selectedTimeSlot.endTime
@@ -88,7 +88,7 @@ export default function ChooseTimeScreen() {
                         When works best for you?
                     </Text>
                     <Text className="text-base font-medium text-text-sub-light dark:text-text-sub-dark">
-                        Select a time for your mentoring session.
+                        Select a time for your therapisting session.
                     </Text>
                 </View>
 

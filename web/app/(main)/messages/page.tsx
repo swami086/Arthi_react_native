@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
     title: 'Messages | SafeSpace',
-    description: 'Connect with your mentor or mentee via secure messaging.',
+    description: 'Connect with your therapist or patient via secure messaging.',
 };
 
 export default async function MessagesPage() {

@@ -4,8 +4,8 @@ import { createVideoRoom } from '../api/videoService';
  * Generate Daily.co meeting link for appointment
  * @deprecated Use createVideoRoom from videoService instead
  */
-export const generateJitsiMeetLink = (mentorId: string, menteeId: string, uniqueId: string): string => {
-    const roomName = `SafeSpace-${mentorId}-${menteeId}-${uniqueId}`;
+export const generateJitsiMeetLink = (therapistId: string, patientId: string, uniqueId: string): string => {
+    const roomName = `SafeSpace-${therapistId}-${patientId}-${uniqueId}`;
     const safeRoomName = roomName.replace(/[^a-zA-Z0-9-_]/g, '');
     return `https://meet.jit.si/${safeRoomName}`;
 };

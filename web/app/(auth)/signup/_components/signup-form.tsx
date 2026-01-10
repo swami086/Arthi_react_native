@@ -40,7 +40,7 @@ export default function SignUpForm() {
     } = useForm<SignUpFormData>({
         resolver: zodResolver(signupSchema),
         defaultValues: {
-            role: 'mentee',
+            role: 'patient',
             termsAccepted: false,
         }
     });
@@ -147,25 +147,25 @@ export default function SignUpForm() {
                     <div className="grid grid-cols-2 gap-4">
                         <button
                             type="button"
-                            onClick={() => setValue('role', 'mentee')}
+                            onClick={() => setValue('role', 'patient')}
                             className={cn(
                                 "relative flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all duration-200",
-                                selectedRole === 'mentee'
+                                selectedRole === 'patient'
                                     ? "border-primary bg-primary/5 ring-2 ring-primary/20"
                                     : "border-border-light dark:border-border-dark hover:border-primary/50"
                             )}
                         >
                             <div className={cn(
                                 "w-12 h-12 rounded-full flex items-center justify-center mb-2 transition-colors",
-                                selectedRole === 'mentee' ? "bg-primary text-white" : "bg-surface-light dark:bg-surface-dark text-text-secondary-light dark:text-text-secondary-dark"
+                                selectedRole === 'patient' ? "bg-primary text-white" : "bg-surface-light dark:bg-surface-dark text-text-secondary-light dark:text-text-secondary-dark"
                             )}>
                                 <GraduationCap className="w-6 h-6" />
                             </div>
                             <span className={cn(
                                 "font-semibold text-sm",
-                                selectedRole === 'mentee' ? "text-primary" : "text-text-secondary-light dark:text-text-secondary-dark"
-                            )}>Mentee</span>
-                            {selectedRole === 'mentee' && (
+                                selectedRole === 'patient' ? "text-primary" : "text-text-secondary-light dark:text-text-secondary-dark"
+                            )}>Patient</span>
+                            {selectedRole === 'patient' && (
                                 <div className="absolute top-2 right-2 text-primary">
                                     <CheckCircle2 className="w-4 h-4" />
                                 </div>
@@ -174,25 +174,25 @@ export default function SignUpForm() {
 
                         <button
                             type="button"
-                            onClick={() => setValue('role', 'mentor')}
+                            onClick={() => setValue('role', 'therapist')}
                             className={cn(
                                 "relative flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all duration-200",
-                                selectedRole === 'mentor'
+                                selectedRole === 'therapist'
                                     ? "border-primary bg-primary/5 ring-2 ring-primary/20"
                                     : "border-border-light dark:border-border-dark hover:border-primary/50"
                             )}
                         >
                             <div className={cn(
                                 "w-12 h-12 rounded-full flex items-center justify-center mb-2 transition-colors",
-                                selectedRole === 'mentor' ? "bg-primary text-white" : "bg-surface-light dark:bg-surface-dark text-text-secondary-light dark:text-text-secondary-dark"
+                                selectedRole === 'therapist' ? "bg-primary text-white" : "bg-surface-light dark:bg-surface-dark text-text-secondary-light dark:text-text-secondary-dark"
                             )}>
                                 <UserCheck className="w-6 h-6" />
                             </div>
                             <span className={cn(
                                 "font-semibold text-sm",
-                                selectedRole === 'mentor' ? "text-primary" : "text-text-secondary-light dark:text-text-secondary-dark"
-                            )}>Mentor</span>
-                            {selectedRole === 'mentor' && (
+                                selectedRole === 'therapist' ? "text-primary" : "text-text-secondary-light dark:text-text-secondary-dark"
+                            )}>Therapist</span>
+                            {selectedRole === 'therapist' && (
                                 <div className="absolute top-2 right-2 text-primary">
                                     <CheckCircle2 className="w-4 h-4" />
                                 </div>
@@ -202,7 +202,7 @@ export default function SignUpForm() {
                     {errors.role && <p className="text-xs text-status-error ml-1">{errors.role.message}</p>}
                 </div>
 
-                {selectedRole === 'mentor' && (
+                {selectedRole === 'therapist' && (
                     <motion.div
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -210,7 +210,7 @@ export default function SignUpForm() {
                     >
                         <Info className="w-5 h-5 text-secondary flex-shrink-0" />
                         <p className="text-xs text-secondary font-medium leading-relaxed">
-                            Note: Mentor accounts require admin approval before you can access the platform.
+                            Note: Therapist accounts require admin approval before you can access the platform.
                         </p>
                     </motion.div>
                 )}

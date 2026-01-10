@@ -28,13 +28,13 @@ export default async function VideoCallPage({ params }: PageProps) {
         redirect(`/video/${appointmentId}/waiting`);
     }
 
-    const isMentor = appointment.mentor_id === user.id;
+    const isTherapist = appointment.therapist_id === user.id;
 
     // Generate token server-side for security
     const { token } = await getDailyRoomToken(
         appointment.video_room.room_name,
         user.id,
-        isMentor ? 'mentor' : 'mentee'
+        isTherapist ? 'therapist' : 'patient'
     );
 
     if (!token) {

@@ -30,7 +30,7 @@ export default async function PaymentCheckoutPage({ searchParams }: CheckoutPage
             .from('appointments')
             .select(`
                 *,
-                mentor:profiles!appointments_mentor_id_fkey(
+                therapist:profiles!appointments_therapist_id_fkey(
                     full_name,
                     avatar_url,
                     specialization
@@ -52,7 +52,7 @@ export default async function PaymentCheckoutPage({ searchParams }: CheckoutPage
         }
 
         // Verify ownership
-        if (appointment.mentee_id !== user.id) {
+        if (appointment.patient_id !== user.id) {
             redirect('/appointments');
         }
 

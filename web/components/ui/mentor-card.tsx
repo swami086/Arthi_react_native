@@ -12,7 +12,7 @@ function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
 
-interface MentorCardProps {
+interface TherapistCardProps {
     name: string;
     role: string;
     imageUrl?: string;
@@ -24,7 +24,7 @@ interface MentorCardProps {
     className?: string;
 }
 
-export const MentorCard: React.FC<MentorCardProps> = ({
+export const TherapistCard: React.FC<TherapistCardProps> = ({
     name,
     role,
     imageUrl,
@@ -60,7 +60,7 @@ export const MentorCard: React.FC<MentorCardProps> = ({
                 <div className="flex justify-between items-start mb-2 gap-2">
                     <div className="min-w-0">
                         <span className="text-primary font-black text-[10px] uppercase tracking-[0.1em] mb-1 block">
-                            {role || 'Mentor'}
+                            {role || 'Therapist'}
                         </span>
                         <h3 className="text-xl font-black text-gray-900 dark:text-gray-100 mb-1 truncate leading-tight group-hover:text-primary transition-colors">
                             {name}

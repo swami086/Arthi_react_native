@@ -8,7 +8,7 @@ import { MotiView } from 'moti';
 
 import { useAuth } from '../../auth/hooks/useAuth';
 import { useProfile } from '../hooks/useProfile';
-import { useMyMentors } from '../hooks/useMyMentors';
+import { useMyTherapists } from '../hooks/useMyTherapists';
 import { useAppointments } from '../../appointments/hooks/useAppointments';
 import { GradientAvatar } from '../../../components/GradientAvatar';
 import { TagPill } from '../../../components/TagPill';
@@ -23,7 +23,7 @@ import { withRollbarPerformance } from '../../../services/rollbar';
 export const ProfileScreen = () => {
     const { signOut } = useAuth();
     const { profile, loading } = useProfile();
-    const { mentors, loading: mentorsLoading } = useMyMentors();
+    const { therapists, loading: therapistsLoading } = useMyTherapists();
     const { appointments } = useAppointments();
     const { isDark } = useColorScheme();
     const navigation = useNavigation<MainTabCompositeProp>();
@@ -41,7 +41,7 @@ export const ProfileScreen = () => {
         );
     }
 
-    const renderMentorItem = ({ item }: { item: any }) => (
+    const renderTherapistItem = ({ item }: { item: any }) => (
         <View className="bg-white dark:bg-gray-800 p-4 rounded-2xl mr-4 shadow-sm border border-gray-100 dark:border-gray-700 w-40 items-center relative">
             <View className="mb-2">
                 <GradientAvatar
@@ -182,19 +182,19 @@ export const ProfileScreen = () => {
                     </MotiView>
 
 
-                    {/* My Mentors */}
+                    {/* My Therapists */}
                     <MotiView from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ delay: 600, type: 'timing', duration: 500 }}>
                         <View className="mb-24">
                             <View className="flex-row justify-between items-center px-6 mb-4">
-                                <Text className="text-lg font-bold text-gray-900 dark:text-white">My Mentors</Text>
+                                <Text className="text-lg font-bold text-gray-900 dark:text-white">My Therapists</Text>
                                 <TouchableOpacity>
                                     <Text className="text-primary font-bold text-sm">See All</Text>
                                 </TouchableOpacity>
                             </View>
-                            {mentors.length > 0 ? (
+                            {therapists.length > 0 ? (
                                 <FlatList
-                                    data={mentors}
-                                    renderItem={renderMentorItem}
+                                    data={therapists}
+                                    renderItem={renderTherapistItem}
                                     keyExtractor={(item, index) => `${item.id}-${index}`}
                                     horizontal
                                     showsHorizontalScrollIndicator={false}
@@ -202,7 +202,7 @@ export const ProfileScreen = () => {
                                 />
                             ) : (
                                 <View className="px-6">
-                                    <Text className="text-gray-500 dark:text-gray-400 italic">No mentors connected yet.</Text>
+                                    <Text className="text-gray-500 dark:text-gray-400 italic">No therapists connected yet.</Text>
                                 </View>
                             )}
 

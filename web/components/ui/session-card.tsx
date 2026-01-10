@@ -18,8 +18,8 @@ interface SessionCardProps {
     date: string;
     duration: string;
     status: 'confirmed' | 'pending' | 'completed' | 'cancelled';
-    menteeName: string;
-    menteeAvatar?: string | null;
+    patientName: string;
+    patientAvatar?: string | null;
     meetingLink?: string | null;
     feedback?: string | null;
     onClick: () => void;
@@ -38,8 +38,8 @@ export const SessionCard: React.FC<SessionCardProps> = ({
     date,
     duration,
     status,
-    menteeName,
-    menteeAvatar,
+    patientName,
+    patientAvatar,
     meetingLink,
     feedback,
     onClick,
@@ -100,12 +100,12 @@ export const SessionCard: React.FC<SessionCardProps> = ({
             <div className="flex items-center mt-3 pt-3 border-t border-gray-50 dark:border-border-dark justify-between">
                 <div className="flex items-center gap-2.5">
                     <GradientAvatar
-                        src={menteeAvatar || 'https://via.placeholder.com/150'}
-                        alt={menteeName}
+                        src={patientAvatar || 'https://via.placeholder.com/150'}
+                        alt={patientName}
                         size={32}
                     />
                     <span className="text-gray-700 dark:text-gray-300 text-sm font-bold">
-                        with {menteeName}
+                        with {patientName}
                     </span>
                 </div>
 

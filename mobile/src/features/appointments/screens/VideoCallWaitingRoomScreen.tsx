@@ -13,7 +13,7 @@ import { createGoogleMeetRoom } from '../../../api/videoService';
 import { supabase } from '../../../api/supabase';
 import { useColorScheme } from '../../../hooks/useColorScheme';
 import { LinearGradient } from 'expo-linear-gradient';
-import RecordingConsentModal from '../../mentor/components/RecordingConsentModal';
+import RecordingConsentModal from '../../therapist/components/RecordingConsentModal';
 
 type VideoCallWaitingRoomRouteProp = RouteProp<RootStackParamList, 'VideoCallWaitingRoom'>;
 
@@ -58,7 +58,7 @@ export const VideoCallWaitingRoomScreen = () => {
                 .from('appointments')
                 .select(`
                     *,
-                    mentor:profiles!mentor_id(full_name, avatar_url)
+                    therapist:profiles!therapist_id(full_name, avatar_url)
                 `)
                 .eq('id', appointmentId)
                 .single();
@@ -87,7 +87,7 @@ export const VideoCallWaitingRoomScreen = () => {
                 user.id,
                 user.email || '',
                 (user as any).full_name || 'User',
-                user.role as 'mentor' | 'mentee',
+                user.role as 'therapist' | 'patient',
                 accessToken || undefined
             );
 
@@ -206,9 +206,9 @@ export const VideoCallWaitingRoomScreen = () => {
                     {/* Session Details */}
                     <View className="bg-surface-light dark:bg-surface-dark rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/5 flex-row items-center gap-4">
                         <View className="relative">
-                            {appointment?.mentor?.avatar_url ? (
+                            {appointment?.therapist?.avatar_url ? (
                                 <Image
-                                    source={{ uri: appointment.mentor.avatar_url }}
+                                    source={{ uri: appointment.therapist.avatar_url }}
                                     className="h-14 w-14 rounded-full bg-gray-200"
                                 />
                             ) : (
@@ -220,7 +220,7 @@ export const VideoCallWaitingRoomScreen = () => {
                         </View>
                         <View className="flex-1 justify-center">
                             <Text className="text-text-main-light dark:text-text-main-dark text-base font-bold leading-tight">
-                                {appointment?.mentor?.full_name || 'Mentor'}
+                                {appointment?.therapist?.full_name || 'Therapist'}
                             </Text>
                             <View className="flex-row items-center gap-2 mt-1">
                                 <View className={`px-2 py-0.5 rounded-md ${appointment?.session_type === 'public' ? 'bg-indigo-100' : 'bg-primary/10'}`}>

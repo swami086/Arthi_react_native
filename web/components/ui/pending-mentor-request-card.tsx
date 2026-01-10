@@ -13,7 +13,7 @@ function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
 
-interface PendingMentorRequestCardProps {
+interface PendingTherapistRequestCardProps {
     request: any;
     onAccept: (id: string) => void;
     onDecline: (id: string) => void;
@@ -21,20 +21,20 @@ interface PendingMentorRequestCardProps {
     className?: string;
 }
 
-export const PendingMentorRequestCard: React.FC<PendingMentorRequestCardProps> = ({
+export const PendingTherapistRequestCard: React.FC<PendingTherapistRequestCardProps> = ({
     request,
     onAccept,
     onDecline,
     isProcessing,
     className,
 }) => {
-    const mentor = request.mentor;
+    const therapist = request.therapist;
 
     const handleAccept = async () => {
         try {
             await onAccept(request.id);
         } catch (error) {
-            reportError(error, 'mentor_request.accept');
+            reportError(error, 'therapist_request.accept');
         }
     };
 
@@ -42,7 +42,7 @@ export const PendingMentorRequestCard: React.FC<PendingMentorRequestCardProps> =
         try {
             await onDecline(request.id);
         } catch (error) {
-            reportError(error, 'mentor_request.decline');
+            reportError(error, 'therapist_request.decline');
         }
     };
 
@@ -57,11 +57,11 @@ export const PendingMentorRequestCard: React.FC<PendingMentorRequestCardProps> =
         >
             <div className="flex items-start mb-4 gap-4">
                 <div className="h-14 w-14 rounded-2xl bg-gray-100 dark:bg-gray-800 overflow-hidden flex-shrink-0 border border-gray-100 dark:border-gray-700">
-                    {mentor?.avatar_url ? (
+                    {therapist?.avatar_url ? (
                         <div className="relative w-full h-full">
                             <Image
-                                src={mentor.avatar_url}
-                                alt={mentor.full_name}
+                                src={therapist.avatar_url}
+                                alt={therapist.full_name}
                                 fill
                                 className="object-cover"
                                 sizes="56px"
@@ -70,7 +70,7 @@ export const PendingMentorRequestCard: React.FC<PendingMentorRequestCardProps> =
                     ) : (
                         <div className="h-full w-full flex items-center justify-center bg-primary/10 dark:bg-primary/20">
                             <span className="text-xl font-black text-primary">
-                                {mentor?.full_name?.charAt(0) || '?'}
+                                {therapist?.full_name?.charAt(0) || '?'}
                             </span>
                         </div>
                     )}
@@ -79,14 +79,14 @@ export const PendingMentorRequestCard: React.FC<PendingMentorRequestCardProps> =
                 <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-start gap-2">
                         <h4 className="font-black text-lg text-gray-900 dark:text-gray-100 leading-none truncate">
-                            {mentor?.full_name || 'Unknown Mentor'}
+                            {therapist?.full_name || 'Unknown Therapist'}
                         </h4>
                         <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 whitespace-nowrap pt-1">
                             {new Date(request.created_at).toLocaleDateString()}
                         </span>
                     </div>
                     <p className="text-xs font-bold text-primary uppercase tracking-widest mt-1.5 opacity-80">
-                        {mentor?.specialization || 'Mentor Application'}
+                        {therapist?.specialization || 'Therapist Application'}
                     </p>
                 </div>
             </div>
@@ -99,16 +99,16 @@ export const PendingMentorRequestCard: React.FC<PendingMentorRequestCardProps> =
                 </div>
             )}
 
-            {mentor?.expertise_areas && (
+            {therapist?.expertise_areas && (
                 <div className="flex flex-wrap gap-2 mb-5">
-                    {mentor.expertise_areas.slice(0, 3).map((area: string, i: number) => (
+                    {therapist.expertise_areas.slice(0, 3).map((area: string, i: number) => (
                         <div key={i} className="bg-primary/5 dark:bg-primary/10 px-2.5 py-1 rounded-lg border border-primary/10">
                             <span className="text-[10px] font-black uppercase tracking-wider text-primary">{area}</span>
                         </div>
                     ))}
-                    {mentor.expertise_areas.length > 3 && (
+                    {therapist.expertise_areas.length > 3 && (
                         <div className="bg-gray-50 dark:bg-gray-800 px-2.5 py-1 rounded-lg border border-gray-100 dark:border-gray-700">
-                            <span className="text-[10px] font-black text-gray-400 dark:text-gray-500">+{mentor.expertise_areas.length - 3} More</span>
+                            <span className="text-[10px] font-black text-gray-400 dark:text-gray-500">+{therapist.expertise_areas.length - 3} More</span>
                         </div>
                     )}
                 </div>

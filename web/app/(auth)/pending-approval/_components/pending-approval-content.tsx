@@ -36,7 +36,7 @@ export default function PendingApprovalContent() {
                     Account Under Review
                 </h1>
                 <p className="text-text-secondary-light dark:text-text-secondary-dark max-w-sm mx-auto leading-relaxed">
-                    Your mentor profile is currently being reviewed by our clinical team. This process usually takes 24-48 hours.
+                    Your therapist profile is currently being reviewed by our clinical team. This process usually takes 24-48 hours.
                 </p>
             </div>
 

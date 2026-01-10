@@ -14,7 +14,7 @@ export const SignUpScreen = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [role, setRole] = useState<'mentor' | 'mentee'>('mentee');
+    const [role, setRole] = useState<'therapist' | 'patient'>('patient');
     const [termsAccepted, setTermsAccepted] = useState(false);
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -151,32 +151,32 @@ export const SignUpScreen = () => {
                         {/* Improve role selection buttons styling */}
                         <View className="flex-row space-x-4">
                             <TouchableOpacity
-                                onPress={() => setRole('mentee')}
+                                onPress={() => setRole('patient')}
                                 className={`flex-1 py-4 rounded-2xl border items-center shadow-sm transition-all ${
-                                    role === 'mentee'
+                                    role === 'patient'
                                         ? 'bg-primary border-primary'
                                         : 'bg-white dark:bg-surface-dark border-gray-200 dark:border-gray-700'
                                 }`}
                             >
-                                <Icon name="account-school" size={24} color={role === 'mentee' ? 'white' : '#94aeb8'} style={{marginBottom: 4}} />
-                                <Text className={`font-bold ${role === 'mentee' ? 'text-white' : 'text-text-sub-light dark:text-text-sub-dark'}`}>Mentee</Text>
+                                <Icon name="account-school" size={24} color={role === 'patient' ? 'white' : '#94aeb8'} style={{marginBottom: 4}} />
+                                <Text className={`font-bold ${role === 'patient' ? 'text-white' : 'text-text-sub-light dark:text-text-sub-dark'}`}>Patient</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                onPress={() => setRole('mentor')}
+                                onPress={() => setRole('therapist')}
                                 className={`flex-1 py-4 rounded-2xl border items-center shadow-sm transition-all ${
-                                    role === 'mentor'
+                                    role === 'therapist'
                                         ? 'bg-primary border-primary'
                                         : 'bg-white dark:bg-surface-dark border-gray-200 dark:border-gray-700'
                                 }`}
                             >
-                                <Icon name="human-male-board" size={24} color={role === 'mentor' ? 'white' : '#94aeb8'} style={{marginBottom: 4}} />
-                                <Text className={`font-bold ${role === 'mentor' ? 'text-white' : 'text-text-sub-light dark:text-text-sub-dark'}`}>Mentor</Text>
+                                <Icon name="human-male-board" size={24} color={role === 'therapist' ? 'white' : '#94aeb8'} style={{marginBottom: 4}} />
+                                <Text className={`font-bold ${role === 'therapist' ? 'text-white' : 'text-text-sub-light dark:text-text-sub-dark'}`}>Therapist</Text>
                             </TouchableOpacity>
                         </View>
-                        {role === 'mentor' && (
+                        {role === 'therapist' && (
                             <View className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl mt-1 border border-blue-100 dark:border-blue-800">
                                 <Text className="text-blue-700 dark:text-blue-300 text-xs leading-relaxed font-medium">
-                                    Note: Mentor accounts require admin approval before you can access the platform.
+                                    Note: Therapist accounts require admin approval before you can access the platform.
                                 </Text>
                             </View>
                         )}

@@ -72,19 +72,19 @@ export default function AdminDashboardClient({ stats, recentActions, adminName }
                         className="h-full cursor-pointer hover:border-amber-200 dark:hover:border-amber-900/50 transition-colors"
                     />
                 </Link>
-                <Link href="/admin/mentors" className="block">
+                <Link href="/admin/therapists" className="block">
                     <StatCard
-                        title="Active Mentors"
-                        value={stats?.active_mentors || 0}
+                        title="Active Therapists"
+                        value={stats?.active_therapists || 0}
                         icon={Users}
                         iconColor="#6366f1"
                         className="h-full cursor-pointer hover:border-indigo-200 dark:hover:border-indigo-900/50 transition-colors"
                     />
                 </Link>
-                <Link href="/admin/mentees" className="block">
+                <Link href="/admin/patients" className="block">
                     <StatCard
-                        title="Total Mentees"
-                        value={stats?.total_mentees || 0}
+                        title="Total Patients"
+                        value={stats?.total_patients || 0}
                         icon={GraduationCap}
                         iconColor="#10b981"
                         className="h-full cursor-pointer hover:border-emerald-200 dark:hover:border-emerald-900/50 transition-colors"
@@ -128,12 +128,12 @@ export default function AdminDashboardClient({ stats, recentActions, adminName }
                                     <div key={action.id || idx} className="flex items-start gap-4 p-4 rounded-2xl bg-gray-50 dark:bg-gray-800/30 group transition-all hover:bg-primary/5">
                                         <div className={cn(
                                             "h-10 w-10 rounded-xl flex items-center justify-center shrink-0",
-                                            action.action_type === 'approve_mentor' ? "bg-green-100 text-green-600 dark:bg-green-900/30" :
-                                                action.action_type === 'reject_mentor' ? "bg-red-100 text-red-600 dark:bg-red-900/30" :
+                                            action.action_type === 'approve_therapist' ? "bg-green-100 text-green-600 dark:bg-green-900/30" :
+                                                action.action_type === 'reject_therapist' ? "bg-red-100 text-red-600 dark:bg-red-900/30" :
                                                     "bg-blue-100 text-blue-600 dark:bg-blue-900/30"
                                         )}>
-                                            {action.action_type === 'approve_mentor' ? <CheckCircle className="h-5 w-5" /> :
-                                                action.action_type === 'reject_mentor' ? <XCircle className="h-5 w-5" /> :
+                                            {action.action_type === 'approve_therapist' ? <CheckCircle className="h-5 w-5" /> :
+                                                action.action_type === 'reject_therapist' ? <XCircle className="h-5 w-5" /> :
                                                     <Shield className="h-5 w-5" />}
                                         </div>
                                         <div className="flex-1">
@@ -199,7 +199,7 @@ export default function AdminDashboardClient({ stats, recentActions, adminName }
                         <Shield className="absolute -right-8 -bottom-8 h-32 w-32 text-primary/5 rotate-12" />
                         <h4 className="font-black text-primary text-sm uppercase tracking-widest mb-2">Pro Tip</h4>
                         <p className="text-gray-600 dark:text-gray-400 text-sm font-bold leading-relaxed relative z-10">
-                            Check pending approvals daily to maintain a high-quality mentor network and fast response times.
+                            Check pending approvals daily to maintain a high-quality therapist network and fast response times.
                         </p>
                     </div>
                 </motion.div>

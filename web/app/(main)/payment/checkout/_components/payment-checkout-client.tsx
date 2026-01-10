@@ -40,7 +40,7 @@ export default function PaymentCheckoutClient({ appointment, user }: PaymentChec
     const platformFee = Math.round(sessionFee * 0.1);
     const totalAmount = sessionFee + platformFee;
 
-    const mentor = appointment.mentor;
+    const therapist = appointment.therapist;
 
     const handleProceedToPay = async () => {
         if (!agreedToTerms) {
@@ -71,15 +71,15 @@ export default function PaymentCheckoutClient({ appointment, user }: PaymentChec
                     <div className="flex items-center gap-4 mb-4">
                         <div
                             className="w-16 h-16 rounded-full bg-cover bg-center shrink-0 border-2 border-[#30bae8]/20"
-                            style={{ backgroundImage: `url(${mentor?.avatar_url || 'https://via.placeholder.com/150'})` }}
+                            style={{ backgroundImage: `url(${therapist?.avatar_url || 'https://via.placeholder.com/150'})` }}
                         ></div>
                         <div>
-                            <h2 className="text-base font-bold dark:text-white text-slate-900">{mentor?.full_name}</h2>
-                            <p className="text-sm text-slate-500 dark:text-[#94aeb8] font-medium">{mentor?.specialization}</p>
+                            <h2 className="text-base font-bold dark:text-white text-slate-900">{therapist?.full_name}</h2>
+                            <p className="text-sm text-slate-500 dark:text-[#94aeb8] font-medium">{therapist?.specialization}</p>
                             <div className="flex items-center gap-1 mt-1">
                                 <Star className="w-4 h-4 text-[#30bae8] fill-[#30bae8]" />
-                                <span className="text-xs font-bold dark:text-white text-slate-900">{mentor?.rating_average || '5.0'}</span>
-                                <span className="text-xs text-slate-500 dark:text-[#94aeb8]">({mentor?.total_sessions || 0} reviews)</span>
+                                <span className="text-xs font-bold dark:text-white text-slate-900">{therapist?.rating_average || '5.0'}</span>
+                                <span className="text-xs text-slate-500 dark:text-[#94aeb8]">({therapist?.total_sessions || 0} reviews)</span>
                             </div>
                         </div>
                     </div>

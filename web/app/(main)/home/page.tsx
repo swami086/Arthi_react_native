@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic';
 
 import { createClient } from '@/lib/supabase/server';
-import { getMenteeStats, getRecentActivity } from '@/lib/services/stats-service';
+import { getPatientStats, getRecentActivity } from '@/lib/services/stats-service';
 import { HomePageClient } from './_components/home-page-client';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
 import { addBreadcrumb, reportError } from '@/lib/rollbar-utils';
@@ -40,7 +40,7 @@ export default async function HomePage() {
 
         // Parallel data fetching for performance
         const [stats, recentActivity] = await Promise.all([
-            getMenteeStats(supabase, user.id),
+            getPatientStats(supabase, user.id),
             getRecentActivity(supabase, user.id)
         ]);
 

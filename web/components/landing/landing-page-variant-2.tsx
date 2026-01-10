@@ -54,7 +54,7 @@ export default function LandingPageVariant2() {
                         animate={{ opacity: 1, y: 0 }}
                         className="tracking-tight text-[32px] font-extrabold leading-[1.15] text-left"
                     >
-                        Mentoring for the <span className="text-[#30bae8]">real you.</span>
+                        Therapisting for the <span className="text-[#30bae8]">real you.</span>
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
@@ -68,7 +68,7 @@ export default function LandingPageVariant2() {
                     <div className="flex gap-2 flex-wrap mb-6">
                         <div className="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-[#e7f0f3] dark:bg-gray-800 pl-3 pr-4 border border-transparent dark:border-gray-700">
                             <ShieldCheck className="w-4 h-4 text-[#30bae8]" />
-                            <p className="text-sm font-semibold">Mentoring</p>
+                            <p className="text-sm font-semibold">Therapisting</p>
                         </div>
                         <div className="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-[#e7f0f3] dark:bg-gray-800 pl-3 pr-4 border border-transparent dark:border-gray-700">
                             <Flower2 className="w-4 h-4 text-[#30bae8]" />
@@ -105,7 +105,7 @@ export default function LandingPageVariant2() {
                     >
                         Start a Conversation
                     </Button>
-                    <p className="text-center text-xs text-gray-400 mt-3 dark:text-gray-500">Free 15-min intro • Mentorship & Coaching</p>
+                    <p className="text-center text-xs text-gray-400 mt-3 dark:text-gray-500">Free 15-min intro • Therapistship & Coaching</p>
                 </div>
 
                 {/* Areas of Focus section */}
@@ -172,10 +172,10 @@ export default function LandingPageVariant2() {
                                 Whether you are a student facing exams or a young adult starting a career, we offer proactive support. We focus on personal development and reflective conversation to help you thrive.
                             </p>
                             <button
-                                onClick={() => router.push('/mentors')}
+                                onClick={() => router.push('/therapists')}
                                 className="flex items-center gap-2 text-[#30bae8] font-bold hover:underline"
                             >
-                                <span>Meet our mentors</span>
+                                <span>Meet our therapists</span>
                                 <ArrowRight className="w-4 h-4" />
                             </button>
                         </div>
@@ -189,7 +189,7 @@ export default function LandingPageVariant2() {
                             {[...Array(5)].map((_, i) => <Star key={i} className="w-5 h-5 fill-current" />)}
                         </div>
                         <p className="font-bold text-xl leading-snug mb-6">
-                            "My mentor helped me prepare for my first college interview and calmed my nerves about moving out. It felt super productive."
+                            "My therapist helped me prepare for my first college interview and calmed my nerves about moving out. It felt super productive."
                         </p>
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-300 font-bold">J</div>
@@ -209,7 +209,7 @@ export default function LandingPageVariant2() {
                             <div>
                                 <h4 className="font-bold text-yellow-900 dark:text-yellow-500 text-sm mb-2">Important Legal Notice</h4>
                                 <p className="text-xs text-yellow-800 dark:text-yellow-400 leading-relaxed font-body">
-                                    Safe Space provides <strong>life coaching and mentoring</strong>, which are distinct from medical or psychological treatment. Our services are educational and supportive in nature, focusing on personal development. We do <strong>not</strong> diagnose or treat mental health disorders.
+                                    Safe Space provides <strong>life coaching and therapisting</strong>, which are distinct from medical or psychological treatment. Our services are educational and supportive in nature, focusing on personal development. We do <strong>not</strong> diagnose or treat mental health disorders.
                                 </p>
                             </div>
                         </div>

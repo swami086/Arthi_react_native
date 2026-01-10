@@ -1,29 +1,29 @@
 import { useState, useEffect } from 'react';
-import { getAllMentees } from '../../../api/adminService';
+import { getAllPatients } from '../../../api/adminService';
 import { Profile } from '../../../api/types';
 
-export const useAllMentees = () => {
-    const [mentees, setMentees] = useState<Profile[]>([]);
+export const useAllPatients = () => {
+    const [patients, setPatients] = useState<Profile[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchMentees = async () => {
+    const fetchPatients = async () => {
         setLoading(true);
         setError(null);
         try {
-            const data = await getAllMentees();
-            setMentees(data);
+            const data = await getAllPatients();
+            setPatients(data);
         } catch (err: any) {
             console.error(err);
-            setError(err.message || 'Failed to fetch mentees');
+            setError(err.message || 'Failed to fetch patients');
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchMentees();
+        fetchPatients();
     }, []);
 
-    return { mentees, loading, error, fetchMentees };
+    return { patients, loading, error, fetchPatients };
 };

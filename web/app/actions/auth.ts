@@ -29,13 +29,13 @@ export const signInWithEmail = withErrorHandling(
 
         const userProfile = profile as { role: string; approval_status: string | null } | null;
 
-        if (userProfile?.role === 'mentor' && userProfile?.approval_status === 'pending') {
+        if (userProfile?.role === 'therapist' && userProfile?.approval_status === 'pending') {
             redirect('/pending-approval');
-        } else if (userProfile?.role === 'mentor') {
-            redirect('/mentor/home');
+        } else if (userProfile?.role === 'therapist') {
+            redirect('/therapist/home');
         } else if (userProfile?.role === 'admin') {
             redirect('/admin/dashboard');
-        } else if (userProfile?.role === 'mentee') {
+        } else if (userProfile?.role === 'patient') {
             redirect('/home');
         }
 
@@ -49,7 +49,7 @@ export const signUpWithEmail = withErrorHandling(
     async (
         email: string,
         password: string,
-        userData: { fullName: string; role: 'mentor' | 'mentee' }
+        userData: { fullName: string; role: 'therapist' | 'patient' }
     ) => {
         const supabase = await createClient();
 
@@ -79,7 +79,7 @@ export const signUpWithEmail = withErrorHandling(
                 user_id: authData.user.id,
                 full_name: userData.fullName,
                 role: userData.role,
-                approval_status: userData.role === 'mentor' ? 'pending' : null,
+                approval_status: userData.role === 'therapist' ? 'pending' : null,
             });
 
         if (profileError) {
@@ -88,7 +88,7 @@ export const signUpWithEmail = withErrorHandling(
             throw new Error('Failed to create user profile');
         }
 
-        if (userData.role === 'mentor') {
+        if (userData.role === 'therapist') {
             redirect('/pending-approval');
         } else {
             redirect('/home');

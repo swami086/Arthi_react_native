@@ -8,14 +8,14 @@ import { MotiView, MotiText } from 'moti';
 
 import { MainTabCompositeProp } from '../../../navigation/types';
 
-import { usePendingMentorRequests } from '../../profile/hooks/usePendingMentorRequests';
+import { usePendingTherapistRequests } from '../../profile/hooks/usePendingTherapistRequests';
 
 import { withRollbarPerformance } from '../../../services/rollbar';
 
 export const HomeScreen = () => {
     const { user } = useAuth();
     const navigation = useNavigation<MainTabCompositeProp>();
-    const { requests, refetch } = usePendingMentorRequests();
+    const { requests, refetch } = usePendingTherapistRequests();
 
     useFocusEffect(
         React.useCallback(() => {
@@ -89,14 +89,14 @@ export const HomeScreen = () => {
                     className="mb-8"
                 >
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('PendingMentorRequests')}
+                        onPress={() => navigation.navigate('PendingTherapistRequests')}
                         className="bg-red-500 p-4 rounded-xl flex-row items-center justify-between shadow-md"
                     >
                         <View className="flex-row items-center">
                             <Icon name="account-alert" size={24} color="#fff" />
                             <View className="ml-3">
                                 <Text className="text-white font-bold text-lg">Pending Requests</Text>
-                                <Text className="text-white/90">You have {requests.length} mentor invite(s)</Text>
+                                <Text className="text-white/90">You have {requests.length} therapist invite(s)</Text>
                             </View>
                         </View>
                         <Icon name="chevron-right" size={24} color="#fff" />
@@ -123,9 +123,9 @@ export const HomeScreen = () => {
                         animate={itemVariants.animate as any}
                         className="flex-1 mr-2"
                     >
-                        <TouchableOpacity onPress={() => navigation.navigate('Mentors')} className="bg-primary p-4 rounded-xl items-center w-full">
+                        <TouchableOpacity onPress={() => navigation.navigate('Therapists')} className="bg-primary p-4 rounded-xl items-center w-full">
                             <Icon name="account-search" size={24} color="#fff" />
-                            <Text className="text-white font-bold mt-2">Find Mentor</Text>
+                            <Text className="text-white font-bold mt-2">Find Therapist</Text>
                         </TouchableOpacity>
                     </MotiView>
                     <MotiView

@@ -8,7 +8,7 @@ export function generateOrganizationSchema() {
         '@context': 'https://schema.org',
         '@type': 'Organization',
         name: 'SafeSpace',
-        description: 'Mental health support platform connecting mentees with certified life coaches',
+        description: 'Mental health support platform connecting patients with certified life coaches',
         url: process.env.NEXT_PUBLIC_SITE_URL || 'https://safespace.app',
         logo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://safespace.app'}/logo.png`,
         sameAs: [
@@ -25,24 +25,24 @@ export function generateOrganizationSchema() {
     };
 }
 
-// Person schema for mentor profiles
-export function generateMentorSchema(mentor: Profile & { avg_rating?: number, total_reviews?: number }) {
+// Person schema for therapist profiles
+export function generateTherapistSchema(therapist: Profile & { avg_rating?: number, total_reviews?: number }) {
     return {
         '@context': 'https://schema.org',
         '@type': 'Person',
-        name: mentor.full_name,
-        image: mentor.avatar_url,
+        name: therapist.full_name,
+        image: therapist.avatar_url,
         jobTitle: 'Life Coach',
-        description: mentor.bio || 'Certified Life Coach at SafeSpace',
-        knowsAbout: (mentor.expertise_areas as string[]) || [],
+        description: therapist.bio || 'Certified Life Coach at SafeSpace',
+        knowsAbout: (therapist.expertise_areas as string[]) || [],
         worksFor: {
             '@type': 'Organization',
             name: 'SafeSpace'
         },
-        aggregateRating: mentor.avg_rating ? {
+        aggregateRating: therapist.avg_rating ? {
             '@type': 'AggregateRating',
-            ratingValue: mentor.avg_rating,
-            reviewCount: mentor.total_reviews
+            ratingValue: therapist.avg_rating,
+            reviewCount: therapist.total_reviews
         } : undefined,
         offers: {
             '@type': 'Service',
@@ -56,14 +56,14 @@ export function generateMentorSchema(mentor: Profile & { avg_rating?: number, to
 }
 
 // Service schema for booking pages
-export function generateServiceSchema(mentorName: string, serviceName: string) {
+export function generateServiceSchema(therapistName: string, serviceName: string) {
     return {
         '@context': 'https://schema.org',
         '@type': 'Service',
         name: serviceName,
         provider: {
             '@type': 'Person',
-            name: mentorName
+            name: therapistName
         },
         areaServed: 'India',
         serviceType: 'Mental Health Support'

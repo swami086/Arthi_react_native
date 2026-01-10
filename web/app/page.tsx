@@ -11,7 +11,7 @@ import { LandingCTA } from './_components/landing-cta-client';
 
 export const metadata = generateMetadata({
   title: 'SafeSpace - Mental Health Support Platform',
-  description: 'Connect with mentors for mental health support, life coaching, and personal growth. Find your safe space today.',
+  description: 'Connect with therapists for mental health support, life coaching, and personal growth. Find your safe space today.',
   path: '/',
 });
 
@@ -35,7 +35,7 @@ export default function LandingPage() {
               <div className="flex-1 space-y-6">
                 <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight">For Students & Teens</h2>
                 <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed font-medium">
-                  Whether you're stressing about finals, friendship drama, or just feeling "off"—we're here. We are mentors, not doctors.
+                  Whether you're stressing about finals, friendship drama, or just feeling "off"—we're here. We are therapists, not doctors.
                 </p>
                 <Link href="/about" className="inline-flex items-center gap-2 text-primary font-bold text-lg hover:underline underline-offset-8">
                   Learn how it works <ArrowRight className="w-5 h-5" />
@@ -47,7 +47,7 @@ export default function LandingPage() {
                     <div key={i} className="w-20 h-20 rounded-full border-4 border-white dark:border-gray-800 overflow-hidden shadow-xl">
                       <Image
                         src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 10}`}
-                        alt="Mentor"
+                        alt="Therapist"
                         width={80}
                         height={80}
                       />

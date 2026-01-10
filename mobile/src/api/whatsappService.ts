@@ -38,7 +38,7 @@ export const sendAppointmentConfirmation = async (
     recipientId: string,
     phoneNumber: string,
     appointmentDetails: {
-        mentorName: string;
+        therapistName: string;
         date: string;
         time: string;
         meetingLink: string;
@@ -61,7 +61,7 @@ export const sendAppointmentReminder = async (
     recipientId: string,
     phoneNumber: string,
     appointmentDetails: {
-        mentorName: string;
+        therapistName: string;
         date: string;
         time: string;
     }

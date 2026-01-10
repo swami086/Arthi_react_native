@@ -27,13 +27,13 @@ export default async function FeedbackPage({ params }: PageProps) {
         return notFound();
     }
 
-    const isMentor = appointment.mentor_id === user.id;
+    const isTherapist = appointment.therapist_id === user.id;
 
     return (
         <FeedbackClient
             appointment={appointment}
             user={user}
-            role={isMentor ? 'mentor' : 'mentee'}
+            role={isTherapist ? 'therapist' : 'patient'}
         />
     );
 }

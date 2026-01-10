@@ -15,7 +15,7 @@ export async function generateSoapNote(appointmentId: string, transcriptId: stri
 
         if (error) throw error;
 
-        revalidatePath(`/mentor/sessions/${appointmentId}/soap`);
+        revalidatePath(`/therapist/sessions/${appointmentId}/soap`);
         return { success: true, data };
     } catch (error: any) {
         console.error('Error generating SOAP note:', error);
@@ -34,7 +34,7 @@ export async function regenerateSoapNote(appointmentId: string, transcriptId: st
 
         if (error) throw error;
 
-        revalidatePath(`/mentor/sessions/${appointmentId}/soap`);
+        revalidatePath(`/therapist/sessions/${appointmentId}/soap`);
         return { success: true, data };
     } catch (error: any) {
         console.error('Error regenerating SOAP note:', error);
@@ -56,13 +56,13 @@ export async function updateSoapNote(
             .update({
                 ...updates,
                 updated_at: new Date().toISOString(),
-                edited_by_mentor: true
+                edited_by_therapist: true
             })
             .eq('id', id);
 
         if (error) throw error;
 
-        revalidatePath(`/mentor/sessions/${appointmentId}/soap`);
+        revalidatePath(`/therapist/sessions/${appointmentId}/soap`);
         return { success: true };
     } catch (error: any) {
         console.error('Error updating SOAP note:', error);
@@ -84,7 +84,7 @@ export async function finalizeSoapNote(id: string, appointmentId: string) {
 
         if (error) throw error;
 
-        revalidatePath(`/mentor/sessions/${appointmentId}/soap`);
+        revalidatePath(`/therapist/sessions/${appointmentId}/soap`);
         return { success: true };
     } catch (error: any) {
         console.error('Error finalizing SOAP note:', error);

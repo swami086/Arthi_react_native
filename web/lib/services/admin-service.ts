@@ -5,16 +5,16 @@ import { reportError, startTimer, endTimer, withRollbarSpan, getTraceId } from '
 
 export const adminService = {
     /**
-     * Fetch mentors with approval_status='pending'
+     * Fetch therapists with approval_status='pending'
      */
-    async getPendingMentors(supabase: SupabaseClient<Database>) {
-        const spanName = 'adminService:getPendingMentors';
+    async getPendingTherapists(supabase: SupabaseClient<Database>) {
+        const spanName = 'adminService:getPendingTherapists';
         startTimer(spanName);
         try {
             const { data, error } = await supabase
                 .from('profiles')
                 .select('*')
-                .eq('role', 'mentor')
+                .eq('role', 'therapist')
                 .eq('approval_status', 'pending')
                 .order('created_at', { ascending: false });
 
@@ -28,10 +28,10 @@ export const adminService = {
     },
 
     /**
-     * Approval process for a mentor
+     * Approval process for a therapist
      */
-    async approveMentor(supabase: SupabaseClient<Database>, mentorId: string, adminId: string, notes?: string) {
-        const spanName = 'adminService:approveMentor';
+    async approveTherapist(supabase: SupabaseClient<Database>, therapistId: string, adminId: string, notes?: string) {
+        const spanName = 'adminService:approveTherapist';
         startTimer(spanName);
         try {
             const { error } = await (supabase
@@ -40,27 +40,27 @@ export const adminService = {
                     approval_status: 'approved',
                     approval_date: new Date().toISOString(),
                     approved_by: adminId,
-                    mentor_bio_extended: notes || null
+                    therapist_bio_extended: notes || null
                 })
-                .eq('user_id', mentorId);
+                .eq('user_id', therapistId);
 
             if (error) throw error;
 
-            await this.logAdminAction(supabase, adminId, 'approve_mentor', mentorId, { notes });
+            await this.logAdminAction(supabase, adminId, 'approve_therapist', therapistId, { notes });
 
-            endTimer(spanName, 'adminService', { mentorId, span_name: spanName });
+            endTimer(spanName, 'adminService', { therapistId, span_name: spanName });
             return { success: true };
         } catch (error) {
-            reportError(error, spanName, { mentorId, adminId, span_name: spanName, traceId: getTraceId() });
+            reportError(error, spanName, { therapistId, adminId, span_name: spanName, traceId: getTraceId() });
             throw error;
         }
     },
 
     /**
-     * Rejection process for a mentor
+     * Rejection process for a therapist
      */
-    async rejectMentor(supabase: SupabaseClient<Database>, mentorId: string, adminId: string, reason: string) {
-        const spanName = 'adminService:rejectMentor';
+    async rejectTherapist(supabase: SupabaseClient<Database>, therapistId: string, adminId: string, reason: string) {
+        const spanName = 'adminService:rejectTherapist';
         startTimer(spanName);
         try {
             const { error } = await (supabase
@@ -69,31 +69,31 @@ export const adminService = {
                     approval_status: 'rejected',
                     rejection_reason: reason
                 })
-                .eq('user_id', mentorId);
+                .eq('user_id', therapistId);
 
             if (error) throw error;
 
-            await this.logAdminAction(supabase, adminId, 'reject_mentor', mentorId, { reason });
+            await this.logAdminAction(supabase, adminId, 'reject_therapist', therapistId, { reason });
 
-            endTimer(spanName, 'adminService', { mentorId, span_name: spanName });
+            endTimer(spanName, 'adminService', { therapistId, span_name: spanName });
             return { success: true };
         } catch (error) {
-            reportError(error, spanName, { mentorId, adminId, span_name: spanName, traceId: getTraceId() });
+            reportError(error, spanName, { therapistId, adminId, span_name: spanName, traceId: getTraceId() });
             throw error;
         }
     },
 
     /**
-     * Fetch all mentors with optional status filter
+     * Fetch all therapists with optional status filter
      */
-    async getAllMentors(supabase: SupabaseClient<Database>, status?: string) {
-        const spanName = 'adminService:getAllMentors';
+    async getAllTherapists(supabase: SupabaseClient<Database>, status?: string) {
+        const spanName = 'adminService:getAllTherapists';
         startTimer(spanName);
         try {
             let query = supabase
                 .from('profiles')
                 .select('*')
-                .eq('role', 'mentor');
+                .eq('role', 'therapist');
 
             if (status && status !== 'All') {
                 query = query.eq('approval_status', status.toLowerCase());
@@ -111,16 +111,16 @@ export const adminService = {
     },
 
     /**
-     * Fetch all mentees
+     * Fetch all patients
      */
-    async getAllMentees(supabase: SupabaseClient<Database>) {
-        const spanName = 'adminService:getAllMentees';
+    async getAllPatients(supabase: SupabaseClient<Database>) {
+        const spanName = 'adminService:getAllPatients';
         startTimer(spanName);
         try {
             const { data, error } = await supabase
                 .from('profiles')
                 .select('*')
-                .eq('role', 'mentee')
+                .eq('role', 'patient')
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
@@ -133,24 +133,24 @@ export const adminService = {
     },
 
     /**
-     * Fetch single mentor profile details
+     * Fetch single therapist profile details
      */
-    async getMentorDetails(supabase: SupabaseClient<Database>, mentorId: string) {
-        const spanName = 'adminService:getMentorDetails';
+    async getTherapistDetails(supabase: SupabaseClient<Database>, therapistId: string) {
+        const spanName = 'adminService:getTherapistDetails';
         startTimer(spanName);
         try {
             const { data, error } = await supabase
                 .from('profiles')
                 .select('*')
-                .eq('user_id', mentorId)
-                .eq('role', 'mentor')
+                .eq('user_id', therapistId)
+                .eq('role', 'therapist')
                 .single();
 
             if (error) throw error;
-            endTimer(spanName, 'adminService', { mentorId, span_name: spanName });
+            endTimer(spanName, 'adminService', { therapistId, span_name: spanName });
             return data as Profile;
         } catch (error) {
-            reportError(error, spanName, { mentorId, span_name: spanName, traceId: getTraceId() });
+            reportError(error, spanName, { therapistId, span_name: spanName, traceId: getTraceId() });
             throw error;
         }
     },
@@ -252,10 +252,10 @@ export const adminService = {
         const spanName = 'adminService:revokeAdminAccess';
         startTimer(spanName);
         try {
-            // Change role back to mentee or just remove admin privileges
+            // Change role back to patient or just remove admin privileges
             const { error } = await (supabase
                 .from('profiles') as any)
-                .update({ role: 'mentee', is_super_admin: false })
+                .update({ role: 'patient', is_super_admin: false })
                 .eq('user_id', targetAdminId)
                 .eq('role', 'admin');
 

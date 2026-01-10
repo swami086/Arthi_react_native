@@ -14,10 +14,10 @@ serve(async (req) => {
         let message = '';
         switch (messageType) {
             case 'confirmation':
-                message = `✅ Your therapy session with ${templateData.mentorName} is confirmed!\n\n📅 Date: ${templateData.date}\n⏰ Time: ${templateData.time}\n🔗 Join: ${templateData.meetingLink}\n\nSee you soon! 🌟`;
+                message = `✅ Your therapy session with ${templateData.therapistName} is confirmed!\n\n📅 Date: ${templateData.date}\n⏰ Time: ${templateData.time}\n🔗 Join: ${templateData.meetingLink}\n\nSee you soon! 🌟`;
                 break;
             case 'reminder':
-                message = `⏰ Reminder: Your session with ${templateData.mentorName} is in 24 hours!\n\n📅 ${templateData.date} at ${templateData.time}\n\nDon't forget to join on time! 💙`;
+                message = `⏰ Reminder: Your session with ${templateData.therapistName} is in 24 hours!\n\n📅 ${templateData.date} at ${templateData.time}\n\nDon't forget to join on time! 💙`;
                 break;
             case 'cancellation':
                 message = `❌ Your session has been cancelled.\nReason: ${templateData.reason}\n\nPlease visit the app for more details.`;

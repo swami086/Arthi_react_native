@@ -156,7 +156,7 @@ function VideoCallClient({ roomUrl, token, appointment, user }: VideoCallClientP
                 <div className="flex items-center gap-3">
                     <span className="bg-red-500 w-2 h-2 rounded-full animate-pulse"></span>
                     <span className="text-white font-medium text-sm tracking-wide">
-                        {appointment.mentor.full_name} • {appointment.duration_minutes} min session
+                        {appointment.therapist.full_name} • {appointment.duration_minutes} min session
                     </span>
                 </div>
                 <div className="flex items-center gap-2">

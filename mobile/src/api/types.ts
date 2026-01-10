@@ -48,7 +48,7 @@ export interface Database {
             profiles: {
                 Row: {
                     user_id: string
-                    role: 'mentor' | 'mentee' | 'admin'
+                    role: 'therapist' | 'patient' | 'admin'
                     full_name: string | null
                     bio: string | null
                     avatar_url: string | null
@@ -66,7 +66,7 @@ export interface Database {
                     background_check_status: 'pending' | 'completed' | 'failed' | null
                     verification_documents: string[] | null
                     rejection_reason: string | null
-                    mentor_bio_extended: string | null
+                    therapist_bio_extended: string | null
                     certifications: string[] | null
                     is_super_admin: boolean
                     hourly_rate: number | null
@@ -75,7 +75,7 @@ export interface Database {
                 }
                 Insert: {
                     user_id: string
-                    role: 'mentor' | 'mentee' | 'admin'
+                    role: 'therapist' | 'patient' | 'admin'
                     full_name?: string | null
                     bio?: string | null
                     avatar_url?: string | null
@@ -93,14 +93,14 @@ export interface Database {
                     background_check_status?: 'pending' | 'completed' | 'failed' | null
                     verification_documents?: string[] | null
                     rejection_reason?: string | null
-                    mentor_bio_extended?: string | null
+                    therapist_bio_extended?: string | null
                     certifications?: string[] | null
                     is_super_admin?: boolean
                     hourly_rate?: number | null
                 }
                 Update: {
                     user_id?: string
-                    role?: 'mentor' | 'mentee' | 'admin'
+                    role?: 'therapist' | 'patient' | 'admin'
                     full_name?: string | null
                     bio?: string | null
                     avatar_url?: string | null
@@ -118,17 +118,17 @@ export interface Database {
                     background_check_status?: 'pending' | 'completed' | 'failed' | null
                     verification_documents?: string[] | null
                     rejection_reason?: string | null
-                    mentor_bio_extended?: string | null
+                    therapist_bio_extended?: string | null
                     certifications?: string[] | null
                     is_super_admin?: boolean
                     hourly_rate?: number | null
                 }
             }
-            mentor_mentee_relationships: {
+            therapist_patient_relationships: {
                 Row: {
                     id: string
-                    mentor_id: string
-                    mentee_id: string
+                    therapist_id: string
+                    patient_id: string
                     status: 'active' | 'inactive' | 'pending' | 'completed' | 'declined'
                     assigned_date: string
                     assigned_by: string | null
@@ -139,8 +139,8 @@ export interface Database {
                 }
                 Insert: {
                     id?: string
-                    mentor_id: string
-                    mentee_id: string
+                    therapist_id: string
+                    patient_id: string
                     status?: 'active' | 'inactive' | 'pending' | 'completed' | 'declined'
                     assigned_date?: string
                     assigned_by?: string | null
@@ -151,8 +151,8 @@ export interface Database {
                 }
                 Update: {
                     id?: string
-                    mentor_id?: string
-                    mentee_id?: string
+                    therapist_id?: string
+                    patient_id?: string
                     status?: 'active' | 'inactive' | 'pending' | 'completed' | 'declined'
                     assigned_date?: string
                     assigned_by?: string | null
@@ -162,12 +162,12 @@ export interface Database {
                     updated_at?: string
                 }
             }
-            mentee_referrals: {
+            patient_referrals: {
                 Row: {
                     id: string
-                    mentee_id: string
-                    referring_mentor_id: string
-                    referred_to_mentor_id: string
+                    patient_id: string
+                    referring_therapist_id: string
+                    referred_to_therapist_id: string
                     status: 'pending' | 'accepted' | 'declined' | 'completed'
                     referral_reason: string
                     referral_notes: string | null
@@ -177,9 +177,9 @@ export interface Database {
                 }
                 Insert: {
                     id?: string
-                    mentee_id: string
-                    referring_mentor_id: string
-                    referred_to_mentor_id: string
+                    patient_id: string
+                    referring_therapist_id: string
+                    referred_to_therapist_id: string
                     status?: 'pending' | 'accepted' | 'declined' | 'completed'
                     referral_reason: string
                     referral_notes?: string | null
@@ -189,9 +189,9 @@ export interface Database {
                 }
                 Update: {
                     id?: string
-                    mentee_id?: string
-                    referring_mentor_id?: string
-                    referred_to_mentor_id?: string
+                    patient_id?: string
+                    referring_therapist_id?: string
+                    referred_to_therapist_id?: string
                     status?: 'pending' | 'accepted' | 'declined' | 'completed'
                     referral_reason?: string
                     referral_notes?: string | null
@@ -200,12 +200,12 @@ export interface Database {
                     responded_at?: string | null
                 }
             }
-            mentee_invitations: {
+            patient_invitations: {
                 Row: {
                     id: string
-                    mentor_id: string
-                    mentee_email: string
-                    mentee_name: string | null
+                    therapist_id: string
+                    patient_email: string
+                    patient_name: string | null
                     invitation_message: string | null
                     status: 'pending' | 'accepted' | 'expired'
                     invitation_token: string
@@ -215,9 +215,9 @@ export interface Database {
                 }
                 Insert: {
                     id?: string
-                    mentor_id: string
-                    mentee_email: string
-                    mentee_name?: string | null
+                    therapist_id: string
+                    patient_email: string
+                    patient_name?: string | null
                     invitation_message?: string | null
                     status?: 'pending' | 'accepted' | 'expired'
                     invitation_token: string
@@ -227,9 +227,9 @@ export interface Database {
                 }
                 Update: {
                     id?: string
-                    mentor_id?: string
-                    mentee_email?: string
-                    mentee_name?: string | null
+                    therapist_id?: string
+                    patient_email?: string
+                    patient_name?: string | null
                     invitation_message?: string | null
                     status?: 'pending' | 'accepted' | 'expired'
                     invitation_token?: string
@@ -242,7 +242,7 @@ export interface Database {
                 Row: {
                     id: string
                     admin_id: string
-                    action_type: 'create_admin' | 'approve_mentor' | 'reject_mentor' | 'assign_mentee'
+                    action_type: 'create_admin' | 'approve_therapist' | 'reject_therapist' | 'assign_patient'
                     target_user_id: string | null
                     details: Json | null
                     created_at: string
@@ -250,7 +250,7 @@ export interface Database {
                 Insert: {
                     id?: string
                     admin_id: string
-                    action_type: 'create_admin' | 'approve_mentor' | 'reject_mentor' | 'assign_mentee'
+                    action_type: 'create_admin' | 'approve_therapist' | 'reject_therapist' | 'assign_patient'
                     target_user_id?: string | null
                     details?: Json | null
                     created_at?: string
@@ -258,7 +258,7 @@ export interface Database {
                 Update: {
                     id?: string
                     admin_id?: string
-                    action_type?: 'create_admin' | 'approve_mentor' | 'reject_mentor' | 'assign_mentee'
+                    action_type?: 'create_admin' | 'approve_therapist' | 'reject_therapist' | 'assign_patient'
                     target_user_id?: string | null
                     details?: Json | null
                     created_at?: string
@@ -267,8 +267,8 @@ export interface Database {
             appointments: {
                 Row: {
                     id: string
-                    mentor_id: string
-                    mentee_id: string | null
+                    therapist_id: string
+                    patient_id: string | null
                     start_time: string
                     end_time: string
                     status: 'pending' | 'confirmed' | 'completed' | 'cancelled'
@@ -286,8 +286,8 @@ export interface Database {
                 }
                 Insert: {
                     id?: string
-                    mentor_id: string
-                    mentee_id?: string | null
+                    therapist_id: string
+                    patient_id?: string | null
                     start_time: string
                     end_time: string
                     status?: 'pending' | 'confirmed' | 'completed' | 'cancelled'
@@ -304,8 +304,8 @@ export interface Database {
                 }
                 Update: {
                     id?: string
-                    mentor_id?: string
-                    mentee_id?: string | null
+                    therapist_id?: string
+                    patient_id?: string | null
                     start_time?: string
                     end_time?: string
                     status?: 'pending' | 'confirmed' | 'completed' | 'cancelled'
@@ -350,8 +350,8 @@ export interface Database {
             reviews: {
                 Row: {
                     id: string
-                    mentor_id: string
-                    mentee_id: string
+                    therapist_id: string
+                    patient_id: string
                     appointment_id: string
                     rating: number
                     comment: string | null
@@ -359,8 +359,8 @@ export interface Database {
                 }
                 Insert: {
                     id?: string
-                    mentor_id: string
-                    mentee_id: string
+                    therapist_id: string
+                    patient_id: string
                     appointment_id: string
                     rating: number
                     comment?: string | null
@@ -368,8 +368,8 @@ export interface Database {
                 }
                 Update: {
                     id?: string
-                    mentor_id?: string
-                    mentee_id?: string
+                    therapist_id?: string
+                    patient_id?: string
                     appointment_id?: string
                     rating?: number
                     comment?: string | null
@@ -390,11 +390,11 @@ export interface Database {
                     name: string
                 }
             }
-            mentee_goals: {
+            patient_goals: {
                 Row: {
                     id: string
-                    mentee_id: string
-                    mentor_id: string
+                    patient_id: string
+                    therapist_id: string
                     goal_title: string
                     goal_description: string | null
                     progress_percentage: number
@@ -404,8 +404,8 @@ export interface Database {
                 }
                 Insert: {
                     id?: string
-                    mentee_id: string
-                    mentor_id: string
+                    patient_id: string
+                    therapist_id: string
                     goal_title: string
                     goal_description?: string | null
                     progress_percentage?: number
@@ -415,8 +415,8 @@ export interface Database {
                 }
                 Update: {
                     id?: string
-                    mentee_id?: string
-                    mentor_id?: string
+                    patient_id?: string
+                    therapist_id?: string
                     goal_title?: string
                     goal_description?: string | null
                     progress_percentage?: number
@@ -425,11 +425,11 @@ export interface Database {
                     updated_at?: string
                 }
             }
-            mentor_notes: {
+            therapist_notes: {
                 Row: {
                     id: string
-                    mentor_id: string
-                    mentee_id: string
+                    therapist_id: string
+                    patient_id: string
                     note_content: string
                     is_private: boolean
                     created_at: string
@@ -437,8 +437,8 @@ export interface Database {
                 }
                 Insert: {
                     id?: string
-                    mentor_id: string
-                    mentee_id: string
+                    therapist_id: string
+                    patient_id: string
                     note_content: string
                     is_private?: boolean
                     created_at?: string
@@ -446,8 +446,8 @@ export interface Database {
                 }
                 Update: {
                     id?: string
-                    mentor_id?: string
-                    mentee_id?: string
+                    therapist_id?: string
+                    patient_id?: string
                     note_content?: string
                     is_private?: boolean
                     created_at?: string
@@ -458,8 +458,8 @@ export interface Database {
                 Row: {
                     id: string
                     appointment_id: string
-                    mentee_id: string
-                    mentor_id: string
+                    patient_id: string
+                    therapist_id: string
                     amount: number
                     currency: string
                     razorpay_order_id: string | null
@@ -468,7 +468,7 @@ export interface Database {
                     status: 'pending' | 'processing' | 'completed' | 'failed' | 'refunded'
                     payment_method: string
                     platform_fee: number | null
-                    mentor_payout: number | null
+                    therapist_payout: number | null
                     failure_reason: string | null
                     metadata: Json | null
                     created_at: string
@@ -477,8 +477,8 @@ export interface Database {
                 Insert: {
                     id?: string
                     appointment_id: string
-                    mentee_id: string
-                    mentor_id: string
+                    patient_id: string
+                    therapist_id: string
                     amount: number
                     currency?: string
                     razorpay_order_id?: string | null
@@ -487,7 +487,7 @@ export interface Database {
                     status?: 'pending' | 'processing' | 'completed' | 'failed' | 'refunded'
                     payment_method?: string
                     platform_fee?: number | null
-                    mentor_payout?: number | null
+                    therapist_payout?: number | null
                     failure_reason?: string | null
                     metadata?: Json | null
                     created_at?: string
@@ -496,8 +496,8 @@ export interface Database {
                 Update: {
                     id?: string
                     appointment_id?: string
-                    mentee_id?: string
-                    mentor_id?: string
+                    patient_id?: string
+                    therapist_id?: string
                     amount?: number
                     currency?: string
                     razorpay_order_id?: string | null
@@ -506,7 +506,7 @@ export interface Database {
                     status?: 'pending' | 'processing' | 'completed' | 'failed' | 'refunded'
                     payment_method?: string
                     platform_fee?: number | null
-                    mentor_payout?: number | null
+                    therapist_payout?: number | null
                     failure_reason?: string | null
                     metadata?: Json | null
                     created_at?: string
@@ -521,8 +521,8 @@ export interface Database {
                     room_url: string
                     provider: 'daily' | 'agora' | 'google_meet'
                     daily_room_id: string | null
-                    mentor_token: string | null
-                    mentee_token: string | null
+                    therapist_token: string | null
+                    patient_token: string | null
                     status: 'created' | 'active' | 'ended'
                     started_at: string | null
                     ended_at: string | null
@@ -542,8 +542,8 @@ export interface Database {
                     room_url: string
                     provider?: 'daily' | 'agora' | 'google_meet'
                     daily_room_id?: string | null
-                    mentor_token?: string | null
-                    mentee_token?: string | null
+                    therapist_token?: string | null
+                    patient_token?: string | null
                     status?: 'created' | 'active' | 'ended'
                     started_at?: string | null
                     ended_at?: string | null
@@ -563,8 +563,8 @@ export interface Database {
                     room_url?: string
                     provider?: 'daily' | 'agora' | 'google_meet'
                     daily_room_id?: string | null
-                    mentor_token?: string | null
-                    mentee_token?: string | null
+                    therapist_token?: string | null
+                    patient_token?: string | null
                     status?: 'created' | 'active' | 'ended'
                     started_at?: string | null
                     ended_at?: string | null
@@ -832,11 +832,11 @@ export type Appointment = Tables<'appointments'>
 export type Message = Tables<'messages'>
 export type Review = Tables<'reviews'>
 export type FocusArea = Tables<'focus_areas'>
-export type MenteeGoal = Tables<'mentee_goals'>
-export type MentorNote = Tables<'mentor_notes'>
-export type MentorMenteeRelationship = Tables<'mentor_mentee_relationships'>
-export type MenteeReferral = Tables<'mentee_referrals'>
-export type MenteeInvitation = Tables<'mentee_invitations'>
+export type PatientGoal = Tables<'patient_goals'>
+export type TherapistNote = Tables<'therapist_notes'>
+export type TherapistPatientRelationship = Tables<'therapist_patient_relationships'>
+export type PatientReferral = Tables<'patient_referrals'>
+export type PatientInvitation = Tables<'patient_invitations'>
 export type AdminAction = Tables<'admin_actions'>
 export type Payment = Tables<'payments'>
 export type VideoRoom = Tables<'video_rooms'>
@@ -849,8 +849,8 @@ export type SessionRecording = Tables<'session_recordings'>
 export type Transcript = Tables<'transcripts'>
 export type SoapNote = Tables<'soap_notes'>
 
-export type MentorStats = {
-    total_mentees: number
+export type TherapistStats = {
+    total_patients: number
     total_sessions: number
     upcoming_sessions: number
     pending_requests: number
@@ -858,13 +858,13 @@ export type MentorStats = {
 
 export type AdminStats = {
     pending_approvals: number
-    active_mentors: number
-    total_mentees: number
+    active_therapists: number
+    total_patients: number
     total_admins: number
 }
 
-export type MenteeWithActivity = {
-    mentee_id: string
+export type PatientWithActivity = {
+    patient_id: string
     full_name: string | null
     avatar_url: string | null
     last_appointment_date: string | null

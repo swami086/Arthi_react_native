@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Alert } from 'react-native';
 import { useAuth } from '../../auth/hooks/useAuth';
-import { getPendingRelationshipsForMentee, acceptMentorRequest, declineMentorRequest } from '../../../api/relationshipService';
+import { getPendingRelationshipsForPatient, acceptTherapistRequest, declineTherapistRequest } from '../../../api/relationshipService';
 
 import { supabase } from '../../../api/supabase';
 
-export const usePendingMentorRequests = () => {
+export const usePendingTherapistRequests = () => {
     const { user } = useAuth();
     const [requests, setRequests] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
@@ -15,7 +15,7 @@ export const usePendingMentorRequests = () => {
         if (!user?.id) return;
         setLoading(true);
         try {
-            const data = await getPendingRelationshipsForMentee(user.id);
+            const data = await getPendingRelationshipsForPatient(user.id);
             setRequests(data || []);
         } catch (error) {
             console.error('Error fetching pending requests:', error);
@@ -36,8 +36,8 @@ export const usePendingMentorRequests = () => {
                 {
                     event: '*',
                     schema: 'public',
-                    table: 'mentor_mentee_relationships',
-                    filter: `mentee_id=eq.${user.id}`,
+                    table: 'therapist_patient_relationships',
+                    filter: `patient_id=eq.${user.id}`,
                 },
                 () => {
                     fetchRequests();
@@ -54,10 +54,10 @@ export const usePendingMentorRequests = () => {
     const handleAccept = async (relationshipId: string) => {
         setProcessingId(relationshipId);
         try {
-            await acceptMentorRequest(relationshipId);
+            await acceptTherapistRequest(relationshipId);
             // Optimistic update is handled by fetchRequests, but we can do it here too for faster feedback
             setRequests(prev => prev.filter(r => r.id !== relationshipId));
-            Alert.alert("Success", "You have successfully connected with your new mentor!");
+            Alert.alert("Success", "You have successfully connected with your new therapist!");
         } catch (error: any) {
             console.error('Error accepting request:', error);
             Alert.alert("Error", "Failed to accept request.");
@@ -70,7 +70,7 @@ export const usePendingMentorRequests = () => {
     const handleDecline = async (relationshipId: string) => {
         setProcessingId(relationshipId);
         try {
-            await declineMentorRequest(relationshipId);
+            await declineTherapistRequest(relationshipId);
             setRequests(prev => prev.filter(r => r.id !== relationshipId));
             Alert.alert("Declined", "Request has been removed.");
         } catch (error: any) {

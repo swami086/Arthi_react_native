@@ -2,24 +2,24 @@ export const dynamic = 'force-dynamic';
 
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { getMentorById } from '@/lib/services/mentor-service';
+import { getTherapistById } from '@/lib/services/therapist-service';
 import ChooseTimeClient from './_components/choose-time-client';
 import { generateServiceSchema } from '@/lib/schemas';
 
 // Next.js 15 recommendation: params and searchParams are Promises
 type Props = {
-    params: Promise<{ mentorId: string }>;
+    params: Promise<{ therapistId: string }>;
     searchParams: Promise<{ date?: string; time?: string; endTime?: string }>;
 };
 
 export default async function ChooseTimePage({ params, searchParams }: Props) {
-    const { mentorId } = await params;
+    const { therapistId } = await params;
     const { date, time, endTime } = await searchParams;
 
     const supabase = await createClient();
-    const mentor = await getMentorById(supabase, mentorId);
+    const therapist = await getTherapistById(supabase, therapistId);
 
-    if (!mentor) {
+    if (!therapist) {
         notFound();
     }
 
@@ -33,7 +33,7 @@ export default async function ChooseTimePage({ params, searchParams }: Props) {
         );
     }
 
-    const serviceSchema = generateServiceSchema(mentor.full_name || 'Mentor', '1-on-1 Mentorship Session');
+    const serviceSchema = generateServiceSchema(therapist.full_name || 'Therapist', '1-on-1 Therapistship Session');
 
     // Pass resolved params to client
     return (
@@ -43,7 +43,7 @@ export default async function ChooseTimePage({ params, searchParams }: Props) {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
             />
             <ChooseTimeClient
-                mentor={mentor}
+                therapist={therapist}
                 dateStr={date}
                 initialTime={time}
                 initialEndTime={endTime}

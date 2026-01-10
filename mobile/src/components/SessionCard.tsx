@@ -10,15 +10,15 @@ interface SessionCardProps {
     date: string;
     duration: string;
     status: 'confirmed' | 'pending' | 'completed' | 'cancelled';
-    menteeName: string;
-    menteeAvatar?: string | null;
+    patientName: string;
+    patientAvatar?: string | null;
     meetingLink?: string | null;
     feedback?: string | null;
     onPress: () => void;
 }
 
 export const SessionCard: React.FC<SessionCardProps> = ({
-    title, date, duration, status, menteeName, menteeAvatar, meetingLink, feedback, onPress
+    title, date, duration, status, patientName, patientAvatar, meetingLink, feedback, onPress
 }) => {
     const getStatusColor = () => {
         switch (status) {
@@ -67,11 +67,11 @@ export const SessionCard: React.FC<SessionCardProps> = ({
                     <View className="flex-row items-center gap-3">
                         <View className="shadow-soft rounded-full">
                             <GradientAvatar
-                                source={menteeAvatar ? { uri: menteeAvatar } : { uri: 'https://via.placeholder.com/150' }}
+                                source={patientAvatar ? { uri: patientAvatar } : { uri: 'https://via.placeholder.com/150' }}
                                 size={32}
                             />
                         </View>
-                        <Text className="text-text-primary dark:text-text-primary-dark text-sm font-bold font-primary">with {menteeName}</Text>
+                        <Text className="text-text-primary dark:text-text-primary-dark text-sm font-bold font-primary">with {patientName}</Text>
                     </View>
 
                     {status === 'confirmed' && meetingLink && (

@@ -25,7 +25,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 
 export const metadata = generateMetadata({
   title: 'SafeSpace - Mental Health Support Platform',
-  description: 'Connect with mentors for mental health support, life coaching, and personal growth. Find your safe space today.',
+  description: 'Connect with therapists for mental health support, life coaching, and personal growth. Find your safe space today.',
   path: '/',
 });
 

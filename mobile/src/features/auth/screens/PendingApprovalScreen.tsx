@@ -28,7 +28,7 @@ export const PendingApprovalScreen = () => {
                 </Text>
 
                 <Text className="text-text-sub-light dark:text-gray-400 text-center mb-8 leading-6">
-                    Thanks for applying to be a mentor! Your profile is currently being reviewed by our admin team. This usually takes 24-48 hours.
+                    Thanks for applying to be a therapist! Your profile is currently being reviewed by our admin team. This usually takes 24-48 hours.
                 </Text>
 
                 <View className="bg-white dark:bg-gray-800 p-4 rounded-xl w-full mb-8 shadow-sm">

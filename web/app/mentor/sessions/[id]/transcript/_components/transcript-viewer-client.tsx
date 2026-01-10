@@ -6,9 +6,9 @@ import { format } from 'date-fns';
 import { ArrowLeft, Download, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { TranscriptMessage } from '@/components/mentor/transcript-message';
-import { TranscriptSearch } from '@/components/mentor/transcript-search';
-import { ProcessingStatus } from '@/components/mentor/processing-status';
+import { TranscriptMessage } from '@/components/therapist/transcript-message';
+import { TranscriptSearch } from '@/components/therapist/transcript-search';
+import { ProcessingStatus } from '@/components/therapist/processing-status';
 import { exportService } from '@/lib/services/export-service';
 import { useTranscriptStatus } from '@/hooks/use-transcript-status';
 import { toast } from 'react-hot-toast';
@@ -16,7 +16,7 @@ import { toast } from 'react-hot-toast';
 interface TranscriptViewerClientProps {
     recordingId: string;
     appointmentId: string;
-    mentorName?: string;
+    therapistName?: string;
 }
 
 interface TranscriptMessageData {
@@ -26,7 +26,7 @@ interface TranscriptMessageData {
     timestamp?: string;
 }
 
-export default function TranscriptViewerClient({ recordingId, appointmentId, mentorName }: TranscriptViewerClientProps) {
+export default function TranscriptViewerClient({ recordingId, appointmentId, therapistName }: TranscriptViewerClientProps) {
     const router = useRouter();
     const { transcript, status, error } = useTranscriptStatus(recordingId);
     const parentRef = useRef<HTMLDivElement>(null);
@@ -38,7 +38,7 @@ export default function TranscriptViewerClient({ recordingId, appointmentId, men
 
         const lines = transcript.transcript_text.split('\n');
         return lines.map((line: string, index: number) => {
-            const match = line.match(/^(Speaker \w+|Mentor|Mentee|Patient): (.*)/i);
+            const match = line.match(/^(Speaker \w+|Therapist|Patient|Patient): (.*)/i);
             if (match) {
                 return {
                     id: `msg-${index}`,

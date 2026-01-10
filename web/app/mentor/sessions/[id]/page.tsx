@@ -34,8 +34,8 @@ export default async function SessionDetailPage({ params }: SessionDetailPagePro
         .from('appointments' as any)
         .select(`
             *,
-            mentee:profiles!mentee_id(*),
-            mentor:profiles!mentor_id(*)
+            patient:profiles!patient_id(*),
+            therapist:profiles!therapist_id(*)
         `)
         .eq('id', id)
         .single();
@@ -43,12 +43,12 @@ export default async function SessionDetailPage({ params }: SessionDetailPagePro
     const appointment = appointmentResult as any;
 
     if (error || !appointment) {
-        redirect('/mentor/dashboard');
+        redirect('/therapist/dashboard');
     }
 
     // Verify Access
-    if (appointment.mentor_id !== user.id) {
-        redirect('/mentor/dashboard');
+    if (appointment.therapist_id !== user.id) {
+        redirect('/therapist/dashboard');
     }
 
     // 3. Fetch Recording Status
@@ -88,26 +88,26 @@ export default async function SessionDetailPage({ params }: SessionDetailPagePro
                             <span>{formatDate(appointment.start_time)}</span>
                         </div>
                     </div>
-                    <Link href="/mentor/dashboard">
+                    <Link href="/therapist/dashboard">
                         <Button variant="outline">Back to Dashboard</Button>
                     </Link>
                 </div>
 
                 {/* Session Info */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Mentee Card */}
+                    {/* Patient Card */}
                     <div className="bg-white dark:bg-[#121f24] p-6 rounded-2xl border border-slate-100 dark:border-white/5 shadow-sm">
                         <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                             Patient
                         </h2>
                         <div className="flex items-center gap-4">
                             <Avatar className="h-16 w-16">
-                                <AvatarImage src={appointment.mentee?.avatar_url || ''} />
-                                <AvatarFallback>{appointment.mentee?.full_name?.[0] || 'P'}</AvatarFallback>
+                                <AvatarImage src={appointment.patient?.avatar_url || ''} />
+                                <AvatarFallback>{appointment.patient?.full_name?.[0] || 'P'}</AvatarFallback>
                             </Avatar>
                             <div>
-                                <h3 className="text-xl font-bold text-slate-900 dark:text-white">{appointment.mentee?.full_name || 'Patient'}</h3>
-                                <p className="text-slate-500 dark:text-slate-400 text-sm">Patient ID: {appointment.mentee_id ? appointment.mentee_id.slice(0, 8) : 'N/A'}</p>
+                                <h3 className="text-xl font-bold text-slate-900 dark:text-white">{appointment.patient?.full_name || 'Patient'}</h3>
+                                <p className="text-slate-500 dark:text-slate-400 text-sm">Patient ID: {appointment.patient_id ? appointment.patient_id.slice(0, 8) : 'N/A'}</p>
                             </div>
                         </div>
                     </div>
@@ -166,12 +166,12 @@ export default async function SessionDetailPage({ params }: SessionDetailPagePro
                                         {isCompleted && (
                                             <div className="flex flex-col gap-2">
                                                 <div className="flex gap-2">
-                                                    <Link href={`/mentor/sessions/${appointment.id}/transcript`} className="flex-1">
+                                                    <Link href={`/therapist/sessions/${appointment.id}/transcript`} className="flex-1">
                                                         <Button variant="secondary" className="w-full" leftIcon={<FileText className="w-4 h-4" />}>
                                                             Transcript
                                                         </Button>
                                                     </Link>
-                                                    <Link href={`/mentor/sessions/${appointment.id}/soap`} className="flex-1">
+                                                    <Link href={`/therapist/sessions/${appointment.id}/soap`} className="flex-1">
                                                         <Button
                                                             variant="primary"
                                                             className="w-full"
@@ -183,14 +183,14 @@ export default async function SessionDetailPage({ params }: SessionDetailPagePro
                                                 </div>
                                             </div>
                                         )}
-                                        <Link href={`/mentor/sessions/${appointment.id}/record`}>
+                                        <Link href={`/therapist/sessions/${appointment.id}/record`}>
                                             <Button variant="outline" className="w-full">
                                                 {isCompleted ? 'Re-record Session' : 'Continue Recording'}
                                             </Button>
                                         </Link>
                                     </>
                                 ) : (
-                                    <Link href={`/mentor/sessions/${appointment.id}/record`}>
+                                    <Link href={`/therapist/sessions/${appointment.id}/record`}>
                                         <Button className="w-full shadow-lg shadow-[#30bae8]/20" leftIcon={<Mic className="w-4 h-4" />}>
                                             Start Recording
                                         </Button>

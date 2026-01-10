@@ -1,16 +1,16 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { reportError } from '@/lib/rollbar-utils';
 
-export async function getReferrals(supabase: SupabaseClient, userId: string, role: 'mentor' | 'referrer' = 'mentor') {
+export async function getReferrals(supabase: SupabaseClient, userId: string, role: 'therapist' | 'referrer' = 'therapist') {
     try {
         let query = supabase.from('referrals').select(`
             *,
             referred:recipient_id(full_name),
             referrer:referrer_id(full_name),
-            mentee:mentee_id(full_name)
+            patient:patient_id(full_name)
         `);
 
-        if (role === 'mentor') {
+        if (role === 'therapist') {
             query = query.eq('recipient_id', userId);
         } else {
             query = query.eq('referrer_id', userId);

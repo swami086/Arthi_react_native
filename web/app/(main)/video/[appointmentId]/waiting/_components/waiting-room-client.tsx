@@ -21,7 +21,7 @@ import { Progress } from '@/components/ui/progress';
 interface WaitingRoomClientProps {
     appointment: any;
     user: any;
-    role: 'mentor' | 'mentee';
+    role: 'therapist' | 'patient';
 }
 
 export default function WaitingRoomClient({ appointment, user, role }: WaitingRoomClientProps) {
@@ -173,7 +173,7 @@ export default function WaitingRoomClient({ appointment, user, role }: WaitingRo
         }
     };
 
-    const mentor = appointment.mentor;
+    const therapist = appointment.therapist;
 
     return (
         <div className="min-h-screen bg-background-light dark:bg-[#0e181b] flex flex-col md:flex-row">
@@ -276,12 +276,12 @@ export default function WaitingRoomClient({ appointment, user, role }: WaitingRo
                     {/* Appointment Info Card */}
                     <div className="bg-slate-50 dark:bg-[#1a2a2e] p-5 rounded-2xl border border-slate-100 dark:border-white/5 flex items-center gap-4">
                         <Avatar className="h-14 w-14 border-2 border-white dark:border-[#30bae8]/20">
-                            <AvatarImage src={mentor?.avatar_url || ''} />
-                            <AvatarFallback>{mentor?.full_name?.[0] || 'M'}</AvatarFallback>
+                            <AvatarImage src={therapist?.avatar_url || ''} />
+                            <AvatarFallback>{therapist?.full_name?.[0] || 'M'}</AvatarFallback>
                         </Avatar>
                         <div>
                             <p className="text-sm font-medium text-slate-500 dark:text-[#94aeb8] uppercase tracking-wider mb-0.5">Session with</p>
-                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">{mentor?.full_name}</h3>
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">{therapist?.full_name}</h3>
                             <p className="text-xs text-[#30bae8]">{appointment.duration_minutes || 60} mins • Private Session</p>
                         </div>
                     </div>

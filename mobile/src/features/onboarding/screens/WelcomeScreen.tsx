@@ -64,7 +64,7 @@ export const WelcomeScreen = () => {
                         from={itemVariants.initial} animate={itemVariants.animate}
                         className="text-text-main-light dark:text-text-main-dark tracking-tight text-[32px] font-extrabold leading-tight text-center pb-3"
                     >
-                        Mentoring, <Text className="text-primary dark:text-primary-dark">Not Therapy</Text>
+                        Therapisting, <Text className="text-primary dark:text-primary-dark">Not Therapy</Text>
                     </MotiText>
 
                     {/* Body Text */}
@@ -73,7 +73,7 @@ export const WelcomeScreen = () => {
                         from={itemVariants.initial} animate={itemVariants.animate}
                         className="text-text-sub-light dark:text-text-sub-dark text-base font-medium leading-relaxed text-center self-center max-w-[320px]"
                     >
-                        Life can be overwhelmed. We provide a judgment-free zone where you can talk to real mentors and build skills for the future.
+                        Life can be overwhelmed. We provide a judgment-free zone where you can talk to real therapists and build skills for the future.
                     </MotiText>
                 </View>
 

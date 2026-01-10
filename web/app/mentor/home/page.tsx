@@ -3,14 +3,14 @@ export const dynamic = 'force-dynamic';
 import { createClient } from '@/lib/supabase/server';
 import { Metadata } from 'next';
 import { reportError } from '@/lib/rollbar-utils';
-import MentorHomeClient from './_components/MentorHomeClient';
+import TherapistHomeClient from './_components/TherapistHomeClient';
 
 export const metadata: Metadata = {
-    title: 'Mentor Dashboard | SafeSpace',
-    description: 'Manage your mentees, sessions, and referrals.',
+    title: 'Therapist Dashboard | SafeSpace',
+    description: 'Manage your patients, sessions, and referrals.',
 };
 
-export default async function MentorHomePage() {
+export default async function TherapistHomePage() {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -19,12 +19,12 @@ export default async function MentorHomePage() {
     // 1. Fetch Stats (RPC)
     let stats = null;
     try {
-        const { data } = await (supabase as any).rpc('get_mentor_stats', {
-            mentor_uuid: user.id
+        const { data } = await (supabase as any).rpc('get_therapist_stats', {
+            therapist_uuid: user.id
         });
         stats = data;
     } catch (error) {
-        console.error('Error fetching mentor stats:', error);
+        console.error('Error fetching therapist stats:', error);
         // reportError(error); // Assuming reportError is available or imported from lib/rollbar-utils
     }
 
@@ -37,9 +37,9 @@ export default async function MentorHomePage() {
                 id,
                 start_time,
                 status,
-                mentee:mentee_id(full_name, avatar_url)
+                patient:patient_id(full_name, avatar_url)
             `)
-            .eq('mentor_id', user.id)
+            .eq('therapist_id', user.id)
             .eq('status', 'scheduled')
             .gte('start_time', new Date().toISOString())
             .order('start_time', { ascending: true })
@@ -72,16 +72,16 @@ export default async function MentorHomePage() {
     // Cast stats to any to avoid TS errors if types aren't generated
     const typedStats = stats as any;
     const formattedStats = typedStats ? {
-        totalMentees: typedStats.total_mentees || 0,
+        totalPatients: typedStats.total_patients || 0,
         activeSessions: typedStats.active_sessions || 0,
         totalHours: typedStats.total_hours || 0,
         rating: typedStats.rating || 5.0,
-        menteesTrend: typedStats.mentees_trend || 0,
+        patientsTrend: typedStats.patients_trend || 0,
         sessionsTrend: typedStats.sessions_trend || 0
     } : null;
 
     return (
-        <MentorHomeClient
+        <TherapistHomeClient
             user={user}
             initialStats={formattedStats}
             initialAppointments={appointments || []}

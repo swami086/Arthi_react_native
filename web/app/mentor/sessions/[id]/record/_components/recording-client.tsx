@@ -7,7 +7,7 @@ import { ChevronLeft, Info, FileText } from 'lucide-react';
 import { useRecording } from '@/hooks/use-recording';
 import { audioUploadService } from '@/lib/services/audio-upload-service';
 import { triggerTranscription } from '@/app/actions/recording';
-import { RecordingControls } from '@/components/mentor/recording-controls';
+import { RecordingControls } from '@/components/therapist/recording-controls';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { RecordingConsentModal } from '@/components/video/recording-consent-modal';
@@ -65,7 +65,7 @@ export default function RecordingClient({ appointment, existingRecording, user }
                 blob,
                 appointment.id,
                 user.id,
-                appointment.mentee_id,
+                appointment.patient_id,
                 (progress) => setUploadProgress(progress)
             );
 

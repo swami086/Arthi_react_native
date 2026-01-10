@@ -11,7 +11,7 @@ interface CreateMeetingRequest {
     userId: string;
     userEmail: string;
     userName: string;
-    userRole: 'mentor' | 'mentee';
+    userRole: 'therapist' | 'patient';
 }
 
 serve(async (req) => {

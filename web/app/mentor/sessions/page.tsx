@@ -11,25 +11,25 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 
 export const metadata = {
-    title: 'My Sessions | SafeSpace Mentor',
-    description: 'View your upcoming and past mentoring sessions.'
+    title: 'My Sessions | SafeSpace Therapist',
+    description: 'View your upcoming and past therapisting sessions.'
 };
 
-export default async function MentorSessionsPage() {
+export default async function TherapistSessionsPage() {
     const supabase = await createClient();
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) redirect('/login');
 
-    // Fetch details to ensure role is mentor? Assuming middleware or layout already did.
+    // Fetch details to ensure role is therapist? Assuming middleware or layout already did.
 
     const { data: appointments } = await supabase
         .from('appointments' as any)
         .select(`
             *,
-            mentee:profiles!mentee_id(*)
+            patient:profiles!patient_id(*)
         `)
-        .eq('mentor_id', user.id)
+        .eq('therapist_id', user.id)
         .order('start_time', { ascending: true });
 
     const upcoming = appointments?.filter((a: any) => new Date(a.start_time) > new Date()) || [];
@@ -42,7 +42,7 @@ export default async function MentorSessionsPage() {
                     <h1 className="text-2xl font-bold text-slate-900 dark:text-white">My Sessions</h1>
                     <p className="text-slate-500 dark:text-slate-400">Manage your upcoming appointments and history.</p>
                 </div>
-                {/* Maybe a 'Schedule New' button if mentors initiate? Usually mentees book. */}
+                {/* Maybe a 'Schedule New' button if therapists initiate? Usually patients book. */}
             </div>
 
             <div className="space-y-6">
@@ -80,19 +80,19 @@ export default async function MentorSessionsPage() {
 }
 
 function SessionCard({ session, isUpcoming }: { session: any, isUpcoming?: boolean }) {
-    const mentee = session.mentee;
+    const patient = session.patient;
 
     return (
-        <Link href={`/mentor/sessions/${session.id}`}>
+        <Link href={`/therapist/sessions/${session.id}`}>
             <Card className="hover:border-[#30bae8]/50 transition-colors cursor-pointer dark:bg-[#121f24] dark:border-white/5">
                 <CardContent className="p-6 flex flex-col md:flex-row gap-6 items-center">
                     <div className="flex items-center gap-4 flex-1">
                         <Avatar className="h-12 w-12">
-                            <AvatarImage src={mentee?.avatar_url} />
-                            <AvatarFallback>{mentee?.full_name?.[0]}</AvatarFallback>
+                            <AvatarImage src={patient?.avatar_url} />
+                            <AvatarFallback>{patient?.full_name?.[0]}</AvatarFallback>
                         </Avatar>
                         <div>
-                            <h3 className="font-semibold text-slate-900 dark:text-white">{mentee?.full_name || 'Patient'}</h3>
+                            <h3 className="font-semibold text-slate-900 dark:text-white">{patient?.full_name || 'Patient'}</h3>
                             <p className="text-sm text-slate-500">{session.type || 'Therapy Session'}</p>
                         </div>
                     </div>

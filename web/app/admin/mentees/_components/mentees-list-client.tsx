@@ -16,20 +16,20 @@ import { Input } from '@/components/ui/input';
 import { Profile } from '@/types/admin';
 import { useRouter } from 'next/navigation';
 
-interface MenteesListClientProps {
-    initialMentees: Profile[];
+interface PatientsListClientProps {
+    initialPatients: Profile[];
 }
 
-export default function MenteesListClient({ initialMentees }: MenteesListClientProps) {
-    const [mentees] = useState<Profile[]>(initialMentees);
+export default function PatientsListClient({ initialPatients }: PatientsListClientProps) {
+    const [patients] = useState<Profile[]>(initialPatients);
     const [searchTerm, setSearchTerm] = useState('');
     const router = useRouter();
 
-    const filteredMentees = useMemo(() => {
-        return mentees.filter(m =>
+    const filteredPatients = useMemo(() => {
+        return patients.filter(m =>
             (m.full_name || '').toLowerCase().includes(searchTerm.toLowerCase())
         );
-    }, [mentees, searchTerm]);
+    }, [patients, searchTerm]);
 
     return (
         <div className="space-y-8">
@@ -41,10 +41,10 @@ export default function MenteesListClient({ initialMentees }: MenteesListClientP
                     </Button>
                     <div>
                         <h2 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">
-                            All <span className="text-primary">Mentees</span>
+                            All <span className="text-primary">Patients</span>
                         </h2>
                         <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">
-                            Total of {mentees.length} Users Enrolled
+                            Total of {patients.length} Users Enrolled
                         </p>
                     </div>
                 </div>
@@ -52,7 +52,7 @@ export default function MenteesListClient({ initialMentees }: MenteesListClientP
                 <div className="relative w-full md:w-72">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <Input
-                        placeholder="Search mentees by name..."
+                        placeholder="Search patients by name..."
                         className="pl-11 h-12 rounded-2xl bg-white dark:bg-gray-950 border-gray-100 dark:border-gray-800 shadow-sm"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -74,10 +74,10 @@ export default function MenteesListClient({ initialMentees }: MenteesListClientP
                         </thead>
                         <tbody className="divide-y divide-gray-50 dark:divide-gray-800/50">
                             <AnimatePresence mode="popLayout">
-                                {filteredMentees.length > 0 ? (
-                                    filteredMentees.map((mentee, index) => (
+                                {filteredPatients.length > 0 ? (
+                                    filteredPatients.map((patient, index) => (
                                         <motion.tr
-                                            key={mentee.user_id}
+                                            key={patient.user_id}
                                             initial={{ opacity: 0, x: -10 }}
                                             animate={{ opacity: 1, x: 0 }}
                                             transition={{ delay: index * 0.02 }}
@@ -86,22 +86,22 @@ export default function MenteesListClient({ initialMentees }: MenteesListClientP
                                             <td className="px-8 py-5">
                                                 <div className="flex items-center gap-4">
                                                     <div className="h-12 w-12 rounded-2xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center font-black text-gray-400 shrink-0 overflow-hidden">
-                                                        {mentee.avatar_url ? (
-                                                            <img src={mentee.avatar_url} alt="" className="h-full w-full object-cover" />
+                                                        {patient.avatar_url ? (
+                                                            <img src={patient.avatar_url} alt="" className="h-full w-full object-cover" />
                                                         ) : (
                                                             <User className="h-5 w-5" />
                                                         )}
                                                     </div>
                                                     <div>
-                                                        <p className="font-black text-gray-900 dark:text-white group-hover:text-primary transition-colors">{mentee.full_name}</p>
-                                                        <p className="text-xs font-bold text-gray-400">Mentee Account</p>
+                                                        <p className="font-black text-gray-900 dark:text-white group-hover:text-primary transition-colors">{patient.full_name}</p>
+                                                        <p className="text-xs font-bold text-gray-400">Patient Account</p>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="px-8 py-5">
                                                 <div className="flex flex-col">
                                                     <span className="text-sm font-bold text-gray-700 dark:text-gray-300">
-                                                        {new Date(mentee.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                        {new Date(patient.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                                     </span>
                                                     <span className="text-[10px] font-bold text-gray-400 uppercase">Joined Safespace</span>
                                                 </div>
@@ -109,7 +109,7 @@ export default function MenteesListClient({ initialMentees }: MenteesListClientP
                                             <td className="px-8 py-5">
                                                 <div className="flex items-center gap-4">
                                                     <div className="flex flex-col">
-                                                        <span className="text-sm font-black text-gray-900 dark:text-white">{mentee.total_sessions || 0}</span>
+                                                        <span className="text-sm font-black text-gray-900 dark:text-white">{patient.total_sessions || 0}</span>
                                                         <span className="text-[10px] font-bold text-gray-400 uppercase">Sessions</span>
                                                     </div>
                                                     <div className="h-4 w-px bg-gray-200 dark:bg-gray-800" />
@@ -134,7 +134,7 @@ export default function MenteesListClient({ initialMentees }: MenteesListClientP
                                 ) : (
                                     <tr>
                                         <td colSpan={4} className="py-20 text-center">
-                                            <p className="text-gray-400 font-bold uppercase tracking-widest">No mentees found matching your search</p>
+                                            <p className="text-gray-400 font-bold uppercase tracking-widest">No patients found matching your search</p>
                                         </td>
                                     </tr>
                                 )}
@@ -145,7 +145,7 @@ export default function MenteesListClient({ initialMentees }: MenteesListClientP
 
                 {/* Pagination Placeholder */}
                 <div className="px-8 py-6 border-t dark:border-gray-800 flex items-center justify-between">
-                    <p className="text-xs font-bold text-gray-500">Showing {filteredMentees.length} of {mentees.length} users</p>
+                    <p className="text-xs font-bold text-gray-500">Showing {filteredPatients.length} of {patients.length} users</p>
                     <div className="flex gap-2">
                         <Button variant="outline" size="sm" className="rounded-xl h-9 px-4 font-bold disabled:opacity-30" disabled>Previous</Button>
                         <Button variant="outline" size="sm" className="rounded-xl h-9 px-4 font-bold disabled:opacity-30" disabled>Next</Button>

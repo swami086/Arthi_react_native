@@ -6,21 +6,21 @@ import * as Slider from '@radix-ui/react-slider';
 import { X, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useMenteeGoals } from '../_hooks/useMenteeGoals';
+import { usePatientGoals } from '../_hooks/usePatientGoals';
 
 interface AddGoalModalProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    menteeId: string;
+    patientId: string;
     onSuccess?: (goal: any) => void;
 }
 
-export function AddGoalModal({ open, onOpenChange, menteeId, onSuccess }: AddGoalModalProps) {
+export function AddGoalModal({ open, onOpenChange, patientId, onSuccess }: AddGoalModalProps) {
     const [title, setTitle] = useState('');
     const [progress, setProgress] = useState(0);
     const [targetDate, setTargetDate] = useState('');
 
-    const { createGoal, loading } = useMenteeGoals(menteeId);
+    const { createGoal, loading } = usePatientGoals(patientId);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

@@ -107,10 +107,10 @@ export const getPaymentHistory = async (userId: string): Promise<Payment[]> => {
         id,
         start_time,
         end_time,
-        mentor: profiles!mentor_id(full_name, avatar_url)
+        therapist: profiles!therapist_id(full_name, avatar_url)
     )
       `)
-            .or(`mentee_id.eq.${userId}, mentor_id.eq.${userId} `)
+            .or(`patient_id.eq.${userId}, therapist_id.eq.${userId} `)
             .order('created_at', { ascending: false });
 
         if (error) throw error;
@@ -164,16 +164,16 @@ export const requestRefund = async (paymentId: string, reason: string): Promise<
 };
 
 /**
- * Get mentor earnings summary
+ * Get therapist earnings summary
  */
-export const getMentorEarnings = async (
-    mentorId: string,
+export const getTherapistEarnings = async (
+    therapistId: string,
     startDate?: string,
     endDate?: string
 ): Promise<any> => {
     try {
-        const { data, error } = await supabase.rpc('get_mentor_earnings', {
-            mentor_user_id: mentorId,
+        const { data, error } = await supabase.rpc('get_therapist_earnings', {
+            therapist_user_id: therapistId,
             start_date: startDate,
             end_date: endDate
         });
@@ -181,8 +181,8 @@ export const getMentorEarnings = async (
         if (error) throw error;
         return data;
     } catch (error) {
-        console.error('Error fetching mentor earnings:', error);
-        reportError(error, 'paymentService:getMentorEarnings');
+        console.error('Error fetching therapist earnings:', error);
+        reportError(error, 'paymentService:getTherapistEarnings');
         throw error;
     }
 };

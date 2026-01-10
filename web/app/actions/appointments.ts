@@ -12,22 +12,22 @@ import { generateTimeSlots, filterAvailableSlots } from '@/lib/appointments/time
 import { parseISO, parse } from 'date-fns';
 
 /**
- * Fetches available time slots for a mentor on a specific date.
+ * Fetches available time slots for a therapist on a specific date.
  */
 export async function getAvailableTimeSlots(
-    mentorId: string,
+    therapistId: string,
     date: string, // YYYY-MM-DD
     timeOfDay?: 'morning' | 'afternoon' | 'evening'
 ) {
     const traceId = getTraceId();
-    addBreadcrumb('Fetching available time slots', 'appointments.getAvailableTimeSlots', 'info', { mentorId, date, timeOfDay, traceId });
+    addBreadcrumb('Fetching available time slots', 'appointments.getAvailableTimeSlots', 'info', { therapistId, date, timeOfDay, traceId });
 
     try {
         const supabase = await createClient();
 
-        // 1. Fetch existing appointments for the mentor on this date
+        // 1. Fetch existing appointments for the therapist on this date
         // Use local start/end of day logic approximation or UTC?
-        // Let's assume date param 'YYYY-MM-DD' implies the mentor's local day or UTC day.
+        // Let's assume date param 'YYYY-MM-DD' implies the therapist's local day or UTC day.
         // For simplicity and consistency with current RN logic that likely relies on simple date matching or UTC if generic.
         // We'll query a range covering specific date strings if stored as ISO.
 
@@ -42,7 +42,7 @@ export async function getAvailableTimeSlots(
         const { data: existingAppointments, error: fetchError } = await supabase
             .from('appointments')
             .select('start_time, end_time')
-            .eq('mentor_id', mentorId)
+            .eq('therapist_id', therapistId)
             .gte('start_time', startOfDay.toISOString())
             .lte('start_time', endOfDay.toISOString())
             .neq('status', 'cancelled'); // Don't block cancelled slots
@@ -56,7 +56,7 @@ export async function getAvailableTimeSlots(
 
         // 3. Filter available slots
         const availableSlots = filterAvailableSlots(
-            mentorId,
+            therapistId,
             date,
             slots,
             existingAppointments || []
@@ -64,13 +64,13 @@ export async function getAvailableTimeSlots(
 
         return { success: true, data: availableSlots };
     } catch (error) {
-        reportError(error, 'appointments.getAvailableTimeSlots', { mentorId, date, traceId });
+        reportError(error, 'appointments.getAvailableTimeSlots', { therapistId, date, traceId });
         return { success: false, error: 'Failed to fetch available time slots' };
     }
 }
 
 interface CreateAppointmentData {
-    mentorId: string;
+    therapistId: string;
     date: string; // YYYY-MM-DD
     time: string; // h:mm a
     endTime: string; // h:mm a
@@ -83,7 +83,7 @@ interface CreateAppointmentData {
  */
 export async function createAppointment(data: CreateAppointmentData) {
     const traceId = getTraceId();
-    addBreadcrumb('Creating appointment', 'appointments.createAppointment', 'info', { mentorId: data.mentorId, date: data.date, traceId });
+    addBreadcrumb('Creating appointment', 'appointments.createAppointment', 'info', { therapistId: data.therapistId, date: data.date, traceId });
 
     try {
         const supabase = await createClient();
@@ -112,8 +112,8 @@ export async function createAppointment(data: CreateAppointmentData) {
         const { data: appointmentResult, error: insertError } = await (supabase
             .from('appointments') as any)
             .insert({
-                mentor_id: data.mentorId,
-                mentee_id: user.id,
+                therapist_id: data.therapistId,
+                patient_id: user.id,
                 start_time: startDateTime.toISOString(),
                 end_time: endDateTime.toISOString(),
                 status: 'pending',
@@ -168,7 +168,7 @@ export async function createAppointment(data: CreateAppointmentData) {
 
         reportInfo('Appointment created successfully', 'appointments.createAppointment', { appointmentId: appointment.id, traceId });
         revalidatePath('/appointments');
-        revalidatePath(`/mentors/${data.mentorId}`);
+        revalidatePath(`/therapists/${data.therapistId}`);
 
         return { success: true, data: { appointmentId: appointment.id } };
 
@@ -190,20 +190,20 @@ export async function getAppointments(userId?: string) {
             targetUserId = user.id;
         }
 
-        // Fetch appointments with mentor details
-        // Note: Relationship name might vary! 'mentor:profiles!appointments_mentor_id_fkey'
+        // Fetch appointments with therapist details
+        // Note: Relationship name might vary! 'therapist:profiles!appointments_therapist_id_fkey'
         // Using explicit join syntax if possible or assuming default relation
         const { data, error } = await (supabase
             .from('appointments') as any)
             .select(`
                 *,
-                mentor:profiles!appointments_mentor_id_fkey (
+                therapist:profiles!appointments_therapist_id_fkey (
                     full_name,
                     avatar_url,
                     specialization
                 )
             `)
-            .eq('mentee_id', targetUserId)
+            .eq('patient_id', targetUserId)
             .order('start_time', { ascending: true });
 
         if (error) throw error;

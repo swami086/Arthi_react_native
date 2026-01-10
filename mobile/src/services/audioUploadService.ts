@@ -17,8 +17,8 @@ export interface UploadProgress {
 export const uploadAudioToSupabase = async (
   uri: string,
   appointmentId: string,
-  mentorId: string,
-  menteeId: string,
+  therapistId: string,
+  patientId: string,
   onProgress?: (progress: UploadProgress) => void
 ): Promise<{ recordingId: string; recordingUrl: string } | null> => {
   try {
@@ -51,8 +51,8 @@ export const uploadAudioToSupabase = async (
       .from('session_recordings')
       .insert({
         appointment_id: appointmentId,
-        mentor_id: mentorId,
-        mentee_id: menteeId,
+        therapist_id: therapistId,
+        patient_id: patientId,
         consent_captured: true, // Assuming consent was checked in UI
         recording_status: 'processing',
         file_size_bytes: fileSizeBytes,
@@ -70,7 +70,7 @@ export const uploadAudioToSupabase = async (
 
     const recordingId = recording.id;
     const fileExt = uri.split('.').pop();
-    const fileName = `${mentorId}/${recordingId}.${fileExt}`;
+    const fileName = `${therapistId}/${recordingId}.${fileExt}`;
 
     console.log('[AudioUpload] File info:', { uri, fileExt, fileName, fileSizeBytes });
 
@@ -127,7 +127,7 @@ export const uploadAudioToSupabase = async (
 };
 export const deleteRecordingFromStorage = async (
   recordingUrl: string,
-  mentorId: string
+  therapistId: string
 ): Promise<boolean> => {
   try {
     const { error } = await supabase.storage

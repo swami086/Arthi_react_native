@@ -9,8 +9,8 @@ import { ErrorBoundary } from '@/components/ui/error-boundary';
 import { MessageListener } from '@/components/messaging/message-listener';
 
 export const metadata: Metadata = {
-    title: 'SafeSpace - Mentoring, Not Therapy',
-    description: 'Dashboard for mentees at SafeSpace.',
+    title: 'SafeSpace - Therapisting, Not Therapy',
+    description: 'Dashboard for patients at SafeSpace.',
 };
 
 export default async function MainLayout({
@@ -33,7 +33,7 @@ export default async function MainLayout({
             .eq('id', user.id)
             .single();
 
-        if (!profile || (profile as any).role !== 'mentee') {
+        if (!profile || (profile as any).role !== 'patient') {
             redirect('/login');
         }
 
