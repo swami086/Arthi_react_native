@@ -34,7 +34,7 @@ export const setRollbarUser = (id: string, email?: string, username?: string, me
 export const clearRollbarUser = () => {
     rollbar.configure({
         payload: {
-            person: undefined,
+            person: null,
         },
     });
 };
