@@ -9,6 +9,7 @@ import { ErrorBoundary } from './src/components/ErrorBoundary';
 import { StatusBar } from 'expo-status-bar';
 import { useColorScheme } from './src/hooks/useColorScheme';
 import { navigationRef, onNavigationStateChange, onUnhandledAction } from './src/navigation/navigationErrorHandler';
+import RollbarProvider from './src/components/RollbarProvider';
 
 import { View } from 'react-native';
 
@@ -21,21 +22,23 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <ErrorBoundary>
-        <AuthProvider>
-          <View className={`flex-1 ${isDark ? 'dark' : ''}`}>
-            <NavigationContainer
-              theme={isDark ? DarkTheme : DefaultTheme}
-              ref={navigationRef}
-              onStateChange={onNavigationStateChange}
-              onUnhandledAction={onUnhandledAction}
-            >
-              <StatusBar style={isDark ? 'light' : 'dark'} />
-              <AppNavigator />
-            </NavigationContainer>
-          </View>
-        </AuthProvider>
-      </ErrorBoundary>
+      <RollbarProvider>
+        <ErrorBoundary>
+          <AuthProvider>
+            <View className={`flex-1 ${isDark ? 'dark' : ''}`}>
+              <NavigationContainer
+                theme={isDark ? DarkTheme : DefaultTheme}
+                ref={navigationRef}
+                onStateChange={onNavigationStateChange}
+                onUnhandledAction={onUnhandledAction}
+              >
+                <StatusBar style={isDark ? 'light' : 'dark'} />
+                <AppNavigator />
+              </NavigationContainer>
+            </View>
+          </AuthProvider>
+        </ErrorBoundary>
+      </RollbarProvider>
     </SafeAreaProvider>
   );
 }

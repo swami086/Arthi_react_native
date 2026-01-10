@@ -1,6 +1,6 @@
 'use client';
 import { Provider, ErrorBoundary } from '@rollbar/react';
-import rollbar from '@/lib/rollbar-client';
+import rollbar from '@/lib/rollbar';
 import { useAuth } from '@/components/providers/auth-provider';
 import { useEffect } from 'react';
 

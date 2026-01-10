@@ -4,7 +4,7 @@ import { generateOrganizationSchema } from '@/lib/schemas';
 import { Manrope, Plus_Jakarta_Sans } from 'next/font/google';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { ErrorBoundary } from '@/components/error-boundary';
-import { RollbarProvider } from '@/components/providers/rollbar-provider';
+import RollbarProvider from '@/components/providers/RollbarProvider';
 import { AuthProvider } from '@/components/providers/auth-provider';
 import { WebVitalsProvider } from '@/components/providers/web-vitals-provider';
 import { AnalyticsProvider } from '@/components/providers/analytics-provider';
