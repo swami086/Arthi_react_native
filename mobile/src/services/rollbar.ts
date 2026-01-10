@@ -264,7 +264,7 @@ export const setRollbarUser = (userId: string, email?: string, username?: string
 export const clearRollbarUser = () => {
     if (!rollbarConfig.enabled) return;
 
-    rollbar.setPerson(null);
+    rollbar.setPerson({});
 };
 
 // HOC for performance tracking

@@ -1,13 +1,28 @@
 'use client';
+import { Provider, ErrorBoundary } from '@rollbar/react';
+import rollbar from '@/lib/rollbar-client';
+import { useAuth } from '@/components/providers/auth-provider';
+import { useEffect } from 'react';
 
-import { Provider } from '@rollbar/react';
-import { rollbarConfig } from '@/lib/rollbar';
-import { ReactNode } from 'react';
+export function RollbarProvider({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
 
-export function RollbarProvider({ children }: { children: ReactNode }) {
-    return (
-        <Provider config={rollbarConfig}>
-            {children}
-        </Provider>
-    );
+  useEffect(() => {
+    if (user) {
+      rollbar.configure({
+        payload: {
+          person: {
+            id: user.id,
+            email: user.email,
+          },
+        },
+      });
+    }
+  }, [user]);
+
+  return (
+    <Provider instance={rollbar}>
+      <ErrorBoundary>{children}</ErrorBoundary>
+    </Provider>
+  );
 }
