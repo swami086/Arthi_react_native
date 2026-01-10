@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Payment Success</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#305ee8",
+                        "background-light": "#f8f9fa",
+                        "background-dark": "#111521",
+                        "success": "#10B981",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "1.5rem", "xl": "2rem", "2xl": "2.5rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom simple animation for the checkmark since JS/Lottie isn't allowed */
+        @keyframes scaleUp {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-scale-up {
+            animation: scaleUp 0.5s ease-out forwards;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased">
+<!-- Mobile Container -->
+<div class="mx-auto flex h-full min-h-screen w-full max-w-md flex-col overflow-hidden bg-background-light dark:bg-background-dark shadow-2xl relative">
+<!-- Header / Success Animation Section -->
+<div class="flex flex-col items-center justify-center pt-12 pb-6 px-6 relative z-10">
+<!-- Simulated Confetti/Decoration Background -->
+<div class="absolute top-0 left-0 w-full h-full opacity-50 pointer-events-none" style="background-image: radial-gradient(#305ee8 1px, transparent 1px); background-size: 20px 20px; mask-image: linear-gradient(to bottom, black, transparent);"></div>
+<!-- Success Icon -->
+<div class="animate-scale-up mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-success/10 shadow-sm">
+<span class="material-symbols-outlined text-6xl text-success" style="font-variation-settings: 'FILL' 1, 'wght' 700;">check_circle</span>
+</div>
+<!-- Headings -->
+<h1 class="text-slate-900 dark:text-white text-3xl font-bold tracking-tight text-center mb-2">Payment Successful!</h1>
+<p class="text-slate-500 dark:text-slate-400 text-lg font-medium text-center">Your session is confirmed</p>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto px-4 pb-32">
+<!-- Booking Confirmation Card -->
+<div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow-sm mb-4 border border-slate-100 dark:border-slate-700">
+<div class="flex items-start gap-4 mb-5">
+<div class="relative shrink-0">
+<img alt="Portrait of Dr. Sarah Jenkins" class="h-16 w-16 rounded-full object-cover border-2 border-slate-100 dark:border-slate-600" data-alt="Professional headshot of a female doctor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHfC6H1qMch2rCuMDTiNUCOtm5Pxhz1ECljGcmfDq1jDguAUvRMe_PUDCP-kehhsIbI2YH8yDdzgFDm1UksdWIYB9H7A-k1-G6JwUGvm3rabMm7ofvtWKowiCDdUhxvMuiOlSnyGpbmzSQ63dzJlQq7C3uKze8_IJzAM_lkw7DDJdfeYCRKovbPS90QC9tjZTmh3jFd-bPgLRLcOeBIsIndXNVLITwEVrp9GLdViailMq56aV0eYfS_zM56W6Oh_zwy_xZtATCZoDB"/>
+<div class="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-primary border-2 border-white dark:border-slate-800">
+<span class="material-symbols-outlined text-white text-[14px]">videocam</span>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="text-slate-900 dark:text-white text-lg font-bold truncate">Dr. Sarah Jenkins</h3>
+<p class="text-primary text-sm font-medium mb-1">Clinical Psychologist</p>
+<div class="inline-flex items-center rounded-full bg-slate-100 dark:bg-slate-700 px-2.5 py-0.5 text-xs font-medium text-slate-600 dark:text-slate-300">
+                            ID: #ABC123
+                        </div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3 pt-4 border-t border-slate-100 dark:border-slate-700">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-1.5 text-slate-400 dark:text-slate-500">
+<span class="material-symbols-outlined text-lg">calendar_today</span>
+<span class="text-xs font-medium uppercase tracking-wider">Date</span>
+</div>
+<p class="text-slate-900 dark:text-white text-sm font-semibold pl-6">Oct 24, 2023</p>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-1.5 text-slate-400 dark:text-slate-500">
+<span class="material-symbols-outlined text-lg">schedule</span>
+<span class="text-xs font-medium uppercase tracking-wider">Time</span>
+</div>
+<p class="text-slate-900 dark:text-white text-sm font-semibold pl-6">10:00 AM (45m)</p>
+</div>
+</div>
+</div>
+<!-- Receipt Card -->
+<div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow-sm mb-6 border border-slate-100 dark:border-slate-700">
+<div class="flex items-center justify-between mb-4">
+<h4 class="text-slate-900 dark:text-white text-base font-bold">Payment Details</h4>
+<span class="text-success text-xs font-bold bg-success/10 px-2 py-1 rounded-md">PAID</span>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-center text-sm">
+<span class="text-slate-500 dark:text-slate-400">Amount Paid</span>
+<span class="text-slate-900 dark:text-white font-bold text-base">₹1,098</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-slate-500 dark:text-slate-400">Payment Method</span>
+<div class="flex items-center gap-1 text-slate-900 dark:text-white font-medium">
+<span class="material-symbols-outlined text-sm">smartphone</span>
+                            UPI
+                        </div>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-slate-500 dark:text-slate-400">Transaction ID</span>
+<span class="text-slate-700 dark:text-slate-300 font-mono text-xs">razorpay_xyz123</span>
+</div>
+</div>
+<button class="mt-5 flex w-full items-center justify-center gap-2 rounded-lg border border-slate-200 dark:border-slate-600 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 transition hover:bg-slate-50 dark:hover:bg-slate-700">
+<span class="material-symbols-outlined text-lg">download</span>
+                    Download Receipt
+                </button>
+</div>
+<!-- Next Steps -->
+<div class="mb-6">
+<h4 class="text-slate-900 dark:text-white text-lg font-bold mb-4 px-1">What's Next?</h4>
+<ul class="space-y-3">
+<li class="flex items-start gap-3 bg-white/50 dark:bg-slate-800/50 p-3 rounded-xl border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400">
+<span class="material-symbols-outlined">chat</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-semibold text-slate-900 dark:text-white">Confirmation sent</span>
+<span class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">You'll receive a confirmation message on WhatsApp shortly.</span>
+</div>
+</li>
+<li class="flex items-start gap-3 bg-white/50 dark:bg-slate-800/50 p-3 rounded-xl border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined">video_camera_front</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-semibold text-slate-900 dark:text-white">Join the call</span>
+<span class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">The "Join" button will activate 5 minutes before the session.</span>
+</div>
+</li>
+<li class="flex items-start gap-3 bg-white/50 dark:bg-slate-800/50 p-3 rounded-xl border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400">
+<span class="material-symbols-outlined">notifications</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-semibold text-slate-900 dark:text-white">Reminder</span>
+<span class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">We will send you a reminder 24 hours before your session.</span>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<!-- Sticky Footer Action Buttons -->
+<div class="absolute bottom-0 left-0 w-full bg-white/90 dark:bg-background-dark/95 backdrop-blur-md border-t border-slate-100 dark:border-slate-800 p-4 pb-8 flex flex-col gap-3">
+<button class="flex h-12 w-full items-center justify-center rounded-full bg-primary text-white text-base font-bold shadow-lg shadow-primary/20 transition hover:bg-primary/90 active:scale-[0.98]">
+                View Appointment
+            </button>
+<button class="flex h-12 w-full items-center justify-center gap-2 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-white text-base font-bold transition hover:bg-slate-50 dark:hover:bg-slate-700 active:scale-[0.98]">
+<span class="material-symbols-outlined text-primary">event</span>
+                Add to Calendar
+            </button>
+<button class="h-8 w-full text-center text-sm font-semibold text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition">
+                Back to Home
+            </button>
+</div>
+</div>
+</body></html>

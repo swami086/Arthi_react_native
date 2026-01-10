@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mentor Payment Dashboard</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30bae8",
+                        "primary-dark": "#2095bf",
+                        "background-light": "#f8f9fa",
+                        "background-dark": "#111d21",
+                        "surface-white": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem", 
+                        "lg": "1.5rem", 
+                        "xl": "2rem", 
+                        "2xl": "2.5rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        "soft": "0 4px 20px -2px rgba(0, 0, 0, 0.05)",
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding for horizontal scroll areas */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Toggle Switch Styles */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #30bae8;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #30bae8;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light text-[#0e181b] font-display min-h-screen relative overflow-x-hidden selection:bg-primary/20">
+<!-- Top Navigation / Header -->
+<header class="sticky top-0 z-40 bg-background-light/95 backdrop-blur-sm px-4 pt-12 pb-4 flex items-center justify-between border-b border-gray-100">
+<h1 class="text-2xl font-extrabold tracking-tight">Earnings</h1>
+<!-- Date Range Selector -->
+<button class="flex items-center gap-2 bg-surface-white border border-gray-200 rounded-full px-4 py-2 shadow-sm active:bg-gray-50 transition-colors">
+<span class="text-sm font-bold text-[#4e8597]">This Month</span>
+<span class="material-symbols-outlined text-[#4e8597] text-xl">expand_more</span>
+</button>
+</header>
+<main class="flex flex-col gap-6 pb-28"> <!-- Padding bottom for sticky footer -->
+<!-- Summary Cards (Horizontal Scroll) -->
+<section class="w-full overflow-x-auto no-scrollbar pl-4 py-2">
+<div class="flex gap-4 pr-4 w-max">
+<!-- Total Earnings Card -->
+<div class="flex flex-col justify-between min-w-[260px] h-[160px] p-5 rounded-[2rem] bg-surface-white shadow-soft border border-gray-100 relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl"></div>
+<div class="flex justify-between items-start">
+<div class="p-2 bg-primary/10 rounded-full w-10 h-10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-xl">account_balance_wallet</span>
+</div>
+<span class="flex items-center gap-1 text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                            +12%
+                        </span>
+</div>
+<div class="flex flex-col gap-1 z-10">
+<p class="text-[#4e8597] text-sm font-medium">Total Earnings</p>
+<h2 class="text-3xl font-extrabold tracking-tight text-[#0e181b]">₹45,000</h2>
+</div>
+</div>
+<!-- Pending Payouts Card -->
+<div class="flex flex-col justify-between min-w-[260px] h-[160px] p-5 rounded-[2rem] bg-surface-white shadow-soft border border-gray-100 relative overflow-hidden">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-orange-50 rounded-full w-10 h-10 flex items-center justify-center">
+<span class="material-symbols-outlined text-orange-400 text-xl">schedule</span>
+</div>
+<span class="text-xs font-bold text-[#4e8597] bg-gray-50 px-2 py-1 rounded-full border border-gray-100">
+                            Due: Dec 25
+                        </span>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-[#4e8597] text-sm font-medium">Pending Payouts</p>
+<h2 class="text-3xl font-extrabold tracking-tight text-[#0e181b]">₹12,000</h2>
+</div>
+</div>
+<!-- Completed Sessions Card -->
+<div class="flex flex-col justify-between min-w-[260px] h-[160px] p-5 rounded-[2rem] bg-surface-white shadow-soft border border-gray-100 relative overflow-hidden">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-purple-50 rounded-full w-10 h-10 flex items-center justify-center">
+<span class="material-symbols-outlined text-purple-400 text-xl">check_circle</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-[#4e8597] text-sm font-medium">Completed Sessions</p>
+<div class="flex items-baseline gap-2">
+<h2 class="text-3xl font-extrabold tracking-tight text-[#0e181b]">45</h2>
+<span class="text-xs font-medium text-[#4e8597]">~ ₹1k / session</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Income Trends Chart -->
+<section class="px-4">
+<div class="bg-surface-white rounded-[2rem] p-5 shadow-soft border border-gray-100">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-lg font-bold text-[#0e181b]">Income Trends</h3>
+<!-- Chart Toggle -->
+<div class="flex bg-gray-100 p-1 rounded-full">
+<button class="px-3 py-1 bg-white rounded-full shadow-sm text-xs font-bold text-[#0e181b] transition-all">Daily</button>
+<button class="px-3 py-1 rounded-full text-xs font-medium text-gray-500 hover:text-[#0e181b] transition-all">Weekly</button>
+<button class="px-3 py-1 rounded-full text-xs font-medium text-gray-500 hover:text-[#0e181b] transition-all">Monthly</button>
+</div>
+</div>
+<!-- Chart Visual -->
+<div class="relative w-full h-[180px]">
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 350 150">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#30bae8" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#30bae8" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Grid lines -->
+<line stroke="#f0f0f0" stroke-width="1" x1="0" x2="350" y1="150" y2="150"></line>
+<line stroke="#f0f0f0" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="350" y1="100" y2="100"></line>
+<line stroke="#f0f0f0" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="350" y1="50" y2="50"></line>
+<line stroke="#f0f0f0" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="350" y1="0" y2="0"></line>
+<!-- Chart Path -->
+<path d="M0 120 C 30 120, 40 80, 70 80 C 100 80, 110 40, 140 50 C 170 60, 180 100, 210 90 C 240 80, 250 30, 280 20 C 310 10, 330 40, 350 30" fill="none" stroke="#30bae8" stroke-linecap="round" stroke-width="3"></path>
+<!-- Fill Area -->
+<path d="M0 120 C 30 120, 40 80, 70 80 C 100 80, 110 40, 140 50 C 170 60, 180 100, 210 90 C 240 80, 250 30, 280 20 C 310 10, 330 40, 350 30 V 150 H 0 Z" fill="url(#chartGradient)"></path>
+<!-- Interactive Tooltip Point (Simulated) -->
+<circle cx="280" cy="20" fill="#ffffff" r="5" stroke="#30bae8" stroke-width="3"></circle>
+<rect fill="#0e181b" height="24" rx="12" width="80" x="240" y="-10"></rect>
+<text fill="white" font-size="10" font-weight="bold" text-anchor="middle" x="280" y="6">₹2,400</text>
+</svg>
+</div>
+<div class="flex justify-between mt-2 text-xs text-gray-400 font-medium px-1">
+<span>Dec 1</span>
+<span>Dec 5</span>
+<span>Dec 10</span>
+<span>Dec 15</span>
+<span>Dec 20</span>
+</div>
+</div>
+</section>
+<!-- Payout Settings -->
+<section class="px-4">
+<div class="bg-surface-white rounded-[2rem] p-5 shadow-soft border border-gray-100">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-blue-600">account_balance</span>
+</div>
+<div class="flex-1">
+<p class="text-sm text-[#4e8597] font-medium">Payout Method</p>
+<p class="text-base font-bold text-[#0e181b]">HDFC Bank **** 8821</p>
+</div>
+<button class="text-sm font-bold text-primary hover:text-primary-dark transition-colors">
+                        Update
+                    </button>
+</div>
+<div class="w-full h-px bg-gray-100 my-4"></div>
+<div class="flex items-center justify-between">
+<div>
+<p class="text-sm font-bold text-[#0e181b]">Auto-payout</p>
+<p class="text-xs text-[#4e8597]">Process payments every Monday</p>
+</div>
+<!-- Toggle Switch -->
+<div class="relative inline-block w-12 h-7 align-middle select-none transition duration-200 ease-in">
+<input class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 border-gray-200 appearance-none cursor-pointer top-1 left-1 checked:left-6 checked:border-primary transition-all duration-300 z-10" id="toggle" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-7 rounded-full bg-gray-200 cursor-pointer transition-colors duration-300" for="toggle"></label>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Transactions -->
+<section class="px-4">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-xl font-bold text-[#0e181b]">Recent Transactions</h3>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Transaction Item 1: Paid -->
+<div class="bg-surface-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center gap-4 active:scale-[0.99] transition-transform cursor-pointer">
+<div class="w-[56px] h-[56px] rounded-full bg-cover bg-center shrink-0 border-2 border-white shadow-sm" data-alt="Portrait of Sarah Jenkins, a mentee" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCtscPUkMdDTnxmrKy2ZCQ3t9CQXuppT9uOPzsPj13Gvp2ZX83pYlMqqRkvNKVXHaOQR1M_HAqnNTjkloguAZx6dqW4Y3NZo2MdHe_-6-6iTCR6j-IEjNudMpHQCqcRwMHatCFSLRmQ4s3QWGgkSKT_8AJQD_JHRUttU4SAaLrR1VOdI_yGm-ZYx_fCJSDMwnKfKKdrME8Ows-TIEGE36EGVIIQ8619r8OKjR9AHOYUA1jFqCQbZz-SXmX4_vKE4sQrOLin1dpmT7vK");'></div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<h4 class="text-base font-bold text-[#0e181b] truncate">Sarah Jenkins</h4>
+<span class="text-base font-bold text-green-600">+₹850</span>
+</div>
+<div class="flex justify-between items-end mt-1">
+<div>
+<p class="text-xs text-[#4e8597] font-medium truncate">Mentoring Session</p>
+<p class="text-xs text-gray-400 mt-0.5">Dec 12, 10:00 AM</p>
+</div>
+<span class="bg-green-50 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-green-100 uppercase tracking-wide">Paid</span>
+</div>
+</div>
+</div>
+<!-- Transaction Item 2: Pending -->
+<div class="bg-surface-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center gap-4 active:scale-[0.99] transition-transform cursor-pointer">
+<div class="w-[56px] h-[56px] rounded-full bg-cover bg-center shrink-0 border-2 border-white shadow-sm" data-alt="Portrait of Michael Chen, a mentee" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA6yKs5OJAUSY27KFL1YIBKf09J3IwInHoLpxgHK8AOrl6fUsfku0uxept8_uUBjY33a0NV73lwpR5LIxEzK25n2OBkJKeN0deuOfZeim9rOMQVRlnySnry3Xhz4jHGvJN3ad4BtsonYGjgKWy81M2V9fuLH7n7NxPpbn90wSGyfo_riZd07sX4oyymczrBwJPAepWallliwn1cksd7-aHC1jumzfPJaEVQ2CFV1p-Ycnzgwd_4vDWhDkojTFRvd40eNZzEKNkZ_b6r");'></div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<h4 class="text-base font-bold text-[#0e181b] truncate">Michael Chen</h4>
+<span class="text-base font-bold text-[#0e181b]">+₹1,200</span>
+</div>
+<div class="flex justify-between items-end mt-1">
+<div>
+<p class="text-xs text-[#4e8597] font-medium truncate">Career Review</p>
+<p class="text-xs text-gray-400 mt-0.5">Yesterday, 2:30 PM</p>
+</div>
+<span class="bg-orange-50 text-orange-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-orange-100 uppercase tracking-wide">Pending</span>
+</div>
+</div>
+</div>
+<!-- Transaction Item 3: Paid -->
+<div class="bg-surface-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center gap-4 active:scale-[0.99] transition-transform cursor-pointer">
+<div class="w-[56px] h-[56px] rounded-full bg-cover bg-center shrink-0 border-2 border-white shadow-sm" data-alt="Portrait of Priya Patel, a mentee" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDdKeOcBLSIYnl5NuEA24rb-wtDD3PePZdH9AiuW4XkzGbDvFpcBB6yF1M-aJcoXayEReelZTfsHnxK3OQmcfhfzYi8AdLlGS_Gu8oq7BU_ueQCzsTO_OhniwDohkima32Zdq4MBjJqHUUauo6z3u1dwnCSrCAji2fvJpTfVR8dITh02Cv-d_djiBBk3vGL7Sw5zVOmoODzQ_x565gJydKKvMHlO_ACbLTHWJMdefBAbJqREQBZhceCGxEkXZvFwsss8ggoVK7-fKby");'></div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<h4 class="text-base font-bold text-[#0e181b] truncate">Priya Patel</h4>
+<span class="text-base font-bold text-green-600">+₹850</span>
+</div>
+<div class="flex justify-between items-end mt-1">
+<div>
+<p class="text-xs text-[#4e8597] font-medium truncate">Mentoring Session</p>
+<p class="text-xs text-gray-400 mt-0.5">Dec 10, 4:15 PM</p>
+</div>
+<span class="bg-green-50 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-green-100 uppercase tracking-wide">Paid</span>
+</div>
+</div>
+</div>
+<!-- Transaction Item 4: Paid -->
+<div class="bg-surface-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center gap-4 active:scale-[0.99] transition-transform cursor-pointer">
+<div class="w-[56px] h-[56px] rounded-full bg-cover bg-center shrink-0 border-2 border-white shadow-sm" data-alt="Portrait of David Kim, a mentee" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDJYROFmjUTP1Ex3tS-d-OxNP4R1V1VMBL4VMQef9xAt_n5k99smZBOv4G6oqoaijHQ7wlTzc1AiizVkAfBM4yWiFqlTC7jGZUEqAUKNWu2LskMRuB7wFx95-8HVJJ2eSVhV6d1M7AOgHKw8Bxodxr97Udl_40CaorumsiiDRNcNCgsP7bxXb-r_6kyofr6N4d0Mg6JeN8ukbN-qo8dKFKuBixk5F5FUBtdUKhBedC7zQBORMbjjjr5XC3NBZ0iKfjC1w4-fgJoFuGb");'></div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<h4 class="text-base font-bold text-[#0e181b] truncate">David Kim</h4>
+<span class="text-base font-bold text-green-600">+₹850</span>
+</div>
+<div class="flex justify-between items-end mt-1">
+<div>
+<p class="text-xs text-[#4e8597] font-medium truncate">Resume Review</p>
+<p class="text-xs text-gray-400 mt-0.5">Dec 08, 11:00 AM</p>
+</div>
+<span class="bg-green-50 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-green-100 uppercase tracking-wide">Paid</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Sticky Footer Actions -->
+<div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 pb-6 shadow-[0_-4px_20px_-2px_rgba(0,0,0,0.05)] z-50">
+<div class="flex gap-4 max-w-lg mx-auto">
+<button class="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border-2 border-gray-200 text-[#0e181b] font-bold hover:bg-gray-50 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-xl">filter_list</span>
+                Filter
+            </button>
+<button class="flex-[2] flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-primary text-white font-bold shadow-lg shadow-primary/30 hover:bg-primary-dark active:scale-95 transition-all">
+<span class="material-symbols-outlined text-xl">download</span>
+                Export Report
+            </button>
+</div>
+</div>
+</body></html>

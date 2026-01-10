@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Safe Space - Mentee Discovery</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30bae8",
+                        "primary-dark": "#259ac0", 
+                        "background-light": "#f8fbfc",
+                        "background-dark": "#111d21",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2c32",
+                        "text-main-light": "#0e181b",
+                        "text-main-dark": "#e0e6e8",
+                        "text-sub-light": "#4f626b",
+                        "text-sub-dark": "#9ba8ae",
+                        "accent-orange": "#F97316",
+                        "accent-purple": "#8B5CF6",
+                        "accent-green": "#10B981",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "1.5rem", "xl": "2rem", "2xl": "2.5rem", "full": "9999px"},
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(48, 186, 232, 0.08)',
+                        'card': '0 2px 12px -2px rgba(0, 0, 0, 0.05)',
+                        'glow': '0 0 15px rgba(48, 186, 232, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+          min-height: max(884px, 100dvh);
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased transition-colors duration-200">
+<div class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden">
+<header class="sticky top-0 z-10 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm transition-colors border-b border-gray-100 dark:border-gray-800">
+<div class="flex items-center px-4 py-4 justify-between">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700">
+<img alt="Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_ppLGt4mgbsLWtm0yVc70RBhnmiv0sEbWvO-fmLhbHYKb5ouie2_o5fMODl7YTaFk58Jrvl20zgaliSg-BW-nkQt8bFjHG75wb_qVrwOCn8DV0ebZkOxu6i0AfJtmJnJ9EjYAE6NSYw53n9uCm1GBJSa14_XQXbM1aoiEdkMTBTvTgFqA9XwUwJruFgWdBVKeRKuoXg6K05aEj9dQOGHYqdcfVDQRdHE1352SzsJ0kWGWkMzPjKt6Yv5ZsWE07Wv3RQQo0I_bDB1D"/>
+</div>
+<div>
+<h1 class="text-text-main-light dark:text-text-main-dark text-lg font-bold leading-none">Find Mentees</h1>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark font-medium mt-0.5">Connect and inspire</p>
+</div>
+</div>
+<button class="relative p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-text-main-light dark:text-text-main-dark">
+<span class="material-symbols-outlined text-[24px]">tune</span>
+</button>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto px-4 pb-24 pt-2 space-y-6 scrollbar-hide">
+<section>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-text-sub-light dark:text-text-sub-dark text-[20px]">search</span>
+<input class="w-full bg-white dark:bg-surface-dark pl-11 pr-4 py-3 rounded-xl border-none shadow-sm dark:shadow-none dark:border dark:border-white/5 text-text-main-light dark:text-text-main-dark placeholder:text-text-sub-light/50 focus:ring-2 focus:ring-primary text-sm transition-colors" placeholder="Search by name, interest, or topic..." type="text"/>
+</div>
+<div class="flex gap-2 overflow-x-auto py-4 scrollbar-hide -mx-4 px-4">
+<button class="px-4 py-2 rounded-full bg-primary text-white text-xs font-bold whitespace-nowrap shadow-lg shadow-primary/20">All</button>
+<button class="px-4 py-2 rounded-full bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 text-text-sub-light dark:text-text-sub-dark text-xs font-semibold whitespace-nowrap transition-colors">Academic</button>
+<button class="px-4 py-2 rounded-full bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 text-text-sub-light dark:text-text-sub-dark text-xs font-semibold whitespace-nowrap transition-colors">Anxiety &amp; Stress</button>
+<button class="px-4 py-2 rounded-full bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 text-text-sub-light dark:text-text-sub-dark text-xs font-semibold whitespace-nowrap transition-colors">Career Prep</button>
+<button class="px-4 py-2 rounded-full bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 text-text-sub-light dark:text-text-sub-dark text-xs font-semibold whitespace-nowrap transition-colors">Creative Arts</button>
+</div>
+</section>
+<section>
+<div class="flex items-center justify-between mb-3">
+<h3 class="text-text-main-light dark:text-text-main-dark font-bold text-lg">Referral Requests</h3>
+<span class="bg-accent-orange/10 text-accent-orange px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wide">1 New</span>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-2xl shadow-card dark:border dark:border-white/5 border-l-4 border-l-accent-orange relative overflow-hidden transition-colors">
+<div class="flex items-start gap-3">
+<div class="size-12 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden flex-shrink-0">
+<div class="w-full h-full flex items-center justify-center text-text-sub-light dark:text-text-main-dark font-bold text-lg">DK</div>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-bold text-text-main-light dark:text-text-main-dark">Dylan K. <span class="text-sm font-normal text-text-sub-light dark:text-text-sub-dark ml-1">16y</span></h4>
+<p class="text-[11px] text-text-sub-light dark:text-text-sub-dark font-medium mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">school</span> Referred by Mr. Anderson
+                            </p>
+</div>
+<span class="text-[10px] font-bold text-text-sub-light dark:text-text-sub-dark bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md">2h ago</span>
+</div>
+<div class="flex flex-wrap gap-1.5 mt-3 mb-2">
+<span class="px-2 py-0.5 rounded-md bg-accent-orange/10 text-accent-orange text-[10px] font-bold">College Apps</span>
+<span class="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 text-text-sub-light dark:text-text-sub-dark text-[10px] font-bold">First Gen</span>
+</div>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark leading-relaxed">
+                            Looking for guidance on scholarship essays and navigating the college application process as a first-generation student.
+                        </p>
+</div>
+</div>
+<div class="flex gap-2 mt-4 pt-3 border-t border-gray-100 dark:border-gray-800">
+<button class="flex-1 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 text-text-sub-light dark:text-text-sub-dark text-xs font-bold hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                            Decline
+                        </button>
+<button class="flex-1 py-2.5 rounded-xl bg-primary text-white text-xs font-bold shadow-lg shadow-primary/20 hover:bg-primary-dark transition-colors">
+                            Accept Referral
+                        </button>
+</div>
+</div>
+</section>
+<section>
+<div class="flex items-center justify-between mb-3">
+<h3 class="text-text-main-light dark:text-text-main-dark font-bold text-lg">Recommended Matches</h3>
+<button class="text-primary hover:text-primary-dark text-sm font-semibold transition-colors">Filter</button>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-2xl shadow-card dark:border dark:border-white/5 mb-3 transition-all hover:shadow-soft dark:hover:bg-surface-dark/80">
+<div class="flex justify-between items-start mb-3">
+<div class="flex gap-3">
+<div class="size-14 rounded-full overflow-hidden border-2 border-white dark:border-gray-700 shadow-sm">
+<img alt="Maya R." class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxysxTbC9gvE965rSyYPpIgsFmRZD48ZKRzpIqyFLwdwCx2s59sO0HzshVHqI--Y_OQDwg7LQ1LYDWYd_RJqyxPy7e5ZJVpaRS_NBSI5jyuO9ivgjzvSQApgBH6oziRDSVcXd1npi0Iw2JaczzCW-tHf8RkF8g9yNkWqzooIqNtq7q9UNN4VJqIYr-GFTo4Jimp9OWnQUDrHIYosbN5OQ7RyP5I4YDF2C_myoBDw59Ezofvs0RqLXCUXYyu7aJHeQUFcVC7_3VBF9t"/>
+</div>
+<div>
+<h4 class="font-bold text-text-main-light dark:text-text-main-dark text-base">Maya Ross</h4>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="text-xs text-text-sub-light dark:text-text-sub-dark">15 years old</span>
+<span class="size-1 rounded-full bg-gray-300 dark:bg-gray-600"></span>
+<span class="text-xs text-text-sub-light dark:text-text-sub-dark">Grade 10</span>
+</div>
+</div>
+</div>
+<button class="text-text-sub-light dark:text-text-sub-dark hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">bookmark_border</span>
+</button>
+</div>
+<div class="flex flex-wrap gap-1.5 mb-3">
+<span class="px-2.5 py-1 rounded-lg bg-accent-purple/10 text-accent-purple text-[10px] font-bold">Social Anxiety</span>
+<span class="px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-text-sub-light dark:text-text-sub-dark text-[10px] font-bold">Painting</span>
+<span class="px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-text-sub-light dark:text-text-sub-dark text-[10px] font-bold">LGBTQ+</span>
+</div>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark leading-relaxed mb-4">
+                    I love art and music but often feel overwhelmed in large groups. I'd love a mentor who can help me build confidence in social situations.
+                </p>
+<button class="w-full py-3 rounded-xl bg-surface-light dark:bg-surface-dark border-2 border-primary text-primary text-xs font-bold uppercase tracking-wide hover:bg-primary hover:text-white transition-colors">
+                    View Profile &amp; Connect
+                </button>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-2xl shadow-card dark:border dark:border-white/5 mb-3 transition-all hover:shadow-soft dark:hover:bg-surface-dark/80">
+<div class="flex justify-between items-start mb-3">
+<div class="flex gap-3">
+<div class="size-14 rounded-full overflow-hidden border-2 border-white dark:border-gray-700 shadow-sm">
+<img alt="James L." class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBucmQ4oTJfMZSvCWPlYqSASJfWltc6RW_jJe4bWC3ZQilPi9w5i5I2s4L2Tmt3Zml_QHOktknTf53b4R6jnV9ARSWDt1nsF5_jsF8GRKtjVbBq1KGwHoDHzwgLzYBwHzss-xadCESjt3XZ3XfDL9AVHoo4LOt5LN6FICT1A4MxeezDA1dlltsh5tzij_HHlKiryJIXsjWig6KsdiB3CXy0UDQNjDpPkwTFjiZaB1Y_gw_5DAgqt_gzIqGKe9627Lo28g2TjFnP8W_L"/>
+</div>
+<div>
+<h4 class="font-bold text-text-main-light dark:text-text-main-dark text-base">James Liu</h4>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="text-xs text-text-sub-light dark:text-text-sub-dark">17 years old</span>
+<span class="size-1 rounded-full bg-gray-300 dark:bg-gray-600"></span>
+<span class="text-xs text-text-sub-light dark:text-text-sub-dark">Grade 12</span>
+</div>
+</div>
+</div>
+<button class="text-text-sub-light dark:text-text-sub-dark hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">bookmark_border</span>
+</button>
+</div>
+<div class="flex flex-wrap gap-1.5 mb-3">
+<span class="px-2.5 py-1 rounded-lg bg-accent-green/10 text-accent-green text-[10px] font-bold">Time Management</span>
+<span class="px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-text-sub-light dark:text-text-sub-dark text-[10px] font-bold">Sports</span>
+</div>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark leading-relaxed mb-4">
+                    Trying to balance varsity soccer with my final year exams. Need help organizing my schedule so I don't burn out.
+                </p>
+<button class="w-full py-3 rounded-xl bg-surface-light dark:bg-surface-dark border-2 border-primary text-primary text-xs font-bold uppercase tracking-wide hover:bg-primary hover:text-white transition-colors">
+                    View Profile &amp; Connect
+                </button>
+</div>
+</section>
+<div class="h-4"></div>
+</main>
+<div class="sticky bottom-0 bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-md border-t border-gray-100 dark:border-gray-800/50 grid grid-cols-4 px-2 py-3 z-20">
+<button class="flex flex-col items-center gap-1 text-text-sub-light dark:text-text-sub-dark hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">dashboard</span>
+<span class="text-[10px] font-medium">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary dark:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px] fill-1">groups</span>
+<span class="text-[10px] font-bold">Mentees</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-text-sub-light dark:text-text-sub-dark hover:text-primary dark:hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined text-[24px]">chat_bubble</span>
+<span class="text-[10px] font-medium">Messages</span>
+<span class="absolute top-0 right-7 size-2 bg-red-500 rounded-full border border-surface-light dark:border-surface-dark"></span>
+</button>
+<button class="flex flex-col items-center gap-1 text-text-sub-light dark:text-text-sub-dark hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</button>
+</div>
+</div>
+
+</body></html>

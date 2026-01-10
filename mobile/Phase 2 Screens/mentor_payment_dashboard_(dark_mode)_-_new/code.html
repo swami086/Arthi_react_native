@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mentor Payment Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#30bae8',
+                        'background-dark': '#0e181b', 
+                        'surface-dark': '#1a2a2e',
+                        'text-secondary': '#A0AEC0',
+                        'accent-green': '#4ADE80',
+                        'accent-orange': '#FB923C',
+                    },
+                    fontFamily: {
+                        display: ['Manrope', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark text-white font-display antialiased selection:bg-primary selection:text-white">
+<!-- Main Mobile Container -->
+<div class="relative min-h-screen w-full flex flex-col max-w-md mx-auto bg-background-dark overflow-x-hidden border-x border-white/5">
+<!-- Sticky Header -->
+<header class="flex items-center justify-between px-5 pt-6 pb-2 sticky top-0 z-20 bg-background-dark/95 backdrop-blur-md border-b border-white/5">
+<div class="flex items-center gap-3">
+<button class="material-symbols-outlined text-white hover:text-primary transition-colors">arrow_back</button>
+<h1 class="text-2xl font-bold tracking-tight">Earnings</h1>
+</div>
+<button class="flex items-center gap-2 text-primary hover:text-white transition-colors group">
+<span class="text-sm font-bold">Export</span>
+<span class="material-symbols-outlined text-[20px] group-hover:-translate-y-0.5 transition-transform">ios_share</span>
+</button>
+</header>
+<!-- Main Content Scroll Area -->
+<div class="flex-1 overflow-y-auto">
+<!-- Date Range Selector -->
+<div class="px-5 py-4">
+<div class="flex gap-3 overflow-x-auto no-scrollbar">
+<button class="flex items-center gap-2 pl-4 pr-3 py-2 rounded-full bg-primary text-background-dark text-sm font-bold whitespace-nowrap shadow-lg shadow-primary/20">
+                        This Month
+                        <span class="material-symbols-outlined text-[18px]">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full bg-surface-dark text-text-secondary text-sm font-medium whitespace-nowrap border border-white/5 hover:bg-white/5 transition-colors">
+                        Last Month
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full bg-surface-dark text-text-secondary text-sm font-medium whitespace-nowrap border border-white/5 hover:bg-white/5 transition-colors">
+                        Custom Range
+                    </button>
+</div>
+</div>
+<!-- Summary Cards Carousel -->
+<div class="pl-5 py-2 mb-2">
+<div class="flex gap-4 overflow-x-auto no-scrollbar pr-5 pb-4 snap-x">
+<!-- Total Earnings Card -->
+<div class="snap-center shrink-0 w-[260px] p-5 rounded-2xl bg-surface-dark border border-white/5 flex flex-col justify-between h-[150px] relative overflow-hidden group">
+<!-- Subtle background effect -->
+<div class="absolute -right-6 -top-6 w-32 h-32 bg-primary/10 rounded-full blur-3xl"></div>
+<div class="flex items-start justify-between relative z-10">
+<div class="p-2.5 rounded-xl bg-primary/10 text-primary">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</div>
+<div class="flex items-center gap-1 text-accent-green bg-accent-green/10 px-2 py-1 rounded-lg">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span class="text-xs font-bold">+12%</span>
+</div>
+</div>
+<div class="relative z-10">
+<p class="text-text-secondary text-sm font-medium mb-1">Total Earned</p>
+<h2 class="text-3xl font-extrabold text-white tracking-tight">₹45,000</h2>
+</div>
+</div>
+<!-- Pending Payouts Card -->
+<div class="snap-center shrink-0 w-[260px] p-5 rounded-2xl bg-surface-dark border border-white/5 flex flex-col justify-between h-[150px] relative overflow-hidden">
+<div class="absolute -right-6 -top-6 w-32 h-32 bg-accent-orange/10 rounded-full blur-3xl"></div>
+<div class="flex items-start justify-between relative z-10">
+<div class="p-2.5 rounded-xl bg-accent-orange/10 text-accent-orange">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+</div>
+<div class="relative z-10">
+<p class="text-text-secondary text-sm font-medium mb-1">Pending Payouts</p>
+<div class="flex items-baseline gap-2">
+<h2 class="text-3xl font-extrabold text-white tracking-tight">₹12,000</h2>
+</div>
+<p class="text-xs text-text-secondary mt-1 font-medium">Est: Dec 25</p>
+</div>
+</div>
+<!-- Completed Sessions Card -->
+<div class="snap-center shrink-0 w-[260px] p-5 rounded-2xl bg-surface-dark border border-white/5 flex flex-col justify-between h-[150px] relative overflow-hidden">
+<div class="flex items-start justify-between relative z-10">
+<div class="p-2.5 rounded-xl bg-purple-500/10 text-purple-400">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+</div>
+<div class="relative z-10">
+<p class="text-text-secondary text-sm font-medium mb-1">Completed Sessions</p>
+<div class="flex items-baseline gap-2">
+<h2 class="text-3xl font-extrabold text-white tracking-tight">45</h2>
+<span class="text-sm text-text-secondary">sessions</span>
+</div>
+<p class="text-xs text-text-secondary mt-1 font-medium">~ ₹1k / session</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Chart Section -->
+<div class="px-5 mb-6">
+<div class="p-5 rounded-2xl bg-surface-dark border border-white/5">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-bold text-lg">Income Trends</h3>
+<!-- Segmented Control -->
+<div class="flex bg-background-dark p-1 rounded-lg border border-white/5">
+<button class="px-3 py-1 text-xs font-bold rounded-md bg-primary text-background-dark shadow-sm">D</button>
+<button class="px-3 py-1 text-xs font-medium rounded-md text-text-secondary hover:text-white transition-colors">W</button>
+<button class="px-3 py-1 text-xs font-medium rounded-md text-text-secondary hover:text-white transition-colors">M</button>
+</div>
+</div>
+<!-- Chart Graphic -->
+<div class="relative h-48 w-full">
+<!-- Chart SVG -->
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 100 50">
+<!-- Background Grid -->
+<line stroke="#ffffff" stroke-dasharray="2 2" stroke-opacity="0.05" stroke-width="0.5" x1="0" x2="100" y1="0" y2="0"></line>
+<line stroke="#ffffff" stroke-dasharray="2 2" stroke-opacity="0.05" stroke-width="0.5" x1="0" x2="100" y1="25" y2="25"></line>
+<line stroke="#ffffff" stroke-opacity="0.05" stroke-width="0.5" x1="0" x2="100" y1="50" y2="50"></line>
+<!-- Area Fill -->
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#30bae8" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#30bae8" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0 45 C 15 45, 20 35, 30 25 C 40 15, 50 20, 60 15 C 70 10, 80 5, 90 8 L 100 2 V 50 H 0 Z" fill="url(#chartGradient)"></path>
+<!-- Line Path -->
+<path d="M0 45 C 15 45, 20 35, 30 25 C 40 15, 50 20, 60 15 C 70 10, 80 5, 90 8 L 100 2" fill="none" stroke="#30bae8" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+</svg>
+<!-- Interactive Tooltip -->
+<div class="absolute top-[8px] right-0 transform translate-x-1/2 flex flex-col items-center">
+<div class="bg-white text-background-dark text-[10px] font-bold px-2 py-1 rounded shadow-lg mb-2 relative">
+                                ₹4,200
+                                <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-white rotate-45"></div>
+</div>
+<div class="w-3 h-3 bg-primary rounded-full border-[3px] border-surface-dark shadow-sm"></div>
+<!-- Vertical Line -->
+<div class="w-[1px] h-[130px] bg-white/10 border-l border-dashed border-white/20 mt-1"></div>
+</div>
+</div>
+<!-- Axis Labels -->
+<div class="flex justify-between mt-4 px-1">
+<span class="text-[10px] font-medium text-text-secondary uppercase">Mon</span>
+<span class="text-[10px] font-medium text-text-secondary uppercase">Tue</span>
+<span class="text-[10px] font-medium text-text-secondary uppercase">Wed</span>
+<span class="text-[10px] font-medium text-text-secondary uppercase">Thu</span>
+<span class="text-[10px] font-medium text-text-secondary uppercase">Fri</span>
+<span class="text-[10px] font-medium text-text-secondary uppercase">Sat</span>
+<span class="text-[10px] font-medium text-white uppercase">Sun</span>
+</div>
+</div>
+</div>
+<!-- Payout Method -->
+<div class="px-5 mb-8">
+<div class="p-5 rounded-2xl bg-surface-dark border border-white/5 flex flex-col gap-5">
+<div class="flex justify-between items-center">
+<h3 class="font-bold text-white text-lg">Payout Method</h3>
+<button class="text-primary text-sm font-bold hover:text-white transition-colors">Update</button>
+</div>
+<div class="flex items-center gap-4 p-4 rounded-xl bg-background-dark border border-white/5">
+<div class="w-12 h-12 rounded-full bg-white flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-background-dark" style="font-size: 24px;">account_balance</span>
+</div>
+<div class="flex-1">
+<p class="text-base font-bold text-white">HDFC Bank</p>
+<p class="text-xs text-text-secondary font-medium tracking-wider">•••• 8392</p>
+</div>
+<span class="material-symbols-outlined text-accent-green" title="Verified">verified_user</span>
+</div>
+<div class="flex items-center justify-between border-t border-white/5 pt-4">
+<div class="flex flex-col gap-1">
+<p class="text-sm font-bold text-white">Auto-payout</p>
+<p class="text-xs text-text-secondary">Withdraw on the 25th</p>
+</div>
+<!-- Custom Toggle Switch -->
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-12 h-7 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</div>
+<!-- Recent Transactions List -->
+<div class="px-5 pb-10">
+<div class="flex items-center justify-between mb-5">
+<h3 class="text-lg font-bold text-white">Recent Activity</h3>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-surface-dark border border-white/5 text-text-secondary hover:text-white hover:bg-white/5 transition-all">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+</button>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Transaction Item 1 -->
+<div class="group flex items-center justify-between p-4 rounded-xl bg-surface-dark border border-white/5 active:scale-[0.98] transition-all hover:border-white/10 cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img alt="Sarah Jenkins" class="w-10 h-10 rounded-full object-cover border border-white/10" data-alt="Portrait of mentee Sarah Jenkins smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsmuElYEjZzbpjMvs1TVH0Dw7AurRD8DujY8VnxHzmP1oOTVLrutQDWYnU5O0DToWsBRMgwlg3Lq8OUOyz_4aTCMZrrFdFL89C6VFjnHEFNgZ-0BpoZkLan68UUVvY2ldqucHbxD809eTOcUhnBvX4BMtcE9LaOtSaJOHuYGaFCQOb8LpIXPnfqLz8udXXxCcCFvvLTzBgQtAFBTvNV_TzBDAR4uA3VO5dKQ2uV5ipJe6hE9yzjR6K2BX45ZuOuzLwtoE2gDHVyJL4"/>
+<div class="absolute -bottom-1 -right-1 bg-surface-dark rounded-full p-0.5">
+<div class="w-2.5 h-2.5 bg-accent-green rounded-full border border-surface-dark"></div>
+</div>
+</div>
+<div>
+<p class="text-sm font-bold text-white group-hover:text-primary transition-colors">Sarah Jenkins</p>
+<p class="text-xs text-text-secondary">Oct 24, 2:00 PM</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<p class="text-sm font-bold text-white">+ ₹850</p>
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-accent-green"></span>
+<span class="text-[10px] font-bold text-text-secondary uppercase">Paid</span>
+</div>
+</div>
+</div>
+<!-- Transaction Item 2 -->
+<div class="group flex items-center justify-between p-4 rounded-xl bg-surface-dark border border-white/5 active:scale-[0.98] transition-all hover:border-white/10 cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img alt="Michael Chen" class="w-10 h-10 rounded-full object-cover border border-white/10" data-alt="Portrait of mentee Michael Chen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFIYIvQzqF8Q2UqMsgaimPxvICBJdjWWA40CjhPjOptTSQ-bgpmwru3RJFa8LKG-Qgu2Nv9dwlQcMflbaeh6jmO1_6NjG21L4IMZ-UYb0-u3EbGh631VzyPVAPEWs70wKZPsFgLXgzoXwUcJcif22NXOABAupDxui9VN6-9S-KMtQuGI9xN8cszLCX9n21VJQzMKIYUGCnI3tV30zzyfWgcbHP96BsH4RElzTF6lhukQoJanX7GyMHtZnnuxf0epWB6ACh6YZB6Sl3"/>
+</div>
+<div>
+<p class="text-sm font-bold text-white group-hover:text-primary transition-colors">Michael Chen</p>
+<p class="text-xs text-text-secondary">Oct 23, 10:00 AM</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<p class="text-sm font-bold text-white">+ ₹850</p>
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-accent-orange"></span>
+<span class="text-[10px] font-bold text-text-secondary uppercase">Pending</span>
+</div>
+</div>
+</div>
+<!-- Transaction Item 3 -->
+<div class="group flex items-center justify-between p-4 rounded-xl bg-surface-dark border border-white/5 active:scale-[0.98] transition-all hover:border-white/10 cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img alt="James Wilson" class="w-10 h-10 rounded-full object-cover border border-white/10" data-alt="Portrait of mentee James Wilson" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1SA00qYy8W68B4SAd0lSGqCz_kM55rVnot6vgdGbPaulnKHCpVFswaZf3c8BKIhB8SBMetvzIdSSSj6BISb-T-yCRRQqQEFIAvv9xVfecS0_nPqXGNYqxpRE2EUm9SVJZBS88fvUWjHbdSy7NdUEArI0I8RrDGBFSypHGZHt9irZEIEOjonXmjxQbc5Ec4Fa3ydTkMK-WUCs7yyoBOibvLsGF8ecdd9vLpnl0A-xenqJVJcD2LsBHieSVtiZ8nmf3GqTdy-K_3YOl"/>
+<div class="absolute -bottom-1 -right-1 bg-surface-dark rounded-full p-0.5">
+<div class="w-2.5 h-2.5 bg-accent-green rounded-full border border-surface-dark"></div>
+</div>
+</div>
+<div>
+<p class="text-sm font-bold text-white group-hover:text-primary transition-colors">James Wilson</p>
+<p class="text-xs text-text-secondary">Oct 22, 4:30 PM</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<p class="text-sm font-bold text-white">+ ₹850</p>
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-accent-green"></span>
+<span class="text-[10px] font-bold text-text-secondary uppercase">Paid</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom spacing for aesthetics -->
+<div class="h-10"></div>
+</div>
+</div>
+</body></html>

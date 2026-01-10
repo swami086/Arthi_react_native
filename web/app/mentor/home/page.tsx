@@ -1,0 +1,91 @@
+export const dynamic = 'force-dynamic';
+
+import { createClient } from '@/lib/supabase/server';
+import { Metadata } from 'next';
+import { reportError } from '@/lib/rollbar-utils';
+import MentorHomeClient from './_components/MentorHomeClient';
+
+export const metadata: Metadata = {
+    title: 'Mentor Dashboard | SafeSpace',
+    description: 'Manage your mentees, sessions, and referrals.',
+};
+
+export default async function MentorHomePage() {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) return null; // handled by layout/middleware
+
+    // 1. Fetch Stats (RPC)
+    let stats = null;
+    try {
+        const { data } = await (supabase as any).rpc('get_mentor_stats', {
+            mentor_uuid: user.id
+        });
+        stats = data;
+    } catch (error) {
+        console.error('Error fetching mentor stats:', error);
+        // reportError(error); // Assuming reportError is available or imported from lib/rollbar-utils
+    }
+
+    // 2. Fetch Upcoming Appointments (Limit 3)
+    let appointments: any[] = [];
+    try {
+        const { data } = await supabase
+            .from('appointments')
+            .select(`
+                id,
+                start_time,
+                status,
+                mentee:mentee_id(full_name, avatar_url)
+            `)
+            .eq('mentor_id', user.id)
+            .eq('status', 'scheduled')
+            .gte('start_time', new Date().toISOString())
+            .order('start_time', { ascending: true })
+            .limit(3);
+        appointments = data || [];
+    } catch (error) {
+        console.error('Error fetching appointments:', error);
+    }
+
+    // 3. Fetch Recent Conversations (Limit 3)
+    let conversations: any[] = [];
+    try {
+        const { data } = await supabase
+            .from('messages')
+            .select(`
+                id,
+                created_at,
+                content,
+                sender:sender_id(full_name)
+            `)
+            .eq('recipient_id', user.id)
+            .order('created_at', { ascending: false })
+            .limit(5);
+        conversations = data || [];
+    } catch (error) {
+        console.error('Error fetching conversations:', error);
+    }
+
+    // Formatting stats if rpc returns snake_case, client expects camelCase
+    // Cast stats to any to avoid TS errors if types aren't generated
+    const typedStats = stats as any;
+    const formattedStats = typedStats ? {
+        totalMentees: typedStats.total_mentees || 0,
+        activeSessions: typedStats.active_sessions || 0,
+        totalHours: typedStats.total_hours || 0,
+        rating: typedStats.rating || 5.0,
+        menteesTrend: typedStats.mentees_trend || 0,
+        sessionsTrend: typedStats.sessions_trend || 0
+    } : null;
+
+    return (
+        <MentorHomeClient
+            user={user}
+            initialStats={formattedStats}
+            initialAppointments={appointments || []}
+            initialConversations={conversations || []}
+        />
+    );
+}

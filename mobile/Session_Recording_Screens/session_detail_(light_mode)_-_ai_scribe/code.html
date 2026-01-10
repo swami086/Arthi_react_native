@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Session Detail - AI Scribe</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Manrope -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30bae8",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111d21",
+                        "text-main": "#0e181b",
+                        "text-secondary": "#4e8597",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'inner-light': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.02)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-main antialiased selection:bg-primary/20">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden pb-24">
+<!-- Header -->
+<header class="sticky top-0 z-50 flex items-center justify-between bg-background-light/90 px-4 py-4 backdrop-blur-md">
+<button class="group flex size-10 items-center justify-center rounded-full transition-colors hover:bg-gray-100 active:scale-95">
+<span class="material-symbols-outlined text-text-main">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold leading-tight tracking-tight text-text-main">Session Details</h1>
+<button class="group flex size-10 items-center justify-center rounded-full transition-colors hover:bg-gray-100 active:scale-95">
+<span class="material-symbols-outlined text-text-main">settings</span>
+</button>
+</header>
+<main class="flex flex-1 flex-col gap-6 px-4 pt-2">
+<!-- Profile & Context Card -->
+<section class="flex flex-col gap-4 rounded-[2rem] bg-white p-5 shadow-soft dark:bg-[#1a2c32]">
+<div class="flex items-center gap-4">
+<div class="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border-2 border-white shadow-sm ring-1 ring-gray-100" data-alt="Portrait of mentee Alex Doe smiling gently" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBWy-TNSefSZU_1u-3Xx086wAhSE412gz6YyhOzEfz2fg9W1MJGrhEd9csAgb9gG2uEKhECF6ATwKwfmNLGBE-V95ZvO1-kXjv87EoA0RvJyTjp-reFVYbv__SqSgkU2JDSc_yn47e-21Dg3vJWRZpB6-kz8iCHaCZAONoAPLcOqRMwX51Mh1KLe2PMaU1JUizdhnREdvpicMuG_2hTGR1yFATEXYqqII8aLxIY63v2hQUc7QF3MrkgS-HsGMbTL6rYKYc_WWFsv_r7'); background-size: cover; background-position: center;">
+</div>
+<div class="flex flex-col justify-center">
+<h2 class="text-xl font-extrabold text-text-main dark:text-white">Alex Doe</h2>
+<span class="inline-flex w-fit items-center rounded-full bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary dark:bg-primary/20">
+                            Mentee
+                        </span>
+<p class="mt-1 text-sm font-medium text-text-secondary">Mental Health Check-in</p>
+</div>
+</div>
+<div class="h-px w-full bg-gray-100 dark:bg-gray-700"></div>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex items-center gap-3 rounded-2xl bg-background-light p-3 dark:bg-gray-800">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-text-main shadow-sm dark:bg-gray-700 dark:text-white">
+<span class="material-symbols-outlined text-[20px]">calendar_today</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-semibold text-text-secondary">Date</span>
+<span class="text-sm font-bold text-text-main dark:text-white">Oct 24</span>
+</div>
+</div>
+<div class="flex items-center gap-3 rounded-2xl bg-background-light p-3 dark:bg-gray-800">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-text-main shadow-sm dark:bg-gray-700 dark:text-white">
+<span class="material-symbols-outlined text-[20px]">schedule</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-semibold text-text-secondary">Time</span>
+<span class="text-sm font-bold text-text-main dark:text-white">2:00 PM</span>
+</div>
+</div>
+</div>
+</section>
+<!-- AI Scribe Hero Section -->
+<section class="relative overflow-hidden rounded-[2.5rem] bg-white shadow-soft ring-1 ring-black/5 dark:bg-[#1a2c32] dark:ring-white/10">
+<div class="absolute right-0 top-0 -mt-10 -mr-10 h-40 w-40 rounded-full bg-primary/5 blur-3xl"></div>
+<div class="absolute bottom-0 left-0 -mb-10 -ml-10 h-40 w-40 rounded-full bg-primary/10 blur-3xl"></div>
+<div class="relative flex flex-col p-6">
+<div class="mb-4 flex items-center justify-between">
+<h3 class="flex items-center gap-2 text-lg font-bold text-text-main dark:text-white">
+<span class="material-symbols-outlined text-primary icon-filled">spark</span>
+                            AI Scribe
+                        </h3>
+<span class="rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-green-700">Ready</span>
+</div>
+<!-- Consent Block -->
+<label class="group mb-8 flex cursor-pointer items-start gap-3 rounded-xl border border-transparent bg-background-light p-3 transition-all hover:bg-gray-100 has-[:checked]:border-primary/30 has-[:checked]:bg-primary/5 dark:bg-gray-800 dark:hover:bg-gray-700">
+<div class="relative flex items-center pt-0.5">
+<input checked="" class="peer size-5 cursor-pointer appearance-none rounded-md border-2 border-gray-300 bg-white transition-all checked:border-primary checked:bg-primary hover:border-primary focus:ring-0 focus:ring-offset-0 dark:border-gray-500 dark:bg-gray-700" type="checkbox"/>
+<span class="material-symbols-outlined pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[16px] text-white opacity-0 transition-opacity peer-checked:opacity-100">check</span>
+</div>
+<div class="flex-1 text-sm font-medium leading-relaxed text-text-secondary group-has-[:checked]:text-text-main dark:text-gray-400 dark:group-has-[:checked]:text-white">
+                            I have obtained verbal consent from the patient to record this session for transcription purposes.
+                        </div>
+</label>
+<!-- Recording Controls -->
+<div class="flex flex-col items-center justify-center gap-4">
+<!-- Pulse effect ring -->
+<div class="relative flex items-center justify-center">
+<!-- Outer glow ring for active state simulation (optional for "Ready" state) -->
+<div class="absolute inset-0 scale-110 animate-pulse rounded-full bg-primary/20"></div>
+<button class="relative flex size-24 items-center justify-center rounded-full bg-primary text-white shadow-lg shadow-primary/40 transition-all hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400 disabled:shadow-none dark:disabled:bg-gray-700">
+<span class="material-symbols-outlined text-[40px] icon-filled">mic</span>
+</button>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="font-mono text-3xl font-bold tracking-widest text-text-main dark:text-white">00:00</span>
+<span class="text-xs font-semibold uppercase tracking-wider text-text-secondary">Tap to Record</span>
+</div>
+</div>
+<!-- Post-Processing Actions (Showing generated state for demo) -->
+<!-- Usually hidden until recording is done, shown here as secondary actions for context -->
+<div class="mt-8 grid grid-cols-2 gap-3 opacity-50 grayscale transition-all hover:opacity-100 hover:grayscale-0">
+<button class="flex h-12 items-center justify-center gap-2 rounded-xl bg-background-light px-4 text-sm font-bold text-text-main transition-colors disabled:cursor-not-allowed dark:bg-gray-800 dark:text-white" disabled="">
+<span class="material-symbols-outlined text-[20px]">description</span>
+                            Transcript
+                        </button>
+<button class="flex h-12 items-center justify-center gap-2 rounded-xl bg-background-light px-4 text-sm font-bold text-text-main transition-colors disabled:cursor-not-allowed dark:bg-gray-800 dark:text-white" disabled="">
+<span class="material-symbols-outlined text-[20px]">summarize</span>
+                            SOAP Note
+                        </button>
+</div>
+</div>
+</section>
+<!-- Manual Notes Section -->
+<section class="flex flex-col gap-3 pb-8">
+<h3 class="px-1 text-lg font-bold text-text-main dark:text-white">Session Notes</h3>
+<div class="relative">
+<textarea class="min-h-[160px] w-full resize-none rounded-2xl border-none bg-white p-4 text-base leading-relaxed text-text-main shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-primary/50 dark:bg-[#1a2c32] dark:text-white dark:placeholder:text-gray-600" placeholder="Add private session notes here... These notes are only visible to you."></textarea>
+<div class="absolute bottom-3 right-3 flex items-center justify-center rounded-lg bg-background-light p-1.5 text-text-secondary dark:bg-gray-800">
+<span class="material-symbols-outlined text-[18px]">edit_note</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Sticky Footer -->
+<footer class="fixed bottom-0 left-0 z-40 w-full bg-white/80 px-4 py-4 backdrop-blur-xl dark:bg-[#111d21]/80">
+<div class="mx-auto flex w-full max-w-md gap-3">
+<button class="flex h-14 flex-1 items-center justify-center rounded-full bg-red-50 text-base font-bold text-red-600 transition-colors hover:bg-red-100 active:scale-95 dark:bg-red-900/20 dark:text-red-400">
+                    Cancel
+                </button>
+<button class="flex h-14 flex-[2] items-center justify-center gap-2 rounded-full bg-primary text-base font-bold text-white shadow-lg shadow-primary/25 transition-transform hover:bg-sky-400 active:scale-95">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+                    Mark Completed
+                </button>
+</div>
+<!-- Safe Area Spacer for iOS Home Indicator -->
+<div class="h-1 w-full"></div>
+</footer>
+</div>
+</body></html>

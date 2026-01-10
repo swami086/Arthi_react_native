@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Safe Space</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&amp;family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+            extend: {
+                colors: {
+                "primary": "#30bae8",
+                "background-light": "#f8fbfc",
+                "background-dark": "#111d21",
+                },
+                fontFamily: {
+                "display": ["Plus Jakarta Sans", "sans-serif"],
+                "body": ["Noto Sans", "sans-serif"]
+                },
+                borderRadius: {"DEFAULT": "1rem", "lg": "1.5rem", "xl": "2rem", "2xl": "2.5rem", "full": "9999px"},
+            },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0e181b] dark:text-white transition-colors duration-200">
+<!-- Top App Bar -->
+<div class="sticky top-0 z-40 flex items-center bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md p-4 justify-between border-b border-gray-100 dark:border-gray-800">
+<div class="flex items-center gap-2">
+<div class="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 text-primary">
+<span class="material-symbols-outlined text-[20px]">spa</span>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em] text-[#0e181b] dark:text-white">Safe Space</h2>
+</div>
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-[#0e181b] dark:text-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+<!-- Main Content Wrapper -->
+<div class="flex flex-col w-full max-w-md mx-auto overflow-x-hidden pb-24">
+<!-- Hero Section -->
+<div class="px-4 pt-6 pb-2">
+<h1 class="text-[#0e181b] dark:text-white tracking-tight text-[36px] font-extrabold leading-[1.15] text-left">
+                A place to be heard, <span class="text-primary">not analyzed.</span>
+</h1>
+<p class="text-gray-600 dark:text-gray-300 text-lg font-normal leading-relaxed pt-3 pb-4">
+                Life coaching and active listening for when you just need to talk. No diagnosis, just support.
+            </p>
+<!-- Chips -->
+<div class="flex gap-2 flex-wrap mb-6">
+<div class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-[#e7f0f3] dark:bg-gray-800 pl-3 pr-4 border border-transparent dark:border-gray-700">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<p class="text-[#0e181b] dark:text-gray-200 text-sm font-semibold">Not Therapy</p>
+</div>
+<div class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-[#e7f0f3] dark:bg-gray-800 pl-3 pr-4 border border-transparent dark:border-gray-700">
+<span class="material-symbols-outlined text-primary text-[18px]">favorite</span>
+<p class="text-[#0e181b] dark:text-gray-200 text-sm font-semibold">Life Coaching</p>
+</div>
+</div>
+<!-- Hero Image -->
+<div class="w-full relative overflow-hidden rounded-2xl aspect-[4/3] shadow-sm">
+<div class="w-full h-full bg-center bg-no-repeat bg-cover transform hover:scale-105 transition-transform duration-700" data-alt="Illustration of two young friends sitting on bean bags chatting comfortably in a cozy room with plants" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB5NswgvnQBfEQBSsCNTWXK74n6ysVP6ago1FPTuZvO4RfuQfCmXNVSd-bI0IPNdDJrpaPNBb5FRMEIPZfwOqmGj2NEjpE-adilwDSBF6L64TAroG0oJCE1o8A9Ze_BE2HRs5sbj_KaY9pzdJYkzlqSzhGGdmB1lX79M1_xk1k5Hd6K0sobMIWGz_bwnodOT_NHo5_RWCF53sFbOXTyYwaEi4Lum1HcSBxgBLYophcUc3HnzdVwCFJVy0-n3b01eiKvh2rQvTg_fFfe");'>
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+</div>
+</div>
+<!-- Main CTA -->
+<div class="px-4 py-6">
+<button class="w-full h-14 bg-primary hover:bg-primary/90 active:scale-[0.98] text-white rounded-full flex items-center justify-center gap-2 font-bold text-lg shadow-lg shadow-primary/30 transition-all">
+<span class="material-symbols-outlined">chat_bubble</span>
+                Connect with a Listener
+            </button>
+<p class="text-center text-xs text-gray-400 mt-3 dark:text-gray-500">Free 15-min intro session • No credit card needed</p>
+</div>
+<!-- Benefits Horizontal Scroll -->
+<div class="py-6 w-full">
+<div class="px-4 mb-4 flex justify-between items-end">
+<h3 class="text-xl font-bold text-[#0e181b] dark:text-white">Why are we here?</h3>
+<span class="text-sm text-primary font-medium">Swipe →</span>
+</div>
+<div class="flex overflow-x-auto gap-4 px-4 pb-4 snap-x snap-mandatory scrollbar-hide">
+<!-- Card 1 -->
+<div class="snap-center shrink-0 w-[240px] bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col items-start gap-3">
+<div class="w-10 h-10 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-500">
+<span class="material-symbols-outlined">air</span>
+</div>
+<h4 class="font-bold text-lg dark:text-white">Just Vent</h4>
+<p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                        Release the pressure valve. Talk about school, friends, or life without fear of judgment.
+                    </p>
+</div>
+<!-- Card 2 -->
+<div class="snap-center shrink-0 w-[240px] bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col items-start gap-3">
+<div class="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-500">
+<span class="material-symbols-outlined">explore</span>
+</div>
+<h4 class="font-bold text-lg dark:text-white">Find Direction</h4>
+<p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                        Feeling lost? Our coaches help you map out your next steps and set achievable goals.
+                    </p>
+</div>
+<!-- Card 3 -->
+<div class="snap-center shrink-0 w-[240px] bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col items-start gap-3">
+<div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-500">
+<span class="material-symbols-outlined">hearing</span>
+</div>
+<h4 class="font-bold text-lg dark:text-white">Unbiased Ear</h4>
+<p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                        We aren't your parents or your teachers. We're just here to listen to your side.
+                    </p>
+</div>
+</div>
+</div>
+<!-- Audience Section -->
+<div class="px-4 py-6">
+<div class="bg-blue-50 dark:bg-gray-800/50 rounded-2xl p-6 relative overflow-hidden">
+<div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-primary/20 rounded-full blur-2xl"></div>
+<div class="relative z-10">
+<h3 class="text-xl font-bold mb-3 text-[#0e181b] dark:text-white">For Students &amp; Teens</h3>
+<p class="text-gray-700 dark:text-gray-300 mb-4">
+                        Whether you're stressing about finals, friendship drama, or just feeling "off"—we're here. We are mentors, not doctors.
+                    </p>
+<div class="flex items-center gap-2 text-primary font-bold cursor-pointer hover:underline">
+<span>Learn how it works</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Listeners Section -->
+<div class="px-4 py-6">
+<h3 class="text-xl font-bold mb-4 text-[#0e181b] dark:text-white">Meet a few listeners</h3>
+<div class="flex items-center justify-between">
+<div class="flex -space-x-4">
+<div class="w-14 h-14 rounded-full border-2 border-white dark:border-background-dark bg-gray-200 bg-cover bg-center" data-alt="Portrait of a smiling young woman with glasses" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCM8QONBw_vd55DryX9yTeDS3wt9u8RWTw8QCFDSKlI9Lmp48ix12HoKKf92ywRbWFWi32GH75FV6zpAwe5QjMY_Zd6SWi89v42FoU93K6WJfcZCsUNMeX42e8ljgpj74IQw2gJscjxkX8spa_zN5frxQ2aHVPVvezx67hyxH81MJt2m84b45tJL1MR8yn8DU29t_c6jQjnwbodwi63gxL2sshKdwJq2WHHzOi4ohU8yNY8uy_sv4OcbvDKvrXmowSe_u7H98JXEP6A");'></div>
+<div class="w-14 h-14 rounded-full border-2 border-white dark:border-background-dark bg-gray-200 bg-cover bg-center" data-alt="Portrait of a friendly young man smiling" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBAkluZlFODDWG6qr1tcOHC5Zfqmtzf-x7y5vIp5GAK_xrlhYToq43fK98yu5JtnOalWDhAjLDLGT9Hw3h9AGDdxDXXyL3jWUf1Olh1NELg9F25KMJ1gxb1HU6z9nQuidQ3Q0ICxHdITBVqBGsDNv7ZDwRJ5YaSMXdFi_m5yD6zNNJBbOYurx6g_0mye_zPYkEfD9osdSUJt_4OaQZMqYaOEP5Q1REa4Ee5S1PFxCQ03GZWXmKPHW0VENUl5lStNc3MB5eD7_RIHy6o");'></div>
+<div class="w-14 h-14 rounded-full border-2 border-white dark:border-background-dark bg-gray-200 bg-cover bg-center" data-alt="Portrait of a woman with curly hair smiling warmly" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDZn3HMvsywdIKqY-MVeu8ogQLQiuGCKYOf7B_rlggEVvuFP3itfsH45NIT7IZrjWQLy_kULoz7IFATTMqwjfR9m_bH_FpdkZG4ky-BNa6pxlUgT_pqOM_fKfK3R0nXmz8cU7YB-d2pgtQcDY53UY3SGAKlMqu7cHczSWhKIII1zivdIVABijUVcpASoDu_kCjHk7EfThcNOYpd1Uwx9sBbTBa9D9h0TT-bCH2hZJR5iMJjQzjDfnXbktV0maUhqG4GFm1xBTMmWt5H");'></div>
+<div class="w-14 h-14 rounded-full border-2 border-white dark:border-background-dark bg-gray-200 bg-cover bg-center" data-alt="Portrait of a man with a beard smiling" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBi-3oISg4e38AJmCkDlR0xKJIE-BKDxXT1WM1sh8SiX00PIENpOzF9sb4-2EgfapNjUIgrqv3MlfG9V3LkiOm941Fj0BYRRGZgidbhpKYIGNuXbnX6xiJX8CYmbCppNPxxGI6AA9SJLfVrhuOVSluKPwwwUS4JLUR1XOrWqb5Ss0GyyRHQoRAeR3GAp3BY3f7-HyoVcrsoUBycMU4rxeJonO-QTq3zdgGmALHYXEVVRVNDhGg9EtCenkXCNHKBUU8GJBKlPssWGh8m");'></div>
+<div class="w-14 h-14 rounded-full border-2 border-white dark:border-background-dark bg-gray-100 flex items-center justify-center text-gray-500 text-xs font-bold">
+                        +40
+                    </div>
+</div>
+</div>
+<p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                Real people. Vetted mentors. Available 24/7.
+            </p>
+</div>
+<!-- Testimonial Slider (Single View) -->
+<div class="px-4 py-4">
+<div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+<div class="flex gap-1 text-yellow-400 mb-3">
+<span class="material-symbols-outlined text-[20px] fill-current">star</span>
+<span class="material-symbols-outlined text-[20px] fill-current">star</span>
+<span class="material-symbols-outlined text-[20px] fill-current">star</span>
+<span class="material-symbols-outlined text-[20px] fill-current">star</span>
+<span class="material-symbols-outlined text-[20px] fill-current">star</span>
+</div>
+<p class="text-[#0e181b] dark:text-white font-medium text-lg leading-snug mb-4">
+                    "I was scared to talk to a therapist, but this felt just like talking to a cool older sibling. I feel so much lighter."
+                </p>
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-300 font-bold text-xs">A</div>
+<p class="text-sm text-gray-500 dark:text-gray-400">Alex, College Sophomore</p>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<div class="px-6 mt-8 mb-20 text-center">
+<div class="h-px bg-gray-200 dark:bg-gray-800 w-full mb-6"></div>
+<p class="text-xs text-gray-400 dark:text-gray-500 leading-relaxed max-w-[300px] mx-auto">
+<span class="font-bold text-gray-500 dark:text-gray-400">Disclaimer:</span> Safe Space is not a medical service. We do not diagnose or treat mental health disorders.
+            </p>
+<div class="mt-4 p-3 bg-red-50 dark:bg-red-900/10 rounded-xl border border-red-100 dark:border-red-900/30 inline-block">
+<p class="text-xs text-red-600 dark:text-red-400 font-medium flex flex-col gap-1">
+<span>In crisis? Please don't wait.</span>
+<a class="underline font-bold" href="#">Call 988 for Suicide &amp; Crisis Lifeline</a>
+</p>
+</div>
+</div>
+</div>
+<!-- Sticky Floating Action Button (FAB) -->
+<div class="fixed bottom-6 right-6 z-50">
+<button class="group flex items-center justify-center w-14 h-14 bg-primary text-white rounded-full shadow-xl shadow-primary/40 hover:scale-110 active:scale-95 transition-all duration-300">
+<span class="material-symbols-outlined text-[28px] group-hover:rotate-12 transition-transform">chat</span>
+</button>
+</div>
+</body></html>

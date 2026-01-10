@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Safe Space - Mentor Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30bae8",
+                        "primary-dark": "#259ac0", 
+                        "background-light": "#f8fbfc",
+                        "background-dark": "#111d21",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2c32",
+                        "text-main-light": "#0e181b",
+                        "text-main-dark": "#e0e6e8",
+                        "text-sub-light": "#4f626b",
+                        "text-sub-dark": "#9ba8ae",
+                        "accent-orange": "#F97316",
+                        "accent-purple": "#8B5CF6",
+                        "accent-green": "#10B981",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "1.5rem", "xl": "2rem", "2xl": "2.5rem", "full": "9999px"},
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(48, 186, 232, 0.08)',
+                        'card': '0 2px 12px -2px rgba(0, 0, 0, 0.05)',
+                        'glow': '0 0 15px rgba(48, 186, 232, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+          min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased transition-colors duration-200">
+<div class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden">
+<header class="sticky top-0 z-10 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm transition-colors border-b border-gray-100 dark:border-gray-800">
+<div class="flex items-center px-4 py-4 justify-between">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700">
+<img alt="Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_ppLGt4mgbsLWtm0yVc70RBhnmiv0sEbWvO-fmLhbHYKb5ouie2_o5fMODl7YTaFk58Jrvl20zgaliSg-BW-nkQt8bFjHG75wb_qVrwOCn8DV0ebZkOxu6i0AfJtmJnJ9EjYAE6NSYw53n9uCm1GBJSa14_XQXbM1aoiEdkMTBTvTgFqA9XwUwJruFgWdBVKeRKuoXg6K05aEj9dQOGHYqdcfVDQRdHE1352SzsJ0kWGWkMzPjKt6Yv5ZsWE07Wv3RQQo0I_bDB1D"/>
+</div>
+<div>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark font-medium">Welcome back,</p>
+<h1 class="text-text-main-light dark:text-text-main-dark text-lg font-bold leading-none">Sarah Jenkins</h1>
+</div>
+</div>
+<button class="relative p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-text-main-light dark:text-text-main-dark">
+<span class="material-symbols-outlined text-[24px]">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border border-surface-light dark:border-surface-dark"></span>
+</button>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto px-4 pb-24 pt-4 space-y-6 scrollbar-hide">
+<section class="grid grid-cols-2 gap-3">
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-2xl shadow-card border border-gray-50 dark:border-gray-800/50">
+<div class="flex items-center gap-2 mb-3 text-primary">
+<div class="p-1.5 bg-primary/10 rounded-full">
+<span class="material-symbols-outlined text-[20px]">group</span>
+</div>
+<span class="text-xs font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Mentees</span>
+</div>
+<p class="text-3xl font-bold text-text-main-light dark:text-text-main-dark">12</p>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark mt-1 flex items-center gap-1">
+<span class="text-accent-green font-bold">+2</span> this month
+                    </p>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-2xl shadow-card border border-gray-50 dark:border-gray-800/50">
+<div class="flex items-center gap-2 mb-3 text-accent-purple">
+<div class="p-1.5 bg-accent-purple/10 rounded-full">
+<span class="material-symbols-outlined text-[20px]">calendar_month</span>
+</div>
+<span class="text-xs font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Sessions</span>
+</div>
+<p class="text-3xl font-bold text-text-main-light dark:text-text-main-dark">45</p>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark mt-1">Total completed</p>
+</div>
+</section>
+<section>
+<h3 class="text-text-main-light dark:text-text-main-dark font-bold text-lg mb-3">Quick Actions</h3>
+<div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4">
+<button class="flex flex-col items-center gap-2 min-w-[80px]">
+<div class="size-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-sm">
+<span class="material-symbols-outlined text-[28px]">add_circle</span>
+</div>
+<span class="text-xs font-medium text-text-sub-light dark:text-text-sub-dark">Session</span>
+</button>
+<button class="flex flex-col items-center gap-2 min-w-[80px]">
+<div class="size-14 rounded-2xl bg-accent-green/10 flex items-center justify-center text-accent-green shadow-sm">
+<span class="material-symbols-outlined text-[28px]">chat</span>
+</div>
+<span class="text-xs font-medium text-text-sub-light dark:text-text-sub-dark">Message</span>
+</button>
+<button class="flex flex-col items-center gap-2 min-w-[80px]">
+<div class="size-14 rounded-2xl bg-accent-orange/10 flex items-center justify-center text-accent-orange shadow-sm">
+<span class="material-symbols-outlined text-[28px]">menu_book</span>
+</div>
+<span class="text-xs font-medium text-text-sub-light dark:text-text-sub-dark">Resources</span>
+</button>
+<button class="flex flex-col items-center gap-2 min-w-[80px]">
+<div class="size-14 rounded-2xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-text-sub-light dark:text-text-sub-dark shadow-sm">
+<span class="material-symbols-outlined text-[28px]">description</span>
+</div>
+<span class="text-xs font-medium text-text-sub-light dark:text-text-sub-dark">Notes</span>
+</button>
+</div>
+</section>
+<section>
+<div class="flex items-center justify-between mb-3">
+<h3 class="text-text-main-light dark:text-text-main-dark font-bold text-lg">Up Next</h3>
+<button class="text-primary text-sm font-semibold">See all</button>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-xl shadow-card border-l-4 border-primary flex items-center gap-4 group cursor-pointer hover:shadow-soft transition-all">
+<div class="flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg p-2 min-w-[60px]">
+<span class="text-xs font-bold text-text-sub-light dark:text-text-sub-dark uppercase">Today</span>
+<span class="text-lg font-extrabold text-primary">2:00</span>
+<span class="text-[10px] font-medium text-text-sub-light dark:text-text-sub-dark">PM</span>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-text-main-light dark:text-text-main-dark">Session with David</h4>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark mt-0.5">Career Guidance • Video Call</p>
+</div>
+<button class="size-10 rounded-full bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/30 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[20px] fill-1">videocam</span>
+</button>
+</div>
+</section>
+<section>
+<div class="flex items-center justify-between mb-3">
+<h3 class="text-text-main-light dark:text-text-main-dark font-bold text-lg">New Messages</h3>
+</div>
+<div class="flex flex-col gap-3">
+<div class="bg-surface-light dark:bg-surface-dark p-3 rounded-xl shadow-card flex gap-3 items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<div class="relative">
+<div class="size-12 rounded-full overflow-hidden">
+<img alt="Maya R." class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxysxTbC9gvE965rSyYPpIgsFmRZD48ZKRzpIqyFLwdwCx2s59sO0HzshVHqI--Y_OQDwg7LQ1LYDWYd_RJqyxPy7e5ZJVpaRS_NBSI5jyuO9ivgjzvSQApgBH6oziRDSVcXd1npi0Iw2JaczzCW-tHf8RkF8g9yNkWqzooIqNtq7q9UNN4VJqIYr-GFTo4Jimp9OWnQUDrHIYosbN5OQ7RyP5I4YDF2C_myoBDw59Ezofvs0RqLXCUXYyu7aJHeQUFcVC7_3VBF9t"/>
+</div>
+<span class="absolute bottom-0 right-0 size-3 bg-green-500 border-2 border-surface-light dark:border-surface-dark rounded-full"></span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h4 class="font-bold text-sm text-text-main-light dark:text-text-main-dark truncate">Maya Ross</h4>
+<span class="text-[10px] text-text-sub-light dark:text-text-sub-dark">2m ago</span>
+</div>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark truncate font-medium text-primary">Thanks for the advice! I tried the...</p>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-3 rounded-xl shadow-card flex gap-3 items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<div class="relative">
+<div class="size-12 rounded-full overflow-hidden">
+<img alt="James L." class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBucmQ4oTJfMZSvCWPlYqSASJfWltc6RW_jJe4bWC3ZQilPi9w5i5I2s4L2Tmt3Zml_QHOktknTf53b4R6jnV9ARSWDt1nsF5_jsF8GRKtjVbBq1KGwHoDHzwgLzYBwHzss-xadCESjt3XZ3XfDL9AVHoo4LOt5LN6FICT1A4MxeezDA1dlltsh5tzij_HHlKiryJIXsjWig6KsdiB3CXy0UDQNjDpPkwTFjiZaB1Y_gw_5DAgqt_gzIqGKe9627Lo28g2TjFnP8W_L"/>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h4 class="font-bold text-sm text-text-main-light dark:text-text-main-dark truncate">James Liu</h4>
+<span class="text-[10px] text-text-sub-light dark:text-text-sub-dark">1h ago</span>
+</div>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark truncate">Can we reschedule our next session?</p>
+</div>
+</div>
+</div>
+</section>
+<div class="h-4"></div>
+</main>
+<div class="sticky bottom-0 bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-md border-t border-gray-100 dark:border-gray-800/30 grid grid-cols-4 px-2 py-3 z-20">
+<button class="flex flex-col items-center gap-1 text-primary dark:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px] fill-1">dashboard</span>
+<span class="text-[10px] font-bold">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-text-sub-light dark:text-text-sub-dark hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">groups</span>
+<span class="text-[10px] font-medium">Mentees</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-text-sub-light dark:text-text-sub-dark hover:text-primary dark:hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined text-[24px]">chat_bubble</span>
+<span class="text-[10px] font-medium">Messages</span>
+<span class="absolute top-0 right-7 size-2 bg-red-500 rounded-full"></span>
+</button>
+<button class="flex flex-col items-center gap-1 text-text-sub-light dark:text-text-sub-dark hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</button>
+</div>
+</div>
+
+</body></html>

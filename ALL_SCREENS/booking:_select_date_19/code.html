@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Safe Space - Chat List</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30bae8",
+                        "primary-dark": "#259ac0", 
+                        "background-light": "#f8fbfc",
+                        "background-dark": "#111d21",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2c32",
+                        "text-main-light": "#0e181b",
+                        "text-main-dark": "#e0e6e8",
+                        "text-sub-light": "#4f626b",
+                        "text-sub-dark": "#9ba8ae",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "1.5rem", "xl": "2rem", "2xl": "2.5rem", "full": "9999px"},
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(48, 186, 232, 0.08)',
+                        'card': '0 2px 12px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+          min-height: max(884px, 100dvh);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased transition-colors duration-200">
+<div class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden">
+<header class="sticky top-0 z-10 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm transition-colors border-b border-gray-100 dark:border-gray-800">
+<div class="flex items-center p-4 justify-between h-16">
+<button class="flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-text-main-light dark:text-text-main-dark">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h2 class="text-text-main-light dark:text-text-main-dark text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Messages</h2>
+<button class="flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-primary">
+<span class="material-symbols-outlined text-[24px]">edit_square</span>
+</button>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto scrollbar-hide">
+<div class="px-5 py-2 sticky top-0 bg-background-light dark:bg-background-dark z-0">
+<div class="relative group">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-text-sub-light dark:text-text-sub-dark">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</span>
+<input class="w-full bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-gray-800 text-text-main-light dark:text-text-main-dark text-sm rounded-xl py-3 pl-11 pr-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-sm" placeholder="Search conversations..." type="text"/>
+</div>
+</div>
+<div class="px-2 pt-2 pb-24 space-y-1">
+<button class="w-full text-left p-3 rounded-2xl hover:bg-surface-light dark:hover:bg-surface-dark transition-colors group flex items-start gap-4 active:scale-[0.99]">
+<div class="relative shrink-0">
+<img alt="Sarah Jenkins" class="w-14 h-14 rounded-full object-cover border-2 border-white dark:border-surface-dark shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAI8IzRihWoeh38yeLIYZwTdIL9v8rYg5-U4znxWlLfJNBzzbnfVCI9h1rgqS5WQTEK0OgtpcUGoMWZLkJax8Wj-y2wGWpr4c4olMISqUDKmKfyiMut8EC-h3KQ2ICJ-15iehd4m9lai8O9-TZyiVThhuJaoZl0vcexdFqVsSt2iw8JoupfGGvoGXF-0dfabyseQ6ggX6kctySPQWnfDH1b3kMWfmV7VEWnBfJTgDJKWHEDB0ikHDOz-H9-XNWIN2qM7BEwlApXzGR6"/>
+<div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-white dark:border-surface-dark rounded-full"></div>
+</div>
+<div class="flex-1 min-w-0 pt-1">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="text-text-main-light dark:text-text-main-dark font-extrabold text-base truncate pr-2">Sarah Jenkins</h3>
+<span class="text-primary font-bold text-xs shrink-0">10:42 AM</span>
+</div>
+<p class="text-text-main-light dark:text-text-main-dark font-semibold text-sm truncate pr-6">
+                        That sounds like a great plan! 🌟 Let's catch up on Monday.
+                    </p>
+</div>
+<div class="flex flex-col items-end justify-center pt-2 gap-2">
+<span class="bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center shadow-sm shadow-primary/30">2</span>
+</div>
+</button>
+<button class="w-full text-left p-3 rounded-2xl hover:bg-surface-light dark:hover:bg-surface-dark transition-colors group flex items-start gap-4 active:scale-[0.99]">
+<div class="relative shrink-0">
+<div class="w-14 h-14 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-indigo-600 dark:text-indigo-300 font-bold text-lg border-2 border-transparent">
+                        MK
+                    </div>
+</div>
+<div class="flex-1 min-w-0 pt-1">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="text-text-main-light dark:text-text-main-dark font-bold text-base truncate pr-2">Michael Key</h3>
+<span class="text-text-sub-light dark:text-text-sub-dark text-xs shrink-0">Yesterday</span>
+</div>
+<p class="text-text-sub-light dark:text-text-sub-dark text-sm truncate">
+                        Thanks for listening yesterday. I feel much better about the exam now.
+                    </p>
+</div>
+</button>
+<button class="w-full text-left p-3 rounded-2xl hover:bg-surface-light dark:hover:bg-surface-dark transition-colors group flex items-start gap-4 active:scale-[0.99]">
+<div class="relative shrink-0">
+<div class="w-14 h-14 rounded-full bg-orange-100 dark:bg-orange-900/40 flex items-center justify-center text-orange-600 dark:text-orange-300 font-bold text-lg border-2 border-transparent">
+                        DR
+                    </div>
+<div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-white dark:border-surface-dark rounded-full"></div>
+</div>
+<div class="flex-1 min-w-0 pt-1">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="text-text-main-light dark:text-text-main-dark font-extrabold text-base truncate pr-2">Dr. Riviera</h3>
+<span class="text-primary font-bold text-xs shrink-0">Tue</span>
+</div>
+<p class="text-text-main-light dark:text-text-main-dark font-semibold text-sm truncate pr-6">
+                        Here is the link to the breathing exercises we discussed.
+                    </p>
+</div>
+<div class="flex flex-col items-end justify-center pt-2 gap-2">
+<span class="bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center shadow-sm shadow-primary/30">1</span>
+</div>
+</button>
+<button class="w-full text-left p-3 rounded-2xl hover:bg-surface-light dark:hover:bg-surface-dark transition-colors group flex items-start gap-4 active:scale-[0.99]">
+<div class="relative shrink-0">
+<div class="w-14 h-14 rounded-full bg-teal-100 dark:bg-teal-900/40 flex items-center justify-center text-teal-600 dark:text-teal-300 font-bold text-lg border-2 border-transparent">
+                        AL
+                    </div>
+</div>
+<div class="flex-1 min-w-0 pt-1">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="text-text-main-light dark:text-text-main-dark font-bold text-base truncate pr-2">Anita Lee</h3>
+<span class="text-text-sub-light dark:text-text-sub-dark text-xs shrink-0">Oct 24</span>
+</div>
+<p class="text-text-sub-light dark:text-text-sub-dark text-sm truncate">
+                        You're welcome! Keep practicing those mindfulness techniques.
+                    </p>
+</div>
+<div class="flex flex-col items-end justify-center pt-2 gap-2">
+<span class="material-symbols-outlined text-[16px] text-primary">done_all</span>
+</div>
+</button>
+<button class="w-full text-left p-3 rounded-2xl hover:bg-surface-light dark:hover:bg-surface-dark transition-colors group flex items-start gap-4 active:scale-[0.99]">
+<div class="relative shrink-0">
+<div class="w-14 h-14 rounded-full bg-purple-100 dark:bg-purple-900/40 flex items-center justify-center text-purple-600 dark:text-purple-300 font-bold text-lg border-2 border-transparent">
+                        RJ
+                    </div>
+</div>
+<div class="flex-1 min-w-0 pt-1">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="text-text-main-light dark:text-text-main-dark font-bold text-base truncate pr-2">Robert James</h3>
+<span class="text-text-sub-light dark:text-text-sub-dark text-xs shrink-0">Oct 20</span>
+</div>
+<p class="text-text-sub-light dark:text-text-sub-dark text-sm truncate">
+                        Don't stress too much about the future. One step at a time.
+                    </p>
+</div>
+</button>
+<div class="flex justify-center py-6">
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+                    Messages are private and secure
+                </p>
+</div>
+</div>
+</main>
+<div class="sticky bottom-0 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-md border-t border-gray-100 dark:border-gray-800">
+<nav class="flex justify-around items-center h-20 px-2 pb-2">
+<button class="flex flex-col items-center justify-center w-full h-full text-text-sub-light dark:text-text-sub-dark hover:text-primary dark:hover:text-primary transition-colors gap-1">
+<span class="material-symbols-outlined text-[26px]">home</span>
+<span class="text-[10px] font-bold">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full h-full text-text-sub-light dark:text-text-sub-dark hover:text-primary dark:hover:text-primary transition-colors gap-1">
+<span class="material-symbols-outlined text-[26px]">group</span>
+<span class="text-[10px] font-bold">Mentors</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full h-full text-primary transition-colors gap-1 relative">
+<div class="relative">
+<span class="material-symbols-outlined text-[26px] fill-1">chat_bubble</span>
+<span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-surface-light dark:border-surface-dark"></span>
+</div>
+<span class="text-[10px] font-bold">Messages</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full h-full text-text-sub-light dark:text-text-sub-dark hover:text-primary dark:hover:text-primary transition-colors gap-1">
+<span class="material-symbols-outlined text-[26px]">person</span>
+<span class="text-[10px] font-bold">Profile</span>
+</button>
+</nav>
+</div>
+</div>
+
+</body></html>

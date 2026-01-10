@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Safe Space - Mentor Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30bae8",
+                        "primary-dark": "#259ac0", 
+                        "background-light": "#f8fbfc",
+                        "background-dark": "#111d21",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2c32",
+                        "text-main-light": "#0e181b",
+                        "text-main-dark": "#e0e6e8",
+                        "text-sub-light": "#4f626b",
+                        "text-sub-dark": "#9ba8ae",
+                        "accent-orange": "#F97316",
+                        "accent-purple": "#8B5CF6",
+                        "accent-green": "#10B981",
+                        "accent-blue": "#3B82F6",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "1.5rem", "xl": "2rem", "2xl": "2.5rem", "full": "9999px"},
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(48, 186, 232, 0.08)',
+                        'card': '0 2px 12px -2px rgba(0, 0, 0, 0.05)',
+                        'glow': '0 0 15px rgba(48, 186, 232, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased transition-colors duration-200">
+<div class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden">
+<header class="sticky top-0 z-10 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm transition-colors border-b border-gray-100 dark:border-gray-800">
+<div class="flex items-center px-4 py-4 justify-between">
+<div class="flex items-center gap-3">
+<div class="size-12 rounded-full overflow-hidden border-2 border-primary/20 dark:border-primary/30 p-0.5">
+<div class="w-full h-full rounded-full overflow-hidden">
+<img alt="Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_ppLGt4mgbsLWtm0yVc70RBhnmiv0sEbWvO-fmLhbHYKb5ouie2_o5fMODl7YTaFk58Jrvl20zgaliSg-BW-nkQt8bFjHG75wb_qVrwOCn8DV0ebZkOxu6i0AfJtmJnJ9EjYAE6NSYw53n9uCm1GBJSa14_XQXbM1aoiEdkMTBTvTgFqA9XwUwJruFgWdBVKeRKuoXg6K05aEj9dQOGHYqdcfVDQRdHE1352SzsJ0kWGWkMzPjKt6Yv5ZsWE07Wv3RQQo0I_bDB1D"/>
+</div>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark font-medium">Good Morning,</p>
+<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 leading-none">
+<span class="material-symbols-outlined text-[10px] filled">verified</span> Verified
+                         </span>
+</div>
+<h1 class="text-text-main-light dark:text-text-main-dark text-lg font-bold leading-tight">Sarah Jenkins</h1>
+</div>
+</div>
+<button class="relative p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-text-main-light dark:text-text-main-dark">
+<span class="material-symbols-outlined text-[24px]">notifications</span>
+<span class="absolute top-2.5 right-2.5 size-2 bg-red-500 rounded-full border border-surface-light dark:border-surface-dark"></span>
+</button>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto px-4 pb-24 pt-4 space-y-6 scrollbar-hide">
+<section class="grid grid-cols-2 gap-3">
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-2xl shadow-card border border-gray-50 dark:border-gray-800/50 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-[64px] text-primary">group</span>
+</div>
+<div class="flex items-center gap-2 mb-2 text-primary">
+<div class="p-1.5 bg-primary/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">group</span>
+</div>
+<span class="text-[11px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Mentees</span>
+</div>
+<div class="flex items-baseline gap-1">
+<p class="text-3xl font-bold text-text-main-light dark:text-text-main-dark">12</p>
+<span class="text-xs text-text-sub-light dark:text-text-sub-dark">active</span>
+</div>
+<p class="text-[11px] text-accent-green font-medium mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">trending_up</span> +2 this month
+                </p>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-2xl shadow-card border border-gray-50 dark:border-gray-800/50 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-[64px] text-accent-purple">verified_user</span>
+</div>
+<div class="flex items-center gap-2 mb-2 text-accent-purple">
+<div class="p-1.5 bg-accent-purple/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">badge</span>
+</div>
+<span class="text-[11px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Status</span>
+</div>
+<div class="flex items-baseline gap-1">
+<p class="text-xl font-bold text-text-main-light dark:text-text-main-dark">Approved</p>
+</div>
+<p class="text-[11px] text-text-sub-light dark:text-text-sub-dark mt-2 flex items-center gap-1">
+<span class="size-2 rounded-full bg-accent-green animate-pulse"></span> Profile visible
+                </p>
+</div>
+</section>
+<section>
+<h3 class="text-text-main-light dark:text-text-main-dark font-bold text-lg mb-3 px-1">Mentor Tools</h3>
+<div class="grid grid-cols-4 gap-2">
+<button class="flex flex-col items-center gap-2 group">
+<div class="size-14 rounded-2xl bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-gray-800 flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white group-hover:shadow-md transition-all duration-300">
+<span class="material-symbols-outlined text-[26px]">person_search</span>
+</div>
+<span class="text-[11px] font-medium text-text-sub-light dark:text-text-sub-dark group-hover:text-primary transition-colors">Discover</span>
+</button>
+<button class="flex flex-col items-center gap-2 group">
+<div class="size-14 rounded-2xl bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-gray-800 flex items-center justify-center text-accent-green shadow-sm group-hover:bg-accent-green group-hover:text-white group-hover:shadow-md transition-all duration-300">
+<span class="material-symbols-outlined text-[26px]">calendar_add_on</span>
+</div>
+<span class="text-[11px] font-medium text-text-sub-light dark:text-text-sub-dark group-hover:text-accent-green transition-colors">Schedule</span>
+</button>
+<button class="flex flex-col items-center gap-2 group">
+<div class="size-14 rounded-2xl bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-gray-800 flex items-center justify-center text-accent-orange shadow-sm group-hover:bg-accent-orange group-hover:text-white group-hover:shadow-md transition-all duration-300">
+<span class="material-symbols-outlined text-[26px]">mark_chat_unread</span>
+</div>
+<span class="text-[11px] font-medium text-text-sub-light dark:text-text-sub-dark group-hover:text-accent-orange transition-colors">Requests</span>
+</button>
+<button class="flex flex-col items-center gap-2 group">
+<div class="size-14 rounded-2xl bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-gray-800 flex items-center justify-center text-accent-purple shadow-sm group-hover:bg-accent-purple group-hover:text-white group-hover:shadow-md transition-all duration-300">
+<span class="material-symbols-outlined text-[26px]">menu_book</span>
+</div>
+<span class="text-[11px] font-medium text-text-sub-light dark:text-text-sub-dark group-hover:text-accent-purple transition-colors">Resources</span>
+</button>
+</div>
+</section>
+<section>
+<div class="flex items-center justify-between mb-3 px-1">
+<h3 class="text-text-main-light dark:text-text-main-dark font-bold text-lg">Up Next</h3>
+<button class="text-primary text-xs font-bold uppercase tracking-wide hover:text-primary-dark transition-colors">See Calendar</button>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-0 rounded-2xl shadow-card border border-gray-100 dark:border-gray-800 overflow-hidden relative group">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-primary"></div>
+<div class="p-4 flex items-center gap-4">
+<div class="flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-800/50 rounded-xl p-2.5 min-w-[70px] border border-gray-100 dark:border-gray-700">
+<span class="text-[10px] font-bold text-text-sub-light dark:text-text-sub-dark uppercase tracking-wide">Today</span>
+<span class="text-xl font-black text-text-main-light dark:text-text-main-dark">2:00</span>
+<span class="text-[10px] font-bold text-text-sub-light dark:text-text-sub-dark uppercase">PM</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400">Video Call</span>
+</div>
+<h4 class="font-bold text-text-main-light dark:text-text-main-dark truncate text-lg">David Miller</h4>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark truncate">Topic: Career Guidance &amp; Goals</p>
+</div>
+<button class="size-11 rounded-full bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/30 group-hover:scale-105 group-hover:bg-primary-dark transition-all">
+<span class="material-symbols-outlined text-[22px] fill-1">videocam</span>
+</button>
+</div>
+</div>
+</section>
+<section>
+<div class="flex items-center justify-between mb-3 px-1">
+<h3 class="text-text-main-light dark:text-text-main-dark font-bold text-lg">New Messages</h3>
+</div>
+<div class="flex flex-col gap-3">
+<div class="bg-surface-light dark:bg-surface-dark p-3 rounded-2xl shadow-card border border-gray-50 dark:border-gray-800/50 flex gap-3 items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors relative group">
+<div class="relative">
+<div class="size-12 rounded-full overflow-hidden border border-gray-100 dark:border-gray-700">
+<img alt="Maya R." class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxysxTbC9gvE965rSyYPpIgsFmRZD48ZKRzpIqyFLwdwCx2s59sO0HzshVHqI--Y_OQDwg7LQ1LYDWYd_RJqyxPy7e5ZJVpaRS_NBSI5jyuO9ivgjzvSQApgBH6oziRDSVcXd1npi0Iw2JaczzCW-tHf8RkF8g9yNkWqzooIqNtq7q9UNN4VJqIYr-GFTo4Jimp9OWnQUDrHIYosbN5OQ7RyP5I4YDF2C_myoBDw59Ezofvs0RqLXCUXYyu7aJHeQUFcVC7_3VBF9t"/>
+</div>
+<span class="absolute bottom-0 right-0 size-3 bg-green-500 border-2 border-surface-light dark:border-surface-dark rounded-full"></span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h4 class="font-bold text-sm text-text-main-light dark:text-text-main-dark truncate group-hover:text-primary transition-colors">Maya Ross</h4>
+<span class="text-[10px] text-text-sub-light dark:text-text-sub-dark font-medium">2m ago</span>
+</div>
+<p class="text-xs text-text-main-light dark:text-text-main-dark truncate font-medium">Thanks for the advice! I tried the new study...</p>
+</div>
+<div class="size-2 rounded-full bg-primary shrink-0 mr-1"></div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-3 rounded-2xl shadow-card border border-gray-50 dark:border-gray-800/50 flex gap-3 items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors group">
+<div class="relative">
+<div class="size-12 rounded-full overflow-hidden border border-gray-100 dark:border-gray-700">
+<img alt="James L." class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBucmQ4oTJfMZSvCWPlYqSASJfWltc6RW_jJe4bWC3ZQilPi9w5i5I2s4L2Tmt3Zml_QHOktknTf53b4R6jnV9ARSWDt1nsF5_jsF8GRKtjVbBq1KGwHoDHzwgLzYBwHzss-xadCESjt3XZ3XfDL9AVHoo4LOt5LN6FICT1A4MxeezDA1dlltsh5tzij_HHlKiryJIXsjWig6KsdiB3CXy0UDQNjDpPkwTFjiZaB1Y_gw_5DAgqt_gzIqGKe9627Lo28g2TjFnP8W_L"/>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h4 class="font-bold text-sm text-text-main-light dark:text-text-main-dark truncate group-hover:text-primary transition-colors">James Liu</h4>
+<span class="text-[10px] text-text-sub-light dark:text-text-sub-dark font-medium">1h ago</span>
+</div>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark truncate">Can we reschedule our next session?</p>
+</div>
+</div>
+</div>
+</section>
+<div class="h-4"></div>
+</main>
+<div class="sticky bottom-0 bg-surface-light/90 dark:bg-surface-dark/90 backdrop-blur-md border-t border-gray-200 dark:border-gray-800/50 grid grid-cols-4 px-2 py-3 z-20 pb-safe">
+<button class="flex flex-col items-center gap-1 text-primary dark:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px] fill-1">dashboard</span>
+<span class="text-[10px] font-bold">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-text-sub-light dark:text-text-sub-dark hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">groups</span>
+<span class="text-[10px] font-medium">Mentees</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-text-sub-light dark:text-text-sub-dark hover:text-primary dark:hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined text-[24px]">chat_bubble</span>
+<span class="text-[10px] font-medium">Messages</span>
+<span class="absolute top-0 right-7 size-2 bg-red-500 rounded-full ring-2 ring-surface-light dark:ring-surface-dark"></span>
+</button>
+<button class="flex flex-col items-center gap-1 text-text-sub-light dark:text-text-sub-dark hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</button>
+</div>
+</div>
+
+</body></html>

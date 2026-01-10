@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Session Detail - Enhanced</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;family=Noto+Sans:wght@400..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30bae8",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111d21",
+                        "surface-dark": "#1a272c",
+                        "surface-highlight": "#233238",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .waveform-bar {
+            animation: wave 1.2s ease-in-out infinite;
+        }
+        @keyframes wave {
+            0%, 100% { height: 20%; }
+            50% { height: 100%; }
+        }
+        .pulse-ring {
+            animation: pulse-border 2s infinite;
+        }
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased overflow-x-hidden">
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto shadow-2xl bg-background-light dark:bg-background-dark">
+<!-- Top App Bar -->
+<div class="flex items-center px-4 py-3 justify-between sticky top-0 z-50 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md">
+<button class="text-slate-900 dark:text-white flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight flex-1 text-center">Session Detail</h2>
+<button class="flex w-10 items-center justify-center rounded-full hover:bg-primary/10 transition-colors">
+<span class="text-primary text-base font-bold leading-normal">Save</span>
+</button>
+</div>
+<div class="flex flex-col gap-6 px-4 py-2 pb-24">
+<!-- Appointment Context Card -->
+<div class="flex items-center gap-4 bg-white dark:bg-surface-dark p-4 rounded-xl shadow-sm border border-slate-200 dark:border-white/5">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-14 w-14 shrink-0 border-2 border-primary/20" data-alt="Portrait of mentee Alex Doe with a blurred natural background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC9wBkGlSyLN108OrG_hJE-jPOMeQfxReDiXHG_Q8XoXQQiY6kwz76bspBCHH8FMwBm8ctXml6r7vyjLGa4ULmGIneYNHWhVZjq09rvFznkifDVEeZrwDoJsOOhwwNGGTB0HTfCGo8LxFkxFAPl4PBfZXH7nU-wDAijETIG333pEdZ1DOvvfzvi_3ZcXSpTTzeT3_18UuBBBUzDLIAKsgtvpuoh8o7-CHxJCmqRXQ1yH8v7K--m8fBp34ceSrd5q_HEkWaI9e-VZ0FU");'>
+</div>
+<div class="flex flex-col justify-center flex-1">
+<p class="text-slate-900 dark:text-white text-lg font-bold leading-tight line-clamp-1">Alex Doe</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="material-symbols-outlined text-primary text-sm">calendar_today</span>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Oct 24 • 4:00 PM</p>
+</div>
+</div>
+<div class="flex items-center justify-center size-10 rounded-full bg-primary/10">
+<span class="material-symbols-outlined text-primary">videocam</span>
+</div>
+</div>
+<!-- Active Recording Interface -->
+<div class="flex flex-col bg-white dark:bg-surface-dark rounded-xl overflow-hidden shadow-lg border border-primary/20">
+<!-- Header -->
+<div class="bg-primary/10 px-4 py-3 border-b border-primary/10 flex justify-between items-center">
+<span class="text-primary font-bold text-sm tracking-wide uppercase">Live Recording</span>
+<div class="flex items-center gap-1.5">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+</span>
+<span class="text-red-500 text-xs font-bold">ON AIR</span>
+</div>
+</div>
+<!-- Consent Section (Collapsed/Small when active) -->
+<div class="px-5 pt-4 pb-2">
+<label class="flex gap-x-3 items-start cursor-pointer opacity-80 hover:opacity-100 transition-opacity">
+<input checked="" class="mt-1 h-5 w-5 rounded border-slate-300 dark:border-slate-600 bg-transparent text-primary checked:bg-primary checked:border-primary focus:ring-0 focus:ring-offset-0 focus:outline-none" type="checkbox"/>
+<p class="text-slate-600 dark:text-slate-300 text-xs leading-relaxed select-none">
+                            I have obtained verbal consent from the patient to record this session for clinical documentation purposes.
+                        </p>
+</label>
+</div>
+<!-- Visualization & Timer -->
+<div class="flex flex-col items-center justify-center py-6 gap-2">
+<h3 class="text-4xl font-mono font-medium text-slate-900 dark:text-white tracking-widest tabular-nums">04:23</h3>
+<!-- Waveform Visualizer -->
+<div class="flex items-center justify-center gap-1 h-12 w-full px-8 mt-2 opacity-80">
+<div class="w-1 bg-primary rounded-full h-3 waveform-bar" style="animation-delay: 0.1s"></div>
+<div class="w-1 bg-primary rounded-full h-6 waveform-bar" style="animation-delay: 0.2s"></div>
+<div class="w-1 bg-primary rounded-full h-4 waveform-bar" style="animation-delay: 0.3s"></div>
+<div class="w-1 bg-primary rounded-full h-8 waveform-bar" style="animation-delay: 0.5s"></div>
+<div class="w-1 bg-primary rounded-full h-5 waveform-bar" style="animation-delay: 0.2s"></div>
+<div class="w-1 bg-primary rounded-full h-10 waveform-bar" style="animation-delay: 0.1s"></div>
+<div class="w-1 bg-primary rounded-full h-6 waveform-bar" style="animation-delay: 0.4s"></div>
+<div class="w-1 bg-primary rounded-full h-3 waveform-bar" style="animation-delay: 0.6s"></div>
+<div class="w-1 bg-primary rounded-full h-7 waveform-bar" style="animation-delay: 0.3s"></div>
+<div class="w-1 bg-primary rounded-full h-4 waveform-bar" style="animation-delay: 0.1s"></div>
+<div class="w-1 bg-primary rounded-full h-8 waveform-bar" style="animation-delay: 0.5s"></div>
+<div class="w-1 bg-primary rounded-full h-5 waveform-bar" style="animation-delay: 0.2s"></div>
+<div class="w-1 bg-primary rounded-full h-2 waveform-bar" style="animation-delay: 0.1s"></div>
+</div>
+</div>
+<!-- Controls -->
+<div class="flex items-center justify-center gap-8 pb-8 pt-2">
+<!-- Pause Button -->
+<button class="flex flex-col items-center gap-2 group">
+<div class="size-12 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center border border-amber-500/20 group-active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-2xl">pause</span>
+</div>
+<span class="text-xs font-medium text-slate-500 dark:text-slate-400">Pause</span>
+</button>
+<!-- Stop Button (Primary Action) -->
+<button class="flex flex-col items-center gap-2 group">
+<div class="size-20 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg shadow-red-500/30 pulse-ring group-active:scale-95 transition-transform">
+<div class="size-8 bg-white rounded-md"></div>
+</div>
+<span class="text-sm font-bold text-slate-900 dark:text-white mt-1">Stop &amp; Process</span>
+</button>
+<!-- Cancel Button (Hidden/Ghost for layout balance) -->
+<button class="flex flex-col items-center gap-2 group opacity-50 hover:opacity-100">
+<div class="size-12 rounded-full bg-slate-500/10 text-slate-500 dark:text-slate-400 flex items-center justify-center border border-slate-500/20 group-active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-2xl">close</span>
+</div>
+<span class="text-xs font-medium text-slate-500 dark:text-slate-400">Cancel</span>
+</button>
+</div>
+</div>
+<!-- Processing State Mockup (Demonstrative) -->
+<div class="flex flex-col bg-white dark:bg-surface-dark rounded-xl p-4 border border-slate-200 dark:border-white/5 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all">
+<div class="flex justify-between items-center mb-3">
+<h4 class="text-sm font-bold text-slate-900 dark:text-white">Previous Attempt</h4>
+<span class="text-xs text-slate-500">Processing...</span>
+</div>
+<div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 mb-2 overflow-hidden">
+<div class="bg-primary h-2 rounded-full w-2/3 animate-pulse"></div>
+</div>
+<p class="text-xs text-primary font-medium mt-1 flex items-center gap-2">
+<span class="size-2 rounded-full bg-primary inline-block animate-pulse"></span>
+                    Transcribing audio...
+                </p>
+</div>
+<!-- Completed State Mockup (Demonstrative) -->
+<div class="flex flex-col bg-white dark:bg-surface-dark rounded-xl p-5 border border-l-4 border-l-green-500 border-slate-200 dark:border-white/5">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-green-500 filled" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            Session Processed
+                        </h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1 pl-8">Oct 24, 3:15 PM • 45m duration</p>
+</div>
+</div>
+<div class="flex gap-3 mt-4 pl-8">
+<button class="px-4 py-2 bg-primary text-white rounded-full text-xs font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
+                        View SOAP Note
+                    </button>
+<button class="px-4 py-2 bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white rounded-full text-xs font-bold hover:bg-slate-200 dark:hover:bg-white/20 transition-colors">
+                        Transcript
+                    </button>
+</div>
+</div>
+<!-- Manual Notes Section -->
+<div class="flex flex-col gap-2 pt-2">
+<div class="flex items-center justify-between px-1">
+<label class="text-slate-900 dark:text-white text-base font-bold">Manual Notes</label>
+<span class="text-xs text-slate-500 dark:text-slate-400">Private</span>
+</div>
+<div class="relative">
+<textarea class="w-full min-h-[160px] bg-white dark:bg-surface-dark border border-slate-200 dark:border-white/10 rounded-xl p-4 text-base text-slate-900 dark:text-white placeholder:text-slate-400 focus:border-primary focus:ring-1 focus:ring-primary resize-none outline-none transition-all shadow-sm" placeholder="Type additional observations, key takeaways, or action items here..."></textarea>
+<div class="absolute bottom-3 right-3 flex gap-2">
+<button class="p-1.5 rounded-lg text-slate-400 hover:text-primary hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-xl">format_bold</span>
+</button>
+<button class="p-1.5 rounded-lg text-slate-400 hover:text-primary hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-xl">format_list_bulleted</span>
+</button>
+<button class="p-1.5 rounded-lg text-slate-400 hover:text-primary hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-xl">mic</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Floating Complete Action -->
+<div class="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background-light dark:from-background-dark via-background-light/95 dark:via-background-dark/95 to-transparent z-40 max-w-md mx-auto">
+<button class="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-lg h-14 rounded-full shadow-xl flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all">
+<span>Complete Session</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</body></html>

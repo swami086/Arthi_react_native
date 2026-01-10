@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Session Detail - AI Scribe</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30bae8",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111d21",
+                        "surface-dark": "#1a2c32", // Slightly lighter for cards
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "body": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111d21;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #243e47;
+            border-radius: 4px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display antialiased selection:bg-primary/30">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden max-w-md mx-auto shadow-2xl bg-background-light dark:bg-background-dark">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-10 bg-background-light dark:bg-background-dark/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 px-4 py-3 flex items-center justify-between">
+<button class="text-slate-900 dark:text-white flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] text-center flex-1">Session Details</h2>
+<div class="size-10 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400 dark:text-slate-500">more_vert</span>
+</div>
+</header>
+<!-- Scrollable Content -->
+<main class="flex-1 flex flex-col pb-24">
+<!-- Profile Header -->
+<div class="p-4">
+<div class="flex items-center gap-4 bg-white dark:bg-surface-dark p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+<div class="relative">
+<div class="bg-center bg-no-repeat bg-cover rounded-full h-16 w-16 ring-2 ring-primary/20" data-alt="Portrait of mentee Alex D smiling" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDaw2jqp9dcDr633nNaU70VRtQgSqNk114cWYatdb2OkUbIgpLXYOeGNXqIo_dkuxdykVm2ZKSFqgnMMVYNgqJ7cA6M-s6VOc3CdUyYXL2qwhbX1HCcg999OL3I6bs7Wtd4BYxKoRGMXY0xoX7TuffaXEJViHrvGQARSGJteeURtl6xJxafnf9dISI1Afz4dtg79R6WzcWhJLLKSk3edKoHtSkg7YwBXpMPeXWCfae4xqdI2pstcmZfAXxMJ82BJjQ4MbMTjWBv-TiX");'>
+</div>
+<div class="absolute bottom-0 right-0 h-4 w-4 bg-green-500 border-2 border-white dark:border-surface-dark rounded-full"></div>
+</div>
+<div class="flex flex-col justify-center flex-1">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-slate-900 dark:text-white text-xl font-bold leading-tight">Alex D.</p>
+<p class="text-slate-500 dark:text-[#93bac8] text-sm font-medium mt-1">Mentee • Career Growth</p>
+</div>
+<span class="bg-primary/10 text-primary text-xs font-bold px-2.5 py-1 rounded-full">UPCOMING</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Session Details List -->
+<div class="px-4 space-y-3">
+<!-- Date/Time -->
+<div class="flex items-center gap-4 bg-white dark:bg-surface-dark px-4 py-3 rounded-2xl border border-gray-100 dark:border-gray-800">
+<div class="text-primary flex items-center justify-center rounded-xl bg-primary/10 shrink-0 size-10">
+<span class="material-symbols-outlined">calendar_month</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-slate-900 dark:text-white text-base font-semibold">Oct 24, 2:00 PM - 3:00 PM</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs">45 mins duration</p>
+</div>
+</div>
+<!-- Location -->
+<div class="flex items-center gap-4 bg-white dark:bg-surface-dark px-4 py-3 rounded-2xl border border-gray-100 dark:border-gray-800">
+<div class="text-primary flex items-center justify-center rounded-xl bg-primary/10 shrink-0 size-10">
+<span class="material-symbols-outlined">videocam</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-slate-900 dark:text-white text-base font-semibold">Online Session</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs">Zoom Link Available</p>
+</div>
+<button class="ml-auto text-primary font-bold text-sm">Join</button>
+</div>
+</div>
+<div class="h-6"></div>
+<!-- AI Scribe Section -->
+<div class="mx-4 bg-gradient-to-b from-[#1a2c32] to-[#142328] rounded-3xl p-6 border border-[#243e47] relative overflow-hidden">
+<!-- Decorative background glow -->
+<div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="flex items-center justify-between mb-4 relative z-10">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+<h3 class="text-white text-lg font-bold">AI Scribe</h3>
+</div>
+<span class="text-xs font-medium text-[#93bac8] bg-[#243e47] px-2 py-1 rounded-md">BETA</span>
+</div>
+<!-- Consent Checkbox -->
+<label class="flex gap-x-3 mb-8 cursor-pointer group relative z-10">
+<div class="relative flex items-start">
+<input checked="" class="peer h-5 w-5 cursor-pointer appearance-none rounded border-2 border-[#345965] bg-transparent transition-all checked:border-primary checked:bg-primary hover:border-primary/50 focus:ring-0 focus:ring-offset-0" type="checkbox"/>
+<span class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-background-dark opacity-0 peer-checked:opacity-100">
+<svg class="h-3.5 w-3.5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path>
+</svg>
+</span>
+</div>
+<p class="text-slate-300 text-sm leading-snug group-hover:text-white transition-colors select-none">I have obtained verbal consent from the patient to record this session.</p>
+</label>
+<!-- Recording Interface -->
+<div class="flex flex-col items-center justify-center gap-4 relative z-10">
+<!-- Record Button Container -->
+<div class="relative group">
+<!-- Pulse effect ring (Active state visual) -->
+<div class="absolute inset-0 rounded-full bg-primary/20 animate-ping opacity-75"></div>
+<!-- Static outer ring -->
+<div class="absolute inset-[-8px] rounded-full border border-primary/30"></div>
+<!-- Main Button -->
+<button class="relative flex h-20 w-20 items-center justify-center rounded-full bg-primary shadow-[0_0_20px_rgba(48,186,232,0.4)] transition-transform active:scale-95 hover:bg-[#5bccf5]">
+<span class="material-symbols-outlined text-background-dark text-4xl" style="font-variation-settings: 'FILL' 1;">mic</span>
+</button>
+</div>
+<div class="text-center mt-2">
+<p class="text-white font-bold text-base">Tap to Record</p>
+<p class="text-[#93bac8] text-xs mt-1">Audio is processed securely</p>
+</div>
+</div>
+</div>
+<div class="h-6"></div>
+<!-- Notes Section -->
+<div class="px-4">
+<h3 class="text-slate-900 dark:text-white text-lg font-bold mb-3 px-1">Session Notes</h3>
+<div class="bg-white dark:bg-surface-dark rounded-2xl p-4 border border-gray-100 dark:border-gray-800 min-h-[160px]">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-[#93bac8] text-sm">history_edu</span>
+<span class="text-xs uppercase tracking-wider font-bold text-[#93bac8]">Previous Note Summary</span>
+</div>
+<p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                        In our last session, we discussed Alex's progress on the Q3 career roadmap. Key blockers identified were lack of visibility in cross-functional meetings. 
+                        <br/><br/>
+<span class="text-slate-400 italic">Tap to expand full history...</span>
+</p>
+<hr class="my-4 border-gray-100 dark:border-gray-700"/>
+<div class="relative">
+<textarea class="w-full bg-transparent border-none p-0 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-0 text-base resize-none" placeholder="Add manual notes here..." rows="3"></textarea>
+</div>
+</div>
+</div>
+</main>
+<!-- Sticky Footer -->
+<footer class="fixed bottom-0 w-full max-w-md bg-background-light dark:bg-background-dark/95 backdrop-blur-xl border-t border-gray-200 dark:border-gray-800 p-4 pb-8 z-50">
+<div class="flex gap-3">
+<button class="flex-1 h-12 rounded-full border border-gray-300 dark:border-gray-600 text-slate-700 dark:text-white font-bold text-sm hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                    Cancel
+                </button>
+<button class="flex-[2] h-12 rounded-full bg-primary text-background-dark font-bold text-sm hover:bg-[#5bccf5] transition-colors shadow-lg shadow-primary/25 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg">check_circle</span>
+                    Mark as Completed
+                </button>
+</div>
+</footer>
+</div>
+</body></html>

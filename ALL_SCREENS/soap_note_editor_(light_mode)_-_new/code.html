@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SOAP Note Editor</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#33b9e6",
+                        "primary-dark": "#2aa1c9",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111d21",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2c32",
+                        "input-light": "#f0f4f6",
+                        "input-dark": "#23343a",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "1.5rem",
+                        "xl": "2rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for textareas */
+        textarea::-webkit-scrollbar {
+            width: 8px;
+        }
+        textarea::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        textarea::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 20px;
+            border: 3px solid transparent;
+            background-clip: content-box;
+        }
+        .dark textarea::-webkit-scrollbar-thumb {
+            background-color: #4b5563;
+        }
+        
+        /* Hide default summary marker */
+        details > summary {
+            list-style: none;
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display h-screen flex flex-col overflow-hidden text-slate-800 dark:text-slate-100">
+<!-- Fixed Header -->
+<header class="shrink-0 bg-surface-light dark:bg-surface-dark px-4 py-3 flex items-center justify-between shadow-sm z-20 relative transition-colors duration-200">
+<button class="flex items-center justify-center size-10 rounded-full hover:bg-input-light dark:hover:bg-input-dark transition-colors text-slate-800 dark:text-slate-100">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<div class="flex flex-col items-center">
+<h1 class="text-lg font-bold leading-tight">SOAP Note</h1>
+</div>
+<div class="flex w-10 justify-end">
+<!-- Placeholder for balance -->
+</div>
+</header>
+<!-- Sub-header Status Bar -->
+<div class="shrink-0 bg-surface-light dark:bg-surface-dark pb-3 px-4 flex justify-between items-center border-b border-slate-100 dark:border-slate-800 z-10 transition-colors duration-200">
+<div class="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700">
+<span class="size-2 rounded-full bg-yellow-500 animate-pulse"></span>
+<span class="text-xs font-semibold text-slate-600 dark:text-slate-300 tracking-wide uppercase">Draft</span>
+</div>
+<p class="text-xs text-slate-400 dark:text-slate-500">Last edited 2m ago</p>
+</div>
+<!-- Scrollable Content -->
+<main class="flex-1 overflow-y-auto p-4 space-y-4 pb-32">
+<!-- S - Subjective Section -->
+<details class="group bg-surface-light dark:bg-surface-dark rounded-[1.5rem] shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden transition-all duration-300" open="">
+<summary class="flex cursor-pointer items-center justify-between p-5 select-none hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<div class="flex flex-col">
+<h3 class="text-base font-bold text-slate-900 dark:text-slate-100">Subjective</h3>
+<span class="text-xs text-slate-500 dark:text-slate-400 font-medium">245/500 characters</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-400 transition-transform duration-300 group-open:rotate-180">expand_more</span>
+</summary>
+<div class="px-5 pb-5 pt-0">
+<div class="relative">
+<textarea class="w-full min-h-[140px] p-4 bg-input-light dark:bg-input-dark rounded-xl text-sm leading-relaxed text-slate-700 dark:text-slate-200 border-none focus:ring-2 focus:ring-primary/50 placeholder-slate-400 resize-none transition-shadow" placeholder="Describe the client's current condition in their own words...">Client expressed feeling overwhelmed by work deadlines. They mentioned trouble sleeping and irritability with family members. "I just feel like I'm constantly behind," they stated.</textarea>
+<!-- Floating Auto-save Indicator inside input area -->
+<div class="absolute bottom-3 right-3 flex items-center gap-1.5 bg-surface-light dark:bg-surface-dark py-1 px-2 rounded-lg shadow-sm opacity-80">
+<span class="material-symbols-outlined text-green-500 text-[14px]">check_circle</span>
+<span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Saved</span>
+</div>
+</div>
+</div>
+</details>
+<!-- O - Objective Section -->
+<details class="group bg-surface-light dark:bg-surface-dark rounded-[1.5rem] shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden transition-all duration-300">
+<summary class="flex cursor-pointer items-center justify-between p-5 select-none hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-500 shrink-0">
+<span class="material-symbols-outlined">visibility</span>
+</div>
+<div class="flex flex-col">
+<h3 class="text-base font-bold text-slate-900 dark:text-slate-100">Objective</h3>
+<span class="text-xs text-slate-500 dark:text-slate-400 font-medium">180/500 characters</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-400 transition-transform duration-300 group-open:rotate-180">expand_more</span>
+</summary>
+<div class="px-5 pb-5 pt-0">
+<textarea class="w-full min-h-[120px] p-4 bg-input-light dark:bg-input-dark rounded-xl text-sm leading-relaxed text-slate-700 dark:text-slate-200 border-none focus:ring-2 focus:ring-primary/50 placeholder-slate-400 resize-none transition-shadow" placeholder="Record factual observations...">Client spoke rapidly and maintained intermittent eye contact. Fidgeted with hands throughout the session. Affect was anxious but appropriate to content.</textarea>
+<div class="flex justify-end mt-2">
+<span class="text-xs font-medium text-slate-400">Autosaved 30s ago</span>
+</div>
+</div>
+</details>
+<!-- A - Assessment Section -->
+<details class="group bg-surface-light dark:bg-surface-dark rounded-[1.5rem] shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden transition-all duration-300">
+<summary class="flex cursor-pointer items-center justify-between p-5 select-none hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-500 shrink-0">
+<span class="material-symbols-outlined">analytics</span>
+</div>
+<div class="flex flex-col">
+<h3 class="text-base font-bold text-slate-900 dark:text-slate-100">Assessment</h3>
+<span class="text-xs text-slate-500 dark:text-slate-400 font-medium">300/500 characters</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-400 transition-transform duration-300 group-open:rotate-180">expand_more</span>
+</summary>
+<div class="px-5 pb-5 pt-0">
+<textarea class="w-full min-h-[120px] p-4 bg-input-light dark:bg-input-dark rounded-xl text-sm leading-relaxed text-slate-700 dark:text-slate-200 border-none focus:ring-2 focus:ring-primary/50 placeholder-slate-400 resize-none transition-shadow" placeholder="Provide your professional assessment...">Client appears to be experiencing moderate anxiety related to professional performance. Symptoms are affecting sleep hygiene and interpersonal relationships. Progress is steady.</textarea>
+<div class="flex justify-end mt-2">
+<span class="text-xs font-medium text-slate-400">Autosaved just now</span>
+</div>
+</div>
+</details>
+<!-- P - Plan Section (Validation State) -->
+<details class="group bg-surface-light dark:bg-surface-dark rounded-[1.5rem] shadow-sm border border-red-200 dark:border-red-900/50 overflow-hidden transition-all duration-300" open="">
+<summary class="flex cursor-pointer items-center justify-between p-5 select-none hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 shrink-0">
+<span class="material-symbols-outlined">next_plan</span>
+</div>
+<div class="flex flex-col">
+<h3 class="text-base font-bold text-slate-900 dark:text-slate-100">Plan</h3>
+<div class="flex items-center gap-1.5">
+<span class="text-xs text-red-500 font-bold">45/500 characters</span>
+<span class="material-symbols-outlined text-red-500 text-[14px]">error</span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-400 transition-transform duration-300 group-open:rotate-180">expand_more</span>
+</summary>
+<div class="px-5 pb-5 pt-0">
+<textarea class="w-full min-h-[100px] p-4 bg-red-50 dark:bg-red-900/10 rounded-xl text-sm leading-relaxed text-slate-700 dark:text-slate-200 border border-red-200 dark:border-red-800 focus:ring-2 focus:ring-red-300 placeholder-red-300 resize-none transition-shadow" placeholder="Outline the next steps...">Continue breathing exercises.</textarea>
+<div class="flex justify-between items-center mt-2">
+<span class="text-xs font-medium text-red-500">Minimum 50 characters required</span>
+<span class="text-xs font-medium text-slate-400">Autosaved 10s ago</span>
+</div>
+</div>
+</details>
+</main>
+<!-- Sticky Action Footer -->
+<footer class="fixed bottom-0 left-0 w-full z-30 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-md border-t border-slate-100 dark:border-slate-800 pb-safe pt-2 px-4 shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.05)]">
+<!-- Validation Message Area (Conditional) -->
+<div class="w-full flex justify-center pb-2">
+<span class="text-[10px] text-red-500 font-medium">Please complete the Plan section to finalize.</span>
+</div>
+<div class="flex items-center justify-between gap-3 pb-4">
+<!-- Icon Actions Group -->
+<div class="flex items-center gap-2">
+<button aria-label="Copy to clipboard" class="size-12 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-[20px]">content_copy</span>
+</button>
+<button aria-label="Export PDF" class="size-12 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>
+</button>
+</div>
+<!-- Main Actions Group -->
+<div class="flex items-center gap-2 flex-1 justify-end">
+<button class="h-12 px-5 rounded-full border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold text-sm bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">autorenew</span>
+                    Regenerate
+                </button>
+<button class="h-12 px-6 rounded-full bg-primary hover:bg-primary-dark text-white font-bold text-sm shadow-lg shadow-primary/30 transition-all flex items-center gap-2 flex-1 justify-center max-w-[160px] opacity-75 cursor-not-allowed">
+                    Finalize
+                    <span class="material-symbols-outlined text-[18px]">check</span>
+</button>
+</div>
+</div>
+</footer>
+<!-- Safe area padding helper for iOS bottom bar -->
+<style>
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+        }
+    </style>
+</body></html>

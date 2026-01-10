@@ -1,0 +1,87 @@
+'use client';
+
+
+
+import { useState } from 'react';
+import { useMenteeList } from '../_hooks/useMenteeList';
+import { MenteeCard } from '../_components/MenteeCard';
+import { Input } from '@/components/ui/input';
+import { Search, Filter } from 'lucide-react';
+import * as Tabs from '@radix-ui/react-tabs';
+import { Button } from '@/components/ui/button';
+
+export default function MenteesPage() {
+    const { mentees, loading, removeMentee } = useMenteeList();
+    const [searchQuery, setSearchQuery] = useState('');
+
+    // Filter logic
+    const filteredMentees = mentees.filter(m =>
+        m.full_name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    return (
+        <div className="space-y-6 max-w-5xl mx-auto">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">My Mentees</h1>
+                    <p className="text-gray-500">Manage your active mentorships and student progress.</p>
+                </div>
+                <Button>
+                    Add New Mentee
+                </Button>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 items-center bg-white dark:bg-gray-900 p-4 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm">
+                <div className="relative flex-1 w-full">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                        placeholder="Search mentees..."
+                        className="pl-9 bg-gray-50 dark:bg-gray-800 border-0"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                </div>
+                {/* Simple Filters implementation instead of full Tabs if filtering locally only on Active vs others, but hook returns 'active' */}
+                {/* Plan asked for Tabs. Let's add them to switch between 'Active' and 'Past' if we had data, for now just 'Active' */}
+                <Tabs.Root defaultValue="active" className="w-full sm:w-auto">
+                    <Tabs.List className="flex gap-2 p-1 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                        <Tabs.Trigger
+                            value="active"
+                            className="px-4 py-1.5 text-sm font-medium rounded-md text-gray-600 dark:text-gray-400 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all"
+                        >
+                            Active
+                        </Tabs.Trigger>
+                        <Tabs.Trigger
+                            value="pending"
+                            className="px-4 py-1.5 text-sm font-medium rounded-md text-gray-600 dark:text-gray-400 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all"
+                        >
+                            Pending
+                        </Tabs.Trigger>
+                    </Tabs.List>
+                </Tabs.Root>
+            </div>
+
+            <div className="space-y-4">
+                {loading ? (
+                    <div className="flex flex-col gap-4">
+                        {[1, 2, 3].map(i => (
+                            <div key={i} className="h-24 bg-gray-100 dark:bg-gray-800 animate-pulse rounded-xl" />
+                        ))}
+                    </div>
+                ) : filteredMentees.length === 0 ? (
+                    <div className="text-center py-12">
+                        <p className="text-gray-500">No mentees found matching your search.</p>
+                    </div>
+                ) : (
+                    filteredMentees.map(mentee => (
+                        <MenteeCard
+                            key={mentee.id}
+                            mentee={mentee}
+                            onRemove={removeMentee}
+                        />
+                    ))
+                )}
+            </div>
+        </div>
+    );
+}

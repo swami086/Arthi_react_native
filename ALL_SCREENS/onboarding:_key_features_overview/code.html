@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Onboarding - Key Features</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30bae8",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111d21",
+                        "text-main": "#0e181b",
+                        "text-sub": "#4e8597",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem", 
+                        "lg": "2rem", 
+                        "xl": "3rem", 
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-gray-100 font-display antialiased flex justify-center min-h-screen items-center">
+<!-- Mobile Screen Container -->
+<div class="relative flex h-full min-h-[812px] w-full max-w-[375px] flex-col bg-background-light dark:bg-background-dark overflow-hidden sm:rounded-xl sm:shadow-2xl">
+<!-- Header Section with illustration placeholder if needed, focusing on clean typography here -->
+<div class="pt-12 px-6 pb-2 flex flex-col items-center">
+<!-- Decorative top element (optional, subtle brand touch) -->
+<div class="w-16 h-1 bg-primary/20 rounded-full mb-8"></div>
+<h1 class="text-text-main dark:text-white tracking-tight text-[32px] font-extrabold leading-[1.1] text-center w-full">
+                What to expect
+            </h1>
+<p class="text-text-sub dark:text-gray-400 text-center mt-3 text-base font-medium">
+                Here are the tools available to help you navigate your journey.
+            </p>
+</div>
+<!-- Features List -->
+<div class="flex-1 px-5 flex flex-col justify-center gap-4 py-6">
+<!-- Feature 1: Mentors -->
+<div class="group flex items-start gap-4 p-4 rounded-lg hover:bg-white dark:hover:bg-white/5 transition-colors duration-200">
+<div class="flex items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20 shrink-0 size-14 text-primary">
+<span class="material-symbols-outlined text-[28px]">diversity_3</span>
+</div>
+<div class="flex flex-col justify-center py-1">
+<p class="text-text-main dark:text-white text-lg font-bold leading-tight mb-1">Connect with Mentors</p>
+<p class="text-text-sub dark:text-gray-400 text-sm font-medium leading-relaxed">Real people ready to listen, not just analyze your situation.</p>
+</div>
+</div>
+<!-- Feature 2: Scheduling -->
+<div class="group flex items-start gap-4 p-4 rounded-lg hover:bg-white dark:hover:bg-white/5 transition-colors duration-200">
+<div class="flex items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20 shrink-0 size-14 text-primary">
+<span class="material-symbols-outlined text-[28px]">calendar_month</span>
+</div>
+<div class="flex flex-col justify-center py-1">
+<p class="text-text-main dark:text-white text-lg font-bold leading-tight mb-1">Easy Scheduling</p>
+<p class="text-text-sub dark:text-gray-400 text-sm font-medium leading-relaxed">Book a session that fits your school life seamlessly.</p>
+</div>
+</div>
+<!-- Feature 3: Chat -->
+<div class="group flex items-start gap-4 p-4 rounded-lg hover:bg-white dark:hover:bg-white/5 transition-colors duration-200">
+<div class="flex items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20 shrink-0 size-14 text-primary">
+<span class="material-symbols-outlined text-[28px]">chat_bubble</span>
+</div>
+<div class="flex flex-col justify-center py-1">
+<p class="text-text-main dark:text-white text-lg font-bold leading-tight mb-1">Safe Chat</p>
+<p class="text-text-sub dark:text-gray-400 text-sm font-medium leading-relaxed">Drop a message whenever you need to be heard instantly.</p>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation Area -->
+<div class="mt-auto w-full flex flex-col pb-10 px-6 bg-background-light dark:bg-background-dark">
+<!-- Page Indicators -->
+<div class="flex w-full flex-row items-center justify-center gap-3 py-6">
+<div class="h-2.5 w-2.5 rounded-full bg-gray-300 dark:bg-gray-700"></div>
+<div class="h-2.5 w-8 rounded-full bg-primary shadow-sm shadow-primary/30"></div>
+<div class="h-2.5 w-2.5 rounded-full bg-gray-300 dark:bg-gray-700"></div>
+</div>
+<!-- Buttons -->
+<div class="flex items-center justify-between w-full mt-2">
+<button class="px-6 py-4 text-text-sub dark:text-gray-400 font-bold text-base hover:text-text-main dark:hover:text-white transition-colors">
+                    Back
+                </button>
+<button class="bg-primary hover:bg-[#25a9d6] text-white px-10 py-4 rounded-full font-bold text-base shadow-lg shadow-primary/25 transition-all transform active:scale-95 flex items-center gap-2">
+                    Next
+                    <span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>

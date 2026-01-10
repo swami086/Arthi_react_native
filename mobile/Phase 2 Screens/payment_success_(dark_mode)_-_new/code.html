@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Payment Success</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30bae8",
+                        "success": "#10B981",
+                        "background-dark": "#0e181b",
+                        "surface-dark": "#1a2a2e",
+                        "text-secondary": "#93bac8",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "1.5rem",
+                        "xl": "2rem",
+                        "2xl": "2.5rem",
+                        "3xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding for clean mobile look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark font-display text-white selection:bg-primary/30">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden pb-6">
+<!-- Header / Success Animation Area -->
+<div class="flex flex-col items-center justify-center pt-12 pb-6 px-4 text-center">
+<!-- Simulated Lottie/Animation Container -->
+<div class="relative mb-6">
+<!-- Outer Glow -->
+<div class="absolute inset-0 bg-success/20 blur-xl rounded-full"></div>
+<!-- Circle -->
+<div class="relative flex h-24 w-24 items-center justify-center rounded-full bg-success/10 border-2 border-success/30">
+<span class="material-symbols-outlined text-success" style="font-size: 48px; font-variation-settings: 'wght' 700;">check</span>
+</div>
+<!-- Decorative confetti dots (CSS only) -->
+<div class="absolute -top-2 -left-4 h-2 w-2 rounded-full bg-primary opacity-60"></div>
+<div class="absolute top-0 -right-6 h-3 w-3 rounded-full bg-yellow-400 opacity-60"></div>
+<div class="absolute -bottom-2 right-0 h-2 w-2 rounded-full bg-purple-400 opacity-60"></div>
+</div>
+<h1 class="text-3xl font-extrabold tracking-tight text-white mb-2">Payment Successful!</h1>
+<p class="text-text-secondary text-base">You're all set for your session.</p>
+</div>
+<!-- Main Scrollable Content -->
+<div class="flex-1 px-4 space-y-6">
+<!-- Booking Confirmation Card -->
+<div class="bg-surface-dark rounded-[2rem] p-5 shadow-lg shadow-black/20">
+<div class="flex items-center gap-2 mb-4">
+<div class="flex h-5 w-5 items-center justify-center rounded-full bg-success">
+<span class="material-symbols-outlined text-white" style="font-size: 14px;">check</span>
+</div>
+<p class="text-success text-sm font-semibold tracking-wide uppercase">Your session is confirmed</p>
+</div>
+<div class="flex items-center gap-4 mb-5 border-b border-white/5 pb-5">
+<div class="relative h-14 w-14 flex-shrink-0">
+<img class="h-full w-full rounded-full object-cover border border-white/10" data-alt="Professional portrait of Dr. Sarah Smith smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-az4lgQ3IjG4y6Dg78QQixlb0K4vIN83TD5OxunwEdFeoH2Dq0d_V2PsaHmYqxDeqvesToa5O1b3rXEZODlzUlBxHblulNT4sGsMn1fClZzO7yU9W5K9-dhG5dtlbZRz3yi9pILv7BPADITzwMIazG8FvWnIC2h2uRwvML8h4eQa5QLnJZ1ZO5da4oHUkt2c3gWvq4oR3sG2zD2mJ-hmA2OfwgRcUER4YsoHFxULVwq8KwZCui-4vb3qWIECiXhWzotrbN1a15Z3r"/>
+<div class="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-success border-2 border-surface-dark"></div>
+</div>
+<div class="flex-1">
+<h2 class="text-lg font-bold text-white">Dr. Sarah Smith</h2>
+<p class="text-text-secondary text-sm">Senior Clinical Psychologist</p>
+</div>
+</div>
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-text-secondary">
+<span class="material-symbols-outlined text-primary" style="font-size: 20px;">calendar_today</span>
+<span class="text-sm font-medium">Oct 24, 2023</span>
+</div>
+<div class="h-1 w-1 rounded-full bg-gray-600"></div>
+<div class="flex items-center gap-2 text-text-secondary">
+<span class="material-symbols-outlined text-primary" style="font-size: 20px;">schedule</span>
+<span class="text-sm font-medium">10:00 AM</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-1">
+<div class="flex items-center gap-2 text-text-secondary">
+<span class="material-symbols-outlined text-primary" style="font-size: 20px;">hourglass_empty</span>
+<span class="text-sm font-medium">45 Mins</span>
+</div>
+<div class="bg-background-dark px-3 py-1 rounded-full border border-white/5">
+<span class="text-xs font-mono text-gray-400">#ABC123</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Payment Receipt Card -->
+<div class="bg-surface-dark rounded-[2rem] p-5 shadow-lg shadow-black/20">
+<div class="flex items-end justify-between border-b border-white/5 pb-4 mb-4">
+<div>
+<p class="text-text-secondary text-xs font-medium mb-1">Total Amount Paid</p>
+<p class="text-2xl font-bold text-white">₹1,098</p>
+</div>
+<div class="bg-primary/10 px-2 py-1 rounded text-xs font-bold text-primary mb-1">PAID</div>
+</div>
+<div class="space-y-3 mb-5">
+<div class="flex justify-between text-sm">
+<span class="text-text-secondary">Payment Method</span>
+<span class="text-white font-medium">UPI</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-text-secondary">Transaction ID</span>
+<span class="text-white font-medium font-mono text-xs tracking-wider">razorpay_xyz123</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-text-secondary">Date &amp; Time</span>
+<span class="text-white font-medium">Oct 24, 9:58 AM</span>
+</div>
+</div>
+<button class="w-full flex items-center justify-center gap-2 border border-primary/30 rounded-xl py-3 text-primary text-sm font-semibold hover:bg-primary/5 transition-colors active:scale-[0.98]">
+<span class="material-symbols-outlined" style="font-size: 18px;">download</span>
+                    Download Receipt
+                </button>
+</div>
+<!-- Next Steps Section -->
+<div class="pt-2">
+<h3 class="text-white text-lg font-bold mb-4 px-2">What's Next?</h3>
+<div class="space-y-4 px-2">
+<div class="flex gap-4">
+<div class="flex-shrink-0 h-10 w-10 rounded-full bg-surface-dark flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">mark_chat_read</span>
+</div>
+<div>
+<p class="text-white text-sm font-semibold">Confirmation sent</p>
+<p class="text-text-secondary text-xs mt-0.5">Check your WhatsApp for details.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="flex-shrink-0 h-10 w-10 rounded-full bg-surface-dark flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">videocam</span>
+</div>
+<div>
+<p class="text-white text-sm font-semibold">Join the video call</p>
+<p class="text-text-secondary text-xs mt-0.5">The link activates 5 mins before session.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="flex-shrink-0 h-10 w-10 rounded-full bg-surface-dark flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">notifications</span>
+</div>
+<div>
+<p class="text-white text-sm font-semibold">Reminder set</p>
+<p class="text-text-secondary text-xs mt-0.5">We'll notify you 24 hours prior.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Spacing for bottom actions visibility -->
+<div class="h-4"></div>
+</div>
+<!-- Sticky Bottom Actions -->
+<div class="mt-auto px-4 pt-4 pb-8 bg-background-dark/95 backdrop-blur-sm z-10 sticky bottom-0">
+<div class="flex flex-col gap-3">
+<div class="flex gap-3">
+<button class="flex-1 flex items-center justify-center gap-2 border border-white/20 rounded-full py-3.5 text-white text-sm font-semibold hover:bg-white/5 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined" style="font-size: 18px;">calendar_add_on</span>
+                        Add to Calendar
+                    </button>
+</div>
+<button class="w-full flex items-center justify-center gap-2 bg-primary rounded-full py-3.5 text-background-dark text-base font-bold shadow-lg shadow-primary/20 hover:brightness-110 active:scale-[0.98] transition-all">
+                    View Appointment
+                </button>
+<button class="w-full py-2 text-text-secondary text-sm font-medium hover:text-white transition-colors">
+                    Back to Home
+                </button>
+</div>
+</div>
+</div>
+</body></html>

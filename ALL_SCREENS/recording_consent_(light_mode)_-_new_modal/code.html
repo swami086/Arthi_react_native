@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Recording Consent Modal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#30bae8",
+              "background-light": "#f6f7f8",
+              "background-dark": "#111d21",
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-gray-200 dark:bg-gray-900 flex justify-center items-center min-h-screen p-0 sm:p-4 font-display">
+<!-- Modal Container -->
+<!-- Max width simulates mobile phone width on desktop, full size on mobile -->
+<div class="relative flex h-full min-h-screen sm:min-h-[800px] sm:h-auto sm:max-h-[850px] w-full max-w-[400px] flex-col bg-background-light dark:bg-background-dark shadow-2xl sm:rounded-[2rem] overflow-hidden group/design-root">
+<!-- Header -->
+<div class="flex items-center justify-between px-6 py-5 bg-background-light dark:bg-background-dark z-20 shrink-0 sticky top-0 border-b border-gray-200/50 dark:border-gray-800/50 backdrop-blur-xl bg-opacity-95 dark:bg-opacity-95">
+<h2 class="text-[#0e181b] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1">Recording &amp; Privacy</h2>
+<button aria-label="Close" class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-800 text-[#0e181b] dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-xl">close</span>
+</button>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto px-5 py-4 space-y-4 no-scrollbar scroll-smooth">
+<!-- Section 1: What We Record -->
+<div class="bg-white dark:bg-[#1a2c32] p-4 rounded-2xl shadow-sm border border-transparent dark:border-gray-800 transition-colors">
+<div class="flex gap-4">
+<div class="shrink-0">
+<div class="flex items-center justify-center size-12 rounded-full bg-primary/15 text-primary">
+<span class="material-symbols-outlined text-[24px]">mic</span>
+</div>
+</div>
+<div class="flex flex-col flex-1 justify-center">
+<h3 class="text-[#0e181b] dark:text-white text-base font-bold leading-normal mb-1">What We Record</h3>
+<p class="text-[#4e8597] dark:text-gray-400 text-xs font-medium leading-relaxed mb-2">• Session audio only • Encrypted storage • Secure transmission</p>
+<p class="text-gray-600 dark:text-gray-300 text-sm font-normal leading-relaxed">Audio recording for clinical documentation purposes.</p>
+</div>
+</div>
+</div>
+<!-- Section 2: How We Process -->
+<div class="bg-white dark:bg-[#1a2c32] p-4 rounded-2xl shadow-sm border border-transparent dark:border-gray-800 transition-colors">
+<div class="flex gap-4">
+<div class="shrink-0">
+<div class="flex items-center justify-center size-12 rounded-full bg-primary/15 text-primary">
+<span class="material-symbols-outlined text-[24px]">settings</span>
+</div>
+</div>
+<div class="flex flex-col flex-1 justify-center">
+<h3 class="text-[#0e181b] dark:text-white text-base font-bold leading-normal mb-1">How We Process</h3>
+<p class="text-[#4e8597] dark:text-gray-400 text-xs font-medium leading-relaxed mb-2">• OpenAI Whisper &amp; GPT-4o • Zero data retention policy</p>
+<p class="text-gray-600 dark:text-gray-300 text-sm font-normal leading-relaxed">Your recording is processed using AI for transcription and clinical note generation.</p>
+</div>
+</div>
+</div>
+<!-- Section 3: Where We Store -->
+<div class="bg-white dark:bg-[#1a2c32] p-4 rounded-2xl shadow-sm border border-transparent dark:border-gray-800 transition-colors">
+<div class="flex gap-4">
+<div class="shrink-0">
+<div class="flex items-center justify-center size-12 rounded-full bg-primary/15 text-primary">
+<span class="material-symbols-outlined text-[24px]">database</span>
+</div>
+</div>
+<div class="flex flex-col flex-1 justify-center">
+<h3 class="text-[#0e181b] dark:text-white text-base font-bold leading-normal mb-1">Where We Store</h3>
+<p class="text-[#4e8597] dark:text-gray-400 text-xs font-medium leading-relaxed mb-2">• Encrypted at rest • Encrypted in transit • Regular backups</p>
+<p class="text-gray-600 dark:text-gray-300 text-sm font-normal leading-relaxed">All data is stored securely in AWS Mumbai region (DPDP compliant).</p>
+</div>
+</div>
+</div>
+<!-- Section 4: Your Rights -->
+<div class="bg-white dark:bg-[#1a2c32] p-4 rounded-2xl shadow-sm border border-transparent dark:border-gray-800 transition-colors">
+<div class="flex gap-4">
+<div class="shrink-0">
+<div class="flex items-center justify-center size-12 rounded-full bg-primary/15 text-primary">
+<span class="material-symbols-outlined text-[24px]">gpp_good</span>
+</div>
+</div>
+<div class="flex flex-col flex-1 justify-center">
+<h3 class="text-[#0e181b] dark:text-white text-base font-bold leading-normal mb-1">Your Rights</h3>
+<p class="text-[#4e8597] dark:text-gray-400 text-xs font-medium leading-relaxed mb-2">• Right to access • Right to deletion • Data portability</p>
+<p class="text-gray-600 dark:text-gray-300 text-sm font-normal leading-relaxed">You have the right to access, correct, and delete your data.</p>
+</div>
+</div>
+</div>
+<!-- Section 5: Data Retention -->
+<div class="bg-white dark:bg-[#1a2c32] p-4 rounded-2xl shadow-sm border border-transparent dark:border-gray-800 transition-colors">
+<div class="flex gap-4">
+<div class="shrink-0">
+<div class="flex items-center justify-center size-12 rounded-full bg-primary/15 text-primary">
+<span class="material-symbols-outlined text-[24px]">calendar_month</span>
+</div>
+</div>
+<div class="flex flex-col flex-1 justify-center">
+<h3 class="text-[#0e181b] dark:text-white text-base font-bold leading-normal mb-1">Data Retention</h3>
+<p class="text-[#4e8597] dark:text-gray-400 text-xs font-medium leading-relaxed mb-2">• Automatic deletion • Manual deletion • DPDP compliant</p>
+<p class="text-gray-600 dark:text-gray-300 text-sm font-normal leading-relaxed">Recordings are retained for 1 year from the session date.</p>
+</div>
+</div>
+</div>
+<!-- Bottom Spacer -->
+<div class="h-6"></div>
+</div>
+<!-- Footer -->
+<div class="p-6 pt-4 bg-background-light dark:bg-background-dark border-t border-gray-200/60 dark:border-gray-800 sticky bottom-0 z-20 backdrop-blur-lg bg-opacity-95 dark:bg-opacity-95">
+<div class="flex flex-col items-center gap-4">
+<a class="text-primary text-sm font-semibold hover:text-primary/80 transition-colors decoration-primary/30 hover:decoration-primary underline underline-offset-4" href="#">
+                    Learn More about our Privacy Policy
+                </a>
+<button class="w-full bg-primary hover:bg-[#25a9d6] text-white font-bold text-base py-4 rounded-full shadow-[0_4px_14px_0_rgba(48,186,232,0.39)] hover:shadow-[0_6px_20px_rgba(48,186,232,0.23)] hover:-translate-y-0.5 transition-all duration-200 active:scale-[0.98]">
+                    I Understand
+                </button>
+</div>
+</div>
+</div>
+</body></html>

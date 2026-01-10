@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Transcript Viewer</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;family=Roboto+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+            extend: {
+                colors: {
+                "primary": "#305ee8",
+                "background-light": "#f6f6f8",
+                "background-dark": "#111521",
+                },
+                fontFamily: {
+                "display": ["Manrope", "sans-serif"],
+                "mono": ["Roboto Mono", "monospace"],
+                },
+                borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+            },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for webkit to keep it looking clean on desktop viewing */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111521; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #344065; 
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4B5985; 
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#0b0e16] flex justify-center items-center min-h-screen p-0 sm:p-4">
+<!-- Mobile Screen Container -->
+<div class="relative flex h-screen w-full sm:max-w-[400px] sm:h-[850px] flex-col bg-background-dark dark shadow-2xl sm:rounded-[2.5rem] overflow-hidden ring-8 ring-[#1c2236]">
+<!-- Sticky Header -->
+<header class="flex items-center justify-between px-4 py-4 bg-background-dark/95 backdrop-blur-md sticky top-0 z-50 border-b border-white/5">
+<button class="text-white hover:text-primary transition-colors flex items-center justify-center p-2 -ml-2 rounded-full hover:bg-white/5">
+<span class="material-symbols-outlined" style="font-size: 24px;">arrow_back_ios_new</span>
+</button>
+<h2 class="text-white text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-2">Session Transcript</h2>
+<button class="flex items-center justify-center p-2 rounded-full hover:bg-white/5 text-primary">
+<span class="material-symbols-outlined" style="font-size: 24px;">more_vert</span>
+</button>
+</header>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto overflow-x-hidden pb-32">
+<!-- Metadata Cards -->
+<div class="grid grid-cols-3 gap-2 px-4 py-4">
+<!-- Duration -->
+<div class="flex flex-col gap-1 rounded-2xl bg-[#1a2032] p-3 items-center text-center border border-white/5">
+<span class="material-symbols-outlined text-primary/80" style="font-size: 20px;">schedule</span>
+<div>
+<p class="text-white text-sm font-bold leading-tight">45m 12s</p>
+<p class="text-slate-400 text-[10px] uppercase tracking-wider font-semibold mt-0.5">Duration</p>
+</div>
+</div>
+<!-- Word Count -->
+<div class="flex flex-col gap-1 rounded-2xl bg-[#1a2032] p-3 items-center text-center border border-white/5">
+<span class="material-symbols-outlined text-primary/80" style="font-size: 20px;">description</span>
+<div>
+<p class="text-white text-sm font-bold leading-tight">1,240</p>
+<p class="text-slate-400 text-[10px] uppercase tracking-wider font-semibold mt-0.5">Words</p>
+</div>
+</div>
+<!-- Language -->
+<div class="flex flex-col gap-1 rounded-2xl bg-[#1a2032] p-3 items-center text-center border border-white/5">
+<span class="material-symbols-outlined text-primary/80" style="font-size: 20px;">language</span>
+<div>
+<p class="text-white text-sm font-bold leading-tight">English</p>
+<p class="text-slate-400 text-[10px] uppercase tracking-wider font-semibold mt-0.5">Language</p>
+</div>
+</div>
+</div>
+<!-- Search Bar -->
+<div class="px-4 pb-2 sticky top-0 z-40 bg-background-dark pt-1 shadow-lg shadow-background-dark/50">
+<label class="flex w-full items-center rounded-full h-12 bg-[#242d47] border border-transparent focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all">
+<div class="flex items-center justify-center pl-4 text-[#93a0c8]">
+<span class="material-symbols-outlined" style="font-size: 20px;">search</span>
+</div>
+<input class="w-full bg-transparent border-none text-white placeholder:text-[#93a0c8] px-3 focus:outline-none focus:ring-0 text-base font-medium" placeholder="Search in transcript..." value="overwhelmed"/>
+<div class="pr-2">
+<span class="text-xs font-bold bg-primary text-white px-2 py-0.5 rounded-md">1/3</span>
+</div>
+</label>
+</div>
+<!-- Transcript Section -->
+<div class="flex flex-col gap-2 p-4 select-text">
+<!-- Message 1 -->
+<div class="flex gap-3 group">
+<div class="shrink-0 mt-1">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-8 ring-2 ring-[#242d47]" data-alt="Avatar of the mentor profile" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB6CBdomSEZQtJRp0NOvzvbf2WJcpeEQ1kPUjNYCOaqBretfTAkWSPFLhEHmADWD_hOfL2jR4r1syqgUNHMwT8C_UlqRq2dbgMUXE2cvF8Xmsg4iU545bxKQRP2PNBFAeZmxYWs3l0S-pRfhEIK2OV733Is49xm-IdLlTYGolo-jVzhDzy3BZn95LbaqGKPjDC5CRz3miB6oMRFBaoPGoHdcroXuL4kx8Ee0FSpfHv_nisPJN3UTLUwFlSxGOX1Lml7p7WQSuZDiANt");'></div>
+</div>
+<div class="flex flex-1 flex-col items-start gap-1">
+<div class="flex items-center gap-2">
+<p class="text-primary text-sm font-bold">Mentor</p>
+<p class="text-slate-500 text-xs font-mono mt-0.5">00:01</p>
+</div>
+<div class="p-3 rounded-2xl rounded-tl-none bg-[#1a2032] border border-white/5 w-full">
+<p class="text-slate-200 text-sm font-mono leading-relaxed">Hi there, good to see you again. How are you feeling today compared to our last session?</p>
+</div>
+</div>
+</div>
+<!-- Message 2 -->
+<div class="flex gap-3 group pt-2">
+<div class="shrink-0 mt-1">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-8 ring-2 ring-[#242d47]" data-alt="Avatar of the mentee profile" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDBGuMvWyeKPNjmX7GW3oUHi4ex8Ictj7kF6lh0gNfxfy5ZykbmvLXFnAh9EkLdpjH8aT2v3Je0MfFYmF27QtSRFkxpjsdYt90jMDkdEyP180e_GL8F4eWgo_bd0UJNnVsT9RqvCS8GSfcptFyL9vNBWT1KuwKymiswhV2HlOQUWDcHCY94xOo8jMS5fV6DwlvOrTB6WV9D0nIAoeZFOQMSKtwMSzOEif-cvjYEOMB7EdF1GeKz0vFRSAOREeIwDDOOfXao_Nx6tVgY");'></div>
+</div>
+<div class="flex flex-1 flex-col items-start gap-1">
+<div class="flex items-center gap-2">
+<p class="text-white text-sm font-bold">Mentee</p>
+<p class="text-slate-500 text-xs font-mono mt-0.5">00:05</p>
+</div>
+<div class="p-3 rounded-2xl rounded-tl-none bg-[#242d47] border border-white/5 w-full">
+<p class="text-white text-sm font-mono leading-relaxed">Honestly, I'm feeling a bit <span class="bg-[#FCD34D] text-black font-bold px-1 rounded-sm">overwhelmed</span> right now. The project deadline is approaching and I feel like I'm behind.</p>
+</div>
+</div>
+</div>
+<!-- Message 3 -->
+<div class="flex gap-3 group pt-2">
+<div class="shrink-0 mt-1">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-8 ring-2 ring-[#242d47]" data-alt="Avatar of the mentor profile" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB3Y2kvUeIIVvW4kdARCd3lpVIYEmyoMfoXIbtiB5h7IR66MprY6vAfmwr8LklervtO8x3FintpB-8deF1YAeYSO4CgJ5CMuAulwwq50ii4vcdSyzhbMjW0ZJ7n6tRs6GfAAmAzj_5ZOrkS7A64QCjEFtH13bsZytGOgnYH5E9J5PwrC1MdAcBOL3v41IV3uZ3f6ARxRH4gwG1fgsFZqCGnhTk4YyVh75C1RxGmqzn72DRVvceQ2D2SAJaSOhH4o2vtHAZC6SeoUhsR");'></div>
+</div>
+<div class="flex flex-1 flex-col items-start gap-1">
+<div class="flex items-center gap-2">
+<p class="text-primary text-sm font-bold">Mentor</p>
+<p class="text-slate-500 text-xs font-mono mt-0.5">00:12</p>
+</div>
+<div class="p-3 rounded-2xl rounded-tl-none bg-[#1a2032] border border-white/5 w-full">
+<p class="text-slate-200 text-sm font-mono leading-relaxed">I understand completely. That feeling of being <span class="bg-[#FCD34D] text-black font-bold px-1 rounded-sm">overwhelmed</span> is very common at this stage. Let's break it down. What specific part is causing the most stress?</p>
+</div>
+</div>
+</div>
+<!-- Message 4 -->
+<div class="flex gap-3 group pt-2">
+<div class="shrink-0 mt-1">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-8 ring-2 ring-[#242d47]" data-alt="Avatar of the mentee profile" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCuD4lM7XC-yAHuNTHtHtDpjffil7dhNBvi2k9DbBSEy_CybegGf2Cz4IEUdsswgKLbZEDNROK19CuzORndjOdNQwJE0HF39rJuggqibTIADIs8TdJJVMiLgVm5ADcn3ueUbQ8byzljcCn4JjgT2S2OEf7XXQdMZumpttGh_C8nAIFccdxB6_pPtYn7eyBuSqT9XhSrlbofKzuJYawd1KPUvcxlV7IPboQe6W92lK5Cyf7KffoPTG8IGTNbDonPsNrg3kF4Kxsjqqf9");'></div>
+</div>
+<div class="flex flex-1 flex-col items-start gap-1">
+<div class="flex items-center gap-2">
+<p class="text-white text-sm font-bold">Mentee</p>
+<p class="text-slate-500 text-xs font-mono mt-0.5">00:18</p>
+</div>
+<div class="p-3 rounded-2xl rounded-tl-none bg-[#242d47] border border-white/5 w-full">
+<p class="text-white text-sm font-mono leading-relaxed">It's mostly the data integration part. I tried to run the migration yesterday and it failed twice.</p>
+</div>
+</div>
+</div>
+<!-- Message 5 -->
+<div class="flex gap-3 group pt-2">
+<div class="shrink-0 mt-1">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-8 ring-2 ring-[#242d47]" data-alt="Avatar of the mentor profile" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB-9LSZaNSMxWSstHxsnofJ9TmsKqh_peLfU0mVzBvORT2eiolvPzEkyf-6JxV6_XkIPe5-n2XJvbIPsxDr4LjSPjH3Awt991Wq5A3tscCgtvn5KzoRpw11ly6OOKIWu_vyGNcL41Pt5KXH0X21TUFN9fjqFa9oRzQyrcv27lH9TNhGHnNocmx8XysdVsvhbzDjFubSPNfftOuKybkX4_BWmjGw3y_i3uuD-2HGZkbno3CRYjaYxxoMMl_pDcVOfEDWF0H2B1r825Ty");'></div>
+</div>
+<div class="flex flex-1 flex-col items-start gap-1">
+<div class="flex items-center gap-2">
+<p class="text-primary text-sm font-bold">Mentor</p>
+<p class="text-slate-500 text-xs font-mono mt-0.5">00:24</p>
+</div>
+<div class="p-3 rounded-2xl rounded-tl-none bg-[#1a2032] border border-white/5 w-full">
+<p class="text-slate-200 text-sm font-mono leading-relaxed">Okay, technical blockers are tough. Have you checked the logs for the specific error code?</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky Action Bar -->
+<div class="absolute bottom-0 left-0 w-full z-50">
+<!-- Gradient fade -->
+<div class="h-8 bg-gradient-to-t from-background-dark to-transparent w-full"></div>
+<div class="bg-[#111521]/90 backdrop-blur-xl border-t border-white/10 p-4 pb-8 flex items-center gap-3">
+<!-- Secondary Actions -->
+<button class="flex flex-col items-center justify-center gap-1 size-12 rounded-xl bg-[#1a2032] hover:bg-[#242d47] text-slate-300 transition-colors border border-white/5">
+<span class="material-symbols-outlined" style="font-size: 20px;">content_copy</span>
+<span class="text-[10px] font-bold">Copy</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-1 size-12 rounded-xl bg-[#1a2032] hover:bg-[#242d47] text-slate-300 transition-colors border border-white/5">
+<span class="material-symbols-outlined" style="font-size: 20px;">download</span>
+<span class="text-[10px] font-bold">Export</span>
+</button>
+<!-- Primary Action -->
+<button class="flex-1 h-12 rounded-full bg-primary hover:bg-blue-600 text-white font-bold text-base flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined filled" style="font-size: 20px;">auto_awesome</span>
+                    Generate SOAP Note
+                </button>
+</div>
+</div>
+</div>
+</body></html>

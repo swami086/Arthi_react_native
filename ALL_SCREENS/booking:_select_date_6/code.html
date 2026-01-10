@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Safe Space - Chat Detail</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30bae8",
+                        "primary-dark": "#259ac0", 
+                        "background-light": "#f8fbfc",
+                        "background-dark": "#111d21",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2c32",
+                        "text-main-light": "#0e181b",
+                        "text-main-dark": "#e0e6e8",
+                        "text-sub-light": "#4f626b",
+                        "text-sub-dark": "#9ba8ae",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "1.5rem", "xl": "2rem", "2xl": "2.5rem", "full": "9999px"},
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(48, 186, 232, 0.08)',
+                        'card': '0 2px 12px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+          min-height: max(884px, 100dvh);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased transition-colors duration-200">
+<div class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden">
+<header class="sticky top-0 z-30 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md transition-colors border-b border-gray-100 dark:border-gray-800">
+<div class="flex items-center p-3 justify-between h-16 gap-3">
+<button class="flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-text-main-light dark:text-text-main-dark">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<div class="flex items-center gap-3 flex-1 overflow-hidden cursor-pointer group rounded-xl p-1 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+<div class="relative shrink-0">
+<img alt="Mentor Photo" class="w-10 h-10 rounded-full object-cover shadow-sm border border-gray-100 dark:border-gray-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAI8IzRihWoeh38yeLIYZwTdIL9v8rYg5-U4znxWlLfJNBzzbnfVCI9h1rgqS5WQTEK0OgtpcUGoMWZLkJax8Wj-y2wGWpr4c4olMISqUDKmKfyiMut8EC-h3KQ2ICJ-15iehd4m9lai8O9-TZyiVThhuJaoZl0vcexdFqVsSt2iw8JoupfGGvoGXF-0dfabyseQ6ggX6kctySPQWnfDH1b3kMWfmV7VEWnBfJTgDJKWHEDB0ikHDOz-H9-XNWIN2qM7BEwlApXzGR6"/>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-surface-light dark:border-surface-dark rounded-full"></div>
+</div>
+<div class="flex flex-col overflow-hidden justify-center">
+<h2 class="text-text-main-light dark:text-text-main-dark text-sm font-bold leading-none truncate">Sarah Jenkins</h2>
+<span class="text-primary text-[11px] font-semibold mt-1 truncate">Certified Life Coach</span>
+</div>
+</div>
+<button class="flex items-center justify-center gap-1.5 px-4 h-9 bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 rounded-full border border-red-100 dark:border-red-900/30 transition-all shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-[18px]">emergency_home</span>
+<span class="text-xs font-bold hidden sm:block">Crisis</span>
+</button>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto hide-scrollbar p-4 space-y-6 bg-slate-50/50 dark:bg-transparent">
+<div class="flex justify-center py-2">
+<span class="text-[10px] font-bold text-text-sub-light/60 dark:text-text-sub-dark/60 bg-gray-100 dark:bg-gray-800/50 px-3 py-1 rounded-full uppercase tracking-wider">Today</span>
+</div>
+<div class="flex gap-3 items-end group">
+<img alt="Sarah" class="w-8 h-8 rounded-full object-cover shrink-0 mb-1 shadow-sm border border-white dark:border-gray-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAI8IzRihWoeh38yeLIYZwTdIL9v8rYg5-U4znxWlLfJNBzzbnfVCI9h1rgqS5WQTEK0OgtpcUGoMWZLkJax8Wj-y2wGWpr4c4olMISqUDKmKfyiMut8EC-h3KQ2ICJ-15iehd4m9lai8O9-TZyiVThhuJaoZl0vcexdFqVsSt2iw8JoupfGGvoGXF-0dfabyseQ6ggX6kctySPQWnfDH1b3kMWfmV7VEWnBfJTgDJKWHEDB0ikHDOz-H9-XNWIN2qM7BEwlApXzGR6"/>
+<div class="flex flex-col gap-1 max-w-[85%]">
+<div class="bg-surface-light dark:bg-surface-dark px-4 py-3 rounded-2xl rounded-bl-none shadow-card border border-gray-100 dark:border-gray-800/50">
+<p class="text-sm text-text-main-light dark:text-text-main-dark leading-relaxed">Hi Alex! 👋 I saw you booked a session for later this week. I just wanted to check in and see how you're feeling about the upcoming finals?</p>
+</div>
+<span class="text-[10px] text-text-sub-light dark:text-text-sub-dark ml-1 opacity-0 group-hover:opacity-100 transition-opacity">10:23 AM</span>
+</div>
+</div>
+<div class="flex gap-3 flex-row-reverse items-end group">
+<div class="flex flex-col gap-1 items-end max-w-[85%]">
+<div class="bg-primary text-white px-4 py-3 rounded-2xl rounded-br-none shadow-soft shadow-primary/20">
+<p class="text-sm leading-relaxed">Hey Sarah. Honestly, I'm a bit overwhelmed. 😓 I couldn't sleep much last night thinking about Biology.</p>
+</div>
+<span class="text-[10px] text-text-sub-light dark:text-text-sub-dark mr-1 opacity-0 group-hover:opacity-100 transition-opacity">10:25 AM</span>
+</div>
+</div>
+<div class="flex gap-3 items-end group">
+<img alt="Sarah" class="w-8 h-8 rounded-full object-cover shrink-0 mb-1 shadow-sm border border-white dark:border-gray-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAI8IzRihWoeh38yeLIYZwTdIL9v8rYg5-U4znxWlLfJNBzzbnfVCI9h1rgqS5WQTEK0OgtpcUGoMWZLkJax8Wj-y2wGWpr4c4olMISqUDKmKfyiMut8EC-h3KQ2ICJ-15iehd4m9lai8O9-TZyiVThhuJaoZl0vcexdFqVsSt2iw8JoupfGGvoGXF-0dfabyseQ6ggX6kctySPQWnfDH1b3kMWfmV7VEWnBfJTgDJKWHEDB0ikHDOz-H9-XNWIN2qM7BEwlApXzGR6"/>
+<div class="flex flex-col gap-1 max-w-[85%]">
+<div class="bg-surface-light dark:bg-surface-dark px-4 py-3 rounded-2xl rounded-bl-none shadow-card border border-gray-100 dark:border-gray-800/50">
+<p class="text-sm text-text-main-light dark:text-text-main-dark leading-relaxed">That is completely understandable. It's a high-pressure time. Remember that one bad night of sleep doesn't define your preparation.</p>
+</div>
+</div>
+</div>
+<div class="flex gap-3 items-end group">
+<div class="w-8 shrink-0"></div>
+<div class="flex flex-col gap-1 max-w-[85%]">
+<div class="bg-surface-light dark:bg-surface-dark px-4 py-3 rounded-2xl rounded-tl-none shadow-card border border-gray-100 dark:border-gray-800/50">
+<p class="text-sm text-text-main-light dark:text-text-main-dark leading-relaxed">Let's try a quick grounding exercise before you start studying today? We can tackle a study plan together during our call. 🌱</p>
+</div>
+<span class="text-[10px] text-text-sub-light dark:text-text-sub-dark ml-1 opacity-0 group-hover:opacity-100 transition-opacity">10:26 AM</span>
+</div>
+</div>
+<div class="flex gap-3 flex-row-reverse items-end group">
+<div class="flex flex-col gap-1 items-end max-w-[85%]">
+<div class="bg-primary text-white px-4 py-3 rounded-2xl rounded-br-none shadow-soft shadow-primary/20">
+<p class="text-sm leading-relaxed">That sounds really helpful. I'd appreciate that.</p>
+</div>
+<div class="flex items-center gap-1 mr-1">
+<span class="text-[10px] text-text-sub-light dark:text-text-sub-dark">10:28 AM</span>
+<span class="material-symbols-outlined text-[14px] text-primary">done_all</span>
+</div>
+</div>
+</div>
+<div class="flex gap-3 items-end">
+<img alt="Sarah" class="w-8 h-8 rounded-full object-cover shrink-0 mb-1 shadow-sm border border-white dark:border-gray-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAI8IzRihWoeh38yeLIYZwTdIL9v8rYg5-U4znxWlLfJNBzzbnfVCI9h1rgqS5WQTEK0OgtpcUGoMWZLkJax8Wj-y2wGWpr4c4olMISqUDKmKfyiMut8EC-h3KQ2ICJ-15iehd4m9lai8O9-TZyiVThhuJaoZl0vcexdFqVsSt2iw8JoupfGGvoGXF-0dfabyseQ6ggX6kctySPQWnfDH1b3kMWfmV7VEWnBfJTgDJKWHEDB0ikHDOz-H9-XNWIN2qM7BEwlApXzGR6"/>
+<div class="bg-surface-light dark:bg-surface-dark px-4 py-3 rounded-2xl rounded-bl-none shadow-card border border-gray-100 dark:border-gray-800/50 w-16 flex items-center justify-center gap-1">
+<div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+<div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+<div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></div>
+</div>
+</div>
+<div class="h-4"></div>
+</main>
+<div class="sticky bottom-0 z-20 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-xl px-4 pb-6 pt-2 border-t border-gray-100 dark:border-gray-800/50">
+<div class="flex items-end gap-2 bg-surface-light dark:bg-surface-dark p-1.5 pr-2 rounded-[1.8rem] shadow-card border border-gray-200 dark:border-gray-700">
+<button class="p-2.5 text-text-sub-light dark:text-text-sub-dark hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-white/5 rounded-full transition-colors shrink-0">
+<span class="material-symbols-outlined text-[24px]">add</span>
+</button>
+<textarea class="flex-1 bg-transparent border-none focus:ring-0 text-text-main-light dark:text-text-main-dark placeholder:text-text-sub-light/70 dark:placeholder:text-text-sub-dark/70 text-[15px] py-3 resize-none max-h-32 leading-relaxed" placeholder="Type your message..." rows="1"></textarea>
+<button class="p-2.5 bg-primary hover:bg-primary-dark text-white rounded-full shadow-lg shadow-primary/25 active:scale-95 transition-all shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px] translate-x-0.5 translate-y-[1px]">send</span>
+</button>
+</div>
+</div>
+</div>
+
+</body></html>

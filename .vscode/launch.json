@@ -1,0 +1,16 @@
+{
+    "configurations": [
+        {
+            "name": "Radon IDE panel",
+            "type": "radon-ide",
+            "request": "launch",
+            "appRoot": "./SafeSpaceApp",
+            "env": {},
+            "ios": {
+                "scheme": "SafeSpaceApp"
+            },
+            "android": {},
+            "usePrebuild": true
+        }
+    ]
+}

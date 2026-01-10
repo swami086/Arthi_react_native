@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Safe Space - Onboarding</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#6d13ec",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#181022",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased text-slate-900 dark:text-white transition-colors duration-200">
+<div class="relative flex h-screen w-full flex-col overflow-hidden mx-auto max-w-md bg-background-light dark:bg-background-dark">
+<!-- Header: Skip Button -->
+<div class="flex px-4 py-3 justify-end pt-6 md:pt-8 z-10">
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-transparent hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-slate-800 dark:text-slate-200 text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Skip</span>
+</button>
+</div>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col justify-center items-center w-full px-6 pb-4">
+<!-- Hero Image -->
+<div class="@container w-full mb-8">
+<div class="w-full aspect-[4/3] bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden rounded-xl shadow-sm bg-primary/5 dark:bg-primary/10" data-alt="Illustration of a young person chatting comfortably with a mentor figure on bean bags" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDy979WXgeT-5fkgq_gEkbTeBGv_JiXwOLLTI7Ngzpfw_Sfq9JYiceSllmrVzutxlRDKSdqMDLl9oPg0EVgQJbDC00tmB-SWVKimBRs-RkV7IlaHY-oybYTpkHkZB2JbfTdXlm5xhp6eHI7bzAj5estAt3zx1-j3ZTP_qfsiEesm2LHZaT3L4ulAay7bFL31jhtkFnXy1zrRT-xIw4PXdGQkN_0SyOegdgqMpd36CvuAhw1K6Q5C2ZwzOxNe2SxBQrsarxf0XmpaQN_");'>
+</div>
+</div>
+<!-- Headline -->
+<h1 class="text-slate-900 dark:text-white tracking-tight text-[32px] font-extrabold leading-tight text-center pb-3">
+                Mentoring, <span class="text-primary dark:text-primary-400">Not Therapy</span>
+</h1>
+<!-- Body Text -->
+<p class="text-slate-600 dark:text-slate-300 text-base font-medium leading-relaxed text-center max-w-[320px]">
+                Life can be overwhelming. We provide a judgment-free zone where you can talk to real mentors and build skills for the future.
+            </p>
+</div>
+<!-- Footer: Indicators & Next Button -->
+<div class="w-full px-6 pb-8 pt-2 flex flex-col gap-6">
+<!-- Page Indicators -->
+<div class="flex w-full flex-row items-center justify-center gap-3 py-2">
+<!-- Active Indicator (Pill shape for emphasis) -->
+<div class="h-2 w-6 rounded-full bg-primary transition-all duration-300"></div>
+<!-- Inactive Indicators -->
+<div class="h-2 w-2 rounded-full bg-primary/20 dark:bg-white/20"></div>
+<div class="h-2 w-2 rounded-full bg-primary/20 dark:bg-white/20"></div>
+</div>
+<!-- Next Button -->
+<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-full h-14 bg-primary hover:bg-primary/90 active:scale-[0.98] text-white text-lg font-bold leading-normal tracking-[0.015em] shadow-lg shadow-primary/30 transition-all duration-200">
+<span class="truncate">Next</span>
+<span class="material-symbols-outlined ml-2 text-xl font-bold">arrow_forward</span>
+</button>
+</div>
+</div>
+</body></html>

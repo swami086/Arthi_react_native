@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Post-Session Feedback</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#30bae8",
+              "background-light": "#f6f7f8",
+              "background-dark": "#0e181b",
+              "surface-dark": "#1a2a2e",
+              "success": "#10B981",
+              "text-secondary": "#9CA3AF",
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {
+              "DEFAULT": "1rem", 
+              "lg": "1.5rem", 
+              "xl": "2rem", 
+              "full": "9999px"
+            },
+          },
+        },
+      }
+    </script>
+<style>
+        /* Custom scrollbar for better aesthetic in dark mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0e181b; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1a2a2e; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #30bae8; 
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display antialiased selection:bg-primary selection:text-white">
+<div class="relative flex flex-col min-h-screen w-full max-w-md mx-auto overflow-hidden bg-background-light dark:bg-background-dark shadow-2xl">
+<!-- Header Section -->
+<header class="flex flex-col gap-2 px-6 pt-6 pb-2">
+<div class="flex items-center justify-between h-12">
+<!-- Empty div for spacing/centering alignment if needed, or back button -->
+<div class="w-12"></div>
+<button class="flex items-center justify-end text-primary hover:text-primary/80 transition-colors">
+<span class="text-base font-bold leading-normal tracking-[0.015em]">Skip</span>
+</button>
+</div>
+<h1 class="text-3xl font-bold leading-tight tracking-tight text-slate-900 dark:text-white">How was your<br/>session?</h1>
+</header>
+<!-- Main Scrollable Content -->
+<main class="flex-1 overflow-y-auto px-6 pb-32"> <!-- Added pb-32 for sticky footer clearance -->
+<!-- Session Card -->
+<div class="mt-4 p-4 rounded-xl bg-white dark:bg-surface-dark shadow-[0_4px_20px_rgba(0,0,0,0.2)] dark:shadow-none border border-slate-100 dark:border-slate-800/50">
+<div class="flex items-start gap-4">
+<div class="relative shrink-0">
+<div class="w-16 h-16 rounded-full bg-cover bg-center border-2 border-primary/20" data-alt="Professional headshot of Dr. Sarah Jenkins smiling" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBp3BOmwEZMrWuBSbH_oHRWUpqBU7Fi9a_yjOQ6jSpdLE-dWHAHiEUil8qv2E0URQUIrejY6HpyTJNYOEkTwIxB-FebaBePPZXLOztjlj2obwUBfDc0AmD2K-kLY0INrS6kVim-SHVPiOsfcjLHc53nK62ndlD1Xujfi541Vl4eLtk4BMLm8S44G_onV_iXQyYj1ac6Qfc7tuDyNaPJ1BxidmAWZYh0lCZSO-XeXyHObu2PY9m9YotdpctGx2Znhe23_-0D2GUNXH9P');"></div>
+<div class="absolute -bottom-1 -right-1 bg-success text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-surface-dark flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[10px] leading-none">check</span>
+</div>
+</div>
+<div class="flex flex-col grow min-w-0">
+<div class="flex items-center gap-2 mb-1">
+<span class="bg-success/10 text-success text-xs font-bold px-2 py-0.5 rounded-full">Session completed</span>
+</div>
+<h2 class="text-lg font-bold truncate text-slate-900 dark:text-white">Dr. Sarah Jenkins</h2>
+<p class="text-text-secondary text-xs font-medium">Clinical Psychologist</p>
+<p class="text-text-secondary text-xs mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">calendar_today</span>
+                            Oct 24, 10:00 AM • 50 mins
+                        </p>
+</div>
+</div>
+</div>
+<!-- Rating Section -->
+<div class="mt-8 flex flex-col items-center">
+<h3 class="text-xl font-bold mb-4">Rate your experience</h3>
+<div class="flex items-center gap-3">
+<button class="group transition-transform active:scale-90">
+<span class="material-symbols-outlined text-[40px] text-primary fill-1 variation-settings-FILL-1">star</span>
+</button>
+<button class="group transition-transform active:scale-90">
+<span class="material-symbols-outlined text-[40px] text-primary fill-1 variation-settings-FILL-1">star</span>
+</button>
+<button class="group transition-transform active:scale-90">
+<span class="material-symbols-outlined text-[40px] text-primary fill-1 variation-settings-FILL-1">star</span>
+</button>
+<button class="group transition-transform active:scale-90">
+<span class="material-symbols-outlined text-[40px] text-primary fill-1 variation-settings-FILL-1">star</span>
+</button>
+<button class="group transition-transform active:scale-90">
+<span class="material-symbols-outlined text-[40px] text-slate-300 dark:text-slate-600 group-hover:text-primary/50">star</span>
+</button>
+</div>
+<p class="text-sm text-text-secondary mt-2">4 out of 5 stars</p>
+</div>
+<!-- Feedback Chips -->
+<div class="mt-8">
+<p class="text-base font-semibold mb-3">What went well?</p>
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-2 rounded-full bg-primary/20 border border-primary text-primary text-sm font-semibold transition-colors">
+                        Good listener
+                    </button>
+<button class="px-4 py-2 rounded-full bg-slate-100 dark:bg-surface-dark text-slate-600 dark:text-slate-300 text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                        Helpful advice
+                    </button>
+<button class="px-4 py-2 rounded-full bg-slate-100 dark:bg-surface-dark text-slate-600 dark:text-slate-300 text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                        Empathetic
+                    </button>
+<button class="px-4 py-2 rounded-full bg-primary/20 border border-primary text-primary text-sm font-semibold transition-colors">
+                        Clear guidance
+                    </button>
+<button class="px-4 py-2 rounded-full bg-slate-100 dark:bg-surface-dark text-slate-600 dark:text-slate-300 text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                        Safe space
+                    </button>
+</div>
+</div>
+<!-- Written Feedback -->
+<div class="mt-8">
+<p class="text-base font-semibold mb-3">Share more details (optional)</p>
+<div class="relative">
+<textarea class="w-full bg-slate-100 dark:bg-surface-dark text-slate-900 dark:text-white rounded-xl p-4 text-sm border-0 focus:ring-2 focus:ring-primary placeholder:text-slate-400 dark:placeholder:text-slate-500 resize-none min-h-[120px]" maxlength="500" placeholder="Dr. Jenkins was very helpful with..."></textarea>
+<div class="absolute bottom-3 right-3 text-xs text-text-secondary">0/500</div>
+</div>
+</div>
+<!-- Payment Receipt -->
+<div class="mt-6">
+<button class="w-full flex items-center justify-between p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-transparent hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined">receipt_long</span>
+</div>
+<div class="flex flex-col items-start">
+<span class="text-sm font-semibold text-slate-900 dark:text-white">Download receipt</span>
+<span class="text-xs text-text-secondary">Amount paid: ₹1,098</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-400">download</span>
+</button>
+</div>
+<!-- Next Steps Actions -->
+<div class="mt-8 mb-4">
+<h4 class="text-sm font-semibold text-text-secondary uppercase tracking-wider mb-4">Next Steps</h4>
+<div class="grid grid-cols-2 gap-3">
+<button class="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-slate-100 dark:bg-surface-dark hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors group border border-transparent hover:border-slate-300 dark:hover:border-slate-600">
+<span class="material-symbols-outlined text-primary text-2xl group-hover:scale-110 transition-transform">event</span>
+<span class="text-sm font-bold text-slate-900 dark:text-white">Book Next</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-slate-100 dark:bg-surface-dark hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors group border border-transparent hover:border-slate-300 dark:hover:border-slate-600">
+<span class="material-symbols-outlined text-slate-400 dark:text-slate-300 text-2xl group-hover:scale-110 transition-transform">description</span>
+<span class="text-sm font-bold text-slate-900 dark:text-white">View Notes</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Sticky Footer -->
+<footer class="absolute bottom-0 left-0 w-full p-4 bg-white/80 dark:bg-[#0e181b]/95 backdrop-blur-md border-t border-slate-100 dark:border-slate-800 z-10">
+<div class="flex flex-col gap-3">
+<button class="w-full h-14 bg-primary hover:bg-sky-400 text-white font-bold rounded-full flex items-center justify-center shadow-lg shadow-primary/20 active:scale-[0.98] transition-all">
+                    Submit Feedback
+                </button>
+<button class="w-full h-10 text-slate-500 dark:text-slate-400 font-medium text-sm hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
+                    Skip for now
+                </button>
+</div>
+</footer>
+</div>
+</body></html>

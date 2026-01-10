@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SOAP Note Editor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30bae8",
+                        "primary-dark": "#259bc2",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111d21",
+                        "surface-dark": "#1e2c32",
+                        "surface-highlight": "#243e47",
+                        "text-secondary": "#93bac8",
+                        "status-warning": "#e8b030",
+                        "status-success": "#30e885",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "body": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "1.5rem", "xl": "2rem", "2xl": "2.5rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for dark mode */
+        .dark ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #111d21; 
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #243e47; 
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #30bae8; 
+        }
+        
+        /* Hide default details marker */
+        details > summary {
+            list-style: none;
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen font-display text-slate-900 dark:text-white antialiased selection:bg-primary/30 selection:text-primary">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-hidden max-w-md mx-auto shadow-2xl bg-background-light dark:bg-background-dark">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-50 flex items-center justify-between bg-background-light dark:bg-background-dark/95 backdrop-blur-md px-5 py-4 border-b border-gray-200 dark:border-white/5">
+<button class="group flex items-center justify-center p-2 -ml-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-slate-700 dark:text-white" style="font-size: 24px;">arrow_back_ios_new</span>
+</button>
+<div class="flex flex-col items-center">
+<h1 class="text-lg font-bold leading-tight tracking-tight">SOAP Note</h1>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="size-1.5 rounded-full bg-status-warning"></span>
+<span class="text-xs font-semibold uppercase tracking-wider text-status-warning">Draft</span>
+</div>
+</div>
+<button class="text-primary font-bold text-sm tracking-wide hover:text-primary-dark transition-colors px-2">
+                Save
+            </button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col px-4 pt-4 pb-48 overflow-y-auto">
+<!-- Meta Info -->
+<div class="flex items-center justify-between px-2 mb-6">
+<p class="text-slate-500 dark:text-text-secondary text-xs font-medium">Session #42 • Oct 24, 2023</p>
+<p class="text-slate-500 dark:text-text-secondary text-xs font-medium">Auto-saving...</p>
+</div>
+<div class="flex flex-col gap-4">
+<!-- S: Subjective (Expanded) -->
+<details class="group flex flex-col rounded-2xl bg-white dark:bg-surface-dark shadow-sm overflow-hidden ring-1 ring-black/5 dark:ring-white/5 open:ring-primary/50 dark:open:ring-primary/50 transition-all duration-300" open="">
+<summary class="flex cursor-pointer items-center justify-between px-5 py-4 bg-gray-50 dark:bg-surface-highlight/30 group-open:bg-transparent transition-colors select-none">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center size-8 rounded-full bg-blue-100 text-blue-600 dark:bg-primary/20 dark:text-primary">
+<span class="material-symbols-outlined" style="font-size: 18px;">person</span>
+</div>
+<div>
+<h3 class="text-sm font-bold leading-none">Subjective</h3>
+<p class="text-[10px] font-medium text-slate-400 dark:text-text-secondary mt-1 uppercase tracking-wide">Patient's View</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-xs font-semibold text-slate-400 dark:text-text-secondary bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded-md">245/500</span>
+<span class="material-symbols-outlined text-slate-400 dark:text-text-secondary group-open:rotate-180 transition-transform duration-300">expand_more</span>
+</div>
+</summary>
+<div class="px-5 pb-5 pt-1">
+<div class="relative">
+<textarea class="w-full min-h-[140px] bg-gray-50 dark:bg-black/20 rounded-xl border-0 p-4 text-sm leading-relaxed text-slate-700 dark:text-gray-200 placeholder:text-slate-400 dark:placeholder:text-gray-600 focus:ring-2 focus:ring-primary/50 resize-none transition-shadow" placeholder="Describe the mentee's current condition in their own words...">Mentee expressed concern about upcoming exams and feeling overwhelmed by the workload. Mentioned specific anxiety regarding math test on Friday. They stated, 'I feel like I'm drowning in assignments.'</textarea>
+<!-- Validation / Auto-save line -->
+<div class="flex items-center justify-between mt-2 px-1">
+<div class="flex items-center gap-1.5 text-emerald-500 dark:text-status-success">
+<span class="material-symbols-outlined" style="font-size: 14px;">check_circle</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Saved</span>
+</div>
+<span class="text-[10px] text-slate-400 dark:text-text-secondary">Minimum 50 chars</span>
+</div>
+</div>
+</div>
+</details>
+<!-- O: Objective (Collapsed) -->
+<details class="group flex flex-col rounded-2xl bg-white dark:bg-surface-dark shadow-sm overflow-hidden ring-1 ring-black/5 dark:ring-white/5 transition-all duration-300">
+<summary class="flex cursor-pointer items-center justify-between px-5 py-4 bg-gray-50 dark:bg-surface-highlight/30 group-open:bg-transparent transition-colors select-none">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center size-8 rounded-full bg-purple-100 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400">
+<span class="material-symbols-outlined" style="font-size: 18px;">visibility</span>
+</div>
+<div>
+<h3 class="text-sm font-bold leading-none">Objective</h3>
+<p class="text-[10px] font-medium text-slate-400 dark:text-text-secondary mt-1 uppercase tracking-wide">Observations</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<!-- Warning color for low char count -->
+<span class="text-xs font-semibold text-orange-500 dark:text-status-warning bg-orange-50 dark:bg-status-warning/10 px-2 py-0.5 rounded-md">24/500</span>
+<span class="material-symbols-outlined text-slate-400 dark:text-text-secondary group-open:rotate-180 transition-transform duration-300">expand_more</span>
+</div>
+</summary>
+<div class="px-5 pb-5 pt-1">
+<textarea class="w-full min-h-[120px] bg-gray-50 dark:bg-black/20 rounded-xl border-0 p-4 text-sm leading-relaxed text-slate-700 dark:text-gray-200 placeholder:text-slate-400 dark:placeholder:text-gray-600 focus:ring-2 focus:ring-primary/50 resize-none transition-shadow">Session duration: 45 mins. Affect was anxious but engaged.</textarea>
+<div class="flex items-center justify-between mt-2 px-1">
+<div class="flex items-center gap-1.5 text-orange-500 dark:text-status-warning">
+<span class="material-symbols-outlined" style="font-size: 14px;">warning</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Too Short</span>
+</div>
+</div>
+</div>
+</details>
+<!-- A: Assessment (Collapsed) -->
+<details class="group flex flex-col rounded-2xl bg-white dark:bg-surface-dark shadow-sm overflow-hidden ring-1 ring-black/5 dark:ring-white/5 transition-all duration-300">
+<summary class="flex cursor-pointer items-center justify-between px-5 py-4 bg-gray-50 dark:bg-surface-highlight/30 group-open:bg-transparent transition-colors select-none">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center size-8 rounded-full bg-pink-100 text-pink-600 dark:bg-pink-500/20 dark:text-pink-400">
+<span class="material-symbols-outlined" style="font-size: 18px;">psychology</span>
+</div>
+<div>
+<h3 class="text-sm font-bold leading-none">Assessment</h3>
+<p class="text-[10px] font-medium text-slate-400 dark:text-text-secondary mt-1 uppercase tracking-wide">Analysis</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-xs font-semibold text-slate-400 dark:text-text-secondary bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded-md">112/500</span>
+<span class="material-symbols-outlined text-slate-400 dark:text-text-secondary group-open:rotate-180 transition-transform duration-300">expand_more</span>
+</div>
+</summary>
+<div class="px-5 pb-5 pt-1">
+<textarea class="w-full min-h-[120px] bg-gray-50 dark:bg-black/20 rounded-xl border-0 p-4 text-sm leading-relaxed text-slate-700 dark:text-gray-200 placeholder:text-slate-400 dark:placeholder:text-gray-600 focus:ring-2 focus:ring-primary/50 resize-none transition-shadow">Mentee shows signs of academic stress but is responsive to planning interventions. Anxiety seems situational rather than generalized.</textarea>
+</div>
+</details>
+<!-- P: Plan (Collapsed) -->
+<details class="group flex flex-col rounded-2xl bg-white dark:bg-surface-dark shadow-sm overflow-hidden ring-1 ring-black/5 dark:ring-white/5 transition-all duration-300">
+<summary class="flex cursor-pointer items-center justify-between px-5 py-4 bg-gray-50 dark:bg-surface-highlight/30 group-open:bg-transparent transition-colors select-none">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center size-8 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
+<span class="material-symbols-outlined" style="font-size: 18px;">flag</span>
+</div>
+<div>
+<h3 class="text-sm font-bold leading-none">Plan</h3>
+<p class="text-[10px] font-medium text-slate-400 dark:text-text-secondary mt-1 uppercase tracking-wide">Next Steps</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-xs font-semibold text-slate-400 dark:text-text-secondary bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded-md">85/500</span>
+<span class="material-symbols-outlined text-slate-400 dark:text-text-secondary group-open:rotate-180 transition-transform duration-300">expand_more</span>
+</div>
+</summary>
+<div class="px-5 pb-5 pt-1">
+<textarea class="w-full min-h-[120px] bg-gray-50 dark:bg-black/20 rounded-xl border-0 p-4 text-sm leading-relaxed text-slate-700 dark:text-gray-200 placeholder:text-slate-400 dark:placeholder:text-gray-600 focus:ring-2 focus:ring-primary/50 resize-none transition-shadow">Schedule follow-up next Tuesday. Review study schedule created during this session.</textarea>
+</div>
+</details>
+</div>
+<div class="mt-8 mb-4 text-center">
+<p class="text-[10px] text-slate-400 dark:text-white/30 uppercase tracking-widest font-semibold">AI Generated Content</p>
+</div>
+</main>
+<!-- Sticky Footer Actions -->
+<footer class="absolute bottom-0 w-full z-40 bg-white/90 dark:bg-[#111d21]/90 backdrop-blur-xl border-t border-gray-200 dark:border-white/5 pb-8 pt-4 px-4 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.3)]">
+<!-- Utility Actions Row -->
+<div class="flex items-center justify-between gap-3 mb-4 px-2">
+<button class="flex flex-1 flex-col items-center gap-1 group">
+<div class="flex items-center justify-center size-10 rounded-full bg-gray-100 dark:bg-white/5 text-slate-600 dark:text-text-secondary group-hover:bg-primary/20 group-hover:text-primary transition-all">
+<span class="material-symbols-outlined" style="font-size: 20px;">autorenew</span>
+</div>
+<span class="text-[10px] font-semibold text-slate-500 dark:text-text-secondary group-hover:text-primary transition-colors">Regenerate</span>
+</button>
+<button class="flex flex-1 flex-col items-center gap-1 group">
+<div class="flex items-center justify-center size-10 rounded-full bg-gray-100 dark:bg-white/5 text-slate-600 dark:text-text-secondary group-hover:bg-primary/20 group-hover:text-primary transition-all">
+<span class="material-symbols-outlined" style="font-size: 20px;">content_copy</span>
+</div>
+<span class="text-[10px] font-semibold text-slate-500 dark:text-text-secondary group-hover:text-primary transition-colors">Copy</span>
+</button>
+<button class="flex flex-1 flex-col items-center gap-1 group">
+<div class="flex items-center justify-center size-10 rounded-full bg-gray-100 dark:bg-white/5 text-slate-600 dark:text-text-secondary group-hover:bg-primary/20 group-hover:text-primary transition-all">
+<span class="material-symbols-outlined" style="font-size: 20px;">picture_as_pdf</span>
+</div>
+<span class="text-[10px] font-semibold text-slate-500 dark:text-text-secondary group-hover:text-primary transition-colors">PDF Export</span>
+</button>
+</div>
+<!-- Main CTA -->
+<button class="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark active:scale-[0.98] text-white font-bold py-4 rounded-full shadow-lg shadow-primary/20 transition-all">
+<span>Finalize Note</span>
+<span class="material-symbols-outlined" style="font-size: 20px;">lock</span>
+</button>
+</footer>
+</div>
+</body></html>

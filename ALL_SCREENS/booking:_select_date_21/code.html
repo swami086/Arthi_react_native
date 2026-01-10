@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Safe Space - Pending Mentor Requests (Dark Mode)</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30bae8",
+                        "primary-dark": "#259ac0", 
+                        "background-light": "#f8fbfc",
+                        "background-dark": "#0f171a","surface-light": "#ffffff",
+                        "surface-dark": "#162226","surface-dark-highlight": "#1e2e34","text-main-light": "#0e181b",
+                        "text-main-dark": "#eceff1","text-sub-light": "#4f626b",
+                        "text-sub-dark": "#94a3b8","accent-orange": "#fb923c","accent-purple": "#a78bfa","accent-green": "#34d399","status-success": "#22C55E",
+                        "status-error": "#f87171",},
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "1.5rem", "xl": "2rem", "2xl": "2.5rem", "full": "9999px"},
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(48, 186, 232, 0.08)',
+                        'card': '0 2px 12px -2px rgba(0, 0, 0, 0.25)','glow': '0 0 15px rgba(48, 186, 232, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+          min-height: max(884px, 100dvh);
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark font-display antialiased transition-colors duration-200">
+<div class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto bg-background-dark shadow-2xl overflow-hidden text-text-main-dark">
+<header class="sticky top-0 z-10 bg-background-dark/95 backdrop-blur-sm transition-colors border-b border-white/5">
+<div class="flex items-center px-4 py-4 justify-between">
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center size-10 rounded-full hover:bg-white/10 transition-colors text-text-main-dark -ml-2">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<div>
+<h1 class="text-text-main-dark text-lg font-bold leading-none">Pending Requests</h1>
+<p class="text-xs text-text-sub-dark font-medium mt-0.5">Mentors wanting to connect</p>
+</div>
+</div>
+<div class="size-10 rounded-full overflow-hidden border border-white/10">
+<img alt="Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_ppLGt4mgbsLWtm0yVc70RBhnmiv0sEbWvO-fmLhbHYKb5ouie2_o5fMODl7YTaFk58Jrvl20zgaliSg-BW-nkQt8bFjHG75wb_qVrwOCn8DV0ebZkOxu6i0AfJtmJnJ9EjYAE6NSYw53n9uCm1GBJSa14_XQXbM1aoiEdkMTBTvTgFqA9XwUwJruFgWdBVKeRKuoXg6K05aEj9dQOGHYqdcfVDQRdHE1352SzsJ0kWGWkMzPjKt6Yv5ZsWE07Wv3RQQo0I_bDB1D"/>
+</div>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto px-4 pb-24 pt-4 space-y-6 scrollbar-hide">
+<section>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-text-main-dark font-bold text-lg">New Requests</h3>
+<span class="bg-accent-orange/15 text-accent-orange border border-accent-orange/20 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wide shadow-[0_0_10px_rgba(251,146,60,0.1)]">3 Pending</span>
+</div>
+<div class="space-y-4">
+<div class="bg-surface-dark p-5 rounded-2xl shadow-card border border-white/5 border-l-4 border-l-primary relative overflow-hidden transition-all hover:bg-surface-dark-highlight">
+<div class="flex items-start gap-4 mb-3">
+<div class="size-14 rounded-full overflow-hidden border-2 border-surface-dark shadow-sm flex-shrink-0 ring-2 ring-white/5">
+<img alt="Mentor Sarah" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBucmQ4oTJfMZSvCWPlYqSASJfWltc6RW_jJe4bWC3ZQilPi9w5i5I2s4L2Tmt3Zml_QHOktknTf53b4R6jnV9ARSWDt1nsF5_jsF8GRKtjVbBq1KGwHoDHzwgLzYBwHzss-xadCESjt3XZ3XfDL9AVHoo4LOt5LN6FICT1A4MxeezDA1dlltsh5tzij_HHlKiryJIXsjWig6KsdiB3CXy0UDQNjDpPkwTFjiZaB1Y_gw_5DAgqt_gzIqGKe9627Lo28g2TjFnP8W_L"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-bold text-text-main-dark text-base truncate">Sarah Mitchell</h4>
+<p class="text-[11px] text-text-sub-dark font-medium mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">psychology</span> Life Coach
+                                    </p>
+</div>
+<span class="text-[10px] font-bold text-text-sub-dark bg-white/5 px-2 py-1 rounded-md border border-white/5">Today</span>
+</div>
+<div class="flex flex-wrap gap-1.5 mt-2">
+<span class="px-2 py-0.5 rounded-md bg-accent-purple/15 text-accent-purple border border-accent-purple/20 text-[10px] font-bold">Anxiety Support</span>
+<span class="px-2 py-0.5 rounded-md bg-white/5 text-text-sub-dark border border-white/5 text-[10px] font-bold">Mindfulness</span>
+</div>
+</div>
+</div>
+<p class="text-xs text-text-sub-dark leading-relaxed mb-4 pl-[72px]">
+                        Hi! I noticed your interest in mindfulness techniques. I specialize in helping students manage exam stress and would love to support your journey.
+                    </p>
+<div class="flex gap-3 pl-[72px]">
+<button class="flex-1 py-2.5 rounded-xl border border-white/10 text-status-error text-xs font-bold hover:bg-status-error/10 transition-colors flex items-center justify-center gap-1 backdrop-blur-sm">
+<span class="material-symbols-outlined text-[16px]">close</span> Decline
+                        </button>
+<button class="flex-1 py-2.5 rounded-xl bg-primary text-white text-xs font-bold shadow-lg shadow-primary/10 hover:bg-primary-dark transition-colors flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[16px]">check</span> Accept
+                        </button>
+</div>
+</div>
+<div class="bg-surface-dark p-5 rounded-2xl shadow-card border border-white/5 relative overflow-hidden transition-all hover:bg-surface-dark-highlight">
+<div class="flex items-start gap-4 mb-3">
+<div class="size-14 rounded-full overflow-hidden border-2 border-surface-dark shadow-sm flex-shrink-0 ring-2 ring-white/5">
+<img alt="Mentor David" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxysxTbC9gvE965rSyYPpIgsFmRZD48ZKRzpIqyFLwdwCx2s59sO0HzshVHqI--Y_OQDwg7LQ1LYDWYd_RJqyxPy7e5ZJVpaRS_NBSI5jyuO9ivgjzvSQApgBH6oziRDSVcXd1npi0Iw2JaczzCW-tHf8RkF8g9yNkWqzooIqNtq7q9UNN4VJqIYr-GFTo4Jimp9OWnQUDrHIYosbN5OQ7RyP5I4YDF2C_myoBDw59Ezofvs0RqLXCUXYyu7aJHeQUFcVC7_3VBF9t"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-bold text-text-main-dark text-base truncate">Dr. David Chen</h4>
+<p class="text-[11px] text-text-sub-dark font-medium mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">school</span> Academic Advisor
+                                    </p>
+</div>
+<span class="text-[10px] font-bold text-text-sub-dark bg-white/5 px-2 py-1 rounded-md border border-white/5">Yesterday</span>
+</div>
+<div class="flex flex-wrap gap-1.5 mt-2">
+<span class="px-2 py-0.5 rounded-md bg-accent-green/15 text-accent-green border border-accent-green/20 text-[10px] font-bold">Career Prep</span>
+<span class="px-2 py-0.5 rounded-md bg-white/5 text-text-sub-dark border border-white/5 text-[10px] font-bold">STEM</span>
+</div>
+</div>
+</div>
+<p class="text-xs text-text-sub-dark leading-relaxed mb-4 pl-[72px]">
+                        I see you're interested in engineering. I have 10 years of experience in the tech industry and can help guide your college applications.
+                    </p>
+<div class="flex gap-3 pl-[72px]">
+<button class="flex-1 py-2.5 rounded-xl border border-white/10 text-status-error text-xs font-bold hover:bg-status-error/10 transition-colors flex items-center justify-center gap-1 backdrop-blur-sm">
+<span class="material-symbols-outlined text-[16px]">close</span> Decline
+                        </button>
+<button class="flex-1 py-2.5 rounded-xl bg-primary text-white text-xs font-bold shadow-lg shadow-primary/10 hover:bg-primary-dark transition-colors flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[16px]">check</span> Accept
+                        </button>
+</div>
+</div>
+<div class="bg-surface-dark p-5 rounded-2xl shadow-card border border-white/5 relative overflow-hidden transition-all hover:bg-surface-dark-highlight">
+<div class="flex items-start gap-4 mb-3">
+<div class="size-14 rounded-full bg-accent-purple/10 flex items-center justify-center border-2 border-surface-dark shadow-sm flex-shrink-0 text-accent-purple font-bold text-xl ring-2 ring-white/5">
+                                MJ
+                            </div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-bold text-text-main-dark text-base truncate">Maria Johnson</h4>
+<p class="text-[11px] text-text-sub-dark font-medium mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">palette</span> Art Therapist
+                                    </p>
+</div>
+<span class="text-[10px] font-bold text-text-sub-dark bg-white/5 px-2 py-1 rounded-md border border-white/5">2d ago</span>
+</div>
+<div class="flex flex-wrap gap-1.5 mt-2">
+<span class="px-2 py-0.5 rounded-md bg-accent-orange/15 text-accent-orange border border-accent-orange/20 text-[10px] font-bold">Creative Arts</span>
+<span class="px-2 py-0.5 rounded-md bg-white/5 text-text-sub-dark border border-white/5 text-[10px] font-bold">Self Expression</span>
+</div>
+</div>
+</div>
+<p class="text-xs text-text-sub-dark leading-relaxed mb-4 pl-[72px]">
+                        Art can be a powerful tool for self-discovery. I'd love to work with you on expressing yourself through creative mediums.
+                    </p>
+<div class="flex gap-3 pl-[72px]">
+<button class="flex-1 py-2.5 rounded-xl border border-white/10 text-status-error text-xs font-bold hover:bg-status-error/10 transition-colors flex items-center justify-center gap-1 backdrop-blur-sm">
+<span class="material-symbols-outlined text-[16px]">close</span> Decline
+                        </button>
+<button class="flex-1 py-2.5 rounded-xl bg-primary text-white text-xs font-bold shadow-lg shadow-primary/10 hover:bg-primary-dark transition-colors flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[16px]">check</span> Accept
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<section>
+<div class="flex items-center justify-between mb-4 mt-6">
+<h3 class="text-text-main-dark font-bold text-lg">Previously Declined</h3>
+<button class="text-xs font-semibold text-text-sub-dark hover:text-primary transition-colors flex items-center gap-1">
+                        View All <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+<div class="bg-surface-dark p-4 rounded-2xl shadow-card opacity-80 border border-white/5">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-white/10 overflow-hidden flex-shrink-0">
+<div class="w-full h-full flex items-center justify-center text-text-sub-dark font-bold text-sm">RK</div>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-text-main-dark text-sm">Robert King</h4>
+<p class="text-[10px] text-text-sub-dark">Declined on Oct 12</p>
+</div>
+<button class="text-xs font-bold text-primary px-3 py-1.5 rounded-lg bg-primary/10 hover:bg-primary/20 transition-colors">Undo</button>
+</div>
+</div>
+</section>
+<div class="h-4"></div>
+</main>
+<div class="sticky bottom-0 bg-surface-dark/90 backdrop-blur-md border-t border-white/5 grid grid-cols-4 px-2 py-3 z-20">
+<button class="flex flex-col items-center gap-1 text-text-sub-dark hover:text-primary transition-colors group">
+<span class="material-symbols-outlined text-[24px] group-hover:scale-105 transition-transform">home</span>
+<span class="text-[10px] font-medium">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary transition-colors relative">
+<span class="material-symbols-outlined text-[24px] fill-1 drop-shadow-[0_0_8px_rgba(48,186,232,0.4)]">person_add</span>
+<span class="text-[10px] font-bold">Requests</span>
+<span class="absolute top-0 right-8 size-2 bg-accent-orange rounded-full shadow-[0_0_5px_rgba(251,146,60,0.8)]"></span>
+</button>
+<button class="flex flex-col items-center gap-1 text-text-sub-dark hover:text-primary transition-colors group relative">
+<span class="material-symbols-outlined text-[24px] group-hover:scale-105 transition-transform">chat_bubble</span>
+<span class="text-[10px] font-medium">Messages</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-text-sub-dark hover:text-primary transition-colors group">
+<span class="material-symbols-outlined text-[24px] group-hover:scale-105 transition-transform">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</button>
+</div>
+</div>
+</body></html>

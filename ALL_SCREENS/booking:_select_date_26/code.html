@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Safe Space - Admin Approval</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30bae8",
+                        "primary-dark": "#259ac0", 
+                        "background-light": "#f8fbfc",
+                        "background-dark": "#111d21",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2c32",
+                        "text-main-light": "#0e181b",
+                        "text-main-dark": "#e0e6e8",
+                        "text-sub-light": "#4f626b",
+                        "text-sub-dark": "#9ba8ae",
+                        "accent-orange": "#F97316",
+                        "accent-purple": "#8B5CF6",
+                        "accent-green": "#10B981",
+                        "accent-blue": "#3B82F6",
+                        "status-error": "#EF4444",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "1.5rem", "xl": "2rem", "2xl": "2.5rem", "full": "9999px"},
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(48, 186, 232, 0.08)',
+                        'card': '0 2px 12px -2px rgba(0, 0, 0, 0.05)',
+                        'glow': '0 0 15px rgba(48, 186, 232, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased transition-colors duration-200">
+<div class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden dark:shadow-none dark:border-x dark:border-white/5">
+<header class="sticky top-0 z-10 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm transition-colors border-b border-gray-100 dark:border-white/5">
+<div class="flex items-center px-4 py-4 justify-between">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full overflow-hidden border-2 border-primary/20 dark:border-primary/30 p-0.5">
+<div class="w-full h-full rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
+<img alt="Admin Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_ppLGt4mgbsLWtm0yVc70RBhnmiv0sEbWvO-fmLhbHYKb5ouie2_o5fMODl7YTaFk58Jrvl20zgaliSg-BW-nkQt8bFjHG75wb_qVrwOCn8DV0ebZkOxu6i0AfJtmJnJ9EjYAE6NSYw53n9uCm1GBJSa14_XQXbM1aoiEdkMTBTvTgFqA9XwUwJruFgWdBVKeRKuoXg6K05aEj9dQOGHYqdcfVDQRdHE1352SzsJ0kWGWkMzPjKt6Yv5ZsWE07Wv3RQQo0I_bDB1D"/>
+</div>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark font-medium">Admin Dashboard</p>
+</div>
+<h1 class="text-text-main-light dark:text-text-main-dark text-lg font-bold leading-tight">Approvals</h1>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="relative p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-text-main-light dark:text-text-main-dark">
+<span class="material-symbols-outlined text-[24px]">search</span>
+</button>
+<button class="relative p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-text-main-light dark:text-text-main-dark">
+<span class="material-symbols-outlined text-[24px]">notifications</span>
+<span class="absolute top-2.5 right-2.5 size-2 bg-accent-orange rounded-full border border-surface-light dark:border-surface-dark"></span>
+</button>
+</div>
+</div>
+<div class="px-4 pb-2 flex gap-2 overflow-x-auto scrollbar-hide">
+<button class="flex-shrink-0 px-4 py-1.5 rounded-full bg-primary text-white text-xs font-bold shadow-soft dark:shadow-none flex items-center gap-1.5">
+<span>Pending</span>
+<span class="bg-white/20 px-1.5 py-0.5 rounded text-[10px]">4</span>
+</button>
+<button class="flex-shrink-0 px-4 py-1.5 rounded-full bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-white/5 text-text-sub-light dark:text-text-sub-dark text-xs font-bold hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                In Review
+            </button>
+<button class="flex-shrink-0 px-4 py-1.5 rounded-full bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-white/5 text-text-sub-light dark:text-text-sub-dark text-xs font-bold hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                History
+            </button>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto px-4 pb-24 pt-4 space-y-5 scrollbar-hide">
+<div class="bg-blue-50 dark:bg-blue-500/10 p-3 rounded-xl border border-blue-100 dark:border-blue-400/20 flex gap-3 items-start">
+<span class="material-symbols-outlined text-accent-blue text-[20px] shrink-0 mt-0.5">info</span>
+<p class="text-xs text-text-sub-light dark:text-blue-100/80 leading-relaxed">
+                Review mentor applications carefully. Verify background checks and credentials before approving to ensure a safe space for mentees.
+            </p>
+</div>
+<section class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-card dark:shadow-none border border-gray-100 dark:border-white/10 overflow-hidden">
+<div class="p-4 border-b border-gray-100 dark:border-white/5">
+<div class="flex justify-between items-start mb-3">
+<div class="flex gap-3">
+<div class="size-14 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800 shrink-0">
+<img alt="Maya R." class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxysxTbC9gvE965rSyYPpIgsFmRZD48ZKRzpIqyFLwdwCx2s59sO0HzshVHqI--Y_OQDwg7LQ1LYDWYd_RJqyxPy7e5ZJVpaRS_NBSI5jyuO9ivgjzvSQApgBH6oziRDSVcXd1npi0Iw2JaczzCW-tHf8RkF8g9yNkWqzooIqNtq7q9UNN4VJqIYr-GFTo4Jimp9OWnQUDrHIYosbN5OQ7RyP5I4YDF2C_myoBDw59Ezofvs0RqLXCUXYyu7aJHeQUFcVC7_3VBF9t"/>
+</div>
+<div>
+<h2 class="text-lg font-bold text-text-main-light dark:text-text-main-dark">Maya Ross</h2>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark font-medium">Clinical Psychologist</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[14px] text-text-sub-light dark:text-text-sub-dark">schedule</span>
+<span class="text-[10px] text-text-sub-light dark:text-text-sub-dark">Applied 2h ago</span>
+</div>
+</div>
+</div>
+<span class="px-2 py-1 rounded-lg bg-yellow-100 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-300 text-[10px] font-bold uppercase tracking-wide">
+                        Pending
+                    </span>
+</div>
+<div class="flex flex-wrap gap-2">
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-green-50 dark:bg-green-500/10 text-accent-green text-[11px] font-bold">
+<span class="material-symbols-outlined text-[14px]">verified_user</span>
+                        Check Passed
+                    </div>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-gray-50 dark:bg-white/5 text-text-sub-light dark:text-text-sub-dark text-[11px] font-medium">
+<span class="material-symbols-outlined text-[14px]">folder_shared</span>
+                        3 Docs
+                    </div>
+</div>
+</div>
+<div class="p-4 space-y-4 bg-gray-50/50 dark:bg-surface-dark">
+<div>
+<h3 class="text-xs font-bold text-text-sub-light dark:text-text-sub-dark uppercase tracking-wide mb-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">security</span>
+                        Background Check
+                    </h3>
+<div class="bg-surface-light dark:bg-black/20 p-3 rounded-xl border border-gray-100 dark:border-white/5 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-accent-green text-[20px]">check_circle</span>
+<div class="flex flex-col">
+<span class="text-sm font-bold text-text-main-light dark:text-text-main-dark">Clear Record</span>
+<span class="text-[10px] text-text-sub-light dark:text-text-sub-dark">Verified via Checkr • ID: #99283</span>
+</div>
+</div>
+<button class="text-[10px] font-bold text-primary hover:text-primary-dark transition-colors hover:underline">View Report</button>
+</div>
+</div>
+<div>
+<h3 class="text-xs font-bold text-text-sub-light dark:text-text-sub-dark uppercase tracking-wide mb-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">description</span>
+                        Credentials
+                    </h3>
+<div class="grid grid-cols-2 gap-2">
+<button class="flex items-center gap-2 p-2 bg-surface-light dark:bg-black/20 rounded-lg border border-gray-100 dark:border-white/5 hover:border-primary/50 dark:hover:border-primary/50 transition-colors text-left group">
+<div class="size-8 rounded bg-red-50 dark:bg-red-500/10 flex items-center justify-center text-red-500 shrink-0">
+<span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+</div>
+<div class="min-w-0">
+<p class="text-[11px] font-bold text-text-main-light dark:text-text-main-dark truncate group-hover:text-primary transition-colors">Diploma.pdf</p>
+<p class="text-[9px] text-text-sub-light dark:text-text-sub-dark">2.4 MB</p>
+</div>
+</button>
+<button class="flex items-center gap-2 p-2 bg-surface-light dark:bg-black/20 rounded-lg border border-gray-100 dark:border-white/5 hover:border-primary/50 dark:hover:border-primary/50 transition-colors text-left group">
+<div class="size-8 rounded bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center text-blue-500 shrink-0">
+<span class="material-symbols-outlined text-[18px]">image</span>
+</div>
+<div class="min-w-0">
+<p class="text-[11px] font-bold text-text-main-light dark:text-text-main-dark truncate group-hover:text-primary transition-colors">License.jpg</p>
+<p class="text-[9px] text-text-sub-light dark:text-text-sub-dark">1.1 MB</p>
+</div>
+</button>
+</div>
+</div>
+<div>
+<h3 class="text-xs font-bold text-text-sub-light dark:text-text-sub-dark uppercase tracking-wide mb-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">person</span>
+                        About
+                    </h3>
+<p class="text-sm text-text-sub-light dark:text-gray-400 leading-relaxed">
+                        Specializing in adolescent anxiety and academic stress. I believe in a holistic approach to mentoring...
+                        <span class="text-primary hover:text-primary-dark font-bold text-xs cursor-pointer">Read more</span>
+</p>
+</div>
+</div>
+<div class="p-3 border-t border-gray-100 dark:border-white/5 bg-surface-light dark:bg-surface-dark flex gap-3">
+<button class="flex-1 py-3 rounded-xl border border-red-200 dark:border-red-500/30 text-status-error font-bold text-sm hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">close</span>
+                    Reject
+                </button>
+<button class="flex-1 py-3 rounded-xl bg-accent-green text-white font-bold text-sm shadow-lg shadow-green-500/20 hover:bg-green-600 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">check</span>
+                    Approve Mentor
+                </button>
+</div>
+</section>
+<section class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-card dark:shadow-none border border-gray-100 dark:border-white/10 hover:shadow-lg dark:hover:border-white/20 transition-all cursor-pointer relative group">
+<div class="absolute right-4 top-4">
+<span class="material-symbols-outlined text-gray-300 dark:text-gray-600 group-hover:text-primary transition-colors">expand_more</span>
+</div>
+<div class="p-4 flex gap-3 items-center">
+<div class="size-12 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800 shrink-0">
+<img alt="James L." class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBucmQ4oTJfMZSvCWPlYqSASJfWltc6RW_jJe4bWC3ZQilPi9w5i5I2s4L2Tmt3Zml_QHOktknTf53b4R6jnV9ARSWDt1nsF5_jsF8GRKtjVbBq1KGwHoDHzwgLzYBwHzss-xadCESjt3XZ3XfDL9AVHoo4LOt5LN6FICT1A4MxeezDA1dlltsh5tzij_HHlKiryJIXsjWig6KsdiB3CXy0UDQNjDpPkwTFjiZaB1Y_gw_5DAgqt_gzIqGKe9627Lo28g2TjFnP8W_L"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2 mb-0.5">
+<h2 class="text-sm font-bold text-text-main-light dark:text-text-main-dark truncate">James Liu</h2>
+<span class="size-1.5 rounded-full bg-accent-orange"></span>
+</div>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark truncate mb-1.5">Career Counselor • High School</p>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-gray-100 text-gray-600 dark:bg-white/10 dark:text-gray-300">
+<span class="material-symbols-outlined text-[10px]">pending</span> Check Pending
+                        </span>
+</div>
+</div>
+</div>
+</section>
+<section class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-card dark:shadow-none border border-gray-100 dark:border-white/10 hover:shadow-lg dark:hover:border-white/20 transition-all cursor-pointer relative group">
+<div class="absolute right-4 top-4">
+<span class="material-symbols-outlined text-gray-300 dark:text-gray-600 group-hover:text-primary transition-colors">expand_more</span>
+</div>
+<div class="p-4 flex gap-3 items-center">
+<div class="size-12 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800 shrink-0 flex items-center justify-center text-gray-400 dark:text-gray-500">
+<span class="material-symbols-outlined text-[24px]">person</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2 mb-0.5">
+<h2 class="text-sm font-bold text-text-main-light dark:text-text-main-dark truncate">Sarah Kline</h2>
+</div>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark truncate mb-1.5">Volunteer Coach • University</p>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-green-100 text-green-700 dark:bg-green-500/10 dark:text-green-400">
+<span class="material-symbols-outlined text-[10px]">check_circle</span> Check Passed
+                        </span>
+</div>
+</div>
+</div>
+</section>
+<div class="h-4"></div>
+</main>
+<div class="sticky bottom-0 bg-surface-light/90 dark:bg-surface-dark/95 backdrop-blur-md border-t border-gray-200 dark:border-white/5 grid grid-cols-4 px-2 py-3 z-20 pb-safe">
+<button class="flex flex-col items-center gap-1 text-text-sub-light dark:text-text-sub-dark hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">dashboard</span>
+<span class="text-[10px] font-medium">Overview</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary dark:text-primary transition-colors relative">
+<span class="material-symbols-outlined text-[24px] fill-1">how_to_reg</span>
+<span class="text-[10px] font-bold">Approvals</span>
+<span class="absolute top-0 right-7 size-2 bg-accent-orange rounded-full ring-2 ring-surface-light dark:ring-surface-dark"></span>
+</button>
+<button class="flex flex-col items-center gap-1 text-text-sub-light dark:text-text-sub-dark hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">groups</span>
+<span class="text-[10px] font-medium">Mentors</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-text-sub-light dark:text-text-sub-dark hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">settings</span>
+<span class="text-[10px] font-medium">Settings</span>
+</button>
+</div>
+</div>
+
+</body></html>

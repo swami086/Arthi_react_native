@@ -1,0 +1,24 @@
+Starting project at /app
+Starting Metro Bundler
+The following packages should be updated for best compatibility with the installed expo version:
+  @shopify/react-native-skia@2.4.7 - expected version: 2.2.12
+  react-native-worklets@0.5.2 - expected version: 0.5.1
+Your project may not work correctly until you install the expected versions of the packages.
+Waiting on http://localhost:8081
+Logs for your project will appear below.
+Web ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web ./index.ts ▓▓▓░░░░░░░░░░░░░ 20.3% (23/51)
+Web ./index.ts ▓▓▓▓▓▓▓▓░░░░░░░░ 54.1% (139/268)
+Web ./index.ts ▓▓▓▓▓▓▓▓░░░░░░░░ 54.1% (266/759)
+Web ./index.ts ▓▓▓▓▓▓▓▓░░░░░░░░ 54.1% ( 733/1078)
+Web ./index.ts ▓▓▓▓▓▓▓▓▓░░░░░░░ 60.4% (1058/1371)
+Web ./index.ts ▓▓▓▓▓▓▓▓▓▓░░░░░░ 68.2% (1368/1658)
+Web ./index.ts ▓▓▓▓▓▓▓▓▓▓▓░░░░░ 72.9% (1443/1690)
+Web ./index.ts ▓▓▓▓▓▓▓▓▓▓▓▓▓░░░ 81.5% (1801/1995)
+Web Bundled 31492ms index.ts (2248 modules)
+Web ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web Bundled 406ms index.ts (1 module)
+ LOG  [web] Logs will appear in the browser console
+Web ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web Bundled 105ms index.ts (1 module)
+ LOG  [web] Logs will appear in the browser console

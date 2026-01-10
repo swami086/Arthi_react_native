@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Safe Space - Mentor-Mentee Relationships</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30bae8",
+                        "primary-dark": "#259ac0", 
+                        "background-light": "#f8fbfc",
+                        "background-dark": "#0f1619","surface-light": "#ffffff",
+                        "surface-dark": "#182226","text-main-light": "#0e181b",
+                        "text-main-dark": "#f1f5f7","text-sub-light": "#4f626b",
+                        "text-sub-dark": "#94a3b8","accent-orange": "#fb923c","accent-purple": "#a78bfa","accent-green": "#34d399","accent-red": "#f87171",},
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "1.5rem", "xl": "2rem", "2xl": "2.5rem", "full": "9999px"},
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(48, 186, 232, 0.08)',
+                        'card': '0 2px 12px -2px rgba(0, 0, 0, 0.05)',
+                        'glow': '0 0 15px rgba(48, 186, 232, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased transition-colors duration-200">
+<div class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden border-x border-transparent dark:border-white/5">
+<header class="sticky top-0 z-10 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm transition-colors border-b border-gray-100 dark:border-white/5">
+<div class="flex items-center px-4 py-4 justify-between">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700">
+<img alt="Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_ppLGt4mgbsLWtm0yVc70RBhnmiv0sEbWvO-fmLhbHYKb5ouie2_o5fMODl7YTaFk58Jrvl20zgaliSg-BW-nkQt8bFjHG75wb_qVrwOCn8DV0ebZkOxu6i0AfJtmJnJ9EjYAE6NSYw53n9uCm1GBJSa14_XQXbM1aoiEdkMTBTvTgFqA9XwUwJruFgWdBVKeRKuoXg6K05aEj9dQOGHYqdcfVDQRdHE1352SzsJ0kWGWkMzPjKt6Yv5ZsWE07Wv3RQQo0I_bDB1D"/>
+</div>
+<div>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark font-medium">Relationships</p>
+<h1 class="text-text-main-light dark:text-text-main-dark text-lg font-bold leading-none">Management</h1>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="relative p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-primary">
+<span class="material-symbols-outlined text-[24px]">person_add</span>
+</button>
+</div>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto px-4 pb-24 pt-2 space-y-6 scrollbar-hide">
+<section class="space-y-4">
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-text-sub-light/50 dark:text-text-sub-dark/50">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</span>
+<input class="w-full bg-surface-light dark:bg-surface-dark border-none rounded-xl py-3 pl-10 pr-4 text-sm text-text-main-light dark:text-text-main-dark shadow-sm placeholder:text-text-sub-light/40 dark:placeholder:text-text-sub-dark/40 focus:ring-2 focus:ring-primary/20 transition-all ring-1 ring-transparent dark:ring-white/5" placeholder="Search mentees..." type="text"/>
+</div>
+<div class="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+<button class="px-4 py-1.5 rounded-full bg-primary text-white text-xs font-bold shadow-md shadow-primary/20 whitespace-nowrap">
+                        All Mentees <span class="ml-1 opacity-80">12</span>
+</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-white/10 text-text-sub-light dark:text-text-sub-dark text-xs font-bold whitespace-nowrap hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                        Active <span class="ml-1 opacity-60">8</span>
+</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-white/10 text-text-sub-light dark:text-text-sub-dark text-xs font-bold whitespace-nowrap hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                        Referred <span class="ml-1 opacity-60">3</span>
+</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-white/10 text-text-sub-light dark:text-text-sub-dark text-xs font-bold whitespace-nowrap hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                        Paused <span class="ml-1 opacity-60">1</span>
+</button>
+</div>
+</section>
+<section class="space-y-4">
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-2xl shadow-card border border-gray-50 dark:border-white/5 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-3">
+<button class="text-text-sub-light/40 dark:text-text-sub-dark/40 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+<div class="flex gap-4">
+<div class="relative flex-shrink-0">
+<div class="size-14 rounded-2xl overflow-hidden shadow-sm">
+<img alt="Maya R." class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxysxTbC9gvE965rSyYPpIgsFmRZD48ZKRzpIqyFLwdwCx2s59sO0HzshVHqI--Y_OQDwg7LQ1LYDWYd_RJqyxPy7e5ZJVpaRS_NBSI5jyuO9ivgjzvSQApgBH6oziRDSVcXd1npi0Iw2JaczzCW-tHf8RkF8g9yNkWqzooIqNtq7q9UNN4VJqIYr-GFTo4Jimp9OWnQUDrHIYosbN5OQ7RyP5I4YDF2C_myoBDw59Ezofvs0RqLXCUXYyu7aJHeQUFcVC7_3VBF9t"/>
+</div>
+<span class="absolute -bottom-1 -right-1 size-4 bg-accent-green border-2 border-surface-light dark:border-surface-dark rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] text-white dark:text-black font-bold">check</span>
+</span>
+</div>
+<div class="flex-1 pt-0.5">
+<div class="flex flex-col">
+<h3 class="font-bold text-text-main-light dark:text-text-main-dark text-lg leading-tight">Maya Ross</h3>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark mt-0.5">College Freshman • 19yo</p>
+</div>
+<div class="mt-3 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-md bg-accent-green/10 text-accent-green text-[10px] font-bold uppercase tracking-wide border border-accent-green/10">Active</span>
+<span class="text-[10px] text-text-sub-light dark:text-text-sub-dark flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px] opacity-70">event</span> Next: Tomorrow, 2PM
+                                </span>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-gray-100 dark:border-white/5 flex gap-2">
+<button class="flex-1 py-2 rounded-lg bg-gray-50 dark:bg-white/5 text-text-main-light dark:text-text-main-dark text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/10 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]">edit_note</span>
+                            Update Plan
+                        </button>
+<button class="flex-1 py-2 rounded-lg bg-primary/10 text-primary text-xs font-bold hover:bg-primary/20 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]">chat</span>
+                            Message
+                        </button>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-2xl shadow-card border border-gray-50 dark:border-white/5 relative group">
+<div class="absolute top-0 right-0 p-3">
+<button class="text-text-sub-light/40 dark:text-text-sub-dark/40 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+<div class="flex gap-4">
+<div class="relative flex-shrink-0">
+<div class="size-14 rounded-2xl overflow-hidden shadow-sm">
+<img alt="James L." class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBucmQ4oTJfMZSvCWPlYqSASJfWltc6RW_jJe4bWC3ZQilPi9w5i5I2s4L2Tmt3Zml_QHOktknTf53b4R6jnV9ARSWDt1nsF5_jsF8GRKtjVbBq1KGwHoDHzwgLzYBwHzss-xadCESjt3XZ3XfDL9AVHoo4LOt5LN6FICT1A4MxeezDA1dlltsh5tzij_HHlKiryJIXsjWig6KsdiB3CXy0UDQNjDpPkwTFjiZaB1Y_gw_5DAgqt_gzIqGKe9627Lo28g2TjFnP8W_L"/>
+</div>
+<span class="absolute -bottom-1 -right-1 size-4 bg-accent-orange border-2 border-surface-light dark:border-surface-dark rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] text-white dark:text-black font-bold">arrow_forward</span>
+</span>
+</div>
+<div class="flex-1 pt-0.5">
+<div class="flex flex-col">
+<h3 class="font-bold text-text-main-light dark:text-text-main-dark text-lg leading-tight">James Liu</h3>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark mt-0.5">High School Senior • 17yo</p>
+</div>
+<div class="mt-3 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-md bg-accent-orange/10 text-accent-orange text-[10px] font-bold uppercase tracking-wide border border-accent-orange/10">Referred</span>
+<span class="text-[10px] text-text-sub-light dark:text-text-sub-dark truncate max-w-[120px]">
+                                    To: Dr. Sarah Smith (Therapist)
+                                </span>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-gray-100 dark:border-white/5 flex gap-2">
+<button class="flex-1 py-2 rounded-lg bg-gray-50 dark:bg-white/5 text-text-main-light dark:text-text-main-dark text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/10 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+                            Status
+                        </button>
+<button class="flex-1 py-2 rounded-lg bg-transparent border border-gray-200 dark:border-white/10 text-text-sub-light dark:text-text-sub-dark text-xs font-bold hover:bg-gray-50 dark:hover:bg-white/5 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]">history</span>
+                            Log
+                        </button>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-2xl shadow-card border border-gray-50 dark:border-white/5 relative group">
+<div class="absolute top-0 right-0 p-3">
+<button class="text-text-sub-light/40 dark:text-text-sub-dark/40 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+<div class="flex gap-4">
+<div class="relative flex-shrink-0">
+<div class="size-14 rounded-2xl overflow-hidden shadow-sm bg-accent-purple/10 flex items-center justify-center text-accent-purple font-bold text-xl">
+                                DK
+                            </div>
+<span class="absolute -bottom-1 -right-1 size-4 bg-accent-green border-2 border-surface-light dark:border-surface-dark rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] text-white dark:text-black font-bold">check</span>
+</span>
+</div>
+<div class="flex-1 pt-0.5">
+<div class="flex flex-col">
+<h3 class="font-bold text-text-main-light dark:text-text-main-dark text-lg leading-tight">David Kim</h3>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark mt-0.5">Sophomore • 15yo</p>
+</div>
+<div class="mt-3 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-md bg-accent-green/10 text-accent-green text-[10px] font-bold uppercase tracking-wide border border-accent-green/10">Active</span>
+<span class="text-[10px] text-text-sub-light dark:text-text-sub-dark flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px] opacity-70">flag</span> Goal: Career Path
+                                </span>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-gray-100 dark:border-white/5 flex gap-2">
+<button class="flex-1 py-2 rounded-lg bg-gray-50 dark:bg-white/5 text-text-main-light dark:text-text-main-dark text-xs font-bold hover:bg-gray-100 dark:hover:bg-white/10 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]">edit_note</span>
+                            Update Plan
+                        </button>
+<button class="flex-1 py-2 rounded-lg bg-primary/10 text-primary text-xs font-bold hover:bg-primary/20 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]">chat</span>
+                            Message
+                        </button>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-2xl shadow-card border-l-4 border-red-400 relative group opacity-90">
+<div class="flex gap-4">
+<div class="relative flex-shrink-0">
+<div class="size-14 rounded-2xl overflow-hidden shadow-sm bg-gray-100 dark:bg-white/10 flex items-center justify-center text-text-sub-light dark:text-text-sub-dark font-bold text-xl">
+                                EC
+                            </div>
+<span class="absolute -bottom-1 -right-1 size-4 bg-gray-400 border-2 border-surface-light dark:border-surface-dark rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] text-white font-bold">pause</span>
+</span>
+</div>
+<div class="flex-1 pt-0.5">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<h3 class="font-bold text-text-main-light dark:text-text-main-dark text-lg leading-tight">Emily Chen</h3>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark mt-0.5">Middle School • 13yo</p>
+</div>
+</div>
+<div class="mt-3 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-white/10 text-text-sub-light dark:text-text-sub-dark text-[10px] font-bold uppercase tracking-wide border border-gray-200 dark:border-white/10">Paused</span>
+<span class="text-[10px] text-text-sub-light dark:text-text-sub-dark italic">
+                                    Exam Period
+                                </span>
+</div>
+</div>
+<button class="self-center p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors text-text-sub-light dark:text-text-sub-dark">
+<span class="material-symbols-outlined text-[24px]">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+<div class="h-4"></div>
+</main>
+<div class="sticky bottom-0 bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-md border-t border-gray-100 dark:border-white/5 grid grid-cols-4 px-2 py-3 z-20">
+<button class="flex flex-col items-center gap-1 text-text-sub-light dark:text-text-sub-dark hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">dashboard</span>
+<span class="text-[10px] font-medium">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary dark:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px] fill-1">groups</span>
+<span class="text-[10px] font-bold">Mentees</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-text-sub-light dark:text-text-sub-dark hover:text-primary dark:hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined text-[24px]">chat_bubble</span>
+<span class="text-[10px] font-medium">Messages</span>
+<span class="absolute top-0 right-7 size-2 bg-red-500 rounded-full"></span>
+</button>
+<button class="flex flex-col items-center gap-1 text-text-sub-light dark:text-text-sub-dark hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</button>
+</div>
+</div>
+
+</body></html>
