@@ -20,3 +20,8 @@ mcpjungle.db
 web/*.log
 mobile/*.log
 mcpjungle.log
+node_modules/
+.DS_Store
+.env
+github-sync/.sync-state.json
+
