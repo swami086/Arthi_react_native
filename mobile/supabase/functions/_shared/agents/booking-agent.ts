@@ -7,6 +7,8 @@ export interface BookingAgentState {
     intent: string;
     toolCalls: any[];
     result: any;
+    usage?: any;
+    cost?: number;
 }
 
 export async function bookingAgentNode(
@@ -69,5 +71,7 @@ Current user ID: ${state.userId}`;
         messages: [...state.messages, { role: 'assistant', content: response.content }],
         toolCalls: toolResults,
         result: response.content,
+        usage: response.usage,
+        cost: response.cost
     };
 }

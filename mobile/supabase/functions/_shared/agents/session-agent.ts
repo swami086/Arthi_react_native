@@ -12,6 +12,8 @@ export interface SessionAgentState {
     toolCalls: any[];
     result: any;
     riskFlags: any[];
+    usage?: any;
+    cost?: number;
 }
 
 export async function sessionAgentNode(
@@ -92,5 +94,7 @@ Patient ID: ${state.patientId}`;
         toolCalls: toolResults,
         result: response.content,
         riskFlags: [...(state.riskFlags || []), ...riskFlags],
+        usage: response.usage,
+        cost: response.cost
     };
 }

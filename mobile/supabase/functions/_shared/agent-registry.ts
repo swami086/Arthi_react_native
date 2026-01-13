@@ -1,6 +1,7 @@
 import { bookingAgentNode } from './agents/booking-agent.ts';
 import { sessionAgentNode } from './agents/session-agent.ts';
 import { insightsAgentNode } from './agents/insights-agent.ts';
+import { followupAgentNode } from './agents/followup-agent.ts';
 
 export const agentRegistry = {
     booking: {
@@ -24,7 +25,7 @@ export const agentRegistry = {
     followup: {
         name: 'FollowupAgent',
         description: 'Handles post-session engagement and check-ins',
-        node: null, // To be implemented in Wave 3
-        intents: ['send_followup', 'check_homework', 'wellness_check'],
+        node: followupAgentNode,
+        intents: ['send_followup', 'check_homework', 'wellness_check', 'mood_tracking'],
     },
 };

@@ -4,6 +4,7 @@ import { EmbeddingService } from '../_shared/embedding-service.ts';
 import { bookingAgentNode } from '../_shared/agents/booking-agent.ts';
 import { sessionAgentNode } from '../_shared/agents/session-agent.ts';
 import { insightsAgentNode } from '../_shared/agents/insights-agent.ts';
+import { followupAgentNode } from '../_shared/agents/followup-agent.ts';
 
 export interface Agent {
     name: string;
@@ -67,7 +68,8 @@ suggest they use the appropriate quick action (@book, @insights, etc.).`;
                 return {
                     content: result.result,
                     toolCalls: result.toolCalls?.map(tc => tc.toolCall),
-                    usage: result.usage, // Note: bookingAgentNode doesn't return usage yet but result.result is the text
+                    usage: result.usage,
+                    cost: result.cost,
                     model: 'gpt-4o',
                 };
             },
@@ -94,6 +96,8 @@ suggest they use the appropriate quick action (@book, @insights, etc.).`;
                     content: result.result,
                     toolCalls: result.toolCalls?.map(tc => tc.toolCall),
                     riskFlags: result.riskFlags,
+                    usage: result.usage,
+                    cost: result.cost,
                     model: 'gpt-4o',
                 };
             },
@@ -118,6 +122,8 @@ suggest they use the appropriate quick action (@book, @insights, etc.).`;
                     content: result.result,
                     toolCalls: result.toolCalls?.map(tc => tc.toolCall),
                     insights: result.insights,
+                    usage: result.usage,
+                    cost: result.cost,
                     model: 'gpt-4o',
                 };
             },
@@ -126,7 +132,26 @@ suggest they use the appropriate quick action (@book, @insights, etc.).`;
         followup: {
             name: 'FollowupAgent',
             description: 'Post-session engagement and follow-ups',
-            execute: async () => ({ content: 'FollowupAgent is being implemented and will be available in Wave 3.', usage: {}, cost: 0 }),
+            execute: async ({ message, context, conversation, supabase }) => {
+                const state = {
+                    messages: conversation.messages.map(m => ({ role: m.role, content: m.content })),
+                    userId: context.userId,
+                    patientId: context.patientId || context.userId,
+                    intent: 'followup',
+                };
+
+                state.messages.push({ role: 'user', content: message });
+
+                const result = await followupAgentNode(state, supabase);
+
+                return {
+                    content: result.result,
+                    toolCalls: result.toolCalls?.map(tc => tc.toolCall),
+                    usage: result.usage,
+                    cost: result.cost,
+                    model: 'gpt-4o',
+                };
+            },
         },
     };
 }

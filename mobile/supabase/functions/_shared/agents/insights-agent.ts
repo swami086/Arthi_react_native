@@ -10,6 +10,8 @@ export interface InsightsAgentState {
     toolCalls: any[];
     result: any;
     insights: any[];
+    usage?: any;
+    cost?: number;
 }
 
 export async function insightsAgentNode(
@@ -74,5 +76,7 @@ Current patient ID: ${state.patientId}`;
         toolCalls: toolResults,
         result: response.content,
         insights: [...(state.insights || []), ...insights],
+        usage: response.usage,
+        cost: response.cost
     };
 }
