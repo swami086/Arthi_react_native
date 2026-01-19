@@ -1,5 +1,5 @@
 import type { NextConfig } from 'next';
-import RollbarSourceMapPlugin from 'rollbar-sourcemap-webpack-plugin';
+const RollbarSourceMapPlugin = require('rollbar-sourcemap-webpack-plugin');
 
 const nextConfig: NextConfig = {
   images: {
@@ -35,7 +35,7 @@ const nextConfig: NextConfig = {
     if (!dev && !isServer) {
       config.plugins.push(
         new RollbarSourceMapPlugin({
-          accessToken: process.env.ROLLBAR_POST_SERVER_ITEM_TOKEN,
+          accessToken: process.env.ROLLBAR_POST_SERVER_ITEM_TOKEN || process.env.ROLLBAR_SERVER_TOKEN,
           version: process.env.VERCEL_GIT_COMMIT_SHA || process.env.NEXT_PUBLIC_ROLLBAR_CODE_VERSION || '1.0.0',
           publicPath: 'https://safespace-web.vercel.app/_next/',
         })

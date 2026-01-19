@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import ProgressIndicator from '../../../../_components/progress-indicator';
-import TimeSlotButton from '../../../../_components/time-slot-button';
+import TimeSlotButton from '@/components/ui/time-slot-button';
 import { getAvailableTimeSlots } from '@/app/actions/appointments';
 import { TimeSlot } from '@/lib/appointments/time-slots';
 import { useBookingFlow } from '@/hooks/use-booking-flow';

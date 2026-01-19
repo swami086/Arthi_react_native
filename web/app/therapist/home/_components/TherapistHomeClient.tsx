@@ -93,8 +93,8 @@ export default function TherapistHomeClient({ initialStats, initialAppointments,
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h3>
                         <div className="flex gap-4 overflow-x-auto pb-2">
                             <QuickActionButton label="Add Patient" icon={Plus} href="/therapist/patients/discovery" color="blue" />
-                            <QuickActionButton label="Schedule" icon={Calendar} href="/therapist/sessions/new" color="purple" />
-                            <QuickActionButton label="Message" icon={MessageSquare} href="/therapist/messages" color="green" />
+                            <QuickActionButton label="Schedule" icon={Calendar} href="/therapist/sessions" color="purple" />
+                            <QuickActionButton label="Message" icon={MessageSquare} href="/messages" color="green" />
                             <QuickActionButton label="Notes" icon={FileText} href="/therapist/patients" color="orange" />
                         </div>
                     </div>
@@ -125,7 +125,7 @@ export default function TherapistHomeClient({ initialStats, initialAppointments,
                                                 </p>
                                             </div>
                                         </div>
-                                        <Link href={`/session/${apt.id}`}>
+                                        <Link href={`/therapist/sessions/${apt.id}`}>
                                             <motion.button
                                                 whileHover={{ scale: 1.05 }}
                                                 whileTap={{ scale: 0.95 }}

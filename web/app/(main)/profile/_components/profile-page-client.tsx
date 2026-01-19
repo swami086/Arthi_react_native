@@ -122,7 +122,7 @@ export default function ProfilePageClient({
                         </div>
                         <Button
                             className="bg-white text-blue-600 hover:bg-white/90 font-bold rounded-full px-6"
-                            onClick={() => router.push(`/appointments/${upcomingAppointment.id}`)}
+                            onClick={() => router.push(`/video/${upcomingAppointment.id}/waiting`)}
                         >
                             Join Waiting Room
                         </Button>
@@ -191,7 +191,12 @@ export default function ProfilePageClient({
                                     </div>
                                 </div>
                                 <div className="flex gap-2">
-                                    <Button variant="ghost" size="sm" className="flex-1 bg-gray-50 dark:bg-gray-900 border text-xs gap-1">
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="flex-1 bg-gray-50 dark:bg-gray-900 border text-xs gap-1"
+                                        onClick={() => router.push('/messages')}
+                                    >
                                         <MessageSquare className="h-3.5 w-3.5" /> Chat
                                     </Button>
                                     <Button variant="ghost" size="sm" className="bg-gray-50 dark:bg-gray-900 border" onClick={() => router.push(`/therapists/${rel.therapist_id}`)}>

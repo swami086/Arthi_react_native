@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { createClient } from '@/lib/supabase/server';
 import { getAppointments } from '@/app/actions/appointments';
 import AppointmentsListClient from './_components/appointments-list-client';
+import { BookingAgentWrapper } from './_components/booking-agent-wrapper';
 import { Metadata } from 'next';
 import { addBreadcrumb } from '@/lib/rollbar-utils';
 
@@ -22,8 +23,11 @@ export default async function AppointmentsPage() {
 
     const appointments = result.success && result.data ? result.data : [];
 
+    const { data: { user } } = await supabase.auth.getUser();
+
     return (
-        <div className="container max-w-md mx-auto py-6 px-4">
+        <div className="container max-w-2xl mx-auto py-6 px-4">
+            {user && <BookingAgentWrapper userId={user.id} />}
             <Suspense fallback={<div className="p-4 text-center">Loading sessions...</div>}>
                 <AppointmentsListClient initialAppointments={appointments} />
             </Suspense>

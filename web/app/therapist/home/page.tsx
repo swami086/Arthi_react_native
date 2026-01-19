@@ -1,86 +1,91 @@
+export const dynamic = 'force-dynamic';
+
 import { createClient } from '@/lib/supabase/server';
+import { Metadata } from 'next';
+import { reportError } from '@/lib/rollbar-utils';
 import TherapistHomeClient from './_components/TherapistHomeClient';
-import { startOfDay, endOfDay } from 'date-fns';
+
+export const metadata: Metadata = {
+    title: 'Therapist Dashboard | SafeSpace',
+    description: 'Manage your patients, sessions, and referrals.',
+};
 
 export default async function TherapistHomePage() {
     const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
 
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (!user) return null; // handled by layout/middleware
 
-    if (authError || !user) {
-        return <div>Unauthorized</div>;
-    }
-
-    // Initialize default values
-    let initialStats = {
-        totalPatients: 0,
-        activeSessions: 0,
-        totalHours: 0,
-        rating: 5.0,
-        patientsTrend: 0,
-        sessionsTrend: 0
-    };
-    let initialAppointments: any[] = [];
-    let initialConversations: any[] = [];
-
+    // 1. Fetch Stats (RPC)
+    let stats = null;
     try {
-        // Fetch Counts in Parallel
-        const [patientsCount, sessionsCount, todayAppointments, recentMessages] = await Promise.all([
-            // Total Patients
-            supabase
-                .from('therapist_patient_relationships')
-                .select('*', { count: 'exact', head: true })
-                .eq('therapist_id', user.id)
-                .eq('status', 'active'),
-
-            // Total Sessions (All time)
-            supabase
-                .from('appointments')
-                .select('*', { count: 'exact', head: true })
-                .eq('therapist_id', user.id)
-                .eq('status', 'completed'),
-
-            // Today's Appointments
-            supabase
-                .from('appointments')
-                .select('*, patient:profiles!appointments_patient_id_fkey(*)')
-                .eq('therapist_id', user.id)
-                .gte('start_time', startOfDay(new Date()).toISOString())
-                .lte('start_time', endOfDay(new Date()).toISOString())
-                .order('start_time', { ascending: true }),
-
-            // Recent Messages from patients
-            supabase
-                .from('messages')
-                .select('*, sender:profiles!messages_sender_id_fkey(*)')
-                .eq('receiver_id', user.id)
-                .order('created_at', { ascending: false })
-                .limit(5)
-        ]);
-
-        initialStats = {
-            totalPatients: patientsCount.count || 0,
-            activeSessions: sessionsCount.count || 0, // Simplified as all-time total for now
-            totalHours: (sessionsCount.count || 0) * 1, // Placeholder: assuming 1 hour per session
-            rating: 5.0, // Hardcoded for now
-            patientsTrend: 5, // Hardcoded trend
-            sessionsTrend: 12 // Hardcoded trend
-        };
-
-        initialAppointments = todayAppointments.data || [];
-        initialConversations = recentMessages.data || [];
-
+        const { data } = await (supabase as any).rpc('get_therapist_stats', {
+            therapist_uuid: user.id
+        });
+        stats = data;
     } catch (error) {
-        console.error('Error fetching therapist home data:', error);
-        // Fallback to defaults already initialized
+        console.error('Error fetching therapist stats:', error);
+        // reportError(error); // Assuming reportError is available or imported from lib/rollbar-utils
     }
+
+    // 2. Fetch Upcoming Appointments (Limit 3)
+    let appointments: any[] = [];
+    try {
+        const { data } = await supabase
+            .from('appointments')
+            .select(`
+                id,
+                start_time,
+                status,
+                patient:patient_id(full_name, avatar_url)
+            `)
+            .eq('therapist_id', user.id)
+            .eq('status', 'scheduled')
+            .gte('start_time', new Date().toISOString())
+            .order('start_time', { ascending: true })
+            .limit(3);
+        appointments = data || [];
+    } catch (error) {
+        console.error('Error fetching appointments:', error);
+    }
+
+    // 3. Fetch Recent Conversations (Limit 3)
+    let conversations: any[] = [];
+    try {
+        const { data } = await supabase
+            .from('messages')
+            .select(`
+                id,
+                created_at,
+                content,
+                sender:sender_id(full_name)
+            `)
+            .eq('recipient_id', user.id)
+            .order('created_at', { ascending: false })
+            .limit(5);
+        conversations = data || [];
+    } catch (error) {
+        console.error('Error fetching conversations:', error);
+    }
+
+    // Formatting stats if rpc returns snake_case, client expects camelCase
+    // Cast stats to any to avoid TS errors if types aren't generated
+    const typedStats = stats as any;
+    const formattedStats = typedStats ? {
+        totalPatients: typedStats.total_patients || 0,
+        activeSessions: typedStats.active_sessions || 0,
+        totalHours: typedStats.total_hours || 0,
+        rating: typedStats.rating || 5.0,
+        patientsTrend: typedStats.patients_trend || 0,
+        sessionsTrend: typedStats.sessions_trend || 0
+    } : null;
 
     return (
         <TherapistHomeClient
             user={user}
-            initialStats={initialStats}
-            initialAppointments={initialAppointments}
-            initialConversations={initialConversations}
+            initialStats={formattedStats}
+            initialAppointments={appointments || []}
+            initialConversations={conversations || []}
         />
     );
 }

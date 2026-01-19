@@ -16,6 +16,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 interface PaymentSuccessClientProps {
     payment: any;
@@ -160,7 +161,10 @@ export default function PaymentSuccessClient({ payment }: PaymentSuccessClientPr
                             </span>
                         </div>
                     </div>
-                    <button className="w-full flex items-center justify-center gap-2 border border-[#30bae8]/30 rounded-xl py-3 text-[#30bae8] text-sm font-semibold hover:bg-[#30bae8]/5 transition-colors active:scale-[0.98]">
+                    <button
+                        onClick={() => toast.info('Receipt download coming soon')}
+                        className="w-full flex items-center justify-center gap-2 border border-[#30bae8]/30 rounded-xl py-3 text-[#30bae8] text-sm font-semibold hover:bg-[#30bae8]/5 transition-colors active:scale-[0.98]"
+                    >
                         <Download className="w-4.5 h-4.5" />
                         Download Receipt
                     </button>
@@ -198,7 +202,10 @@ export default function PaymentSuccessClient({ payment }: PaymentSuccessClientPr
                 className="mt-8 px-4 pb-8 pt-4 bg-[#0e181b]/95 backdrop-blur-sm z-10 sticky bottom-0"
             >
                 <div className="flex flex-col gap-3">
-                    <button className="w-full flex items-center justify-center gap-2 border border-white/20 rounded-full py-3.5 text-white text-sm font-semibold hover:bg-white/5 active:scale-[0.98] transition-all">
+                    <button
+                        onClick={() => toast.info('Calendar integration coming soon')}
+                        className="w-full flex items-center justify-center gap-2 border border-white/20 rounded-full py-3.5 text-white text-sm font-semibold hover:bg-white/5 active:scale-[0.98] transition-all"
+                    >
                         <CalendarPlus className="w-4.5 h-4.5" />
                         Add to Calendar
                     </button>

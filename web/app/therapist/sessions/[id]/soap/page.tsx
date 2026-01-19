@@ -64,6 +64,7 @@ export default async function SoapNotePage({ params }: { params: Promise<{ id: s
         <SoapEditorClient
             appointmentId={id}
             transcriptId={recording.transcript_id}
+            userId={user.id}
             therapistName={profile?.full_name || 'Therapist'}
             patientName={patientName}
         />

@@ -1,6 +1,11 @@
+export const dynamic = 'force-dynamic';
+
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
-import { TherapistSidebar } from './_components/TherapistSidebar'; // Commented out for debugging
+import { TherapistSidebar } from './_components/TherapistSidebar';
+import { AlertTriangle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { RollbarProvider } from '@/components/providers/rollbar-provider';
 import { MessageListener } from '@/components/messaging/message-listener';
 
 export default async function TherapistLayout({
@@ -18,44 +23,50 @@ export default async function TherapistLayout({
         redirect('/login');
     }
 
-    // Verify therapist role
-    const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('*')
+    // Verify therapist role (basic check, middleware should also handle)
+    const { data: profile, error: profileError } = await (supabase
+        .from('profiles') as any)
+        .select('role, full_name')
         .eq('user_id', user.id)
         .single();
 
-    if (error) {
-        console.error('Error fetching profile:', error);
-        // We will NOT redirect just yet to see if this is the cause, just render a debug error
-        return (
-            <div className="p-10 text-red-500">
-                <h1>Error Loading Profile</h1>
-                <pre>{JSON.stringify(error, null, 2)}</pre>
-            </div>
-        );
-    }
+    console.log('[TherapistLayout] User:', user?.id, 'Profile Role:', profile?.role, 'Error:', profileError);
 
     if (profile?.role !== 'therapist') {
-        // redirect('/unauthorized'); 
-        return (
-            <div className="p-10 text-orange-500">
-                <h1>Unauthorized: Role is {profile?.role}</h1>
-            </div>
-        );
+        console.warn('[TherapistLayout] Non-therapist user redirected:', user?.id);
+        redirect('/unauthorized');
     }
 
     return (
-        <div className="flex min-h-screen bg-background-light dark:bg-background-dark">
-            <TherapistSidebar userName={profile?.full_name} userEmail={profile?.email} />
+        <RollbarProvider>
+            <div className="flex h-screen bg-gray-50 dark:bg-black overflow-hidden">
+                <TherapistSidebar
+                    userEmail={user.email}
+                    userName={profile.full_name || 'Therapist'}
+                />
+                <MessageListener />
 
-            <MessageListener />
+                <div className="flex-1 flex flex-col overflow-hidden">
+                    {/* Header with Crisis Resource */}
+                    <header className="h-16 border-b bg-white dark:bg-gray-950 dark:border-gray-800 flex items-center justify-between px-8 shadow-sm z-10">
+                        <h1 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                            Workplace
+                        </h1>
+                        <Button
+                            variant="error"
+                            size="sm"
+                            className="gap-2 bg-red-600 hover:bg-red-700 text-white shadow-red-200"
+                        >
+                            <AlertTriangle className="h-4 w-4" />
+                            Crisis Resources
+                        </Button>
+                    </header>
 
-            <main className="flex-1 overflow-y-auto h-screen ml-0 transition-all duration-300">
-                <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8 pb-20 md:pb-8">
-                    {children}
+                    <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#09090b] p-8">
+                        {children}
+                    </main>
                 </div>
-            </main>
-        </div>
+            </div>
+        </RollbarProvider>
     );
 }

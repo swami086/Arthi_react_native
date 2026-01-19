@@ -132,7 +132,7 @@ export const HomePageClient: React.FC<HomePageClientProps> = ({
                                 <Button
                                     variant="link"
                                     className="text-orange-600 dark:text-orange-400 font-bold"
-                                    onClick={() => router.push('/therapists/requests')}
+                                    onClick={() => router.push('/profile/requests')}
                                 >
                                     View All
                                 </Button>
@@ -251,7 +251,7 @@ export const HomePageClient: React.FC<HomePageClientProps> = ({
                                 patientName={activity.therapists?.profiles?.full_name || 'Therapist'}
                                 patientAvatar={activity.therapists?.profiles?.avatar_url}
                                 meetingLink={activity.meeting_link}
-                                onClick={() => router.push(`/appointments/${activity.id}`)}
+                                onClick={() => router.push(`/video/${activity.id}/waiting`)}
                             />
                         ))
                     ) : (

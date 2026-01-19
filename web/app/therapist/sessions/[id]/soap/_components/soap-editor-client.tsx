@@ -13,6 +13,8 @@ import { updateSoapNote, finalizeSoapNote, generateSoapNote, regenerateSoapNote 
 import { toast } from 'react-hot-toast';
 import { exportService } from '@/lib/services/export-service';
 import { format } from 'date-fns';
+import { useSessionCopilot } from '@/hooks/use-session-copilot';
+import { SoapTemplateLoader } from './soap-template-loader';
 
 // Simple debounce hook
 function useDebounceValue<T>(value: T, delay: number): T {
@@ -27,15 +29,22 @@ function useDebounceValue<T>(value: T, delay: number): T {
 interface SoapEditorClientProps {
     appointmentId: string;
     transcriptId: string;
+    userId: string;
     therapistName?: string;
     patientName?: string;
 }
 
 const MIN_SECTION_LENGTH = 50;
 
-export default function SoapEditorClient({ appointmentId, transcriptId, therapistName, patientName = 'Patient' }: SoapEditorClientProps) {
+export default function SoapEditorClient({ appointmentId, transcriptId, userId, therapistName, patientName = 'Patient' }: SoapEditorClientProps) {
     const router = useRouter();
     const { soapNote, status, setSoapNote, isSaving, setIsSaving, setStatus, error } = useSoapNoteStatus(appointmentId);
+    const { surface, loading, error: copilotError } = useSessionCopilot({
+        appointmentId,
+        transcriptId,
+        userId
+    });
+    const dataModel = surface?.dataModel;
 
     // Request generation if not exists
     useEffect(() => {
@@ -235,6 +244,26 @@ export default function SoapEditorClient({ appointmentId, transcriptId, therapis
                 wordCounts={wordCounts}
                 therapistName={therapistName}
             />
+
+            {/* AI Suggestion Box */}
+            {!soapNote.is_finalized && dataModel?.analysis?.soap && (
+                <div className="mb-8">
+                    <SoapTemplateLoader
+                        template={dataModel.analysis.soap}
+                        onApply={(template) => {
+                            setSoapNote(prev => prev ? {
+                                ...prev,
+                                subjective: template.subjective,
+                                objective: template.objective,
+                                assessment: template.assessment,
+                                plan: template.plan
+                            } : null);
+                            setIsSaving(true);
+                            toast.success('Applied AI suggestions to your draft');
+                        }}
+                    />
+                </div>
+            )}
 
             <div className="space-y-6">
                 <SoapSection

@@ -1,205 +1,86 @@
+
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, ArrowUpDown } from 'lucide-react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { TherapistCard } from '@/components/ui/therapist-card';
-import { Input } from '@/components/ui/input';
-import { FilterChip } from '@/components/ui/filter-chip';
+import { GradientAvatar } from '@/components/ui/gradient-avatar';
 import { Button } from '@/components/ui/button';
-import { Database } from '@/types/database';
-import { applyTherapistFilters } from '@/lib/utils/therapist-filters';
-import { staggerContainer, scaleIn } from '@/lib/animation-variants';
-import { addBreadcrumb } from '@/lib/rollbar-utils';
-import Image from 'next/image';
-import { useWindowVirtualizer } from '@tanstack/react-virtual';
-import { useMediaQuery } from '@/hooks/use-media-query';
+import { Search, Filter } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-type Profile = Database['public']['Tables']['profiles']['Row'];
-
-const FILTERS = ['All Filters', 'Anxiety', 'Depression', 'Career', 'Relationships', 'School Stress', 'Self-Esteem', 'Trauma'];
-
-interface TherapistsListClientProps {
-    initialTherapists: Profile[];
+interface Props {
+    initialTherapists: any[];
 }
 
-export default function TherapistsListClient({ initialTherapists }: TherapistsListClientProps) {
-    const [searchQuery, setSearchQuery] = useState('');
+export default function TherapistsListClient({ initialTherapists }: Props) {
     const router = useRouter();
-    const [selectedFilter, setSelectedFilter] = useState('All Filters');
-    const [sortBy, setSortBy] = useState<'rating' | 'experience'>('rating');
+    const [searchTerm, setSearchTerm] = useState('');
 
-    const filteredTherapists = useMemo(() => {
-        return applyTherapistFilters(initialTherapists, {
-            query: searchQuery,
-            expertise: selectedFilter === 'All Filters' ? null : selectedFilter,
-            sortBy
-        });
-    }, [initialTherapists, searchQuery, selectedFilter, sortBy]);
-
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchQuery(e.target.value);
-        if (e.target.value.length > 2) {
-            addBreadcrumb('Therapist search', 'therapists.search', 'info', { query: e.target.value });
-        }
-    };
-
-    const handleFilterSelect = (filter: string) => {
-        setSelectedFilter(filter);
-        addBreadcrumb('Therapist filter selected', 'therapists.filter', 'info', { filter });
-    };
+    const filteredTherapists = initialTherapists.filter(t =>
+        t.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        t.specialization?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <div className="space-y-8">
-            {/* Header & Controls */}
-            <div className="space-y-6">
-                <div>
-                    <h1 className="text-3xl md:text-4xl font-black text-gray-900 dark:text-gray-100 tracking-tight mb-2">
-                        Find Your Therapist
-                    </h1>
-                    <p className="text-gray-500 dark:text-gray-400 font-medium">
-                        Connect with verified experts for personalized guidance and support.
-                    </p>
+            <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
+                <div className="relative w-full md:w-96">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <input
+                        type="text"
+                        placeholder="Search therapists by name or specialty..."
+                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
                 </div>
-
-                <div className="flex flex-col md:flex-row gap-4 items-center">
-                    <div className="relative w-full md:w-96">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-                        <div className="relative">
-                            <Input
-                                placeholder="Search by name, expertise, or bio..."
-                                value={searchQuery}
-                                onChange={handleSearchChange}
-                                className="pl-12 h-14 rounded-2xl bg-white dark:bg-[#1a2c32] border-gray-100 dark:border-border-dark shadow-sm text-base"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="w-full overflow-x-auto pb-2 -mx-6 px-6 md:mx-0 md:px-0 md:pb-0 scrollbar-hide">
-                        <div className="flex gap-2">
-                            {FILTERS.map((filter) => (
-                                <FilterChip
-                                    key={filter}
-                                    label={filter}
-                                    isSelected={selectedFilter === filter}
-                                    onClick={() => handleFilterSelect(filter)}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
-                <div className="flex justify-between items-center pt-2">
-                    <p className="text-sm font-bold text-gray-500 dark:text-gray-400">
-                        Showing <span className="text-gray-900 dark:text-gray-100">{filteredTherapists.length}</span> therapists
-                    </p>
-
-                    {/* Sort Dropdown Placeholder - Simplified as a toggle for now */}
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setSortBy(prev => prev === 'rating' ? 'experience' : 'rating')}
-                        leftIcon={<ArrowUpDown size={14} />}
-                        className="text-gray-500"
-                    >
-                        Sort by {sortBy === 'rating' ? 'Rating' : 'Experience'}
-                    </Button>
-                </div>
+                <Button variant="outline" className="gap-2">
+                    <Filter className="h-4 w-4" /> Filters
+                </Button>
             </div>
 
-            {/* Content */}
-            {/* Content */}
-            {filteredTherapists.length > 0 ? (
-                <VirtualizedTherapistsGrid therapists={filteredTherapists} />
-            ) : (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="flex flex-col items-center justify-center py-20 text-center"
-                >
-                    <div className="w-48 h-48 relative mb-6 opacity-80">
-                        {/* Placeholder illustration or generic icon */}
-                        <div className="w-full h-full bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-                            <Search size={64} className="text-gray-300 dark:text-gray-600" />
-                        </div>
-                    </div>
-                    <h3 className="text-xl font-black text-gray-900 dark:text-gray-100 mb-2">No therapists found</h3>
-                    <p className="text-gray-500 dark:text-gray-400 max-w-sm">
-                        Try adjusting your search or filters to find what you're looking for.
-                    </p>
-                    <Button
-                        variant="outline"
-                        onClick={() => {
-                            setSearchQuery('');
-                            setSelectedFilter('All Filters');
-                        }}
-                        className="mt-6"
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredTherapists.map((therapist) => (
+                    <motion.div
+                        key={therapist.user_id}
+                        layoutId={therapist.user_id}
+                        className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow cursor-pointer group"
+                        onClick={() => router.push(`/therapists/${therapist.user_id}`)}
                     >
-                        Clear Filters
-                    </Button>
-                </motion.div>
-            )}
-        </div>
-    );
-}
-
-function VirtualizedTherapistsGrid({ therapists }: { therapists: Profile[] }) {
-    const router = useRouter();
-    const isMd = useMediaQuery('(min-width: 768px)');
-    const isLg = useMediaQuery('(min-width: 1024px)');
-    const columns = isLg ? 3 : isMd ? 2 : 1;
-
-    const rows = Math.ceil(therapists.length / columns);
-
-    const rowVirtualizer = useWindowVirtualizer({
-        count: rows,
-        estimateSize: () => 480, // Card height + gap
-        overscan: 5,
-    });
-
-    return (
-        <div
-            style={{
-                height: `${rowVirtualizer.getTotalSize()}px`,
-                width: '100%',
-                position: 'relative',
-            }}
-        >
-            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                const startIndex = virtualRow.index * columns;
-                const rowTherapists = therapists.slice(startIndex, startIndex + columns);
-
-                return (
-                    <div
-                        key={virtualRow.index}
-                        style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            width: '100%',
-                            height: `${virtualRow.size}px`,
-                            transform: `translateY(${virtualRow.start}px)`,
-                        }}
-                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-1" // px-1 to avoid outline clipping
-                    >
-                        {rowTherapists.map((therapist) => (
-                            <div key={therapist.user_id} className="h-full pb-6"> {/* pb-6 simulates gap-y */}
-                                <TherapistCard
-                                    name={therapist.full_name || 'Unknown Therapist'}
-                                    role={therapist.specialization || 'Therapist'}
-                                    imageUrl={therapist.avatar_url || undefined}
-                                    rating={parseFloat((therapist.rating_average || 0).toFixed(1))}
-                                    bio={therapist.bio || ''}
-                                    expertise={therapist.expertise_areas || []}
-                                    onClick={() => router.push(`/therapists/${therapist.user_id}`)}
-                                    className="h-full"
-                                />
+                        <div className="flex items-start justify-between mb-4">
+                            <GradientAvatar src={therapist.avatar_url} alt={therapist.full_name} size={64} />
+                            <div className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wider">
+                                {therapist.years_of_experience || '1+'} Years Exp
                             </div>
-                        ))}
-                    </div>
-                );
-            })}
+                        </div>
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">
+                            {therapist.full_name}
+                        </h3>
+                        <p className="text-gray-500 text-sm mb-4">{therapist.specialization}</p>
+
+                        <div className="flex flex-wrap gap-1.5 mb-6">
+                            {therapist.expertise_areas?.slice(0, 3).map((area: string) => (
+                                <span key={area} className="text-[10px] font-bold px-2 py-1 bg-gray-50 dark:bg-gray-900 rounded-md text-gray-600 dark:text-gray-400">
+                                    {area}
+                                </span>
+                            ))}
+                            {(therapist.expertise_areas?.length || 0) > 3 && (
+                                <span className="text-[10px] font-bold px-2 py-1 bg-gray-50 dark:bg-gray-900 rounded-md text-gray-400">
+                                    +{therapist.expertise_areas.length - 3}
+                                </span>
+                            )}
+                        </div>
+
+                        <Button className="w-full">View Profile</Button>
+                    </motion.div>
+                ))}
+            </div>
+
+            {filteredTherapists.length === 0 && (
+                <div className="text-center py-12 text-gray-500">
+                    No therapists found matching your search.
+                </div>
+            )}
         </div>
     );
 }

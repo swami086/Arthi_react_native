@@ -12,6 +12,8 @@
     "lighthouse:ci": "lhci autorun"
   },
   "dependencies": {
+    "@a2ui/core": "^0.1.0",
+    "@a2ui/react": "^0.1.0",
     "@daily-co/daily-js": "^0.85.0",
     "@daily-co/daily-react": "^0.24.0",
     "@hookform/resolvers": "^5.2.2",
@@ -27,11 +29,13 @@
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.89.0",
     "@tanstack/react-virtual": "^3.13.17",
+    "ajv": "^8.12.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.24.0",
     "html2canvas": "^1.4.1",
+    "immer": "^10.0.3",
     "jspdf": "^4.0.0",
     "lucide-react": "^0.562.0",
     "next": "15.1.4",
