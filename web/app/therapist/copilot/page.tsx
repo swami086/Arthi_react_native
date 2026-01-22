@@ -20,6 +20,8 @@ import {
     RefreshCw
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { CalendarManagementPanel } from './_components/CalendarManagementPanel';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function TherapistCopilotPage() {
     const { user } = useAuth();
@@ -42,62 +44,73 @@ export default function TherapistCopilotPage() {
 
     if (!activeAppointmentId) {
         return (
-            <div className="p-8 max-w-2xl mx-auto space-y-8">
+            <div className="p-8 max-w-4xl mx-auto space-y-8">
                 <div>
                     <h1 className="text-3xl font-black mb-2 flex items-center gap-3">
                         <BrainCircuit className="w-8 h-8 text-primary" />
-                        Session Copilot
+                        Therapist Copilot
                     </h1>
                     <p className="text-foreground-muted font-medium">
-                        Enter an appointment ID to start the AI-powered clinical assistant.
+                        AI-powered assistant for session management and calendar scheduling.
                     </p>
                 </div>
 
-                <div className="space-y-4 bg-background-light dark:bg-background-dark p-8 rounded-3xl border-2 border-border shadow-sm">
-                    <div className="space-y-2">
-                        <label className="text-xs font-black uppercase tracking-widest text-foreground-muted">Appointment ID</label>
-                        <div className="flex gap-2">
-                            <Input
-                                placeholder="Paste appointment UUID here..."
-                                value={appointmentId}
-                                onChange={(e) => setAppointmentId(e.target.value)}
-                                className="font-bold"
-                            />
-                            <Button onClick={handleStartCopilot} disabled={!appointmentId.trim()} className="font-black">
-                                Launch
-                            </Button>
-                        </div>
-                    </div>
-
-                    <div className="pt-4 border-t border-border mt-4">
-                        <h3 className="text-sm font-black mb-4 flex items-center gap-2">
-                            <Calendar className="w-4 h-4 text-primary" />
-                            Recent Sessions
-                        </h3>
-                        {/* Mock recent sessions for now */}
+                <Tabs defaultValue="session" className="w-full">
+                    <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="session">Session Copilot</TabsTrigger>
+                        <TabsTrigger value="calendar">Calendar Management</TabsTrigger>
+                    </TabsList>
+                    
+                    <TabsContent value="session" className="space-y-4 bg-background-light dark:bg-background-dark p-8 rounded-3xl border-2 border-border shadow-sm">
                         <div className="space-y-2">
-                            {['Active Session - Patient: John Doe', 'Last Session - Patient: Jane Smith'].map((session, i) => (
-                                <button
-                                    key={i}
-                                    className="w-full text-left p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-zinc-900 border border-transparent hover:border-border transition-all flex items-center justify-between group"
-                                    onClick={() => {
-                                        const mockId = i === 0 ? 'session-123' : 'session-456';
-                                        setAppointmentId(mockId);
-                                        setActiveAppointmentId(mockId);
-                                    }}
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-zinc-800 flex items-center justify-center">
-                                            <User className="w-5 h-5 opacity-50" />
-                                        </div>
-                                        <span className="font-bold">{session}</span>
-                                    </div>
-                                    <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                </button>
-                            ))}
+                            <label className="text-xs font-black uppercase tracking-widest text-foreground-muted">Appointment ID</label>
+                            <div className="flex gap-2">
+                                <Input
+                                    placeholder="Paste appointment UUID here..."
+                                    value={appointmentId}
+                                    onChange={(e) => setAppointmentId(e.target.value)}
+                                    className="font-bold"
+                                />
+                                <Button onClick={handleStartCopilot} disabled={!appointmentId.trim()} className="font-black">
+                                    Launch
+                                </Button>
+                            </div>
                         </div>
-                    </div>
-                </div>
+
+                        <div className="pt-4 border-t border-border mt-4">
+                            <h3 className="text-sm font-black mb-4 flex items-center gap-2">
+                                <Calendar className="w-4 h-4 text-primary" />
+                                Recent Sessions
+                            </h3>
+                            {/* Mock recent sessions for now */}
+                            <div className="space-y-2">
+                                {['Active Session - Patient: John Doe', 'Last Session - Patient: Jane Smith'].map((session, i) => (
+                                    <button
+                                        key={i}
+                                        className="w-full text-left p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-zinc-900 border border-transparent hover:border-border transition-all flex items-center justify-between group"
+                                        onClick={() => {
+                                            const mockId = i === 0 ? 'session-123' : 'session-456';
+                                            setAppointmentId(mockId);
+                                            setActiveAppointmentId(mockId);
+                                        }}
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-zinc-800 flex items-center justify-center">
+                                                <User className="w-5 h-5 opacity-50" />
+                                            </div>
+                                            <span className="font-bold">{session}</span>
+                                        </div>
+                                        <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </TabsContent>
+                    
+                    <TabsContent value="calendar" className="bg-background-light dark:bg-background-dark p-8 rounded-3xl border-2 border-border shadow-sm">
+                        <CalendarManagementPanel />
+                    </TabsContent>
+                </Tabs>
             </div>
         );
     }

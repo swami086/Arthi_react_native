@@ -117,6 +117,7 @@ graph TD
     Orchestrator -->|Routes to| SessionAgent[SessionAgent]
     Orchestrator -->|Routes to| InsightsAgent[InsightsAgent]
     Orchestrator -->|Routes to| FollowupAgent[FollowupAgent]
+    Orchestrator -->|Routes to| CalendarAgent[CalendarManagementAgent]
     
     BookingAgent -->|Accesses| RAG[RAG System]
     SessionAgent -->|Accesses| RAG
@@ -504,10 +505,11 @@ graph TD
     IntentClassifier --> InsightsAgent
     IntentClassifier --> FollowupAgent
     
-    BookingAgent --> Claude
-    SessionAgent --> Claude
-    InsightsAgent --> GPT
-    FollowupAgent --> Claude
+    BookingAgent --> GPT4o[GPT-4o]
+    SessionAgent --> GPT4o
+    InsightsAgent --> GPT4o
+    FollowupAgent --> GPT4o
+    CalendarAgent --> GPT4o
     
     BookingAgent --> RAG
     SessionAgent --> RAG
@@ -640,7 +642,7 @@ graph TD
 - `send_booking_confirmation(appointmentId, channels[])`
 - `suggest_alternative_slots(therapistId, preferredDate, flexibilityDays)`
 
-**LLM:** Claude Sonnet 4.5 (fast, accurate, cost-effective)  
+**LLM:** GPT-4o (standardized model for all agents)  
 **Temperature:** 0.3 (low for booking accuracy)  
 **Success Criteria:** 95% booking accuracy, <3 second response time
 
@@ -663,7 +665,7 @@ graph TD
 - `flag_risk_indicator(riskType, severity, evidence)`
 - `generate_soap_note_draft(transcript, sessionId)`
 
-**LLM:** Claude Opus 4.5 (complex clinical reasoning)  
+**LLM:** GPT-4o (standardized model for all agents)  
 **Temperature:** 0.2 (very low for clinical accuracy)  
 **Success Criteria:** 90% intervention relevance, <2 second response, 100% risk detection
 
@@ -686,7 +688,7 @@ graph TD
 - `generate_treatment_recommendations(patientId, diagnosis[], history)`
 - `calculate_outcome_metrics(patientId, metricType)`
 
-**LLM:** GPT-5.2 (analytical tasks, data analysis)  
+**LLM:** GPT-4o (standardized model for all agents)  
 **Temperature:** 0.1 (very low for analytical accuracy)  
 **Success Criteria:** 85% recommendation accuracy, clinically relevant insights
 
@@ -709,9 +711,59 @@ graph TD
 - `analyze_mood_trend(patientId, days)`
 - `escalate_to_therapist(patientId, concern, urgency)`
 
-**LLM:** Claude Sonnet 4.5 (empathetic communication)  
+**CalendarManagementAgent Tools:**
+
+- `check_availability(therapist_id, date_range, duration_minutes)`
+- `propose_slots(patient_id, therapist_id, proposed_slots[])`
+- `disconnect_calendar(therapist_id, provider)`
+- `get_team_calendars(therapist_id, date_range)`
+- `sync_calendar(therapist_id)`
+
+**LLM:** GPT-4o (standardized model for all agents)  
 **Temperature:** 0.7 (higher for natural, warm responses)  
 **Success Criteria:** 70% patient response rate, 95% escalation accuracy
+
+### Agent 5: CalendarManagementAgent
+
+**Purpose:** Manage therapist calendars, check availability, and propose optimal meeting slots to patients
+
+**Capabilities:**
+
+- Connect/disconnect Google Calendar and Outlook Calendar integrations
+- Sync external calendar events (Google Calendar API v3, Microsoft Graph API)
+- Check therapist availability considering working hours, buffers, and existing events
+- Propose optimal time slots (3-5 options) to patients based on availability
+- Detect scheduling conflicts across multiple calendars
+- View team calendars (busy/free only, privacy-respecting)
+- Manage calendar preferences (working hours, buffer time, timezone)
+
+**Tools:**
+
+- `check_availability(therapist_id, date_range, duration_minutes)` - Check therapist availability for a date range
+- `propose_slots(patient_id, therapist_id, proposed_slots[])` - Propose optimal meeting slots to a patient
+- `disconnect_calendar(therapist_id, provider)` - Disconnect a calendar integration
+- `get_team_calendars(therapist_id, date_range)` - Get busy/free view of team calendars
+- `sync_calendar(therapist_id)` - Manually trigger calendar sync
+
+**LLM:** GPT-4o (standardized model for all agents)  
+**Temperature:** 0.2 (low for scheduling accuracy)  
+**Success Criteria:** 95% conflict detection accuracy, <2 second response time, 90% slot proposal acceptance rate
+
+**Database Schema:**
+
+- `calendar_integrations` - OAuth tokens for Google/Outlook calendars
+- `calendar_events_cache` - Cached calendar events (24-hour TTL)
+- `slot_proposals` - Patient slot proposals (48-hour expiration)
+- `profiles.calendar_preferences` - Working hours, buffer time, timezone
+- `profiles.calendar_visibility` - Privacy settings for team calendar view
+
+**Integration:**
+
+- Google Calendar API v3 for Google calendar sync
+- Microsoft Graph API for Outlook calendar sync
+- Automatic token refresh handling
+- Email notifications via SendGrid
+- WhatsApp notifications via Twilio
 
 ### RAG System (Retrieval-Augmented Generation)
 
@@ -1502,6 +1554,11 @@ sequenceDiagram
 - `check_homework` → FollowupAgent
 - `wellness_check` → FollowupAgent
 - `mood_tracking` → FollowupAgent
+- `manage_calendar` → CalendarManagementAgent
+- `propose_slots` → CalendarManagementAgent
+- `check_team_availability` → CalendarManagementAgent
+- `connect_calendar` → CalendarManagementAgent
+- `disconnect_calendar` → CalendarManagementAgent
 - `general_chat` → General Agent (fallback)
 
 **Classification Accuracy Target:** >95%

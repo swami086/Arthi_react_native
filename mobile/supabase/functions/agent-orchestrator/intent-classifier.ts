@@ -2,7 +2,7 @@
 import { callLLM } from '../_shared/llm-client.ts';
 
 export interface IntentResult {
-    intent: 'booking' | 'session' | 'insights' | 'followup' | 'general';
+    intent: 'booking' | 'session' | 'insights' | 'followup' | 'calendar' | 'general';
     confidence: number;
     reasoning: string[];
 }
@@ -17,6 +17,7 @@ Classify the user's message into one of these intents:
 - session: Related to ongoing therapy sessions, SOAP notes, or session management
 - insights: Requesting analytics, progress reports, or dashboard insights
 - followup: Post-session follow-up, mood tracking, or feedback
+- calendar: Calendar management, availability checking, slot proposals, team calendars, calendar integrations (Google/Outlook)
 - general: General questions, help, or other topics
 
 Respond with JSON: {"intent": "booking", "confidence": 85, "reasoning": ["User mentioned 'book'", "Mentioned anxiety specialty"]}`;
@@ -58,6 +59,12 @@ Respond with JSON: {"intent": "booking", "confidence": 85, "reasoning": ["User m
 
         if (lowerMessage.includes('followup') || lowerMessage.includes('feeling') || lowerMessage.includes('mood')) {
             return { intent: 'followup', confidence: 70, reasoning: ['Keyword: followup/mood'] };
+        }
+
+        if (lowerMessage.includes('calendar') || lowerMessage.includes('availability') || lowerMessage.includes('slot') || 
+            lowerMessage.includes('google calendar') || lowerMessage.includes('outlook') || 
+            lowerMessage.includes('team calendar') || lowerMessage.includes('propose slot')) {
+            return { intent: 'calendar', confidence: 75, reasoning: ['Keyword: calendar/availability/slot'] };
         }
 
         return { intent: 'general', confidence: 50, reasoning: ['No clear intent detected'] };

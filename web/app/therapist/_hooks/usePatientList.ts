@@ -1,8 +1,9 @@
 
 import { createClient } from '@/lib/supabase/client';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { reportError } from '@/lib/rollbar-utils';
 import { toast } from 'sonner';
+import { useAuth } from '@/hooks/use-auth';
 
 export interface Patient {
     id: string;
@@ -15,23 +16,40 @@ export interface Patient {
 }
 
 export function usePatientList() {
-    const supabase = createClient();
+    const { user, isLoading: authLoading } = useAuth();
+    const supabase = useMemo(() => createClient(), []);
     const [patients, setPatients] = useState<Patient[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const fetchingRef = useRef(false);
 
     const fetchPatients = useCallback(async () => {
+        if (!user) {
+            setPatients([]);
+            setLoading(false);
+            return;
+        }
+
+        // Prevent duplicate fetches
+        if (fetchingRef.current) {
+            return;
+        }
+        
         try {
+            fetchingRef.current = true;
             setLoading(true);
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) return;
+            setError(null);
 
             // Fetch practice_id for the user
-            const { data: profile } = await supabase
+            const { data: profile, error: profileError } = await supabase
                 .from('profiles')
                 .select('practice_id')
                 .eq('user_id', user.id)
                 .single();
+
+            if (profileError) {
+                throw profileError;
+            }
 
             // Fetch relationships first
             let relationshipQuery = (supabase.from('therapist_patient_relationships') as any)
@@ -46,26 +64,24 @@ export function usePatientList() {
             const { data: relationships, error: relationshipError } = await relationshipQuery;
 
             if (relationshipError) {
-                console.error('[usePatientList] Relationship query error:', relationshipError);
                 throw relationshipError;
             }
 
             if (!relationships || relationships.length === 0) {
-                console.log('[usePatientList] No relationships found');
                 setPatients([]);
+                setLoading(false);
                 return;
             }
 
             // Fetch patient profiles
             const patientIds = relationships.map((r: any) => r.patient_id);
-            const { data: patientProfiles, error: profileError } = await supabase
+            const { data: patientProfiles, error: profileQueryError } = await supabase
                 .from('profiles')
                 .select('user_id, full_name, avatar_url')
                 .in('user_id', patientIds);
 
-            if (profileError) {
-                console.error('[usePatientList] Profile query error:', profileError);
-                throw profileError;
+            if (profileQueryError) {
+                throw profileQueryError;
             }
 
             // Create a map of patient profiles by user_id
@@ -86,27 +102,25 @@ export function usePatientList() {
                 })
                 .filter((p: any) => p !== null);
 
-            console.log('[usePatientList] Formatted patients:', formatted);
             setPatients(formatted);
 
         } catch (err: any) {
-            console.error('Error fetching patients:', err);
+            console.error('[usePatientList] Error fetching patients:', err);
             setError(err.message);
             reportError(err, 'usePatientList');
+            setPatients([]);
         } finally {
             setLoading(false);
+            fetchingRef.current = false;
         }
-    }, [supabase]);
+    }, [supabase, user]);
 
     const removePatient = async (patientId: string) => {
+        if (!user) return;
+        
         try {
             // Optimistic update
             setPatients(prev => prev.filter(m => m.id !== patientId));
-
-            // Call API/Server Action
-            // Doing client-side delete for now as per simple plan, or usually invoke a server action
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) return;
 
             const { error } = await (supabase
                 .from('therapist_patient_relationships') as any)
@@ -123,26 +137,40 @@ export function usePatientList() {
         }
     };
 
+    // Trigger fetch when user becomes available
     useEffect(() => {
-        fetchPatients();
-        // Subscribe to changes
-        // Subscribe to changes
+        if (user && !authLoading) {
+            fetchPatients();
+        } else if (!authLoading && !user) {
+            setPatients([]);
+            setLoading(false);
+        }
+    }, [authLoading, user, fetchPatients]);
+
+    useEffect(() => {
+        if (!user) return;
+        
+        // Subscribe to auth changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
             fetchPatients();
         });
 
-        // Realtime
+        // Realtime subscription
         const channel = supabase.channel('patient-list-updates')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'therapist_patient_relationships' }, () => {
+            .on('postgres_changes', { 
+                event: '*', 
+                schema: 'public', 
+                table: 'therapist_patient_relationships' 
+            }, () => {
                 fetchPatients();
             })
             .subscribe();
 
         return () => {
-            subscription.unsubscribe();
+            subscription?.unsubscribe();
             supabase.removeChannel(channel);
         };
-    }, [fetchPatients, supabase]);
+    }, [supabase, user, fetchPatients]);
 
     return { patients, loading, error, refetch: fetchPatients, removePatient };
 }

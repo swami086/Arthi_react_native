@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
 import { User } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/client';
 import { Profile } from '@/types/database';
@@ -24,9 +24,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [profile, setProfile] = useState<Profile | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const supabase = createClient();
+    const initializingRef = React.useRef(false);
+    const supabase = React.useMemo(() => createClient(), []);
 
-    const fetchProfile = async (userId: string) => {
+    const fetchProfileData = React.useCallback(async (userId: string) => {
         try {
             const { data, error } = await supabase
                 .from('profiles')
@@ -45,43 +46,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             reportError(error, 'AuthProvider.fetchProfile.catch', { userId });
             return null;
         }
-    };
+    }, [supabase]);
 
     const refreshProfile = async () => {
         if (user) {
-            const updatedProfile = await fetchProfile(user.id);
+            const updatedProfile = await fetchProfileData(user.id);
             setProfile(updatedProfile);
         }
     };
 
     useEffect(() => {
-        const initializeAuth = async () => {
-            try {
-                const { data: { session } } = await supabase.auth.getSession();
-                const initialUser = session?.user ?? null;
-                setUser(initialUser);
-
-                if (initialUser) {
-                    addBreadcrumb('Auth initialized with session', 'auth', 'info', { userId: initialUser.id });
-                    setRollbarUser(initialUser.id, initialUser.email);
-                    const userProfile = await fetchProfile(initialUser.id);
-                    setProfile(userProfile);
-                } else {
-                    addBreadcrumb('Auth initialized without session', 'auth', 'info');
-                    clearRollbarUser();
-                }
-            } catch (error) {
-                reportError(error, 'AuthProvider.initializeAuth');
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        initializeAuth();
+        if (initializingRef.current) {
+            return;
+        }
+        
+        initializingRef.current = true;
 
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
             const currentUser = session?.user ?? null;
             setUser(currentUser);
+            setIsLoading(false); // Set loading to false immediately when auth state changes
 
             addBreadcrumb(`Auth state changed: ${event}`, 'auth', 'info', {
                 userId: currentUser?.id,
@@ -90,19 +74,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             if (currentUser) {
                 setRollbarUser(currentUser.id, currentUser.email);
-                const userProfile = await fetchProfile(currentUser.id);
-                setProfile(userProfile);
+                // Fetch profile async without blocking
+                fetchProfileData(currentUser.id).then((userProfile) => {
+                    setProfile(userProfile);
+                }).catch((error) => {
+                    console.error('[AuthProvider] Error fetching profile:', error);
+                });
             } else {
                 setProfile(null);
                 clearRollbarUser();
             }
-
-            setIsLoading(false);
         });
+
+        // Trigger initial auth state check
+        supabase.auth.getSession();
 
         return () => {
             subscription.unsubscribe();
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const role = profile?.role as any || null;

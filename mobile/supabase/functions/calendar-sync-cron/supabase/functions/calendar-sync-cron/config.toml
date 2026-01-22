@@ -1,0 +1,12 @@
+# Calendar Sync Cron Function Configuration
+# Syncs all therapist calendars every 6 hours
+
+[schedule]
+# Run every 6 hours
+# cron = "0 */6 * * *"
+
+# For testing, uncomment the line below to run every hour
+# cron = "0 * * * *"
+
+# Note: To enable the cron schedule, uncomment the cron line above
+# and deploy the function. The schedule will be managed by Supabase.

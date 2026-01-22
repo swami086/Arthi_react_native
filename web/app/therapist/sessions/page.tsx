@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { Card, CardContent } from '@/components/ui/card';
 import { SessionCard } from './_components/SessionCard';
+import { Calendar } from 'lucide-react';
 
 export const metadata = {
     title: 'My Sessions | SafeSpace Therapist',

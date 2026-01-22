@@ -5,6 +5,7 @@ import { bookingAgentNode } from '../_shared/agents/booking-agent.ts';
 import { sessionAgentNode } from '../_shared/agents/session-agent.ts';
 import { insightsAgentNode } from '../_shared/agents/insights-agent.ts';
 import { followupAgentNode } from '../_shared/agents/followup-agent.ts';
+import { calendarManagementAgentNode } from '../_shared/agents/calendar-management-agent.ts';
 
 export interface Agent {
     name: string;
@@ -152,6 +153,34 @@ suggest they use the appropriate quick action (@book, @insights, etc.).`;
                     toolCalls: result.toolCalls?.map(tc => tc.toolCall),
                     components: result.components, // Pass A2UI components
                     metadata: result.metadata,     // Pass A2UI metadata
+                    usage: result.usage,
+                    cost: result.cost,
+                    model: 'gpt-4o',
+                };
+            },
+        },
+
+        calendar: {
+            name: 'CalendarManagementAgent',
+            description: 'Manages therapist calendars, availability checking, and slot proposals',
+            execute: async ({ message, context, conversation, supabase }) => {
+                const state = {
+                    messages: conversation.messages.map(m => ({ role: m.role, content: m.content })),
+                    userId: context.userId,
+                    intent: 'calendar',
+                };
+
+                state.messages.push({ role: 'user', content: message });
+
+                const result = await calendarManagementAgentNode(state, supabase);
+
+                return {
+                    content: result.result,
+                    toolCalls: result.toolCalls?.map(tc => ({
+                        tool: tc.tool,
+                        arguments: tc.arguments,
+                        result: tc.result,
+                    })),
                     usage: result.usage,
                     cost: result.cost,
                     model: 'gpt-4o',

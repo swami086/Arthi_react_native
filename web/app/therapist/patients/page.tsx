@@ -13,7 +13,7 @@ import * as Tabs from '@radix-ui/react-tabs';
 import { Button } from '@/components/ui/button';
 
 export default function PatientsPage() {
-    const { patients, loading, removePatient, refetch } = usePatientList();
+    const { patients, loading, error, removePatient, refetch } = usePatientList();
     const [searchQuery, setSearchQuery] = useState('');
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
@@ -73,6 +73,11 @@ export default function PatientsPage() {
             </div>
 
             <div className="space-y-4">
+                {error && (
+                    <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                        <p className="text-red-800 dark:text-red-200">Error: {error}</p>
+                    </div>
+                )}
                 {loading ? (
                     <div className="flex flex-col gap-4">
                         {[1, 2, 3].map(i => (
@@ -81,7 +86,9 @@ export default function PatientsPage() {
                     </div>
                 ) : filteredPatients.length === 0 ? (
                     <div className="text-center py-12">
-                        <p className="text-gray-500">No patients found matching your search.</p>
+                        <p className="text-gray-500">
+                            {searchQuery ? 'No patients found matching your search.' : 'No patients found.'}
+                        </p>
                     </div>
                 ) : (
                     filteredPatients.map(patient => (

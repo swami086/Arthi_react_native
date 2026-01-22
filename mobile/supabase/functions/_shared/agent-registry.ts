@@ -2,6 +2,7 @@ import { bookingAgentNode } from './agents/booking-agent.ts';
 import { sessionAgentNode } from './agents/session-agent.ts';
 import { insightsAgentNode } from './agents/insights-agent.ts';
 import { followupAgentNode } from './agents/followup-agent.ts';
+import { calendarManagementAgentNode } from './agents/calendar-management-agent.ts';
 
 export const agentRegistry = {
     booking: {
@@ -27,5 +28,11 @@ export const agentRegistry = {
         description: 'Handles post-session engagement and check-ins',
         node: followupAgentNode,
         intents: ['send_followup', 'check_homework', 'wellness_check', 'mood_tracking'],
+    },
+    calendar: {
+        name: 'CalendarManagementAgent',
+        description: 'Manages therapist calendars, availability checking, and slot proposals',
+        node: calendarManagementAgentNode,
+        intents: ['check_availability', 'propose_slots', 'manage_calendar', 'view_team_calendars', 'sync_calendar'],
     },
 };
