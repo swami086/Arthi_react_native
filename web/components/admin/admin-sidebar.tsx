@@ -22,6 +22,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { signOut } from '@/app/actions/auth';
 
 interface SidebarProps {
     userEmail?: string;
@@ -46,12 +47,10 @@ export function AdminSidebar({ userEmail, userName, isSuperAdmin }: SidebarProps
     ];
 
     const handleLogout = async () => {
-        const { error } = await supabase.auth.signOut();
-        if (error) {
+        try {
+            await signOut();
+        } catch (error) {
             toast.error('Error logging out');
-        } else {
-            router.push('/login');
-            router.refresh();
         }
     };
 

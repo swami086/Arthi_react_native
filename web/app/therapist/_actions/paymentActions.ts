@@ -30,7 +30,7 @@ export async function exportPaymentHistoryAction(therapistId: string) {
                 amount,
                 currency,
                 status,
-                patient: profiles!payments_patient_id_fkey(full_name)
+                patient: profiles!payments_mentee_id_fkey(full_name)
             `)
             .eq('therapist_id', therapistId)
             .order('created_at', { ascending: false });

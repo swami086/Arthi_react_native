@@ -6,6 +6,7 @@ export const createRelationship = async (
     therapistId: string,
     patientId: string,
     assignedBy: string,
+    practiceId?: string,
     status: 'active' | 'inactive' | 'pending' | 'completed' = 'pending',
     notes?: string
 ) => {
@@ -18,7 +19,8 @@ export const createRelationship = async (
                 patient_id: patientId,
                 status,
                 notes,
-                assigned_by: assignedBy
+                assigned_by: assignedBy,
+                practice_id: practiceId
             })
 
             .select()
@@ -69,14 +71,19 @@ export const updateRelationshipStatus = async (relationshipId: string, status: '
     }
 };
 
-export const getRelationshipsByTherapist = async (therapistId: string) => {
+export const getRelationshipsByTherapist = async (therapistId: string, practiceId?: string) => {
     startSpan('api.relationship.getByTherapist');
     try {
-        const { data, error } = await supabase
+        let query = supabase
             .from('therapist_patient_relationships')
             .select('*, patient:profiles!patient_id(*)')
-            .eq('therapist_id', therapistId)
-            ;
+            .eq('therapist_id', therapistId);
+
+        if (practiceId) {
+            query = query.eq('practice_id', practiceId);
+        }
+
+        const { data, error } = await query;
 
         if (error) {
             reportError(error, 'relationshipService:getRelationshipsByTherapist', { therapistId });

@@ -25,7 +25,7 @@ export default async function TherapistPaymentsPage() {
     const { data: profile } = await (supabase
         .from('profiles')
         .select('role')
-        .eq('id', user.id) as any)
+        .eq('user_id', user.id) as any)
         .single();
 
     if (profile?.role !== 'therapist') {

@@ -80,6 +80,7 @@ export function LandingHero() {
                         alt="Supportive Illustration"
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-[2000ms]"
+                        sizes="(max-width: 1024px) 100vw, 50vw"
                         priority
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent mix-blend-overlay" />

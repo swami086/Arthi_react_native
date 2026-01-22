@@ -16,22 +16,29 @@ export default async function TherapistHomePage() {
 
     if (!user) return null; // handled by layout/middleware
 
-    // 1. Fetch Stats (RPC)
+    // 1. Fetch Practice Context
+    const { data: profile } = await supabase
+        .from('profiles')
+        .select('practice_id')
+        .eq('user_id', user.id)
+        .single();
+    const practiceId = profile?.practice_id;
+
+    // 2. Fetch Stats (RPC)
     let stats = null;
     try {
         const { data } = await (supabase as any).rpc('get_therapist_stats', {
-            therapist_uuid: user.id
+            therapist_user_id: user.id
         });
         stats = data;
     } catch (error) {
         console.error('Error fetching therapist stats:', error);
-        // reportError(error); // Assuming reportError is available or imported from lib/rollbar-utils
     }
 
-    // 2. Fetch Upcoming Appointments (Limit 3)
+    // 3. Fetch Upcoming Appointments (Limit 3)
     let appointments: any[] = [];
     try {
-        const { data } = await supabase
+        let query = supabase
             .from('appointments')
             .select(`
                 id,
@@ -41,7 +48,13 @@ export default async function TherapistHomePage() {
             `)
             .eq('therapist_id', user.id)
             .eq('status', 'scheduled')
-            .gte('start_time', new Date().toISOString())
+            .gte('start_time', new Date().toISOString());
+
+        if (practiceId) {
+            query = query.eq('practice_id', practiceId);
+        }
+
+        const { data } = await query
             .order('start_time', { ascending: true })
             .limit(3);
         appointments = data || [];
@@ -49,10 +62,10 @@ export default async function TherapistHomePage() {
         console.error('Error fetching appointments:', error);
     }
 
-    // 3. Fetch Recent Conversations (Limit 3)
+    // 4. Fetch Recent Conversations (Limit 3)
     let conversations: any[] = [];
     try {
-        const { data } = await supabase
+        let query = supabase
             .from('messages')
             .select(`
                 id,
@@ -60,7 +73,13 @@ export default async function TherapistHomePage() {
                 content,
                 sender:sender_id(full_name)
             `)
-            .eq('recipient_id', user.id)
+            .eq('receiver_id', user.id); // Changed from recipient_id to receiver_id
+
+        if (practiceId) {
+            query = query.eq('practice_id', practiceId);
+        }
+
+        const { data } = await query
             .order('created_at', { ascending: false })
             .limit(5);
         conversations = data || [];

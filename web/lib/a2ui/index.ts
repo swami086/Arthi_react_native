@@ -45,11 +45,9 @@ export {
 export {
     validateMessage,
     validateComponent,
-    validateDataBinding,
-    getValidationErrors,
+    validateComponentTree,
+    validateDataModel,
     sanitizeMessage,
-    validateActionId,
-    validateActionType,
 } from './message-validator';
 
 // Hook

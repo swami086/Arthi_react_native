@@ -1,0 +1,16 @@
+{
+    "type": "surfaceUpdate",
+    "surfaceId": "example-button",
+    "components": [
+        {
+            "id": "btn-1",
+            "type": "Button",
+            "props": {
+                "variant": "primary",
+                "size": "md",
+                "children": "Click Me",
+                "onClick": "action_button_click"
+            }
+        }
+    ]
+}

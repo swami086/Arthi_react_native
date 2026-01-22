@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { AddPatientModal } from '../_components/AddPatientModal';
 import { Search, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -18,6 +19,7 @@ export default function PatientDiscoveryPage() {
     const [patients, setPatients] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
     const fetchPatients = useCallback(async () => {
         setLoading(true);
@@ -52,7 +54,13 @@ export default function PatientDiscoveryPage() {
 
     return (
         <div className="space-y-6 max-w-5xl mx-auto">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Discover Patients</h1>
+            <div className="flex justify-between items-center">
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Discover Patients</h1>
+                <Button onClick={() => setIsAddModalOpen(true)}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add New Patient
+                </Button>
+            </div>
 
             <div className="relative">
                 <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
@@ -67,6 +75,14 @@ export default function PatientDiscoveryPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {listContent(loading, patients, handleInvite)}
             </div>
+
+            <AddPatientModal
+                open={isAddModalOpen}
+                onOpenChange={setIsAddModalOpen}
+                onSuccess={() => {
+                    fetchPatients();
+                }}
+            />
         </div>
     );
 }

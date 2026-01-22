@@ -27,7 +27,7 @@ Respond with JSON: {"intent": "booking", "confidence": 85, "reasoning": ["User m
             { role: 'user', content: `Context: ${JSON.stringify(context)}\n\nMessage: ${message}` },
         ],
         {
-            model: 'gpt-3.5-turbo', // Use cheaper model for classification
+            model: 'gpt-4o-mini', // Use cheaper model for classification
             temperature: 0.1,
             maxTokens: 200,
         }

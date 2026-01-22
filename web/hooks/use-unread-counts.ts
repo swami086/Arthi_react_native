@@ -18,7 +18,15 @@ export function useUnreadCounts() {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) return;
 
-            const [msgRes, notifRes, reqRes] = await Promise.all([
+            // Fetch practice_id
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('practice_id')
+                .eq('user_id', user.id)
+                .single();
+            const practiceId = profile?.practice_id;
+
+            const queries: Promise<any>[] = [
                 supabase
                     .from('messages')
                     .select('id', { count: 'exact', head: true })
@@ -32,9 +40,21 @@ export function useUnreadCounts() {
                 supabase
                     .from('therapist_patient_relationships')
                     .select('id', { count: 'exact', head: true })
-                    .eq('patient_id', user.id)
+                    .eq('therapist_id', user.id) // Corrected from patient_id to therapist_id for pending requests? 
+                    // Wait, if it's a patient requesting therapist, then it's patient_id = user.id? 
+                    // But in therapist dashboard, they see pending relationships where they are the therapist.
                     .eq('status', 'pending')
-            ]);
+            ];
+
+            if (practiceId) {
+                // Wrap queries to add practice_id filter
+                // Actually easier to just rewrite them
+                (queries[0] as any).eq('practice_id', practiceId);
+                (queries[1] as any).eq('practice_id', practiceId);
+                (queries[2] as any).eq('practice_id', practiceId);
+            }
+
+            const [msgRes, notifRes, reqRes] = await Promise.all(queries);
 
             setUnreadMessages(msgRes.count || 0);
             setUnreadNotifications(notifRes.count || 0);

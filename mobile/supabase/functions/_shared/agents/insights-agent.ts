@@ -1,15 +1,19 @@
 import { callLLM } from '../llm-client.ts';
 import { EmbeddingService } from '../embedding-service.ts';
-import { insightsTools, executeInsightsTool } from './insights-tools.ts';
+import { insightsTools, executeInsightsTool, analyzePatientData, detectPatterns } from './insights-tools.ts';
+import { buildInsightsDashboard } from '../../insights-agent/surface-builder.ts';
 
 export interface InsightsAgentState {
     messages: any[];
     userId: string;
     patientId: string;
     intent: string;
+    action?: string; // Support for A2UI actions
     toolCalls: any[];
     result: any;
     insights: any[];
+    components?: any[]; // A2UI components
+    metadata?: any; // A2UI metadata
     usage?: any;
     cost?: number;
 }
@@ -19,6 +23,20 @@ export async function insightsAgentNode(
     supabase: any,
     embeddingService: EmbeddingService
 ): Promise<Partial<InsightsAgentState>> {
+    // 1. Handle explicit A2UI actions
+    if (state.action === 'generate_insights' || state.intent === 'generate_insights') {
+        const analysis = await analyzePatientData(supabase, state.patientId);
+        const patterns = detectPatterns(analysis);
+        const components = buildInsightsDashboard(analysis, patterns);
+
+        return {
+            result: "Here is your detailed insights dashboard.",
+            components,
+            metadata: { analysis, patterns },
+            insights: patterns
+        };
+    }
+
     const systemPrompt = `You are an AI insights analyst for a therapy platform.
 Your role is to analyze patient data and provide actionable clinical insights to therapists.
 
@@ -43,7 +61,7 @@ Current patient ID: ${state.patientId}`;
             ...state.messages,
         ],
         {
-            model: 'gpt-4-turbo', // Analytical task
+            model: 'gpt-4o', // Analytical task
             temperature: 0.1, // Very low temperature for analytical accuracy
             tools: insightsTools,
         }
@@ -52,6 +70,9 @@ Current patient ID: ${state.patientId}`;
     // Execute tool calls
     const toolResults = [];
     const insights = [];
+    let dashboardGenerated = false;
+    let components = undefined;
+    let metadata = undefined;
 
     if (response.toolCalls && response.toolCalls.length > 0) {
         for (const toolCall of response.toolCalls) {
@@ -68,6 +89,15 @@ Current patient ID: ${state.patientId}`;
             );
             toolResults.push({ toolCall, result });
             insights.push(result);
+
+            // If we identified patterns or analyzed progress, let's proactively generate the dashboard
+            if ((name === 'identify_patterns' || name === 'analyze_patient_progress') && !dashboardGenerated) {
+                const analysis = await analyzePatientData(supabase, state.patientId);
+                const patterns = detectPatterns(analysis);
+                components = buildInsightsDashboard(analysis, patterns);
+                metadata = { analysis, patterns };
+                dashboardGenerated = true;
+            }
         }
     }
 
@@ -76,7 +106,10 @@ Current patient ID: ${state.patientId}`;
         toolCalls: toolResults,
         result: response.content,
         insights: [...(state.insights || []), ...insights],
+        components, // Return A2UI components if generated
+        metadata,
         usage: response.usage,
         cost: response.cost
     };
 }
+

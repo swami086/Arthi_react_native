@@ -27,7 +27,10 @@ export type MainTabParamList = {
 export type TherapistTabParamList = {
     Home: undefined;
     Patients: undefined;
+    Messages: undefined;
     Sessions: undefined;
+    Payments: undefined;
+    Referrals: undefined;
     Profile: undefined;
     Settings: undefined;
 };

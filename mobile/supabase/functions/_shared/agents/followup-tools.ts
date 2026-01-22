@@ -120,7 +120,9 @@ async function sendWellnessCheck(supabase: any, args: any) {
 
     if (profileError) throw profileError;
 
-    let statusMessage = '';
+    // Declare variables before use (Comment 3)
+    let success = false;
+    let sentAt: string | null = null;
 
     if (args.channel === 'whatsapp') {
         if (!profile.phone_number) {
@@ -138,7 +140,10 @@ async function sendWellnessCheck(supabase: any, args: any) {
             },
         });
         if (error) throw error;
+
         success = true;
+        sentAt = new Date().toISOString();
+
     } else if (args.channel === 'email') {
         return {
             success: false,
@@ -158,7 +163,7 @@ async function sendWellnessCheck(supabase: any, args: any) {
     return {
         success,
         channel: args.channel,
-        sentAt: success ? sentAt : null,
+        sentAt,
         recipientId: args.patientId,
     };
 }
@@ -257,3 +262,80 @@ async function escalateToTherapist(supabase: any, args: any) {
         notified: !!notifiedAt,
     };
 }
+
+/**
+ * Fetches patient history and treatment plan.
+ */
+export async function getPatientHistory(supabase: any, userId: string) {
+    const { data: profile } = await supabase.from('profiles').select('*').eq('user_id', userId).single();
+    const { data: sessions } = await supabase
+        .from('appointments')
+        .select('*')
+        .eq('patient_id', userId)
+        .order('start_time', { ascending: false })
+        .limit(5);
+
+    return {
+        profile,
+        recentSessions: sessions || []
+    };
+}
+
+/**
+ * Selects personalized questions based on history.
+ */
+export function selectQuestions(history: any) {
+    // Default question set
+    const questions = [
+        {
+            id: 'mood_score',
+            type: 'slider',
+            label: 'Overall, how are you feeling today?',
+            min: 1,
+            max: 10,
+            required: true
+        },
+        {
+            id: 'homework_completion',
+            type: 'checkbox',
+            label: 'Were you able to complete your homework assignment from the last session?',
+            options: [{ value: 'done', label: 'Yes, completed it' }],
+            required: false
+        },
+        {
+            id: 'sleep_quality',
+            type: 'radio',
+            label: 'How would you rate your sleep last night?',
+            options: [
+                { value: 'great', label: 'Great (7+ hours)' },
+                { value: 'good', label: 'Good (5-7 hours)' },
+                { value: 'poor', label: 'Poor (<5 hours)' }
+            ],
+            required: true
+        }
+    ];
+
+    return questions;
+}
+
+/**
+ * Saves wellness check results.
+ */
+export async function saveWellnessCheck(supabase: any, userId: string, responses: any) {
+    const moodScore = responses.mood_score || 5;
+    const { data, error } = await supabase
+        .from('wellness_checks')
+        .insert({
+            user_id: userId,
+            responses,
+            mood_score: moodScore,
+            completed_at: new Date().toISOString(),
+            flagged_for_review: moodScore <= 3
+        })
+        .select()
+        .single();
+
+    if (error) throw error;
+    return data;
+}
+

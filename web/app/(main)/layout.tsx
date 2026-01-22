@@ -30,7 +30,7 @@ export default async function MainLayout({
         const { data: profile } = await supabase
             .from('profiles')
             .select('*')
-            .eq('id', user.id)
+            .eq('user_id', user.id)
             .single();
 
         if (!profile || (profile as any).role !== 'patient') {

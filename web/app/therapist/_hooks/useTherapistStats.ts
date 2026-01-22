@@ -28,7 +28,7 @@ export function useTherapistStats() {
             // Assuming the RPC exists as per plan references. 
             // If strictly following "Observations", it says "The system uses Supabase RPC functions (get_therapist_stats)".
             const { data, error } = await (supabase as any).rpc('get_therapist_stats', {
-                therapist_uuid: user.id
+                therapist_user_id: user.id
             });
 
             if (error) throw error;

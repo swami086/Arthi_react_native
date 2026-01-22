@@ -29,6 +29,21 @@ export async function searchTherapists(query?: string, specialization?: string) 
 }
 
 /**
+ * Fetches a therapist by their ID.
+ */
+export async function getTherapistById(therapistId: string) {
+    const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', therapistId)
+        .eq('role', 'therapist')
+        .single();
+
+    if (error) throw error;
+    return data;
+}
+
+/**
  * Fetches available time slots for a therapist on a specific date.
  */
 export async function getAvailableTimeSlots(therapistId: string, date: string) {

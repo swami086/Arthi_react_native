@@ -122,6 +122,8 @@ suggest they use the appropriate quick action (@book, @insights, etc.).`;
                     content: result.result,
                     toolCalls: result.toolCalls?.map(tc => tc.toolCall),
                     insights: result.insights,
+                    components: result.components, // Pass A2UI components
+                    metadata: result.metadata,     // Pass A2UI metadata
                     usage: result.usage,
                     cost: result.cost,
                     model: 'gpt-4o',
@@ -138,6 +140,7 @@ suggest they use the appropriate quick action (@book, @insights, etc.).`;
                     userId: context.userId,
                     patientId: context.patientId || context.userId,
                     intent: 'followup',
+                    // Support passing action if present in message context (future enhancement)
                 };
 
                 state.messages.push({ role: 'user', content: message });
@@ -147,6 +150,8 @@ suggest they use the appropriate quick action (@book, @insights, etc.).`;
                 return {
                     content: result.result,
                     toolCalls: result.toolCalls?.map(tc => tc.toolCall),
+                    components: result.components, // Pass A2UI components
+                    metadata: result.metadata,     // Pass A2UI metadata
                     usage: result.usage,
                     cost: result.cost,
                     model: 'gpt-4o',

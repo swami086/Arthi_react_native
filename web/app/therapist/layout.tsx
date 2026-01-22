@@ -1,5 +1,6 @@
 export const dynamic = 'force-dynamic';
 
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { TherapistSidebar } from './_components/TherapistSidebar';
@@ -11,7 +12,7 @@ import { MessageListener } from '@/components/messaging/message-listener';
 export default async function TherapistLayout({
     children,
 }: {
-    children: React.ReactNode;
+    children: React.ReactNode; // Triggers HMR
 }) {
     const supabase = await createClient();
 
@@ -52,14 +53,16 @@ export default async function TherapistLayout({
                         <h1 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
                             Workplace
                         </h1>
-                        <Button
-                            variant="error"
-                            size="sm"
-                            className="gap-2 bg-red-600 hover:bg-red-700 text-white shadow-red-200"
-                        >
-                            <AlertTriangle className="h-4 w-4" />
-                            Crisis Resources
-                        </Button>
+                        <Link href="/resources/crisis">
+                            <Button
+                                variant="error"
+                                size="sm"
+                                className="gap-2 bg-red-600 hover:bg-red-700 text-white shadow-red-200"
+                            >
+                                <AlertTriangle className="h-4 w-4" />
+                                Crisis Resources
+                            </Button>
+                        </Link>
                     </header>
 
                     <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#09090b] p-8">

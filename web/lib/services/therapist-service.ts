@@ -46,7 +46,7 @@ export async function getTherapistById(supabase: SupabaseClient, id: string) {
     }
 }
 
-export async function getTherapistReviews(supabase: SupabaseClient, therapistId: string, limit = 5) {
+export async function getTherapistReviews(supabase: SupabaseClient, therapistId: string, practiceId?: string, limit = 5) {
     addBreadcrumb('Fetching therapist reviews', 'therapist_service.getTherapistReviews', 'info', { therapistId, limit });
     try {
         // We need to join with profiles to get patient names.
@@ -54,13 +54,19 @@ export async function getTherapistReviews(supabase: SupabaseClient, therapistId:
         // The join syntax depends on the exact relationship name. 
         // Often supabase-js infers it, or we use explicit strict typing.
         // For now, selecting specific fields.
-        const { data, error } = await supabase
+        let query = supabase
             .from('reviews')
             .select(`
                 *,
-                patient:profiles!reviews_patient_id_fkey(full_name, avatar_url)
+                patient:profiles!reviews_mentee_id_fkey(user_id, full_name, avatar_url)
             `)
-            .eq('therapist_id', therapistId)
+            .eq('therapist_id', therapistId);
+
+        if (practiceId) {
+            query = query.eq('practice_id', practiceId);
+        }
+
+        const { data, error } = await query
             .order('created_at', { ascending: false })
             .limit(limit);
 
@@ -75,15 +81,21 @@ export async function getTherapistReviews(supabase: SupabaseClient, therapistId:
     }
 }
 
-export async function getTherapistAvailability(supabase: SupabaseClient, therapistId: string) {
+export async function getTherapistAvailability(supabase: SupabaseClient, therapistId: string, practiceId?: string) {
     addBreadcrumb('Fetching therapist availability', 'therapist_service.getTherapistAvailability', 'info', { therapistId });
     try {
-        const { data, error } = await supabase
+        let queryBuilder = supabase
             .from('therapist_availability' as any)
             .select('*')
             .eq('therapist_id', therapistId)
             .eq('is_booked', false)
-            .gt('start_time', new Date().toISOString())
+            .gt('start_time', new Date().toISOString());
+
+        if (practiceId) {
+            queryBuilder = queryBuilder.eq('practice_id', practiceId);
+        }
+
+        const { data, error } = await queryBuilder
             .order('start_time', { ascending: true })
             .limit(5);
 
@@ -104,18 +116,17 @@ export async function getTherapistAvailability(supabase: SupabaseClient, therapi
     }
 }
 
-export async function searchAvailablePatients(supabase: SupabaseClient, query: string = '', limit = 10) {
-    addBreadcrumb('Searching available patients', 'therapist_service.searchAvailablePatients', 'info', { query });
+export async function searchAvailablePatients(supabase: SupabaseClient, query: string = '', limit = 10, practiceId?: string) {
+    addBreadcrumb('Searching available patients', 'therapist_service.searchAvailablePatients', 'info', { query, practiceId });
     try {
         let builder = supabase
             .from('profiles')
-            .select(`
-                user_id,
-                full_name,
-                avatar_url,
-                role
-            `)
+            .select('user_id, full_name, avatar_url, role')
             .eq('role', 'patient');
+
+        if (practiceId) {
+            builder = builder.eq('practice_id', practiceId);
+        }
 
         if (query) {
             builder = builder.ilike('full_name', `%${query}%`);
@@ -127,6 +138,7 @@ export async function searchAvailablePatients(supabase: SupabaseClient, query: s
 
         return data.map(m => ({
             ...m,
+            id: m.user_id,
             email: 'hidden@example.com', // Email is not exposed in public profile search
             matchPercentage: Math.floor(Math.random() * (98 - 70) + 70)
         }));

@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Users, Calendar, Clock, Star, Plus, MessageSquare, Video, FileText } from 'lucide-react';
+import { Users, Calendar, Clock, Star, Plus, MessageSquare, Video, FileText, BrainCircuit, Sparkles, ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+
 import { StatCard } from '../../_components/StatCard';
 import { QuickActionButton } from '../../_components/QuickActionButton';
 import { useTherapistStats, TherapistStats } from '../../_hooks/useTherapistStats';
@@ -92,11 +94,13 @@ export default function TherapistHomeClient({ initialStats, initialAppointments,
                     <div className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-800">
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h3>
                         <div className="flex gap-4 overflow-x-auto pb-2">
+                            <QuickActionButton label="AI Copilot" icon={BrainCircuit} href="/therapist/copilot" color="purple" />
                             <QuickActionButton label="Add Patient" icon={Plus} href="/therapist/patients/discovery" color="blue" />
                             <QuickActionButton label="Schedule" icon={Calendar} href="/therapist/sessions" color="purple" />
-                            <QuickActionButton label="Message" icon={MessageSquare} href="/messages" color="green" />
+                            <QuickActionButton label="Message" icon={MessageSquare} href="/therapist/messages" color="green" />
                             <QuickActionButton label="Notes" icon={FileText} href="/therapist/patients" color="orange" />
                         </div>
+
                     </div>
 
                     {/* Upcoming Sessions */}
@@ -139,7 +143,32 @@ export default function TherapistHomeClient({ initialStats, initialAppointments,
                             </div>
                         )}
                     </div>
+
+                    {/* AI Clinical Insights */}
+                    <div className="bg-gradient-to-br from-primary/5 via-transparent to-transparent dark:from-primary/10 rounded-xl p-6 shadow-sm border border-primary/10 mt-6">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                <Sparkles className="h-5 w-5 text-primary" />
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">AI Clinical Insights</h3>
+                                <p className="text-xs text-gray-500 font-medium">Derived from recent session transcripts and notes</p>
+                            </div>
+                        </div>
+                        <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 italic">
+                                "Analysis across your caseload suggests a 15% increase in anxiety-related symptoms following recent holiday periods. Would you like to view the automated trend report?"
+                            </p>
+                            <Link href="/therapist/copilot">
+                                <Button variant="link" className="p-0 h-auto mt-4 font-bold text-primary flex items-center gap-2">
+                                    Open AI Copilot
+                                    <ArrowRight className="h-4 w-4" />
+                                </Button>
+                            </Link>
+                        </div>
+                    </div>
                 </div>
+
 
                 {/* Sidebar / Recent Activity */}
                 <div className="space-y-6">

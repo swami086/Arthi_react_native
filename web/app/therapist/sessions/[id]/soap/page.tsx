@@ -15,7 +15,7 @@ export default async function SoapNotePage({ params }: { params: Promise<{ id: s
     const { data: profileResult } = await supabase
         .from('profiles')
         .select('full_name')
-        .eq('id', user.id)
+        .eq('user_id', user.id)
         .single();
     const profile = profileResult as any;
 

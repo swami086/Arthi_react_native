@@ -13,13 +13,13 @@ export type AppointmentWithDetails = Appointment & {
 };
 
 export const useAppointments = () => {
-    const { user } = useAuth();
+    const { user, profile } = useAuth();
     const [appointments, setAppointments] = useState<AppointmentWithDetails[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     const fetchAppointments = useCallback(async () => {
-        if (!user) return;
+        if (!user || !profile?.practice_id) return;
         startSpan('api.appointments.fetch');
         startTimer('appointments_load');
         try {
@@ -31,6 +31,7 @@ export const useAppointments = () => {
                     therapist:profiles!therapist_id(full_name, avatar_url),
                     patient:profiles!patient_id(full_name, avatar_url)
                 `)
+                .eq('practice_id', profile.practice_id)
                 .or(`therapist_id.eq.${user.id},patient_id.eq.${user.id},session_type.eq.public`)
                 // @ts-ignore
                 .order('start_time', { ascending: true });
@@ -50,7 +51,7 @@ export const useAppointments = () => {
             setLoading(false);
             endSpan();
         }
-    }, [user]);
+    }, [user, profile?.practice_id]);
 
     useEffect(() => {
         fetchAppointments();

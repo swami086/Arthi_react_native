@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { GradientAvatar } from '@/components/ui/gradient-avatar';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge'; // Assuming this exists or use standard div
-import { Star, Briefcase, GraduationCap, Clock } from 'lucide-react';
+import { Star, Briefcase, GraduationCap, Clock, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface Props {
@@ -35,9 +35,21 @@ export default function TherapistDetailClient({ therapist, reviews, availability
                         <span>({reviews.length} reviews)</span>
                     </div>
                 </div>
-                <div className="flex flex-col gap-2 w-full md:w-auto">
-                    <Button onClick={() => router.push(`/appointments/book/${therapist.user_id}`)}>Book Session</Button>
-                    <Button variant="outline">Message</Button>
+                <div className="flex flex-col gap-3 w-full md:w-auto">
+                    <Button
+                        onClick={() => router.push(`/appointments/book/${therapist.user_id}/select-date`)}
+                        className="font-bold"
+                    >
+                        Book Session
+                    </Button>
+                    <Button
+                        onClick={() => router.push(`/appointments?smart_book=true&therapistId=${therapist.user_id}`)}
+                        variant="outline"
+                        className="gap-2 border-primary/30 text-primary hover:bg-primary/5"
+                    >
+                        <Sparkles className="w-4 h-4" /> Smart Book
+                    </Button>
+                    <Button variant="ghost">Message</Button>
                 </div>
             </div>
 

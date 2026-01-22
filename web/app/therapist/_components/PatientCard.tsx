@@ -47,7 +47,7 @@ export function PatientCard({ patient, onRemove }: PatientCardProps) {
             </div>
 
             <div className="flex items-center gap-2">
-                <Link href={`/messages?userId=${patient.id}`}>
+                <Link href={`/therapist/messages/${patient.id}`}>
                     <Button variant="ghost" size="icon" className="text-gray-500 hover:text-primary">
                         <MessageSquare className="h-5 w-5" />
                     </Button>

@@ -30,7 +30,7 @@ export default async function HomePage() {
         const { data: rawProfile, error: profileError } = await supabase
             .from('profiles')
             .select('full_name, avatar_url')
-            .eq('id', user.id)
+            .eq('user_id', user.id)
             .single();
         const profile = rawProfile as any;
 

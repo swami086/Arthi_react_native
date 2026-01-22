@@ -70,10 +70,10 @@ export const paymentService = {
     /**
      * Get payment history for user
      */
-    async getPaymentHistory(userId: string): Promise<PaymentWithAppointment[]> {
+    async getPaymentHistory(userId: string, practiceId?: string): Promise<PaymentWithAppointment[]> {
         const supabase = await createClient();
         try {
-            const { data, error } = await supabase
+            let query = supabase
                 .from('payments')
                 .select(`
                     *,
@@ -81,15 +81,21 @@ export const paymentService = {
                         id,
                         start_time,
                         end_time,
-                        therapist: profiles!appointments_therapist_id_fkey(
+                        therapist: profiles!appointments_mentor_id_fkey(
+                            user_id,
                             full_name,
                             avatar_url,
                             specialization
                         )
                     )
                 `)
-                .or(`patient_id.eq.${userId},therapist_id.eq.${userId}`)
-                .order('created_at', { ascending: false });
+                .or(`patient_id.eq.${userId},therapist_id.eq.${userId}`);
+
+            if (practiceId) {
+                query = query.eq('practice_id', practiceId);
+            }
+
+            const { data, error } = await query.order('created_at', { ascending: false });
 
             if (error) throw error;
             return data as PaymentWithAppointment[];
@@ -113,7 +119,8 @@ export const paymentService = {
                         id,
                         start_time,
                         end_time,
-                        therapist: profiles!appointments_therapist_id_fkey(
+                        therapist: profiles!appointments_mentor_id_fkey(
+                            user_id,
                             full_name,
                             avatar_url,
                             specialization
@@ -156,7 +163,7 @@ export const paymentService = {
     /**
      * Get earnings summary for a therapist
      */
-    async getTherapistEarnings(therapistId: string, startDate?: string, endDate?: string): Promise<TherapistEarnings> {
+    async getTherapistEarnings(therapistId: string, practiceId?: string, startDate?: string, endDate?: string): Promise<TherapistEarnings> {
         const supabase = await createClient();
         startTimer('therapist_earnings_fetch');
         try {
@@ -164,6 +171,7 @@ export const paymentService = {
                 .select('amount, therapist_payout, status, created_at')
                 .eq('therapist_id', therapistId);
 
+            if (practiceId) query = query.eq('practice_id', practiceId);
             if (startDate) query = query.gte('created_at', startDate);
             if (endDate) query = query.lte('created_at', endDate);
 
@@ -187,7 +195,7 @@ export const paymentService = {
                 const payout = payment.therapist_payout || (payment.amount * 0.9);
                 const createdAt = new Date(payment.created_at);
 
-                if (payment.status === 'completed') {
+                if (payment.status === 'completed' || payment.status === 'succeeded') {
                     total += payout;
                     available += payout;
 
@@ -216,16 +224,20 @@ export const paymentService = {
     /**
      * Get recent transactions for a therapist
      */
-    async getTherapistTransactions(therapistId: string, limit = 10, offset = 0): Promise<PaymentWithPatient[]> {
+    async getTherapistTransactions(therapistId: string, practiceId?: string, limit = 10, offset = 0): Promise<PaymentWithPatient[]> {
         const supabase = await createClient();
         try {
-            const { data, error } = await supabase.from('payments')
+            let query = supabase.from('payments')
                 .select(`
                     *,
-                    patient: profiles!payments_patient_id_fkey(full_name, avatar_url),
+                    patient: profiles!payments_mentee_id_fkey(user_id, full_name, avatar_url),
                     appointment: appointments(id, start_time, status)
                 `)
-                .eq('therapist_id', therapistId)
+                .eq('therapist_id', therapistId);
+
+            if (practiceId) query = query.eq('practice_id', practiceId);
+
+            const { data, error } = await query
                 .order('created_at', { ascending: false })
                 .range(offset, offset + limit - 1);
 
@@ -240,20 +252,24 @@ export const paymentService = {
     /**
      * Get detailed payment breakdown for a therapist
      */
-    async getTherapistPaymentBreakdown(therapistId: string) {
+    async getTherapistPaymentBreakdown(therapistId: string, practiceId?: string) {
         const supabase = await createClient();
         try {
-            const { data, error } = await supabase.from('payments')
+            let query = supabase.from('payments')
                 .select(`
                     id,
                     amount,
                     therapist_payout,
                     status,
                     created_at,
-                    patient: profiles!payments_patient_id_fkey(id, full_name, avatar_url),
+                    patient: profiles!payments_mentee_id_fkey(user_id, full_name, avatar_url),
                     appointment: appointments(id, start_time, status)
                 `)
-                .eq('therapist_id', therapistId)
+                .eq('therapist_id', therapistId);
+
+            if (practiceId) query = query.eq('practice_id', practiceId);
+
+            const { data, error } = await query
                 .order('created_at', { ascending: false });
 
             if (error) throw error;

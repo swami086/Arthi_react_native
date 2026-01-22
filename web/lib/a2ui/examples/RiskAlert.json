@@ -1,0 +1,18 @@
+{
+    "type": "surfaceUpdate",
+    "surfaceId": "example-risk",
+    "components": [
+        {
+            "id": "risk-1",
+            "type": "RiskAlert",
+            "props": {
+                "type": "self-harm",
+                "severity": "high",
+                "description": "Patient expressed themes of hopelessness in session.",
+                "detectedAt": "2024-03-20T10:00:00Z",
+                "onOpenAssessment": "open_hopelessness_assessment",
+                "onFlagForReview": "flag_risk_high"
+            }
+        }
+    ]
+}

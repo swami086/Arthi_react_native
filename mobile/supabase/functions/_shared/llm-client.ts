@@ -39,11 +39,11 @@ export interface LLMResponse {
 // Cost per 1M tokens (as of early 2026)
 const COSTS = {
     'gpt-4o': { input: 2.5, output: 10 },
-    'gpt-3.5-turbo': { input: 0.5, output: 1.5 },
+    'gpt-4o-mini': { input: 0.15, output: 0.6 },
 };
 
 function calculateCost(model: string, promptTokens: number, completionTokens: number): number {
-    const modelKey = model.includes('gpt-4') ? 'gpt-4o' : 'gpt-3.5-turbo';
+    const modelKey = model.includes('gpt-4') ? 'gpt-4o' : 'gpt-4o-mini';
 
     const rate = COSTS[modelKey] || COSTS['gpt-4o'];
     return (promptTokens * rate.input + completionTokens * rate.output) / 1_000_000;
@@ -82,46 +82,78 @@ export async function callLLM(
     }
 }
 
+export class LLMTimeoutError extends Error {
+    constructor(message: string = 'LLM request exceeded execution time limit') {
+        super(message);
+        this.name = 'LLMTimeoutError';
+    }
+}
+
 async function callOpenAI(
     messages: LLMMessage[],
     options: LLMOptions
 ): Promise<LLMResponse> {
     const finalModel = options.model === 'gpt-4-turbo' ? 'gpt-4o' : (options.model || 'gpt-4o');
 
-    const response = await openai.chat.completions.create({
-        model: finalModel,
-        messages: messages.map(m => ({
-            role: m.role,
-            content: m.content,
-        })),
-        temperature: options.temperature,
-        max_tokens: options.maxTokens,
-        tools: options.tools?.length > 0 ? options.tools : undefined,
-        stream: options.stream,
-    });
+    // Timeout guard (Comment 1)
+    const controller = new AbortController();
+    const timeoutMs = 3500; // 3.5 seconds (safer margin below 5s edge limit)
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-    if (options.stream) {
-        // Return stream object for streaming responses
-        return { content: '', stream: response };
+    try {
+        const response = await openai.chat.completions.create({
+            model: finalModel,
+            messages: messages.map(m => ({
+                role: m.role,
+                content: m.content,
+            })),
+            temperature: options.temperature,
+            max_tokens: options.maxTokens,
+            tools: options.tools?.length > 0 ? options.tools : undefined,
+            stream: options.stream,
+        }, {
+            signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        if (options.stream) {
+            // Return stream object for streaming responses
+            return { content: '', stream: response };
+        }
+
+        const choice = response.choices[0];
+        const usage = response.usage;
+
+        return {
+            content: choice.message.content || '',
+            toolCalls: choice.message.tool_calls,
+            usage: usage ? {
+                promptTokens: usage.prompt_tokens,
+                completionTokens: usage.completion_tokens,
+                totalTokens: usage.total_tokens
+            } : undefined,
+            cost: calculateCost(
+                finalModel,
+                usage?.prompt_tokens || 0,
+                usage?.completion_tokens || 0
+            ),
+        };
+    } catch (error) {
+        clearTimeout(timeoutId);
+        console.error('LLM Internal Error:', {
+            name: error.name,
+            constructor: error.constructor.name,
+            message: error.message,
+            aborted: controller.signal.aborted
+        });
+
+        // If we aborted the request, it is definitely a timeout
+        if (controller.signal.aborted || error.name === 'AbortError' || error.constructor.name === 'APIConnectionTimeoutError') {
+            throw new LLMTimeoutError();
+        }
+        throw error;
     }
-
-    const choice = response.choices[0];
-    const usage = response.usage;
-
-    return {
-        content: choice.message.content || '',
-        toolCalls: choice.message.tool_calls,
-        usage: {
-            promptTokens: usage?.prompt_tokens || 0,
-            completionTokens: usage?.completion_tokens || 0,
-            totalTokens: usage?.total_tokens || 0,
-        },
-        cost: calculateCost(
-            finalModel,
-            usage?.prompt_tokens || 0,
-            usage?.completion_tokens || 0
-        ),
-    };
 }
 
 export { openai };

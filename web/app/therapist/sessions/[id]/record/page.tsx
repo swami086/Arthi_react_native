@@ -31,12 +31,12 @@ export default async function RecordingPage({ params }: RecordingPageProps) {
     const appointment = appointmentData as any;
 
     if (error || !appointment) {
-        redirect('/therapist/appointments');
+        redirect('/therapist/sessions');
     }
 
     // Only allow therapist to record
     if (appointment.therapist_id !== user.id) {
-        redirect('/therapist/dashboard');
+        redirect('/therapist/home');
     }
 
     // 3. Check for existing recording

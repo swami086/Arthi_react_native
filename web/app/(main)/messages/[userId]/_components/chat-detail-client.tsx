@@ -15,7 +15,7 @@ interface ChatDetailClientProps {
     initialMessages: any[];
 }
 
-export default function ChatDetailClient({ otherUser, initialMessages }: ChatDetailClientProps) {
+export default function ChatDetailClient({ otherUser, initialMessages, backUrl = '/messages' }: ChatDetailClientProps & { backUrl?: string }) {
     const { messages, loading, sendMessage } = useChat(otherUser.user_id);
     const scrollRef = useRef<HTMLDivElement>(null);
     const { user } = useAuth();
@@ -39,7 +39,7 @@ export default function ChatDetailClient({ otherUser, initialMessages }: ChatDet
     return (
         <div className="flex flex-col h-[calc(100vh-80px)] md:h-full bg-white dark:bg-black overflow-hidden relative">
             {/* Header */}
-            <ChatHeader user={otherUser} isOnline={isOnline(otherUser.user_id)} />
+            <ChatHeader user={otherUser} isOnline={isOnline(otherUser.user_id)} backUrl={backUrl} />
 
             {/* Messages Area */}
             <div

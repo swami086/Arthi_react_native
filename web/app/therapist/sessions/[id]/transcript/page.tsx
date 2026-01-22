@@ -21,7 +21,7 @@ export default async function TranscriptPage({ params }: PageProps) {
         supabase.from('session_recordings').select('id').eq('appointment_id', id).maybeSingle(),
         supabase.auth.getUser().then(async ({ data: { user } }) => {
             if (!user) return { data: null };
-            return supabase.from('profiles').select('full_name').eq('id', user.id).single();
+            return supabase.from('profiles').select('full_name').eq('user_id', user.id).single();
         })
     ]);
 

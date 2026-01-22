@@ -13,7 +13,7 @@ interface Props {
 export async function generateMetadata({ params }: Props) {
     const { patientId } = await params;
     const supabase = await createClient();
-    const { data: rawData } = await supabase.from('profiles' as any).select('full_name').eq('id', patientId).single();
+    const { data: rawData } = await supabase.from('profiles').select('full_name').eq('user_id', patientId).single();
     const data = rawData as any;
 
     return {
@@ -29,7 +29,7 @@ export default async function PatientDetailPage({ params }: Props) {
     const { data: patient, error: profileError } = await supabase
         .from('profiles')
         .select('*')
-        .eq('id', patientId)
+        .eq('user_id', patientId)
         .single();
 
     if (profileError || !patient) {

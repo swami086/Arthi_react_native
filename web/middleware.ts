@@ -2,17 +2,40 @@ import { updateSession } from '@/lib/supabase/middleware';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const publicRoutes = ['/', '/login', '/signup', '/forgot-password', '/onboarding', '/api/test-rollbar', '/auth/callback', '/api/local-log'];
+const publicRoutes = ['/', '/login', '/signup', '/forgot-password', '/onboarding', '/api/test-rollbar', '/auth/callback', '/api/local-log', '/privacy', '/terms', '/support', '/about', '/resources/crisis'];
 
 export async function middleware(request: NextRequest) {
     const { supabase, response, user } = await updateSession(request);
     const path = request.nextUrl.pathname;
     const onboardingCompleted = request.cookies.get('onboarding_completed')?.value === 'true';
 
+    let isOnboarded = onboardingCompleted;
+    let profile = null;
+
+    if (user) {
+        // Fetch user profile and preferences
+        const { data: userProfile } = await supabase
+            .from('profiles')
+            .select('role, approval_status')
+            .eq('user_id', user.id)
+            .single();
+        profile = userProfile;
+
+        const { data: prefs } = await supabase
+            .from('user_agent_preferences')
+            .select('onboarding_completed')
+            .eq('user_id', user.id)
+            .single();
+
+        if (prefs?.onboarding_completed) {
+            isOnboarded = true;
+        }
+    }
+
     // Public routes handling
     if (publicRoutes.some(route => path === route || path.startsWith(route + '/'))) {
         // If user already completed onboarding and tries to go to onboarding, send them home if authenticated
-        if (user && onboardingCompleted && path.startsWith('/onboarding')) {
+        if (user && isOnboarded && path.startsWith('/onboarding')) {
             return NextResponse.redirect(new URL('/home', request.url));
         }
         return response;
@@ -31,18 +54,11 @@ export async function middleware(request: NextRequest) {
     // Authenticated users flow
 
     // Check onboarding status for authenticated users
-    if (!onboardingCompleted && !path.startsWith('/onboarding')) {
+    if (!isOnboarded && !path.startsWith('/onboarding')) {
         const url = request.nextUrl.clone();
         url.pathname = '/onboarding/welcome';
         return NextResponse.redirect(url, { headers: response.headers });
     }
-
-    // Fetch user profile and role
-    const { data: profile } = await supabase
-        .from('profiles')
-        .select('role, approval_status')
-        .eq('user_id', user.id)
-        .single();
 
     // Handle pending therapist approval
     if (profile?.role === 'therapist' && profile?.approval_status === 'pending') {
@@ -61,7 +77,7 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(url, { headers: response.headers });
     }
 
-    if (profile?.role === 'therapist' && !path.startsWith('/therapist') && !path.startsWith('/profile') && !path.startsWith('/onboarding')) {
+    if (profile?.role === 'therapist' && !path.startsWith('/therapist') && !path.startsWith('/profile') && !path.startsWith('/onboarding') && !path.startsWith('/messages') && !path.startsWith('/notifications') && !path.startsWith('/api')) {
         const url = request.nextUrl.clone();
         url.pathname = '/therapist/home';
         return NextResponse.redirect(url, { headers: response.headers });
@@ -80,8 +96,16 @@ export async function middleware(request: NextRequest) {
         response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
     }
 
+    // AI Safety & Rate Limiting (Placeholder for Upstash/Redis)
+    if (path.startsWith('/ai-assistant') || path.startsWith('/api/ai')) {
+        response.headers.set('X-AI-Safety', 'HIPAA-Standard');
+        // Limit AI requests to prevent abuse
+        // In production, use Upstash: const { success } = await rateLimiter.limit(user.id);
+    }
+
     return response;
 }
+
 
 export const config = {
     matcher: [

@@ -25,13 +25,21 @@ export async function sendMessage(receiverId: string, content: string) {
             throw new Error('Not authenticated');
         }
 
+        // Fetch practice_id for the user
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('practice_id')
+            .eq('user_id', user.id)
+            .single();
+
         const { data, error } = await (supabase
             .from('messages') as any)
             .insert({
                 sender_id: user.id,
                 receiver_id: receiverId,
                 content,
-                is_read: false
+                is_read: false,
+                practice_id: profile?.practice_id // Ensure practice isolation
             })
             .select()
             .single();
@@ -40,6 +48,8 @@ export async function sendMessage(receiverId: string, content: string) {
 
         revalidatePath('/messages');
         revalidatePath(`/messages/${receiverId}`);
+        revalidatePath('/therapist/messages');
+        revalidatePath(`/therapist/messages/${receiverId}`);
 
         return { success: true, data };
     } catch (error) {
@@ -64,17 +74,29 @@ export async function getConversations() {
             return { success: false, error: 'Not authenticated' };
         }
 
+        // Fetch practice_id for the user
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('practice_id')
+            .eq('user_id', user.id)
+            .single();
+
         // Fetch all messages where user is sender or receiver to derive uniquely
         // In a production app, we would use a dedicated conversations table or a optimized RPC
-        const { data: messages, error } = await (supabase
-            .from('messages') as any)
+        let query = (supabase.from('messages') as any)
             .select(`
                 *,
                 sender:profiles!messages_sender_id_fkey(full_name, avatar_url),
                 receiver:profiles!messages_receiver_id_fkey(full_name, avatar_url)
             `)
-            .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
-            .order('created_at', { ascending: false });
+            .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`);
+
+        // Add practice isolation if profile has practice_id
+        if (profile?.practice_id) {
+            query = query.eq('practice_id', profile.practice_id);
+        }
+
+        const { data: messages, error } = await query.order('created_at', { ascending: false });
 
         if (error) throw error;
 

@@ -6,9 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
 import { ChevronLeft, Calendar } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
+import { Button, TimeSlotButton } from '@/components/ui';
 import ProgressIndicator from '../../../../_components/progress-indicator';
-import TimeSlotButton from '@/components/ui/time-slot-button';
 import { getAvailableTimeSlots } from '@/app/actions/appointments';
 import { TimeSlot } from '@/lib/appointments/time-slots';
 import { useBookingFlow } from '@/hooks/use-booking-flow';

@@ -5,14 +5,17 @@
 import { useState } from 'react';
 import { usePatientList } from '../_hooks/usePatientList';
 import { PatientCard } from '../_components/PatientCard';
+import { AddPatientModal } from './_components/AddPatientModal';
 import { Input } from '@/components/ui/input';
-import { Search, Filter } from 'lucide-react';
+import Link from 'next/link';
+import { Search, Filter, Plus } from 'lucide-react';
 import * as Tabs from '@radix-ui/react-tabs';
 import { Button } from '@/components/ui/button';
 
 export default function PatientsPage() {
-    const { patients, loading, removePatient } = usePatientList();
+    const { patients, loading, removePatient, refetch } = usePatientList();
     const [searchQuery, setSearchQuery] = useState('');
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
     // Filter logic
     const filteredPatients = patients.filter(m =>
@@ -26,9 +29,17 @@ export default function PatientsPage() {
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white">My Patients</h1>
                     <p className="text-gray-500">Manage your active therapistships and student progress.</p>
                 </div>
-                <Button>
-                    Add New Patient
-                </Button>
+                <div className="flex gap-2">
+                    <Button onClick={() => setIsAddModalOpen(true)}>
+                        <Plus className="w-4 h-4 mr-2" />
+                        ADD NEW PATIENT
+                    </Button>
+                    <Link href="/therapist/patients/discovery">
+                        <Button variant="outline">
+                            Discover Patients
+                        </Button>
+                    </Link>
+                </div>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 items-center bg-white dark:bg-gray-900 p-4 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm">
@@ -82,6 +93,14 @@ export default function PatientsPage() {
                     ))
                 )}
             </div>
+
+            <AddPatientModal
+                open={isAddModalOpen}
+                onOpenChange={setIsAddModalOpen}
+                onSuccess={() => {
+                    refetch?.();
+                }}
+            />
         </div>
     );
 }

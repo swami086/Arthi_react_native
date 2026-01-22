@@ -12,9 +12,10 @@ interface AddSessionModalProps {
     onClose: () => void;
     onSuccess: () => void;
     therapistId: string;
+    practiceId: string;
 }
 
-export const AddSessionModal: React.FC<AddSessionModalProps> = ({ visible, onClose, onSuccess, therapistId }) => {
+export const AddSessionModal: React.FC<AddSessionModalProps> = ({ visible, onClose, onSuccess, therapistId, practiceId }) => {
     const [patients, setPatients] = useState<PatientWithActivity[]>([]);
     const [loadingPatients, setLoadingPatients] = useState(false);
     const [selectedPatient, setSelectedPatient] = useState<string | null>(null);
@@ -80,6 +81,7 @@ export const AddSessionModal: React.FC<AddSessionModalProps> = ({ visible, onClo
 
             await createSession(
                 therapistId,
+                practiceId,
                 sessionType === 'public' ? null : selectedPatient,
                 sessionStart,
                 duration,

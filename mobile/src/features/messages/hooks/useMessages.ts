@@ -11,19 +11,20 @@ export interface Conversation {
 }
 
 export const useMessages = () => {
-    const { user } = useAuth();
+    const { user, profile } = useAuth();
     const [conversations, setConversations] = useState<Conversation[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     const fetchMessages = useCallback(async () => {
-        if (!user) return;
+        if (!user || !profile?.practice_id) return;
         try {
             setLoading(true);
-            // Fetch all messages involving the user
+            // Fetch all messages involving the user within the same practice
             const { data: messages, error: msgError } = await supabase
                 .from('messages')
                 .select('*')
+                .eq('practice_id', profile.practice_id)
                 .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
                 .order('created_at', { ascending: false });
 
@@ -69,7 +70,7 @@ export const useMessages = () => {
         } finally {
             setLoading(false);
         }
-    }, [user]);
+    }, [user, profile?.practice_id]);
 
     useEffect(() => {
         fetchMessages();

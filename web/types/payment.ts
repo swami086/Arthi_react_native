@@ -51,6 +51,7 @@ export type PaymentWithAppointment = DBPayment & {
         start_time: string;
         end_time: string;
         therapist: {
+            user_id: string;
             full_name: string | null;
             avatar_url: string | null;
             specialization: string | null;
@@ -74,6 +75,7 @@ export interface EarningsChartData {
 
 export type PaymentWithPatient = DBPayment & {
     patient?: {
+        user_id: string;
         full_name: string | null;
         avatar_url: string | null;
     } | null;

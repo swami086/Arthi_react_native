@@ -1,11 +1,17 @@
 import { callLLM } from '../llm-client.ts';
-import { followupTools, executeFollowupTool } from './followup-tools.ts';
+import { followupTools, executeFollowupTool, getPatientHistory, selectQuestions, saveWellnessCheck } from './followup-tools.ts';
 import { reportInfo, startTimer } from '../rollbar.ts';
+import { buildFollowupForm, buildCompletionSurface } from '../../followup-agent/surface-builder.ts';
 
 export interface FollowupAgentState {
     messages: any[];
     userId: string;
     intent: string;
+    action?: string; // Support A2UI actions
+    payload?: any;
+    surfaceId?: string;
+    metadata?: any;
+    components?: any[];
     toolCalls: any[];
     result: any;
     usage?: any;
@@ -17,6 +23,75 @@ export async function followupAgentNode(
     supabase: any
 ): Promise<Partial<FollowupAgentState>> {
     const startTime = startTimer('followup-agent:execute');
+
+    // 1. Handle A2UI Actions (Form interactions)
+    if (state.action) {
+        let updatedMetadata = state.metadata || {};
+        let updatedComponents = state.components;
+        let textResponse = "";
+
+        // Handle value changes (state management)
+        if (state.action.startsWith('on_change_')) {
+            const field = state.action.replace('on_change_', '');
+            let value = state.payload?.value !== undefined ? state.payload.value : (state.payload?.values !== undefined ? state.payload.values : state.payload);
+
+            // Payload normalization
+            if (value && typeof value === 'object' && !Array.isArray(value)) {
+                // Check if it's an object with numeric keys
+                const keys = Object.keys(value);
+                if (keys.length > 0 && keys.every(k => !isNaN(Number(k)))) {
+                    value = Object.values(value);
+                }
+            }
+            if (field === 'mood_score' || field === 'mood') {
+                value = Number(value);
+            }
+
+            updatedMetadata = {
+                ...updatedMetadata,
+                responses: {
+                    ...(updatedMetadata.responses || {}),
+                    [field]: value
+                }
+            };
+
+            // Note: In a stateless node context, we rely on the caller to persist if needed.
+            // But we return the updated metadata so the orchestrator can persist it.
+
+        } else if (state.action === 'submit_wellness_check') {
+            const responses = updatedMetadata.responses || {};
+            if (responses.mood_score) responses.mood_score = Number(responses.mood_score);
+
+            await saveWellnessCheck(supabase, state.userId, responses);
+            updatedComponents = buildCompletionSurface();
+            updatedMetadata = { ...updatedMetadata, step: 'COMPLETED' };
+            textResponse = "I've received your check-in. Thank you for sharing!";
+        } else if (state.action === 'request_help') {
+            textResponse = "I hear you. If you are in immediate danger, please contact emergency services or use one of the hotlines in the resources section.";
+        } else if (state.action === 'view_detailed_insights') {
+            textResponse = "Opening your personal insights dashboard...";
+            // Client handles navigation based on this response or an explicit action directive if we added one
+        }
+
+        return {
+            metadata: updatedMetadata,
+            components: updatedComponents,
+            result: textResponse
+        };
+    }
+
+    // 2. Initial Flow: Generate Wellness Check Form if intent matches
+    if (state.intent === 'wellness_check' || state.intent === 'check_in') {
+        const history = await getPatientHistory(supabase, state.userId);
+        const questions = selectQuestions(history);
+        const components = buildFollowupForm(questions);
+
+        return {
+            result: "Let's do a quick check-in.",
+            components,
+            metadata: { step: 'FORM_INITIALIZED', responses: {} }
+        };
+    }
 
     const systemPrompt = `You are an empathetic, patient-focused Followup Assistant for a mental health platform.
 Your primary role is post-session engagement and monitoring patient well-being between therapy sessions.
@@ -69,7 +144,7 @@ Current Patient ID: ${state.userId}`;
                     supabase
                 );
                 toolResults.push({ toolCall, result });
-            } catch (error) {
+            } catch (error: any) {
                 console.error(`Error executing tool ${name}:`, error);
                 toolResults.push({ toolCall, error: error.message });
             }

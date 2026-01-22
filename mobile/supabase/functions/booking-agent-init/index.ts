@@ -28,12 +28,27 @@ serve(async (req) => {
 
         // 2. Parse Request
         const body = await req.json().catch(() => ({}));
-        const { specialization, query } = body;
+        const { specialization, query, therapistId } = body;
 
         // 3. Generate Initial Surface Data
         const surfaceId = `booking-${user.id.substring(0, 8)}-${Date.now()}`;
-        const therapists = await tools.searchTherapists(query, specialization);
-        const components = builder.buildTherapistSelectionSurface(therapists);
+
+        let components;
+        let metadataAttrs = { step: '', initializedAt: new Date().toISOString() };
+
+        if (therapistId) {
+            const therapist = await tools.getTherapistById(therapistId);
+            components = builder.buildAvailabilitySelectionSurface(therapist, new Date().toISOString().split('T')[0], []);
+            metadataAttrs.step = 'AVAILABILITY_SELECTION';
+            // @ts-ignore
+            metadataAttrs.therapistId = therapistId;
+        } else {
+            const therapists = await tools.searchTherapists(query, specialization);
+            components = builder.buildTherapistSelectionSurface(therapists);
+            metadataAttrs.step = 'THERAPIST_SELECTION';
+            // @ts-ignore
+            metadataAttrs.specialization = specialization;
+        }
 
         // 4. Persist initial surface
         const { data: surface, error: insertError } = await supabaseClient
@@ -43,11 +58,7 @@ serve(async (req) => {
                 user_id: user.id,
                 agent_id: 'booking-agent',
                 components: components,
-                metadata: {
-                    step: 'THERAPIST_SELECTION',
-                    specialization,
-                    initializedAt: new Date().toISOString()
-                },
+                metadata: metadataAttrs,
                 version: 1
             })
             .select()
@@ -70,7 +81,7 @@ serve(async (req) => {
                             userId: user.id,
                             agentId: 'booking-agent',
                             components: components,
-                            metadata: surface.metadata,
+                            metadata: metadataAttrs,
                             timestamp: new Date().toISOString()
                         }
                     });

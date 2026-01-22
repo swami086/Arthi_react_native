@@ -35,8 +35,8 @@ export default async function SessionDetailPage({ params }: SessionDetailPagePro
         .from('appointments' as any)
         .select(`
             *,
-            patient:profiles!patient_id(*),
-            therapist:profiles!therapist_id(*)
+            patient:profiles!appointments_mentee_id_fkey(*),
+            therapist:profiles!appointments_mentor_id_fkey(*)
         `)
         .eq('id', id)
         .single();
@@ -44,12 +44,12 @@ export default async function SessionDetailPage({ params }: SessionDetailPagePro
     const appointment = appointmentResult as any;
 
     if (error || !appointment) {
-        redirect('/therapist/dashboard');
+        redirect('/therapist/home');
     }
 
     // Verify Access
     if (appointment.therapist_id !== user.id) {
-        redirect('/therapist/dashboard');
+        redirect('/therapist/home');
     }
 
     // 3. Fetch Recording Status

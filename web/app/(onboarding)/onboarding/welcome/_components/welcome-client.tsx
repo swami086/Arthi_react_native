@@ -33,7 +33,7 @@ export default function WelcomeClient() {
             const result = await setOnboardingCompleted();
             if (result.success) {
                 localStorage.setItem('onboarding_completed', 'true');
-                router.push('/login');
+                router.push('/home');
             } else {
                 throw new Error(result.error);
             }

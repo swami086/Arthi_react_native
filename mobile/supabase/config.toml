@@ -1,4 +1,4 @@
 
 [functions.proactive-agent-cron]
 verify_jwt = false
-schedule = "*/15 * * * *"
+# schedule = "*/15 * * * *"

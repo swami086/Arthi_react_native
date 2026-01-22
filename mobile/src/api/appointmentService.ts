@@ -19,7 +19,11 @@ export const updateAppointmentStatus = async (
         console.log(`[appointmentService] Fetching appointment data...`);
         const { data: appointment, error: fetchError } = await supabase
             .from('appointments')
-            .select('*, therapist:profiles!therapist_id(*), patient:profiles!patient_id(*)')
+            .select(`
+                *,
+                therapist:profiles!therapist_id(*),
+                patient:profiles!patient_id(*)
+            `)
             .eq('id', appointmentId)
             .single();
 
@@ -65,6 +69,7 @@ export const updateAppointmentStatus = async (
             message,
             type: 'appointment',
             related_entity_id: appointmentId,
+            practice_id: appointment.practice_id,
             metadata: {
                 action: status,
                 previous_status: appointment.status

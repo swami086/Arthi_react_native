@@ -101,7 +101,7 @@ export interface A2UISurface {
 /**
  * Surface update operations
  */
-export type SurfaceOperation = 'create' | 'update' | 'replace' | 'delete';
+export type SurfaceOperation = 'create' | 'update' | 'replace' | 'delete' | 'patch';
 
 /**
  * Agent-to-UI surface update message

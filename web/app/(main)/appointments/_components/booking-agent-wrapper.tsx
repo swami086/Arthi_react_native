@@ -8,10 +8,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 interface BookingAgentWrapperProps {
     userId: string;
+    therapistId?: string;
+    initialOpen?: boolean;
 }
 
-export function BookingAgentWrapper({ userId }: BookingAgentWrapperProps) {
-    const [isOpen, setIsOpen] = useState(false);
+export function BookingAgentWrapper({ userId, therapistId, initialOpen = false }: BookingAgentWrapperProps) {
+    const [isOpen, setIsOpen] = useState(initialOpen);
 
     return (
         <div className="mb-8">
@@ -70,7 +72,7 @@ export function BookingAgentWrapper({ userId }: BookingAgentWrapperProps) {
                             </Button>
                         </div>
                         <div className="p-6">
-                            <A2UIBookingInterface userId={userId} />
+                            <A2UIBookingInterface userId={userId} therapistId={therapistId} />
                         </div>
                     </motion.div>
                 )}

@@ -36,14 +36,19 @@ export const sendNotification = async (notification: NotificationInsert) => {
 /**
  * Get notifications for a user
  */
-export const getNotifications = async (userId: string) => {
+export const getNotifications = async (userId: string, practiceId?: string) => {
     startSpan('api.notification.getAll');
     try {
-        const { data, error } = await supabase
+        let query = supabase
             .from('notifications')
             .select('*')
-            .eq('user_id', userId)
-            .order('created_at', { ascending: false });
+            .eq('user_id', userId);
+
+        if (practiceId) {
+            query = query.eq('practice_id', practiceId);
+        }
+
+        const { data, error } = await query.order('created_at', { ascending: false });
 
         if (error) {
             reportError(error, 'notificationService:getNotifications', { userId });
@@ -67,7 +72,7 @@ export const markAsRead = async (notificationId: string) => {
     try {
         const { error } = await supabase
             .from('notifications')
-            .update({ read: true })
+            .update({ is_read: true })
             .eq('id', notificationId)
 
 

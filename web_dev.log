@@ -1,5 +1,11 @@
+ ⚠ Port 3000 is in use, trying 3001 instead.
+ ⚠ Port 3001 is in use, trying 3002 instead.
+ ⚠ Port 3002 is in use, trying 3003 instead.
+   ▲ Next.js 15.1.4
+   - Local:        http://localhost:3003
+   - Network:      http://192.168.1.3:3003
+   - Environments: .env.local
 
-> safespace-web@0.1.0 dev
-> next dev
-
-sh: 1: next: not found
+ ✓ Starting...
+ ✓ Compiled /instrumentation in 97ms (71 modules)
+ ✓ Ready in 1311ms

@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
 import { motion } from 'framer-motion';
-import { LucideIcon, TrendingUp } from 'lucide-react';
+import * as icons from 'lucide-react';
+import { LucideIcon, TrendingUp, Activity } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -13,7 +13,7 @@ function cn(...inputs: ClassValue[]) {
 interface StatCardProps {
     title: string;
     value: string | number;
-    icon: LucideIcon;
+    icon: LucideIcon | string;
     iconColor?: string;
     growth?: string;
     growthLabel?: string;
@@ -23,12 +23,19 @@ interface StatCardProps {
 export const StatCard: React.FC<StatCardProps> = ({
     title,
     value,
-    icon: Icon,
+    icon,
     iconColor = '#30bae8',
     growth,
     growthLabel,
     className,
 }) => {
+    // Resolve icon string to component if needed
+    let IconComp = icon;
+    if (typeof icon === 'string') {
+        IconComp = (icons as any)[icon] || Activity;
+    }
+    const Icon = IconComp as LucideIcon;
+
     return (
         <motion.div
             whileHover={{ y: -4 }}
@@ -70,3 +77,5 @@ export const StatCard: React.FC<StatCardProps> = ({
         </motion.div>
     );
 };
+
+StatCard.displayName = 'StatCard';

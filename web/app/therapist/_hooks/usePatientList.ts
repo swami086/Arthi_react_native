@@ -26,30 +26,67 @@ export function usePatientList() {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) return;
 
-            // Using relationship table or RPC
-            const { data, error } = await (supabase
-                .from('therapist_patient_relationships') as any)
-                .select(`
-                    id,
-                    status,
-                    created_at,
-                    patient:patient_id(id, full_name, avatar_url, email)
-                `)
-                .eq('therapist_id', user.id)
-                .eq('status', 'active'); // Filtering for active list
+            // Fetch practice_id for the user
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('practice_id')
+                .eq('user_id', user.id)
+                .single();
 
-            if (error) throw error;
+            // Fetch relationships first
+            let relationshipQuery = (supabase.from('therapist_patient_relationships') as any)
+                .select('id, status, created_at, patient_id')
+                .eq('therapist_id', user.id)
+                .eq('status', 'active');
+
+            if (profile?.practice_id) {
+                relationshipQuery = relationshipQuery.eq('practice_id', profile.practice_id);
+            }
+
+            const { data: relationships, error: relationshipError } = await relationshipQuery;
+
+            if (relationshipError) {
+                console.error('[usePatientList] Relationship query error:', relationshipError);
+                throw relationshipError;
+            }
+
+            if (!relationships || relationships.length === 0) {
+                console.log('[usePatientList] No relationships found');
+                setPatients([]);
+                return;
+            }
+
+            // Fetch patient profiles
+            const patientIds = relationships.map((r: any) => r.patient_id);
+            const { data: patientProfiles, error: profileError } = await supabase
+                .from('profiles')
+                .select('user_id, full_name, avatar_url')
+                .in('user_id', patientIds);
+
+            if (profileError) {
+                console.error('[usePatientList] Profile query error:', profileError);
+                throw profileError;
+            }
+
+            // Create a map of patient profiles by user_id
+            const profileMap = new Map((patientProfiles || []).map((p: any) => [p.user_id, p]));
 
             // Transform data
-            const formatted: Patient[] = data.map((item: any) => ({
-                id: item.patient.id,
-                full_name: item.patient.full_name,
-                avatar_url: item.patient.avatar_url,
-                email: item.patient.email,
-                status: item.status,
-                created_at: item.created_at
-            }));
+            const formatted: Patient[] = relationships
+                .map((rel: any) => {
+                    const profile = profileMap.get(rel.patient_id);
+                    if (!profile) return null;
+                    return {
+                        id: profile.user_id,
+                        full_name: profile.full_name,
+                        avatar_url: profile.avatar_url,
+                        status: rel.status,
+                        created_at: rel.created_at
+                    };
+                })
+                .filter((p: any) => p !== null);
 
+            console.log('[usePatientList] Formatted patients:', formatted);
             setPatients(formatted);
 
         } catch (err: any) {

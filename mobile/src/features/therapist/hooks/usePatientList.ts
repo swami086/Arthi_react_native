@@ -5,16 +5,16 @@ import { useAuth } from '../../auth/hooks/useAuth';
 import { supabase } from '../../../api/supabase';
 
 export const usePatientList = () => {
-    const { user } = useAuth();
+    const { user, profile } = useAuth();
     const [patients, setPatients] = useState<PatientWithActivity[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     const fetchPatients = useCallback(async () => {
-        if (!user) return;
+        if (!user || !profile?.practice_id) return;
         try {
             setLoading(true);
-            const data = await getPatientList(user.id);
+            const data = await getPatientList(user.id, profile.practice_id);
             // Deduplicate by patient_id to prevent UI errors
             const uniquePatients = Array.from(new Map(data.map(item => [item.patient_id, item])).values());
             setPatients(uniquePatients);
@@ -23,7 +23,7 @@ export const usePatientList = () => {
         } finally {
             setLoading(false);
         }
-    }, [user]);
+    }, [user, profile?.practice_id]);
 
     useEffect(() => {
         fetchPatients();

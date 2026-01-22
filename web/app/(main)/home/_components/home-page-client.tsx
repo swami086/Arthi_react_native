@@ -11,7 +11,8 @@ import {
     TrendingUp,
     Users,
     Clock,
-    ArrowRight
+    ArrowRight,
+    Heart
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -21,6 +22,7 @@ import { SessionCard } from '@/components/ui/session-card';
 import { PendingTherapistRequestCard } from '@/components/ui/pending-therapist-request-card';
 import { NotificationBadge } from '@/components/ui/notification-badge';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
+import { A2UIInsightsDashboard } from '@/components/ai/a2ui-insights-dashboard';
 
 import { usePendingTherapistRequests } from '@/hooks/use-pending-therapist-requests';
 import { pageTransition, staggerContainer, scaleIn } from '@/lib/animation-variants';
@@ -61,6 +63,8 @@ export const HomePageClient: React.FC<HomePageClientProps> = ({
         reportInfo('Emergency button clicked', 'home.emergency');
         router.push('/resources/crisis');
     };
+
+    const handleWellnessCheck = () => router.push('/wellness-check');
 
     return (
         <motion.div
@@ -192,6 +196,16 @@ export const HomePageClient: React.FC<HomePageClientProps> = ({
                         delay={0.2}
                     />
                 </motion.div>
+                <motion.div variants={scaleIn} className="md:col-span-2">
+                    <QuickActionButton
+                        title="Wellness Check-in"
+                        subtitle="Reflect on your day with your AI companion"
+                        icon={Heart}
+                        onClick={handleWellnessCheck}
+                        color="#ec4899"
+                        delay={0.3}
+                    />
+                </motion.div>
             </motion.section>
 
             {/* Stats Overview */}
@@ -221,6 +235,19 @@ export const HomePageClient: React.FC<HomePageClientProps> = ({
                         growthLabel="sessions completed"
                     />
                 </div>
+            </motion.section>
+
+            {/* AI Insights Dashboard */}
+            <motion.section variants={scaleIn} className="space-y-6">
+                <div className="flex items-center gap-2 px-2">
+                    <h3 className="text-base font-black text-gray-900 dark:text-gray-100 uppercase tracking-widest">
+                        Your AI Insights
+                    </h3>
+                    <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                </div>
+                <ErrorBoundary context="home.ai_insights">
+                    <A2UIInsightsDashboard userId={user.id} />
+                </ErrorBoundary>
             </motion.section>
 
             {/* Recent Activity */}

@@ -104,30 +104,36 @@ serve(async (req) => {
 
         if (createError) throw createError;
 
-        // 4. Broadcast Initial Surface
+        // 4. Broadcast Initial Surface with timeout to prevent hanging
         const channel = supabaseClient.channel(`a2ui:${user.id}`);
-        await new Promise((resolve) => {
-            channel.subscribe(async (status) => {
-                if (status === 'SUBSCRIBED') {
-                    await channel.send({
-                        type: 'broadcast',
-                        event: 'surfaceUpdate',
-                        payload: {
-                            type: 'surfaceUpdate',
-                            operation: 'create',
-                            surfaceId: surfaceId,
-                            userId: user.id,
-                            agentId: 'session-agent',
-                            components: components,
-                            dataModel: { analysis },
-                            metadata: metadata,
-                            timestamp: new Date().toISOString()
-                        }
-                    });
-                    resolve(true);
-                }
-            });
-        });
+        await Promise.race([
+            new Promise((resolve) => {
+                channel.subscribe(async (status) => {
+                    if (status === 'SUBSCRIBED') {
+                        await channel.send({
+                            type: 'broadcast',
+                            event: 'surfaceUpdate',
+                            payload: {
+                                type: 'surfaceUpdate',
+                                operation: 'create',
+                                surfaceId: surfaceId,
+                                userId: user.id,
+                                agentId: 'session-agent',
+                                components: components,
+                                dataModel: { analysis },
+                                metadata: metadata,
+                                timestamp: new Date().toISOString()
+                            }
+                        });
+                        resolve(true);
+                    }
+                });
+            }),
+            new Promise((resolve) => setTimeout(() => {
+                console.warn('[session-agent-init] Broadcast timeout after 5s');
+                resolve(false);
+            }, 5000))
+        ]);
         await supabaseClient.removeChannel(channel);
 
         return new Response(

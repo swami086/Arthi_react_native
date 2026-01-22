@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Users, Calendar, Share2, LogOut, Settings, User, Wallet, MessageSquare, Bell } from 'lucide-react';
+import { Home, Users, Calendar, Share2, LogOut, Settings, User, Wallet, MessageSquare, Bell, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useUnreadCounts } from '@/hooks/use-unread-counts';
 import { NotificationBadge } from '@/components/ui/notification-badge';
+import { signOut } from '@/app/actions/auth';
 
 interface SidebarProps {
     userEmail?: string;
@@ -25,19 +26,21 @@ export function TherapistSidebar({ userEmail, userName }: SidebarProps) {
 
     const navigation = [
         { name: 'Dashboard', href: '/therapist/home', icon: Home },
+        { name: 'AI Copilot', href: '/therapist/copilot', icon: Shield },
         { name: 'My Patients', href: '/therapist/patients', icon: Users },
         { name: 'Sessions', href: '/therapist/sessions', icon: Calendar },
         { name: 'Payments', href: '/therapist/payments', icon: Wallet },
-        { name: 'Messages', href: '/messages', icon: MessageSquare },
-        { name: 'Notifications', href: '/notifications', icon: Bell },
+        { name: 'Messages', href: '/therapist/messages', icon: MessageSquare },
+        { name: 'Notifications', href: '/therapist/notifications', icon: Bell },
         { name: 'Referrals', href: '/therapist/referrals', icon: Share2 },
+
     ];
+
 
     const handleSignOut = async () => {
         try {
-            await supabase.auth.signOut();
-            router.push('/login');
-            toast.success('Signed out successfully');
+            await signOut();
+            // Redirect is handled by the server action
         } catch (error) {
             toast.error('Error signing out');
         }
@@ -91,7 +94,7 @@ export function TherapistSidebar({ userEmail, userName }: SidebarProps) {
             </div>
 
             <div className="border-t p-4 dark:border-gray-800">
-                <div className="flex items-center gap-3 mb-4">
+                <Link href="/therapist/settings" className="flex items-center gap-3 mb-4 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-lg transition-colors">
                     <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center">
                         <User className="h-5 w-5 text-primary" />
                     </div>
@@ -103,7 +106,7 @@ export function TherapistSidebar({ userEmail, userName }: SidebarProps) {
                             {userEmail}
                         </p>
                     </div>
-                </div>
+                </Link>
                 <Button
                     variant="ghost"
                     className="w-full justify-start text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/10"

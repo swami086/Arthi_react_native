@@ -15,7 +15,7 @@ interface ChatHeaderProps {
     isOnline?: boolean;
 }
 
-export default function ChatHeader({ user, isOnline = false }: ChatHeaderProps) {
+export default function ChatHeader({ user, isOnline = false, backUrl = '/messages' }: ChatHeaderProps & { backUrl?: string }) {
     const router = useRouter();
 
     return (
@@ -24,7 +24,7 @@ export default function ChatHeader({ user, isOnline = false }: ChatHeaderProps) 
                 <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => router.push('/messages')}
+                    onClick={() => router.push(backUrl)}
                     className="rounded-xl hover:bg-gray-100 dark:hover:bg-gray-900"
                 >
                     <ArrowLeft className="h-5 w-5" />

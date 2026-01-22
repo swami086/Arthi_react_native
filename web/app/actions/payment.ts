@@ -6,24 +6,33 @@ import { TherapistEarnings, PaymentWithPatient } from '@/types/payment';
 
 async function getAuthenticatedUser() {
     const supabase = await createClient();
-    const { data: { user }, error } = await supabase.auth.getUser();
-    if (error || !user) throw new Error('Unauthorized');
-    return user;
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) throw new Error('Unauthorized');
+
+    const { data: profile, error: profError } = await supabase
+        .from('profiles')
+        .select('practice_id')
+        .eq('user_id', user.id)
+        .single();
+
+    if (profError) throw new Error('Failed to fetch practice context');
+
+    return { user, practiceId: profile?.practice_id };
 }
 
 export async function getTherapistEarningsAction(): Promise<TherapistEarnings> {
-    const user = await getAuthenticatedUser();
-    return paymentService.getTherapistEarnings(user.id);
+    const { user, practiceId } = await getAuthenticatedUser();
+    return paymentService.getTherapistEarnings(user.id, practiceId);
 }
 
 export async function getTherapistTransactionsAction(limit: number): Promise<PaymentWithPatient[]> {
-    const user = await getAuthenticatedUser();
-    return paymentService.getTherapistTransactions(user.id, limit);
+    const { user, practiceId } = await getAuthenticatedUser();
+    return paymentService.getTherapistTransactions(user.id, practiceId, limit);
 }
 
 export async function getTherapistPaymentBreakdownAction(): Promise<PaymentWithPatient[]> {
-    const user = await getAuthenticatedUser();
-    return paymentService.getTherapistPaymentBreakdown(user.id);
+    const { user, practiceId } = await getAuthenticatedUser();
+    return paymentService.getTherapistPaymentBreakdown(user.id, practiceId);
 }
 
 export async function handlePaymentSuccess(
@@ -68,8 +77,8 @@ export async function handlePaymentFailure(paymentId: string, reason: string) {
 
 export async function getPaymentHistoryAction() {
     try {
-        const user = await getAuthenticatedUser();
-        const history = await paymentService.getPaymentHistory(user.id);
+        const { user, practiceId } = await getAuthenticatedUser();
+        const history = await paymentService.getPaymentHistory(user.id, practiceId);
         return { success: true, data: history };
     } catch (error: any) {
         console.error('Get payment history failed', error);

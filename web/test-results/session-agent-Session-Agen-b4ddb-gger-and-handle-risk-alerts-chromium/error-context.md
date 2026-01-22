@@ -1,0 +1,51 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e7]:
+      - img [ref=e9]
+      - heading "SafeSpace" [level=1] [ref=e14]
+      - paragraph [ref=e15]: Your journey to mental wellness begins in a space built for your safety and growth.
+    - generic [ref=e17]:
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - heading "Welcome Back" [level=1] [ref=e21]
+          - paragraph [ref=e22]: Enter your safe space to continue your journey.
+        - generic [ref=e23]:
+          - generic [ref=e24]:
+            - generic [ref=e25]: Email Address
+            - generic [ref=e26]:
+              - img [ref=e28]
+              - textbox "name@example.com" [ref=e31]
+          - generic [ref=e32]:
+            - generic [ref=e33]:
+              - generic [ref=e34]: Password
+              - generic [ref=e35]:
+                - img [ref=e37]
+                - textbox "••••••••" [ref=e40]
+                - button [ref=e41]:
+                  - img [ref=e42]
+            - link "Forgot Password?" [ref=e46] [cursor=pointer]:
+              - /url: /forgot-password
+          - button "Log In" [ref=e47]:
+            - img [ref=e49]
+            - generic [ref=e52]: Log In
+        - generic [ref=e57]: Or continue with
+        - button "Sign in with Google" [ref=e58]:
+          - img [ref=e60]
+          - generic [ref=e65]: Sign in with Google
+        - paragraph [ref=e66]:
+          - text: Don't have an account?
+          - link "Sign Up" [ref=e67] [cursor=pointer]:
+            - /url: /signup
+      - generic [ref=e68]:
+        - link "Privacy Policy" [ref=e69] [cursor=pointer]:
+          - /url: /privacy
+        - link "Terms of Service" [ref=e70] [cursor=pointer]:
+          - /url: /terms
+        - link "Support" [ref=e71] [cursor=pointer]:
+          - /url: /support
+  - region "Notifications alt+T"
+  - alert [ref=e72]
+```

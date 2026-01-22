@@ -3,13 +3,15 @@ import { PatientGoal, TherapistNote, TherapistStats, PatientWithActivity, Appoin
 import { generateDailyMeetLink } from '../utils/meetingLink';
 import { reportError, withRollbarTrace, startSpan, endSpan, startTimer, endTimer, withRollbarSpan, getTraceId } from '../services/rollbar';
 
-export const getTherapistStats = async (therapistId: string): Promise<TherapistStats | null> => {
+export const getTherapistStats = async (therapistId: string, practiceId?: string): Promise<TherapistStats | null> => {
     startSpan('api.therapist.getTherapistStats');
     startTimer('therapist_stats_fetch');
     try {
         const { data, error } = await supabase
             // @ts-ignore
-            .rpc('get_therapist_stats', { therapist_user_id: therapistId });
+            .rpc('get_therapist_stats', {
+                therapist_user_id: therapistId
+            });
 
         if (error) {
             reportError(error, 'therapistService:getTherapistStats', { therapistId });
@@ -104,12 +106,15 @@ export const getPatientProfile = async (patientId: string) => {
     }
 };
 
-export const createTherapistNote = async (note: Omit<TherapistNote, 'id' | 'created_at' | 'updated_at'>) => {
+export const createTherapistNote = async (note: Omit<TherapistNote, 'id' | 'created_at' | 'updated_at'>, practiceId?: string) => {
     startSpan('api.therapist.createTherapistNote');
     try {
         const { data, error } = await supabase
             .from('therapist_notes')
-            .insert(note as any)
+            .insert({
+                ...note,
+                practice_id: practiceId
+            } as any)
             // @ts-ignore
             // @ts-ignore
             .headers(withRollbarTrace())
@@ -181,12 +186,15 @@ export const deleteTherapistNote = async (noteId: string) => {
     }
 };
 
-export const createPatientGoal = async (goal: Omit<PatientGoal, 'id' | 'created_at' | 'updated_at'>) => {
+export const createPatientGoal = async (goal: Omit<PatientGoal, 'id' | 'created_at' | 'updated_at'>, practiceId?: string) => {
     startSpan('api.therapist.createPatientGoal');
     try {
         const { data, error } = await supabase
             .from('patient_goals')
-            .insert(goal as any)
+            .insert({
+                ...goal,
+                practice_id: practiceId
+            } as any)
             // @ts-ignore
             // @ts-ignore
             .headers(withRollbarTrace())
@@ -254,12 +262,16 @@ export const updateAppointmentStatus = async (appointmentId: string, status: str
 
 // New functions
 
-export const searchAvailablePatients = async (therapistId: string, searchQuery: string, category?: string) => {
+export const searchAvailablePatients = async (therapistId: string, searchQuery: string, category?: string, practiceId?: string) => {
     // 1. Fetch all profiles with role 'patient'
     let query = supabase
         .from('profiles')
         .select('*')
         .eq('role', 'patient');
+
+    if (practiceId) {
+        query = query.eq('practice_id', practiceId);
+    }
 
     if (category && category !== 'All') {
         // Assuming 'specialization' or 'expertise_areas' holds the category
@@ -323,7 +335,7 @@ export const invitePatient = async (therapistId: string, patientEmail: string, m
     return data;
 };
 
-export const addPatientToRoster = async (therapistId: string, patientId: string, notes?: string) => {
+export const addPatientToRoster = async (therapistId: string, patientId: string, notes?: string, practiceId?: string) => {
     const { data, error } = await supabase
         .from('therapist_patient_relationships')
         .insert({
@@ -331,7 +343,8 @@ export const addPatientToRoster = async (therapistId: string, patientId: string,
             patient_id: patientId,
             status: 'active',
             notes,
-            assigned_by: therapistId
+            assigned_by: therapistId,
+            practice_id: practiceId
         })
         .select()
         .single();
@@ -380,7 +393,7 @@ export const deactivatePatientRelationship = async (therapistId: string, patient
     return results[0];
 };
 
-export const referPatientToTherapist = async (patientId: string, fromTherapistId: string, toTherapistId: string, reason: string, notes?: string) => {
+export const referPatientToTherapist = async (patientId: string, fromTherapistId: string, toTherapistId: string, reason: string, notes?: string, practiceId?: string) => {
     const { data, error } = await supabase
         .from('patient_referrals')
         .insert({
@@ -388,7 +401,8 @@ export const referPatientToTherapist = async (patientId: string, fromTherapistId
             referring_therapist_id: fromTherapistId,
             referred_to_therapist_id: toTherapistId,
             referral_reason: reason,
-            referral_notes: notes
+            referral_notes: notes,
+            practice_id: practiceId
         })
         .select()
         .single();
@@ -397,37 +411,53 @@ export const referPatientToTherapist = async (patientId: string, fromTherapistId
     return data;
 };
 
-export const getReferralsReceived = async (therapistId: string) => {
-    const { data, error } = await supabase
+export const getReferralsReceived = async (therapistId: string, practiceId?: string) => {
+    let query = supabase
         .from('patient_referrals')
         .select('*, referring_therapist:profiles!referring_therapist_id(*), patient:profiles!patient_id(*)')
         .eq('referred_to_therapist_id', therapistId);
 
+    if (practiceId) {
+        query = query.eq('practice_id', practiceId);
+    }
+
+    const { data, error } = await query;
+
     if (error) throw error;
     return data;
 };
 
-export const getReferralsSent = async (therapistId: string) => {
-    const { data, error } = await supabase
+export const getReferralsSent = async (therapistId: string, practiceId?: string) => {
+    let query = supabase
         .from('patient_referrals')
         .select('*, referred_to_therapist:profiles!referred_to_therapist_id(*), patient:profiles!patient_id(*)')
         .eq('referring_therapist_id', therapistId);
 
+    if (practiceId) {
+        query = query.eq('practice_id', practiceId);
+    }
+
+    const { data, error } = await query;
+
     if (error) throw error;
     return data;
 };
 
-export const respondToReferral = async (referralId: string, status: 'accepted' | 'declined', notes?: string) => {
-    const { data, error } = await supabase
+export const respondToReferral = async (referralId: string, status: 'accepted' | 'declined', notes?: string, practiceId?: string) => {
+    let query = supabase
         .from('patient_referrals')
         .update({
             status,
             response_notes: notes,
             responded_at: new Date().toISOString()
         })
-        .eq('id', referralId)
-        .select()
-        .single();
+        .eq('id', referralId);
+
+    if (practiceId) {
+        query = query.eq('practice_id', practiceId);
+    }
+
+    const { data, error } = await query.select().single();
 
     if (error) throw error;
     return data;
@@ -443,6 +473,7 @@ export const getTherapistPatientRelationships = async (therapistId: string) => {
 
 export const createSession = async (
     therapistId: string,
+    practiceId: string,
     patientId: string | null,
     startTime: Date,
     durationMinutes: number,
@@ -460,6 +491,7 @@ export const createSession = async (
     const appointmentData = {
         therapist_id: therapistId,
         patient_id: patientId,
+        practice_id: practiceId,
         start_time: startTime.toISOString(),
         end_time: endTime.toISOString(),
         status: 'pending' as const,
@@ -497,10 +529,13 @@ export const createSession = async (
     return appointment;
 };
 
-export const createAppointment = async (appointment: Omit<Appointment, 'id' | 'created_at'>) => {
+export const createAppointment = async (appointment: Omit<Appointment, 'id' | 'created_at'>, practiceId?: string) => {
     const { data, error } = await supabase
         .from('appointments')
-        .insert(appointment as any)
+        .insert({
+            ...appointment,
+            practice_id: practiceId
+        } as any)
         .select()
         .single();
 

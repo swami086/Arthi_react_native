@@ -117,7 +117,7 @@ const CustomSessionCard = ({ item, onPress }: { item: any, onPress: () => void }
 
 function TherapySessionsScreen() {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-    const { user } = useAuth();
+    const { user, profile } = useAuth();
     const { isDark } = useColorScheme();
     const { appointments, loading, error, refetch } = useAppointments();
     const [filter, setFilter] = useState<'All' | 'Upcoming'>('All');
@@ -255,6 +255,7 @@ function TherapySessionsScreen() {
                 onClose={() => setShowAddModal(false)}
                 onSuccess={() => refetch()}
                 therapistId={user?.id || ''}
+                practiceId={profile?.practice_id || ''}
             />
         </View>
     );

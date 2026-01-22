@@ -15,7 +15,7 @@ interface MessagesListClientProps {
     initialConversations: any[];
 }
 
-export default function MessagesListClient({ initialConversations }: MessagesListClientProps) {
+export default function MessagesListClient({ initialConversations, basePath = '/messages' }: MessagesListClientProps & { basePath?: string }) {
     const { conversations, loading, refetch } = useMessages();
     const { user } = useAuth();
     const { isOnline } = usePresence(user?.id);
@@ -91,7 +91,7 @@ export default function MessagesListClient({ initialConversations }: MessagesLis
                                     timestamp={conv.lastMessage?.created_at || new Date().toISOString()}
                                     unreadCount={conv.unreadCount}
                                     isOnline={isOnline(conv.otherParticipantId)}
-                                    onClick={() => router.push(`/messages/${conv.otherParticipantId}`)}
+                                    onClick={() => router.push(`${basePath}/${conv.otherParticipantId}`)}
                                 />
                             </motion.div>
                         ))}

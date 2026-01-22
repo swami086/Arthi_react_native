@@ -7,11 +7,13 @@
  * - Action handling and validation
  * - Error boundaries
  * - Security validation
+ * - DomPurify sanitization
+ * - Performance monitoring
  */
 
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { reportError } from '@/lib/rollbar-utils';
 import type {
     A2UIComponent,
@@ -27,36 +29,38 @@ import {
     validateComponentProps,
 } from './component-catalog';
 import { validateComponent } from './message-validator';
+import { validateAction } from './action-validator';
+import { performanceMonitor } from './performance-monitor';
+import { hipaaLogger } from './hipaa-logger';
+import DOMPurify from 'dompurify';
 
 // ============================================================================
 // Data Binding Resolution
 // ============================================================================
 
 /**
- * Resolve JSON Pointer path in data model
+ * Resolves a RFC 6901 JSON Pointer against a data object.
+ * Supports array indices and tilde escape sequences (~0, ~1).
  * 
- * @example
- * resolveJsonPointer({ data: { moodScore: 8 } }, '/data/moodScore') // returns 8
- * resolveJsonPointer({ therapists: [{ name: 'Dr. Smith' }] }, '/therapists/0/name') // returns 'Dr. Smith'
+ * @param dataModel The data object to query
+ * @param path The JSON pointer string (e.g., "/user/name", "/items/0")
+ * @returns The resolved value or undefined if the path doesn't exist
  */
 function resolveJsonPointer(dataModel: any, path: string): any {
     if (!path || path === '/') {
         return dataModel;
     }
 
-    // Remove leading slash and split by /
     const segments = path.slice(1).split('/');
     let current = dataModel;
 
     for (const segment of segments) {
-        // Decode JSON Pointer escape sequences
         const decodedSegment = segment.replace(/~1/g, '/').replace(/~0/g, '~');
 
         if (current === null || current === undefined) {
             return undefined;
         }
 
-        // Handle array indices
         if (Array.isArray(current)) {
             const index = parseInt(decodedSegment, 10);
             if (isNaN(index) || index < 0 || index >= current.length) {
@@ -73,9 +77,6 @@ function resolveJsonPointer(dataModel: any, path: string): any {
     return current;
 }
 
-/**
- * Built-in transform functions
- */
 const transforms: Record<string, (value: any) => any> = {
     uppercase: (value: any) => String(value).toUpperCase(),
     lowercase: (value: any) => String(value).toLowerCase(),
@@ -97,7 +98,11 @@ const transforms: Record<string, (value: any) => any> = {
 };
 
 /**
- * Resolve data binding with optional transform
+ * Resolves a data binding by retrieving the value from the data model and applying transfers.
+ * 
+ * @param binding The data binding configuration
+ * @param dataModel The source data model
+ * @returns The resolved and potentially transformed value
  */
 export function resolveDataBinding(
     binding: A2UIDataBinding,
@@ -109,15 +114,21 @@ export function resolveDataBinding(
         return binding.fallback;
     }
 
+    // Apply strict sanitization to bound string values
+    let finalValue = value;
+    if (typeof finalValue === 'string') {
+        finalValue = DOMPurify.sanitize(finalValue, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] });
+    }
+
     if (binding.transform) {
         if (typeof binding.transform === 'function') {
-            return binding.transform(value);
+            return binding.transform(finalValue);
         } else if (typeof binding.transform === 'string' && transforms[binding.transform]) {
-            return transforms[binding.transform](value);
+            return transforms[binding.transform](finalValue);
         }
     }
 
-    return value;
+    return finalValue;
 }
 
 // ============================================================================
@@ -164,33 +175,41 @@ interface RendererContext {
 }
 
 /**
- * Render a single A2UI component recursively
+ * Recursively renders A2UI component tree into React components.
+ * Handles validation, security, HIPAA logging, data binding, and action wrapping.
+ * 
+ * @param component The A2UI component definition to render
+ * @param context The renderer context containing surface state and action handlers
+ * @param depth Current recursion depth to prevent stack overflow
+ * @returns A React node representing the component and its children
  */
 function renderComponent(
     component: A2UIComponent,
     context: RendererContext,
     depth: number = 0
 ): React.ReactNode {
+    // Determine start time for HIPAA/Perf metrics? 
+    // Usually tracking react renders individually is too granular, tracking surface render end in root.
+
+    // Log HIPAA render (sampled or aggregated in real use)
+    hipaaLogger.logComponentRender(context.surface.surfaceId, component.type, context.surface.userId);
+
     // Prevent infinite recursion
     if (depth > 20) {
         console.error('[A2UI] Maximum component depth exceeded');
         return null;
     }
 
-    // Validate component structure
-    const validation = validateComponent(component, validateComponentProps);
+    const validation = validateComponent(component);
     if (!validation.valid) {
         console.error('[A2UI] Component validation failed:', validation.errors);
+        hipaaLogger.logSecurityViolation('component_validation_failed', { component, errors: validation.errors });
         if (context.debug) {
             return (
                 <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                    <p className="text-red-600 dark:text-red-400 font-bold text-sm">
-                        Component Validation Error
-                    </p>
+                    <p className="text-red-600 dark:text-red-400 font-bold text-sm">Component Validation Error</p>
                     <ul className="mt-2 text-xs text-red-500 dark:text-red-300 list-disc list-inside">
-                        {validation.errors?.map((error, i) => (
-                            <li key={i}>{error}</li>
-                        ))}
+                        {validation.errors?.map((error, i) => <li key={i}>{error}</li>)}
                     </ul>
                 </div>
             );
@@ -198,54 +217,51 @@ function renderComponent(
         return null;
     }
 
-    // Check if component type is whitelisted
     if (!isComponentAllowed(component.type)) {
         console.error('[A2UI] Component type not allowed:', component.type);
-        reportError(
-            new Error(`Unauthorized component type: ${component.type}`),
-            'a2ui.security_violation',
-            { componentType: component.type, surfaceId: context.surface.surfaceId }
-        );
+        const error = new Error(`Unauthorized component type: ${component.type}`);
+        reportError(error, 'a2ui.security_violation', { componentType: component.type, surfaceId: context.surface.surfaceId });
+        hipaaLogger.logSecurityViolation('unauthorized_component', { componentType: component.type, surfaceId: context.surface.surfaceId });
         return null;
     }
 
-    // Get component definition
     const definition = getComponent(component.type);
     if (!definition) {
-        console.error('[A2UI] Component definition not found:', component.type);
         return null;
     }
 
-    // Resolve data bindings
     const resolvedProps = { ...component.props };
     if (component.dataBinding) {
         for (const [propName, binding] of Object.entries(component.dataBinding)) {
             resolvedProps[propName] = resolveDataBinding(binding, context.surface.dataModel);
+            // Log sensitive data access for HIPAA compliance
+            hipaaLogger.logDataAccess(context.surface.surfaceId, binding.path, context.surface.userId);
         }
     }
 
-    // Wrap action handlers
     const wrappedProps = { ...resolvedProps };
     if (definition.allowedActions) {
         for (const actionType of definition.allowedActions) {
             const actionId = resolvedProps[actionType];
             if (actionId && typeof actionId === 'string') {
                 wrappedProps[actionType] = (...args: any[]) => {
-                    // Rate limiting
+                    const startAction = performance.now();
+
                     if (!checkRateLimit(context.surface.surfaceId)) {
-                        console.warn('[A2UI] Rate limit exceeded for surface:', context.surface.surfaceId);
+                        console.warn('[A2UI] Rate limit exceeded');
                         return;
                     }
 
-                    // Create action object
+                    const payloadMerged = {
+                        ...(component.actionPayload || {}),
+                        ...(args[0] || {}),
+                    };
+
                     const action: A2UIAction = {
                         surfaceId: context.surface.surfaceId,
                         actionId,
                         type: actionType,
-                        payload: {
-                            ...(component.actionPayload || {}),
-                            ...(args[0] || {}),
-                        },
+                        payload: payloadMerged,
                         metadata: {
                             componentId: component.id,
                             componentType: component.type,
@@ -253,29 +269,47 @@ function renderComponent(
                         timestamp: new Date().toISOString(),
                     };
 
-                    // Trigger action callback
+                    // Action Validation
+                    const actionValidation = validateAction(action);
+                    if (!actionValidation.valid) {
+                        console.error('[A2UI] Action validation failed:', actionValidation.errors);
+                        hipaaLogger.logSecurityViolation('invalid_action', { action, errors: actionValidation.errors });
+                        return; // Block invalid action
+                    }
+
+                    // HIPAA Log
+                    hipaaLogger.logUserAction(action, context.surface.userId);
+
+                    // Execute
                     context.onAction(action);
+
+                    // Track Latency
+                    const duration = performance.now() - startAction;
+                    performanceMonitor.trackActionLatency(actionId, duration);
                 };
             }
         }
     }
 
-    // Render children recursively
     let children: React.ReactNode = null;
     if (component.children && component.children.length > 0) {
-        children = component.children.map((child, index) =>
-            renderComponent(child, context, depth + 1)
-        );
+        children = component.children.map((child) => renderComponent(child, context, depth + 1));
     } else if (resolvedProps.children) {
         children = resolvedProps.children;
     }
 
-    // Create React element
     const ReactComponent = definition.reactComponent;
     return (
-        <ReactComponent key={component.id} {...wrappedProps}>
-            {children}
-        </ReactComponent>
+        <div
+            key={component.id}
+            className={component.props?.containerClassName || ''}
+            data-component-type={component.type}
+            data-component-id={component.id}
+        >
+            <ReactComponent {...wrappedProps}>
+                {children}
+            </ReactComponent>
+        </div>
     );
 }
 
@@ -283,16 +317,20 @@ function renderComponent(
 // Error Boundary
 // ============================================================================
 
+/**
+ * Error boundary for A2UI components with automatic retry logic.
+ * Reports errors to Rollbar and provides a user-friendly fallback.
+ */
 class A2UIErrorBoundary extends React.Component<
     { children: React.ReactNode; surfaceId: string },
-    ErrorBoundaryState
+    ErrorBoundaryState & { retryCount: number }
 > {
     constructor(props: { children: React.ReactNode; surfaceId: string }) {
         super(props);
-        this.state = { hasError: false };
+        this.state = { hasError: false, retryCount: 0 };
     }
 
-    static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
         return { hasError: true, error };
     }
 
@@ -303,21 +341,34 @@ class A2UIErrorBoundary extends React.Component<
         });
     }
 
+    handleRetry = () => {
+        if (this.state.retryCount < 3) {
+            this.setState(prev => ({ hasError: false, error: undefined, retryCount: prev.retryCount + 1 }));
+        }
+    }
+
     render() {
         if (this.state.hasError) {
+            const canRetry = this.state.retryCount < 3;
             return (
                 <div className="p-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl">
-                    <h3 className="text-red-600 dark:text-red-400 font-bold text-lg mb-2">
-                        Rendering Error
-                    </h3>
+                    <h3 className="text-red-600 dark:text-red-400 font-bold text-lg mb-2">Rendering Error</h3>
                     <p className="text-red-500 dark:text-red-300 text-sm">
-                        An error occurred while rendering this surface. Please try refreshing.
+                        {canRetry ? "A temporary error occurred." : "Persistent error occurred. Please contact support."}
                     </p>
+
+                    {canRetry && (
+                        <button
+                            onClick={this.handleRetry}
+                            className="mt-4 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg text-sm font-medium transition-colors"
+                        >
+                            Retry ({3 - this.state.retryCount} left)
+                        </button>
+                    )}
+
                     {this.state.error && (
                         <details className="mt-4">
-                            <summary className="text-red-600 dark:text-red-400 text-xs font-bold cursor-pointer">
-                                Error Details
-                            </summary>
+                            <summary className="text-red-600 dark:text-red-400 text-xs font-bold cursor-pointer">Error Details</summary>
                             <pre className="mt-2 p-3 bg-red-100 dark:bg-red-900/40 rounded-lg text-xs text-red-700 dark:text-red-300 overflow-auto">
                                 {this.state.error.message}
                             </pre>
@@ -326,7 +377,6 @@ class A2UIErrorBoundary extends React.Component<
                 </div>
             );
         }
-
         return this.props.children;
     }
 }
@@ -336,9 +386,8 @@ class A2UIErrorBoundary extends React.Component<
 // ============================================================================
 
 /**
- * A2UI Renderer Component
- * 
- * Renders A2UI surfaces with validation, data binding, and action handling
+ * Main A2UI Renderer component.
+ * Measures render performance, applies error boundaries, and orchestrates recursive rendering.
  */
 export const A2UIRenderer: React.FC<A2UIRendererProps> = ({
     surface,
@@ -346,39 +395,32 @@ export const A2UIRenderer: React.FC<A2UIRendererProps> = ({
     className,
     debug = false,
 }) => {
+    // Start measuring render time
+    performanceMonitor.trackRenderStart(surface.surfaceId);
+
+    // Track render completion
+    useEffect(() => {
+        performanceMonitor.trackRenderEnd(surface.surfaceId);
+    }, [surface.surfaceId, surface.version]); // Track per version update
+
     const context: RendererContext = {
         surface,
         onAction,
         debug,
     };
 
-    // Validate surface structure
     if (!surface || !surface.components || !Array.isArray(surface.components)) {
         console.error('[A2UI] Invalid surface structure');
-        return (
-            <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-                <p className="text-yellow-600 dark:text-yellow-400 font-bold text-sm">
-                    Invalid Surface
-                </p>
-                <p className="text-yellow-500 dark:text-yellow-300 text-xs mt-1">
-                    The surface structure is invalid or missing components.
-                </p>
-            </div>
-        );
+        return null;
     }
 
     return (
         <A2UIErrorBoundary surfaceId={surface.surfaceId}>
             <div className={className} data-surface-id={surface.surfaceId}>
-                {surface.components.map((component) =>
-                    renderComponent(component, context)
-                )}
+                {surface.components.map((component) => renderComponent(component, context))}
             </div>
         </A2UIErrorBoundary>
     );
 };
 
-A2UIRenderer.displayName = 'A2UIRenderer';
-
-// Export helper functions for testing
 export { resolveJsonPointer, renderComponent };

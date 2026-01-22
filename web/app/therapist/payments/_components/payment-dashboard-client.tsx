@@ -163,9 +163,10 @@ export default function PaymentDashboardClient({ user }: PaymentDashboardClientP
                             </div>
                         </div>
 
-                        <div className="h-[350px] w-full">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <AreaChart data={transformedChartData}>
+                        <div className="h-[350px] w-full min-h-[350px]">
+                            {transformedChartData.length > 0 ? (
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <AreaChart data={transformedChartData}>
                                     <defs>
                                         <linearGradient id="colorEarnings" x1="0" y1="0" x2="0" y2="1">
                                             <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
@@ -209,6 +210,11 @@ export default function PaymentDashboardClient({ user }: PaymentDashboardClientP
                                     />
                                 </AreaChart>
                             </ResponsiveContainer>
+                            ) : (
+                                <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
+                                    <p className="font-medium">No chart data available</p>
+                                </div>
+                            )}
                         </div>
                     </motion.div>
                 </div>

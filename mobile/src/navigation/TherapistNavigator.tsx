@@ -6,6 +6,9 @@ import PatientsScreen from '../features/therapist/screens/PatientsScreen';
 import TherapistSessionsScreen from '../features/therapist/screens/TherapistSessionsScreen';
 import TherapistProfileScreen from '../features/therapist/screens/TherapistProfileScreen';
 import SettingsScreen from '../features/profile/screens/SettingsScreen';
+import MessagesScreen from '../features/messages/screens/MessagesScreen';
+import TherapistPaymentDashboardScreen from '../features/therapist/screens/TherapistPaymentDashboardScreen';
+import ReferralManagementScreen from '../features/therapist/screens/ReferralManagementScreen';
 import { TherapistTabParamList } from './types';
 import { useColorScheme } from '../hooks/useColorScheme';
 import { tokens } from '../design-system/tokens';
@@ -57,12 +60,42 @@ export const TherapistNavigator = () => {
                 }}
             />
             <Tab.Screen
+                name="Messages"
+                component={MessagesScreen}
+                options={{
+                    tabBarLabel: 'Messages',
+                    tabBarIcon: ({ color, size }) => (
+                        <Icon name="message-text" color={color} size={size} />
+                    ),
+                }}
+            />
+            <Tab.Screen
                 name="Sessions"
                 component={TherapistSessionsScreen}
                 options={{
                     tabBarLabel: 'Sessions',
                     tabBarIcon: ({ color, size }) => (
                         <Icon name="calendar-clock" color={color} size={size} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Payments"
+                component={TherapistPaymentDashboardScreen}
+                options={{
+                    tabBarLabel: 'Payments',
+                    tabBarIcon: ({ color, size }) => (
+                        <Icon name="credit-card" color={color} size={size} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Referrals"
+                component={ReferralManagementScreen}
+                options={{
+                    tabBarLabel: 'Referrals',
+                    tabBarIcon: ({ color, size }) => (
+                        <Icon name="account-arrow-right" color={color} size={size} />
                     ),
                 }}
             />

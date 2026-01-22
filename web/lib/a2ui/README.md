@@ -215,6 +215,43 @@ function MyComponent() {
 
 ### 2. Creating a Surface (Agent Side)
 
+## New Agent Integration Guide
+
+To integrate a new AI Agent with TherapyFlow via A2UI, follow these steps:
+
+### 1. Connection Setup
+Agents communicate via Supabase Realtime. Your agent must:
+- Have access to the Supabase Service Role Key (for database operations) or a valid JWT.
+- Subscribe to the user's channel: `a2ui:user_<uuid>`.
+
+### 2. Surface Lifecycle
+1. **Initialize**: Broadcast a `surfaceUpdate` with `operation: 'create'` to establish the initial UI and Data Model.
+2. **Update**: Use `dataModelUpdate` specifically for state changes to minimize bandwidth.
+3. **Re-render**: Use `surfaceUpdate` with `operation: 'update'` or `'replace'` if the UI structure changes (e.g., adding a new tool).
+4. **Cleanup**: Send `deleteSurface` when the agent session ends or the context is no longer relevant.
+
+### 3. Handling Actions
+Listen for `action` events on the same channel:
+- `surfaceId`: To identify which UI triggered the action.
+- `actionId`: The specific handler name you provided in the component props.
+- `payload`: Data gathered from the UI (e.g., input values).
+
+### 4. Best Practices
+- **Payload Minimization**: Keep `dataModel` lean. Large models slow down client-side reconciliation.
+- **Idempotency**: Use stable IDs for components to allow A2UI to perform efficient React updates.
+- **Error Handling**: Monitor for action timeouts. If the agent doesn't respond, the UI may need to show a retry state.
+
+## Component Example Messages
+
+Each component in the catalog supports specific schemas. See the examples below for detailed JSON payloads:
+
+- [Button](examples/Button.json)
+- [RiskAlert](examples/RiskAlert.json)
+- [SessionCard](examples/SessionCard.json) (Pending)
+- [Slider](examples/Slider.json) (Pending)
+
+### 2. Creating a Surface (Agent Side)
+
 ```typescript
 // Agent creates a mood tracking surface
 const surface = {

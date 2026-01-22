@@ -16,9 +16,17 @@ export function useReferrals() {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
+        // Fetch practice context
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('practice_id')
+            .eq('user_id', user.id)
+            .single();
+        const practiceId = profile?.practice_id;
+
         const [rData, sData] = await Promise.all([
-            getReferrals(supabase, user.id, 'therapist'), // received
-            getReferrals(supabase, user.id, 'referrer') // sent
+            getReferrals(supabase, user.id, 'therapist', practiceId), // received
+            getReferrals(supabase, user.id, 'referrer', practiceId) // sent
         ]);
 
         setReceived(rData || []);

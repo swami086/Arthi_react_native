@@ -26,10 +26,17 @@ export async function getNotifications(limit = 20) {
             return { success: false, error: 'Not authenticated' };
         }
 
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('practice_id')
+            .eq('user_id', user.id)
+            .single();
+
         const { data, error } = await (supabase
             .from('notifications') as any)
             .select('*')
             .eq('user_id', user.id)
+            .eq('practice_id', profile?.practice_id)
             .order('created_at', { ascending: false })
             .limit(limit);
 
@@ -76,10 +83,17 @@ export async function markAllNotificationsAsRead() {
 
         if (!user) throw new Error('Not authenticated');
 
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('practice_id')
+            .eq('user_id', user.id)
+            .single();
+
         const { error } = await (supabase
             .from('notifications') as any)
             .update({ is_read: true })
             .eq('user_id', user.id)
+            .eq('practice_id', profile?.practice_id)
             .eq('is_read', false);
 
         if (error) throw error;

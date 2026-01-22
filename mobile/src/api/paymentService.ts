@@ -97,9 +97,9 @@ export const verifyPayment = async (verification: PaymentVerification): Promise<
 /**
  * Get payment history for user
  */
-export const getPaymentHistory = async (userId: string): Promise<Payment[]> => {
+export const getPaymentHistory = async (userId: string, practiceId?: string): Promise<Payment[]> => {
     try {
-        const { data, error } = await supabase
+        let query = supabase
             .from('payments')
             .select(`
     *,
@@ -110,8 +110,13 @@ export const getPaymentHistory = async (userId: string): Promise<Payment[]> => {
         therapist: profiles!therapist_id(full_name, avatar_url)
     )
       `)
-            .or(`patient_id.eq.${userId}, therapist_id.eq.${userId} `)
-            .order('created_at', { ascending: false });
+            .or(`patient_id.eq.${userId}, therapist_id.eq.${userId} `);
+
+        if (practiceId) {
+            query = query.eq('practice_id', practiceId);
+        }
+
+        const { data, error } = await query.order('created_at', { ascending: false });
 
         if (error) throw error;
         return data as any[]; // Type cast as supabase selector join types can be complex
@@ -168,12 +173,14 @@ export const requestRefund = async (paymentId: string, reason: string): Promise<
  */
 export const getTherapistEarnings = async (
     therapistId: string,
+    practiceId?: string,
     startDate?: string,
     endDate?: string
 ): Promise<any> => {
     try {
         const { data, error } = await supabase.rpc('get_therapist_earnings', {
             therapist_user_id: therapistId,
+            p_id: practiceId, // Alignment with my custom RPC naming if I added it, or default
             start_date: startDate,
             end_date: endDate
         });

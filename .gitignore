@@ -25,3 +25,10 @@ node_modules/
 .env
 github-sync/.sync-state.json
 
+
+# React Native specific
+ios/Pods/
+mobile/ios/Pods/
+**/Pods/
+.code-graph-rag/
+logs_llm/

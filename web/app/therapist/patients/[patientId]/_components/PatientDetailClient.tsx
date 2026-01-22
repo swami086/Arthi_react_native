@@ -60,7 +60,7 @@ export default function PatientDetailClient({ patient, initialGoals, initialNote
                             Schedule
                         </Button>
                     </Link>
-                    <Link href={`/messages?userId=${patient.id}`}>
+                    <Link href={`/therapist/messages/${patient.user_id}`}>
                         <Button className="gap-2">
                             <MessageSquare className="h-4 w-4" />
                             Message
@@ -182,14 +182,14 @@ export default function PatientDetailClient({ patient, initialGoals, initialNote
             <AddNoteModal
                 open={isNoteModalOpen}
                 onOpenChange={setIsNoteModalOpen}
-                patientId={patient.id}
+                patientId={patient.user_id}
                 onSuccess={handleNoteAdded}
             />
 
             <AddGoalModal
                 open={isGoalModalOpen}
                 onOpenChange={setIsGoalModalOpen}
-                patientId={patient.id}
+                patientId={patient.user_id}
                 onSuccess={handleGoalAdded}
             />
         </div>

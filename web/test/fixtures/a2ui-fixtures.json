@@ -1,0 +1,49 @@
+{
+    "surfaces": {
+        "booking": {
+            "surfaceId": "booking-surface",
+            "userId": "user-123",
+            "agentId": "booking-agent",
+            "version": 1,
+            "components": [
+                {
+                    "id": "header-1",
+                    "type": "Typography",
+                    "props": {
+                        "variant": "h2",
+                        "children": "Book Appointment"
+                    }
+                },
+                {
+                    "id": "calendar-1",
+                    "type": "CalendarPicker",
+                    "props": {
+                        "onDateSelect": "selectDate"
+                    }
+                }
+            ],
+            "dataModel": {
+                "selectedDate": null,
+                "availableSlots": []
+            },
+            "metadata": {},
+            "updatedAt": "2024-03-20T10:00:00Z"
+        }
+    },
+    "messages": {
+        "update": {
+            "type": "surfaceUpdate",
+            "surfaceId": "booking-surface",
+            "components": [
+                {
+                    "id": "header-1",
+                    "type": "Typography",
+                    "props": {
+                        "variant": "h2",
+                        "children": "Select a Time Slot"
+                    }
+                }
+            ]
+        }
+    }
+}

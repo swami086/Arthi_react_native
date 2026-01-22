@@ -20,12 +20,14 @@ import { reportError } from '@/lib/rollbar-utils';
 
 const navItems = [
     { label: 'Home', path: '/home', icon: Home },
+    { label: 'AI Concierge', path: '/ai-assistant', icon: Shield },
     { label: 'Therapists', path: '/therapists', icon: Users },
     { label: 'Sessions', path: '/appointments', icon: Calendar },
     { label: 'Messages', path: '/messages', icon: MessageSquare },
     { label: 'Notifications', path: '/notifications', icon: Bell },
     { label: 'Profile', path: '/profile', icon: User },
 ];
+
 
 export const MainNavigation = () => {
     const pathname = usePathname();

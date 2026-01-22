@@ -2,11 +2,9 @@
  * useA2UI Hook
  * 
  * React hook for managing A2UI surfaces with Supabase realtime subscriptions.
- * Handles:
- * - Initial surface fetching from database
- * - Realtime updates via Supabase channels
- * - Bidirectional agent-UI communication
- * - Surface state management with immer
+ * Enhanced with:
+ * - Security: Message validation, Action validation, HIPAA logging
+ * - Performance: IndexedDB caching, Incremental updates, Performance monitoring
  */
 
 'use client';
@@ -25,52 +23,90 @@ import type {
     DataModelUpdateMessage,
     DeleteSurfaceMessage,
     ActionMessage,
+    A2UIComponent
 } from '@/lib/a2ui/types';
-import { validateMessage } from '@/lib/a2ui/message-validator';
 
-/**
- * Apply JSON Pointer update to object using immer
- */
+import { validateMessage, sanitizeMessage } from '@/lib/a2ui/message-validator';
+import { validateAction } from '@/lib/a2ui/action-validator';
+import { performanceMonitor } from '@/lib/a2ui/performance-monitor';
+import { hipaaLogger } from '@/lib/a2ui/hipaa-logger';
+import { a2uiCache } from '@/lib/a2ui/cache';
+
 function applyJsonPointerUpdate(obj: any, path: string, value: any): any {
-    if (!path || path === '/') {
-        return value;
-    }
-
+    if (!path || path === '/') return value;
     const segments = path.slice(1).split('/');
     const lastSegment = segments.pop()!;
 
     return produce(obj, (draft: any) => {
         let current = draft;
-
         for (const segment of segments) {
-            const decodedSegment = segment.replace(/~1/g, '/').replace(/~0/g, '~');
-
+            const decoded = segment.replace(/~1/g, '/').replace(/~0/g, '~');
             if (Array.isArray(current)) {
-                const index = parseInt(decodedSegment, 10);
-                if (isNaN(index)) return;
-                current = current[index];
+                const idx = parseInt(decoded, 10);
+                if (isNaN(idx)) return;
+                current = current[idx];
             } else {
-                if (!current[decodedSegment]) {
-                    current[decodedSegment] = {};
-                }
-                current = current[decodedSegment];
+                if (!current[decoded]) current[decoded] = {};
+                current = current[decoded];
             }
         }
-
-        const decodedLastSegment = lastSegment.replace(/~1/g, '/').replace(/~0/g, '~');
+        const decodedLast = lastSegment.replace(/~1/g, '/').replace(/~0/g, '~');
         if (Array.isArray(current)) {
-            const index = parseInt(decodedLastSegment, 10);
-            if (!isNaN(index)) {
-                current[index] = value;
-            }
+            const idx = parseInt(decodedLast, 10);
+            if (!isNaN(idx)) current[idx] = value;
         } else {
-            current[decodedLastSegment] = value;
+            current[decodedLast] = value;
         }
     });
 }
 
+// Deep merge utility
+function deepMerge(target: any, source: any): any {
+    if (typeof target !== 'object' || target === null) return source;
+    if (typeof source !== 'object' || source === null) return source;
+
+    const output = Array.isArray(target) ? [...target] : { ...target };
+
+    if (Array.isArray(source)) return source;
+
+    for (const key of Object.keys(source)) {
+        if (source[key] instanceof Object && key in target) {
+            output[key] = deepMerge(target[key], source[key]);
+        } else {
+            output[key] = source[key];
+        }
+    }
+    return output;
+}
+
 /**
- * useA2UI Hook
+ * Merge component updates for incremental rendering
+ * Updates existing components by ID and appends new ones.
+ */
+function mergeComponents(existing: A2UIComponent[], updates: A2UIComponent[]): A2UIComponent[] {
+    const existingMap = new Map(existing.map(c => [c.id, c]));
+    const result = [...existing];
+    const newItems: A2UIComponent[] = [];
+
+    for (const update of updates) {
+        if (existingMap.has(update.id)) {
+            const idx = result.findIndex(c => c.id === update.id);
+            if (idx !== -1) result[idx] = update;
+        } else {
+            newItems.push(update);
+        }
+    }
+
+    return [...result, ...newItems];
+}
+
+/**
+ * Main React hook for managing A2UI surfaces.
+ * Orchestrates Supabase Realtime subscriptions, surface state management, 
+ * action dispatching, and IndexedDB caching.
+ * 
+ * @param options Configuration options for the hook
+ * @returns An object containing surface state, loading status, and action handlers
  */
 export function useA2UI(options: UseA2UIOptions): UseA2UIReturn {
     const { userId, agentId, surfaceId, enableRealtime = true } = options;
@@ -83,40 +119,47 @@ export function useA2UI(options: UseA2UIOptions): UseA2UIReturn {
     const channelRef = useRef<ReturnType<ReturnType<typeof createClient>['channel']> | null>(null);
     const supabaseRef = useRef(createClient());
 
-    // ============================================================================
-    // Fetch Surfaces from Database
-    // ============================================================================
-
     const fetchSurfaces = useCallback(async () => {
+        // Guard: Don't fetch if userId is empty (would cause UUID error)
+        if (!userId || userId.trim() === '') {
+            setLoading(false);
+            setSurfaces(new Map());
+            return;
+        }
+
         try {
             setLoading(true);
             setError(null);
 
+            // 1. Load from cache first for instant UI
+            try {
+                const cached = await a2uiCache.getAllSurfaces(userId);
+                if (cached.length > 0) {
+                    const surfaceMap = new Map();
+                    cached.forEach(s => {
+                        if ((!agentId || s.agentId === agentId) && (!surfaceId || s.surfaceId === surfaceId)) {
+                            surfaceMap.set(s.surfaceId, s);
+                        }
+                    });
+                    if (surfaceMap.size > 0) {
+                        setSurfaces(surfaceMap);
+                        setLoading(false); // Show cached immediately
+                    }
+                }
+            } catch (cacheErr) {
+                console.warn('[useA2UI] Cache load failed', cacheErr);
+            }
+
+            // 2. Fetch fresh from DB
             const supabase = supabaseRef.current;
-
-            // Build query
-            let query = supabase
-                .from('a2ui_surfaces')
-                .select('*')
-                .eq('user_id', userId);
-
-            if (agentId) {
-                query = query.eq('agent_id', agentId);
-            }
-
-            if (surfaceId) {
-                query = query.eq('surface_id', surfaceId);
-            }
+            let query = supabase.from('a2ui_surfaces').select('*').eq('user_id', userId);
+            if (agentId) query = query.eq('agent_id', agentId);
+            if (surfaceId) query = query.eq('surface_id', surfaceId);
 
             const { data, error: fetchError } = await query;
+            if (fetchError) throw fetchError;
 
-            if (fetchError) {
-                throw fetchError;
-            }
-
-            // Validate and store surfaces
             const surfaceMap = new Map<string, A2UISurface>();
-
             if (data) {
                 for (const row of data) {
                     try {
@@ -131,38 +174,41 @@ export function useA2UI(options: UseA2UIOptions): UseA2UIReturn {
                             createdAt: row.created_at,
                             updatedAt: row.updated_at,
                         };
-
                         surfaceMap.set(surface.surfaceId, surface);
+                        // Update cache
+                        await a2uiCache.saveSurface(surface);
                     } catch (err) {
-                        console.error('[useA2UI] Failed to parse surface:', err);
-                        reportError(err, 'use_a2ui.parse_surface', { surfaceId: row.surface_id });
+                        console.error('[useA2UI] Parse error:', err);
                     }
                 }
             }
 
+            // Clean old cache
+            a2uiCache.clearOldSurfaces().catch(e => console.error(e));
+
             setSurfaces(surfaceMap);
             setLoading(false);
         } catch (err) {
-            console.error('[useA2UI] Failed to fetch surfaces:', err);
-            setError(err instanceof Error ? err.message : 'Failed to fetch surfaces');
-            reportError(err, 'use_a2ui.fetch_surfaces', { userId, agentId, surfaceId });
+            console.error('[useA2UI] Fetch failed:', err);
+            setError(err instanceof Error ? err.message : 'Fetch failed');
             setLoading(false);
         }
     }, [userId, agentId, surfaceId]);
 
-    // ============================================================================
-    // Message Handlers
-    // ============================================================================
-
     const handleSurfaceUpdate = useCallback((message: SurfaceUpdateMessage) => {
+        const start = performance.now();
+        hipaaLogger.logSurfaceUpdate(message);
+
         setSurfaces((prev) => {
             const newSurfaces = new Map(prev);
             const existing = newSurfaces.get(message.surfaceId);
 
+            let updatedSurface: A2UISurface | undefined;
+
             switch (message.operation) {
                 case 'create':
                 case 'replace':
-                    newSurfaces.set(message.surfaceId, {
+                    updatedSurface = {
                         surfaceId: message.surfaceId,
                         userId: message.userId,
                         agentId: message.agentId,
@@ -171,17 +217,20 @@ export function useA2UI(options: UseA2UIOptions): UseA2UIReturn {
                         metadata: message.metadata || {},
                         version: existing ? existing.version + 1 : 1,
                         updatedAt: message.timestamp || new Date().toISOString(),
-                    });
+                    };
+                    newSurfaces.set(message.surfaceId, updatedSurface);
                     break;
 
                 case 'update':
                     if (existing) {
-                        const updated = produce(existing, (draft) => {
+                        updatedSurface = produce(existing, (draft) => {
                             if (message.components) {
-                                draft.components = message.components;
+                                // Incremental component update
+                                draft.components = mergeComponents(draft.components, message.components);
                             }
                             if (message.dataModel) {
-                                draft.dataModel = { ...draft.dataModel, ...message.dataModel };
+                                // Deep merge data model
+                                draft.dataModel = deepMerge(draft.dataModel, message.dataModel);
                             }
                             if (message.metadata) {
                                 draft.metadata = { ...draft.metadata, ...message.metadata };
@@ -189,28 +238,31 @@ export function useA2UI(options: UseA2UIOptions): UseA2UIReturn {
                             draft.version += 1;
                             draft.updatedAt = message.timestamp || new Date().toISOString();
                         });
-                        newSurfaces.set(message.surfaceId, updated);
+                        newSurfaces.set(message.surfaceId, updatedSurface);
                     }
                     break;
-
                 case 'delete':
                     newSurfaces.delete(message.surfaceId);
+                    a2uiCache.deleteSurface(message.surfaceId).catch(console.error);
                     break;
+            }
+
+            if (updatedSurface) {
+                a2uiCache.saveSurface(updatedSurface).catch(console.error);
             }
 
             return newSurfaces;
         });
+
+        performanceMonitor.trackMessageProcessing(message.type, performance.now() - start);
     }, []);
 
     const handleDataModelUpdate = useCallback((message: DataModelUpdateMessage) => {
+        const start = performance.now();
         setSurfaces((prev) => {
             const newSurfaces = new Map(prev);
             const existing = newSurfaces.get(message.surfaceId);
-
-            if (!existing) {
-                console.warn('[useA2UI] Received data model update for unknown surface:', message.surfaceId);
-                return prev;
-            }
+            if (!existing) return prev;
 
             const updated = produce(existing, (draft) => {
                 for (const [path, value] of Object.entries(message.updates)) {
@@ -221,8 +273,10 @@ export function useA2UI(options: UseA2UIOptions): UseA2UIReturn {
             });
 
             newSurfaces.set(message.surfaceId, updated);
+            a2uiCache.saveSurface(updated).catch(console.error);
             return newSurfaces;
         });
+        performanceMonitor.trackMessageProcessing(message.type, performance.now() - start);
     }, []);
 
     const handleDeleteSurface = useCallback((message: DeleteSurfaceMessage) => {
@@ -231,137 +285,89 @@ export function useA2UI(options: UseA2UIOptions): UseA2UIReturn {
             newSurfaces.delete(message.surfaceId);
             return newSurfaces;
         });
+        a2uiCache.deleteSurface(message.surfaceId).catch(console.error);
     }, []);
-
-    // ============================================================================
-    // Realtime Subscription
-    // ============================================================================
 
     useEffect(() => {
         if (!enableRealtime) return;
-
         const supabase = supabaseRef.current;
         const channelName = `a2ui:${userId}`;
-
         const channel = supabase.channel(channelName);
 
-        // Subscribe to broadcast events
         channel
             .on('broadcast', { event: 'surfaceUpdate' }, ({ payload }) => {
-                const validation = validateMessage(payload);
+                let safePayload = sanitizeMessage(payload);
+                const validation = validateMessage(safePayload);
                 if (!validation.valid) {
-                    console.error('[useA2UI] Invalid surfaceUpdate message:', validation.errors);
-                    reportError(
-                        new Error('Invalid surfaceUpdate message'),
-                        'use_a2ui.invalid_message',
-                        { errors: validation.errors, payload }
-                    );
+                    console.error('[useA2UI] Invalid surfaceUpdate:', validation.errors);
                     return;
                 }
-
-                handleSurfaceUpdate(payload as SurfaceUpdateMessage);
+                handleSurfaceUpdate(safePayload as SurfaceUpdateMessage);
             })
             .on('broadcast', { event: 'dataModelUpdate' }, ({ payload }) => {
-                const validation = validateMessage(payload);
-                if (!validation.valid) {
-                    console.error('[useA2UI] Invalid dataModelUpdate message:', validation.errors);
-                    return;
-                }
-
-                handleDataModelUpdate(payload as DataModelUpdateMessage);
+                let safePayload = sanitizeMessage(payload);
+                const validation = validateMessage(safePayload);
+                if (!validation.valid) return;
+                handleDataModelUpdate(safePayload as DataModelUpdateMessage);
             })
             .on('broadcast', { event: 'deleteSurface' }, ({ payload }) => {
                 const validation = validateMessage(payload);
-                if (!validation.valid) {
-                    console.error('[useA2UI] Invalid deleteSurface message:', validation.errors);
-                    return;
-                }
-
+                if (!validation.valid) return;
                 handleDeleteSurface(payload as DeleteSurfaceMessage);
             })
             .subscribe((status) => {
-                if (status === 'SUBSCRIBED') {
-                    setConnected(true);
-                    console.log('[useA2UI] Connected to channel:', channelName);
-                } else if (status === 'CLOSED') {
-                    setConnected(false);
-                    console.log('[useA2UI] Disconnected from channel:', channelName);
-                } else if (status === 'CHANNEL_ERROR') {
-                    setConnected(false);
-                    console.error('[useA2UI] Channel error:', channelName);
-                    toast.error('Lost connection to realtime updates');
-                }
+                if (status === 'SUBSCRIBED') setConnected(true);
+                else setConnected(false);
             });
 
         channelRef.current = channel;
-
         return () => {
-            if (channelRef.current) {
-                supabase.removeChannel(channelRef.current);
-                channelRef.current = null;
-                setConnected(false);
-            }
+            if (channelRef.current) supabase.removeChannel(channelRef.current);
         };
     }, [userId, enableRealtime, handleSurfaceUpdate, handleDataModelUpdate, handleDeleteSurface]);
-
-    // ============================================================================
-    // Initial Fetch
-    // ============================================================================
 
     useEffect(() => {
         fetchSurfaces();
     }, [fetchSurfaces]);
 
-    // ============================================================================
-    // Send Action
-    // ============================================================================
+    const sendAction = useCallback(async (action: A2UIAction) => {
+        // Validation
+        const val = validateAction(action);
+        if (!val.valid) {
+            console.error('Blocked invalid action:', val.errors);
+            toast.error('Action blocked by security policy');
+            return;
+        }
 
-    const sendAction = useCallback(
-        async (action: A2UIAction) => {
-            try {
-                const supabase = supabaseRef.current;
-                const channel = channelRef.current;
+        try {
+            const channel = channelRef.current;
+            if (!channel) throw new Error('Realtime disconnected');
 
-                if (!channel) {
-                    throw new Error('Realtime channel not initialized');
-                }
+            // Log
+            hipaaLogger.logUserAction(action, userId);
 
-                const message: ActionMessage = {
-                    type: 'action',
-                    surfaceId: action.surfaceId,
-                    userId,
-                    actionId: action.actionId,
-                    actionType: action.type,
-                    payload: action.payload,
-                    metadata: action.metadata,
-                    timestamp: action.timestamp || new Date().toISOString(),
-                };
+            const message: ActionMessage = {
+                type: 'action',
+                surfaceId: action.surfaceId,
+                userId,
+                actionId: action.actionId,
+                actionType: action.type,
+                payload: action.payload,
+                metadata: action.metadata,
+                timestamp: action.timestamp || new Date().toISOString(),
+            };
 
-                // Validate message
-                const validation = validateMessage(message);
-                if (!validation.valid) {
-                    throw new Error(`Invalid action message: ${validation.errors?.join(', ')}`);
-                }
-
-                // Broadcast action
-                await channel.send({
-                    type: 'broadcast',
-                    event: 'action',
-                    payload: message,
-                });
-            } catch (err) {
-                console.error('[useA2UI] Failed to send action:', err);
-                toast.error('Failed to send action');
-                reportError(err, 'use_a2ui.send_action', { action });
-                throw err;
-            }
-        },
-        [userId]
-    );
-
-    // ============================================================================
-    // Return Hook Interface
-    // ============================================================================
+            await channel.send({
+                type: 'broadcast',
+                event: 'action',
+                payload: message,
+            });
+        } catch (err) {
+            console.error('Send failed:', err);
+            toast.error('Failed to send action');
+            reportError(err, 'use_a2ui.send_action', { action });
+        }
+    }, [userId]);
 
     return {
         surfaces,

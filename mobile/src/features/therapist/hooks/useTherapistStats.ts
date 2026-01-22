@@ -4,16 +4,16 @@ import { TherapistStats } from '../../../api/types';
 import { useAuth } from '../../auth/hooks/useAuth';
 
 export const useTherapistStats = () => {
-    const { user } = useAuth();
+    const { user, profile } = useAuth();
     const [stats, setStats] = useState<TherapistStats | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     const fetchStats = useCallback(async () => {
-        if (!user) return;
+        if (!user || !profile?.practice_id) return;
         try {
             setLoading(true);
-            const data = await getTherapistStats(user.id);
+            const data = await getTherapistStats(user.id, profile.practice_id);
             if (data) {
                 setStats(data);
             }
@@ -22,7 +22,7 @@ export const useTherapistStats = () => {
         } finally {
             setLoading(false);
         }
-    }, [user]);
+    }, [user, profile?.practice_id]);
 
     useEffect(() => {
         fetchStats();

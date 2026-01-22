@@ -19,6 +19,7 @@ interface UseSessionCopilotOptions {
 export function useSessionCopilot({ userId, appointmentId, transcriptId }: UseSessionCopilotOptions) {
     const surfaceId = `session-copilot-${appointmentId}`;
     const agentId = 'session-agent';
+    const supabase = createClient();
 
     const { surfaces, loading, sendAction, connected, refetch } = useA2UI({
         userId,
@@ -34,27 +35,73 @@ export function useSessionCopilot({ userId, appointmentId, transcriptId }: UseSe
 
     // Initialize surface if it doesn't exist
     const initializeSurface = useCallback(async () => {
+        // Guard: Don't initialize if appointmentId is empty
+        if (!appointmentId || appointmentId.trim() === '') {
+            return;
+        }
+
         if (isInitializing || surface) return;
 
         try {
             setIsInitializing(true);
             setError(null);
-            const supabase = createClient();
-            const { data, error: initError } = await supabase.functions.invoke('session-agent-init', {
-                body: { appointmentId, transcriptId }
+
+            // Get auth session for fetch call
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                throw new Error('Not authenticated');
+            }
+
+            // Use fetch directly to get better error messages
+            const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+            const response = await fetch(`${supabaseUrl}/functions/v1/session-agent-init`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${session.access_token}`,
+                    'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+                },
+                body: JSON.stringify({
+                    appointmentId,
+                    transcriptId
+                })
             });
 
-            if (initError) throw initError;
-            if (data?.success) {
+            const data = await response.json();
+
+            if (!response.ok) {
+                // Extract error message from response
+                const errorMsg = data?.error || data?.message || `Edge Function returned ${response.status}`;
+                throw new Error(errorMsg);
+            }
+
+            // Check if the response itself contains an error
+            if (data && typeof data === 'object' && 'error' in data) {
+                const errorMsg = typeof data.error === 'string' ? data.error : 'Edge Function returned an error';
+                throw new Error(errorMsg);
+            }
+
+            if (data) {
                 await refetch();
             }
         } catch (err: any) {
             console.error('[useSessionCopilot] Failed to initialize:', err);
-            setError(err.message || 'Failed to initialize session agent');
+            // Extract error message from various error formats
+            let errorMessage = 'Failed to initialize session agent';
+            if (err?.message) {
+                errorMessage = err.message;
+            } else if (typeof err === 'string') {
+                errorMessage = err;
+            } else if (err?.error?.message) {
+                errorMessage = err.error.message;
+            } else if (err?.context?.message) {
+                errorMessage = err.context.message;
+            }
+            setError(errorMessage);
         } finally {
             setIsInitializing(false);
         }
-    }, [appointmentId, transcriptId, surface, isInitializing, refetch]);
+    }, [appointmentId, transcriptId, surface, isInitializing, refetch, supabase]);
 
     // Trigger analysis
     const refreshAnalysis = useCallback(async () => {
@@ -62,10 +109,7 @@ export function useSessionCopilot({ userId, appointmentId, transcriptId }: UseSe
 
         try {
             setIsAnalyzing(true);
-            const supabase = createClient();
 
-            // We use the edge function directly via action or direct invoke
-            // The plan says "Trigger analyze_transcript action"
             const { error } = await supabase.functions.invoke('session-agent', {
                 body: {
                     action: 'analyze_transcript',
@@ -75,6 +119,7 @@ export function useSessionCopilot({ userId, appointmentId, transcriptId }: UseSe
             });
 
             if (error) throw error;
+
             toast.success('Session analysis updated');
         } catch (err) {
             console.error('[useSessionCopilot] Analysis failed:', err);
@@ -82,14 +127,14 @@ export function useSessionCopilot({ userId, appointmentId, transcriptId }: UseSe
         } finally {
             setIsAnalyzing(false);
         }
-    }, [appointmentId, transcriptId, surfaceId, isAnalyzing]);
+    }, [appointmentId, transcriptId, surfaceId, isAnalyzing, supabase]);
 
     // Initialize on mount or when transcript becomes available
     useEffect(() => {
-        if (!surface && !loading && !isInitializing) {
+        if (!surface && !loading && !isInitializing && !error) {
             initializeSurface();
         }
-    }, [surface, loading, isInitializing, initializeSurface]);
+    }, [surface, loading, isInitializing, error, initializeSurface]);
 
     return {
         surface,
@@ -99,15 +144,16 @@ export function useSessionCopilot({ userId, appointmentId, transcriptId }: UseSe
         connected,
         sendAction: async (action: any) => {
             try {
-                const supabase = createClient();
-                const { error: actionError } = await supabase.functions.invoke('session-agent', {
+                const { error } = await supabase.functions.invoke('session-agent', {
                     body: {
                         action: action.actionId,
                         surfaceId,
                         payload: action.payload
                     }
                 });
-                if (actionError) throw actionError;
+
+                if (error) throw error;
+
             } catch (err) {
                 console.error('[useSessionCopilot] Action failed:', err);
                 toast.error('Failed to execute action');
