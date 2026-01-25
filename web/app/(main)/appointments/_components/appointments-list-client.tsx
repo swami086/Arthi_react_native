@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { format, isSameDay, addDays, isAfter, isBefore, startOfDay } from 'date-fns';
+import { format, isSameDay, addDays, isAfter, isBefore } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { CalendarDays, List } from 'lucide-react';
 
 import AppointmentCard from './appointment-card';
 import AppointmentFilters from './appointment-filters';
+import { AppointmentsCalendarView } from '@/components/appointments/appointments-calendar-view';
 import { updateAppointmentStatus } from '@/app/actions/appointments';
 import { Button } from '@/components/ui/button';
 
@@ -17,6 +19,7 @@ interface AppointmentsListClientProps {
 export default function AppointmentsListClient({ initialAppointments }: AppointmentsListClientProps) {
     const router = useRouter();
     const [appointments, setAppointments] = useState(initialAppointments || []);
+    const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
     const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
 
     // Filter appointments
@@ -78,14 +81,37 @@ export default function AppointmentsListClient({ initialAppointments }: Appointm
 
     return (
         <div className="min-h-screen">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                 <h1 className="text-2xl font-bold">Session Management</h1>
-                {/* Optional: Add session button */}
+                <div className="flex rounded-lg border border-border p-1 bg-muted/50">
+                    <button
+                        onClick={() => setViewMode('list')}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                            viewMode === 'list' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'
+                        }`}
+                    >
+                        <List className="w-4 h-4" />
+                        List
+                    </button>
+                    <button
+                        onClick={() => setViewMode('calendar')}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                            viewMode === 'calendar' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'
+                        }`}
+                    >
+                        <CalendarDays className="w-4 h-4" />
+                        Calendar
+                    </button>
+                </div>
             </div>
 
-            <AppointmentFilters activeTab={activeTab} onTabChange={setActiveTab} />
+            {viewMode === 'calendar' ? (
+                <AppointmentsCalendarView appointments={appointments} variant="patient" className="mt-2" />
+            ) : (
+                <>
+                    <AppointmentFilters activeTab={activeTab} onTabChange={setActiveTab} />
 
-            {activeTab === 'upcoming' ? (
+                    {activeTab === 'upcoming' ? (
                 <div className="space-y-6">
                     {Object.keys(groupedUpcoming).length === 0 ? (
                         <div className="text-center py-10 text-muted-foreground">
@@ -125,6 +151,8 @@ export default function AppointmentsListClient({ initialAppointments }: Appointm
                         ))
                     )}
                 </div>
+            )}
+                </>
             )}
         </div>
     );

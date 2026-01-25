@@ -3,43 +3,45 @@
 import React, { useState } from 'react';
 import { useSessionCopilot } from '@/hooks/use-session-copilot';
 import { useAuth } from '@/hooks/use-auth';
-import { createClient } from '@/lib/supabase/client';
 import { A2UICopilotSidebar } from '@/components/ai/a2ui-copilot-sidebar';
 import { LoadingSkeleton } from '@/components/ui/loading-skeleton';
 import { ErrorBanner } from '@/components/ui/error-banner';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
     ChevronLeft,
     BrainCircuit,
-    Search,
     User,
     Calendar,
     ArrowRight,
     Bot,
     RefreshCw
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { CalendarManagementPanel } from './_components/CalendarManagementPanel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { PatientSearchSelect } from '@/components/copilot/patient-search-select';
+import { usePatientList } from '../_hooks/usePatientList';
+import { useAppointmentsForPatient } from '../_hooks/useAppointmentsForPatient';
+import { format, parseISO, isFuture } from 'date-fns';
 
 export default function TherapistCopilotPage() {
     const { user } = useAuth();
-    const router = useRouter();
-    const [appointmentId, setAppointmentId] = useState('');
+    const [selectedPatientId, setSelectedPatientId] = useState('');
     const [activeAppointmentId, setActiveAppointmentId] = useState<string | null>(null);
+
+    const { patients, loading: patientsLoading } = usePatientList();
+    const { appointments, loading: appointmentsLoading } = useAppointmentsForPatient(
+        selectedPatientId || null
+    );
 
     const { surface, loading, isAnalyzing, refreshAnalysis, error, retry } = useSessionCopilot({
         userId: user?.id || '',
         appointmentId: activeAppointmentId || '',
     });
 
-    const handleStartCopilot = () => {
-        if (!appointmentId.trim()) {
-            return;
-        }
-        // Simply set the active appointment ID - the hook will handle initialization
-        setActiveAppointmentId(appointmentId.trim());
+    const selectedPatient = patients.find((p) => p.id === selectedPatientId);
+
+    const handleLaunchSession = (appointmentId: string) => {
+        setActiveAppointmentId(appointmentId);
     };
 
     if (!activeAppointmentId) {
@@ -62,48 +64,68 @@ export default function TherapistCopilotPage() {
                     </TabsList>
                     
                     <TabsContent value="session" className="space-y-4 bg-background-light dark:bg-background-dark p-8 rounded-3xl border-2 border-border shadow-sm">
-                        <div className="space-y-2">
-                            <label className="text-xs font-black uppercase tracking-widest text-foreground-muted">Appointment ID</label>
-                            <div className="flex gap-2">
-                                <Input
-                                    placeholder="Paste appointment UUID here..."
-                                    value={appointmentId}
-                                    onChange={(e) => setAppointmentId(e.target.value)}
-                                    className="font-bold"
-                                />
-                                <Button onClick={handleStartCopilot} disabled={!appointmentId.trim()} className="font-black">
-                                    Launch
-                                </Button>
-                            </div>
+                        <div className="space-y-4">
+                            <PatientSearchSelect
+                                patients={patients}
+                                loading={patientsLoading}
+                                value={selectedPatientId}
+                                onSelect={(p) => setSelectedPatientId(p?.id ?? '')}
+                                placeholder="Search patient by name..."
+                                label="Patient"
+                            />
                         </div>
 
                         <div className="pt-4 border-t border-border mt-4">
                             <h3 className="text-sm font-black mb-4 flex items-center gap-2">
                                 <Calendar className="w-4 h-4 text-primary" />
                                 Recent Sessions
+                                {selectedPatient && (
+                                    <span className="font-normal text-muted-foreground">
+                                        — {selectedPatient.full_name}
+                                    </span>
+                                )}
                             </h3>
-                            {/* Mock recent sessions for now */}
-                            <div className="space-y-2">
-                                {['Active Session - Patient: John Doe', 'Last Session - Patient: Jane Smith'].map((session, i) => (
-                                    <button
-                                        key={i}
-                                        className="w-full text-left p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-zinc-900 border border-transparent hover:border-border transition-all flex items-center justify-between group"
-                                        onClick={() => {
-                                            const mockId = i === 0 ? 'session-123' : 'session-456';
-                                            setAppointmentId(mockId);
-                                            setActiveAppointmentId(mockId);
-                                        }}
-                                    >
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-zinc-800 flex items-center justify-center">
-                                                <User className="w-5 h-5 opacity-50" />
-                                            </div>
-                                            <span className="font-bold">{session}</span>
-                                        </div>
-                                        <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                    </button>
-                                ))}
-                            </div>
+                            {!selectedPatientId ? (
+                                <p className="text-sm text-muted-foreground py-6 text-center">
+                                    Select a patient to see their sessions.
+                                </p>
+                            ) : appointmentsLoading ? (
+                                <p className="text-sm text-muted-foreground py-6 text-center">
+                                    Loading sessions…
+                                </p>
+                            ) : appointments.length === 0 ? (
+                                <p className="text-sm text-muted-foreground py-6 text-center">
+                                    No sessions found for this patient.
+                                </p>
+                            ) : (
+                                <div className="space-y-2">
+                                    {appointments.map((apt) => {
+                                        const start = parseISO(apt.start_time);
+                                        const label = isFuture(start)
+                                            ? `Upcoming — ${format(start, 'EEE, MMM d, h:mm a')}`
+                                            : `Past — ${format(start, 'EEE, MMM d, yyyy')}`;
+                                        return (
+                                            <button
+                                                key={apt.id}
+                                                type="button"
+                                                className="w-full text-left p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-zinc-900 border border-transparent hover:border-border transition-all flex items-center justify-between group"
+                                                onClick={() => handleLaunchSession(apt.id)}
+                                            >
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-zinc-800 flex items-center justify-center">
+                                                        <User className="w-5 h-5 opacity-50" />
+                                                    </div>
+                                                    <span className="font-bold">{label}</span>
+                                                    <span className="text-xs text-muted-foreground uppercase">
+                                                        {apt.status}
+                                                    </span>
+                                                </div>
+                                                <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            )}
                         </div>
                     </TabsContent>
                     

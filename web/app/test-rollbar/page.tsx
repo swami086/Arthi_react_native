@@ -19,7 +19,7 @@ export default function TestRollbarPage() {
           Trigger Rollbar Error
         </Button>
 
-        <Button variant="outline" onClick={() => {
+        <Button variant="outline" data-testid="log-to-local-btn" onClick={() => {
           logToLocal('This is a test log from the browser!', 'info');
           alert('Log sent to browser.log');
         }}>

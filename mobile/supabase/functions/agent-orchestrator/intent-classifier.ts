@@ -63,8 +63,10 @@ Respond with JSON: {"intent": "booking", "confidence": 85, "reasoning": ["User m
 
         if (lowerMessage.includes('calendar') || lowerMessage.includes('availability') || lowerMessage.includes('slot') || 
             lowerMessage.includes('google calendar') || lowerMessage.includes('outlook') || 
-            lowerMessage.includes('team calendar') || lowerMessage.includes('propose slot')) {
-            return { intent: 'calendar', confidence: 75, reasoning: ['Keyword: calendar/availability/slot'] };
+            lowerMessage.includes('team calendar') || lowerMessage.includes('propose slot') ||
+            lowerMessage.includes('calendar management') || lowerMessage.includes('check_availability') ||
+            lowerMessage.includes('propose_slots')) {
+            return { intent: 'calendar', confidence: 85, reasoning: ['Keyword: calendar/availability/slot/calendar management'] };
         }
 
         return { intent: 'general', confidence: 50, reasoning: ['No clear intent detected'] };

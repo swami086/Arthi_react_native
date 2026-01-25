@@ -21,6 +21,8 @@
     "@daily-co/daily-js": "^0.85.0",
     "@daily-co/daily-react": "^0.24.0",
     "@hookform/resolvers": "^5.2.2",
+    "@langchain/core": "latest",
+    "@langchain/openai": "latest",
     "@opentelemetry/exporter-metrics-otlp-http": "^0.208.0",
     "@opentelemetry/sdk-metrics": "^2.2.0",
     "@radix-ui/react-alert-dialog": "^1.1.15",
@@ -33,6 +35,7 @@
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.89.0",
     "@tanstack/react-virtual": "^3.13.17",
+    "ai": "^3.0.0",
     "ajv": "^8.12.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -45,11 +48,9 @@
     "next": "15.1.4",
     "next-themes": "^0.4.6",
     "openai": "^4.77.0",
-    "@langchain/core": "latest",
-    "@langchain/openai": "latest",
-    "ai": "^3.0.0",
     "plausible-tracker": "^0.3.9",
     "react": "18.3.1",
+    "react-big-calendar": "^1.19.4",
     "react-day-picker": "^9.13.0",
     "react-dom": "18.3.1",
     "react-hook-form": "^7.70.0",
@@ -71,6 +72,7 @@
     "@types/node": "^20.19.27",
     "@types/react": "18.3.1",
     "@types/react-dom": "18.3.1",
+    "@vitejs/plugin-react": "^4.2.1",
     "@vitest/ui": "^3.0.4",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
@@ -79,7 +81,6 @@
     "msw": "^2.7.0",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^3.0.4",
-    "@vitejs/plugin-react": "^4.2.1"
+    "vitest": "^3.0.4"
   }
 }

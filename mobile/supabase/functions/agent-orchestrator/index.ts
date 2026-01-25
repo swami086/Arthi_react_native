@@ -25,6 +25,14 @@ serve(async (req) => {
     try {
         const { message, context, conversationId } = await req.json();
 
+        // Debug logging for intent routing
+        console.log('[agent-orchestrator] Received request:', {
+            hasMessage: !!message,
+            hasContext: !!context,
+            contextIntent: context?.intent,
+            contextKeys: context ? Object.keys(context) : [],
+        });
+
         if (!message) {
             throw new Error('Message is required');
         }
@@ -93,9 +101,35 @@ serve(async (req) => {
             conversation = newConv;
         }
 
-        // Classify intent
-        reportInfo('Classifying user intent', 'orchestrator:classify', { traceId });
-        const { intent, confidence } = await classifyIntent(message, context);
+        // Classify intent (or use explicit intent from context if provided)
+        let intent: string;
+        let confidence: number;
+        
+        // Check for explicit intent in context (prioritize this)
+        const explicitIntent = context?.intent;
+        console.log('[agent-orchestrator] Intent check:', {
+            explicitIntent,
+            contextType: typeof context,
+            contextIsObject: context && typeof context === 'object',
+            contextKeys: context ? Object.keys(context) : [],
+            contextIntentValue: context?.intent,
+            validIntents: ['booking', 'session', 'insights', 'followup', 'calendar', 'general'],
+            isValidIntent: explicitIntent && ['booking', 'session', 'insights', 'followup', 'calendar', 'general'].includes(explicitIntent),
+        });
+        
+        if (explicitIntent && ['booking', 'session', 'insights', 'followup', 'calendar', 'general'].includes(explicitIntent)) {
+            intent = explicitIntent;
+            confidence = 100; // Explicit intent has 100% confidence
+            console.log(`[agent-orchestrator] Using explicit intent from context: ${intent} (confidence: ${confidence}%)`);
+            reportInfo(`Using explicit intent from context: ${intent}`, 'orchestrator:classify', { traceId });
+        } else {
+            console.log('[agent-orchestrator] No valid explicit intent, classifying via LLM');
+            reportInfo('Classifying user intent', 'orchestrator:classify', { traceId });
+            const result = await classifyIntent(message, context);
+            intent = result.intent;
+            confidence = result.confidence;
+            console.log(`[agent-orchestrator] LLM classified intent: ${intent} (confidence: ${confidence}%)`);
+        }
 
         reportInfo(`Intent classified: ${intent} (${confidence}%)`, 'orchestrator:intent', {
             intent,

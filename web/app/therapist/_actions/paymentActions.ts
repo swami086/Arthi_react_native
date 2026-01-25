@@ -23,25 +23,43 @@ export async function refreshEarningsDataAction() {
 export async function exportPaymentHistoryAction(therapistId: string) {
     const supabase = await createClient();
     try {
-        const { data, error } = await (supabase.from('payments') as any)
-            .select(`
-                id,
-                created_at,
-                amount,
-                currency,
-                status,
-                patient: profiles!payments_mentee_id_fkey(full_name)
-            `)
+        // Fetch payments without joins to avoid PostgREST relationship issues
+        const { data: payments, error: paymentsError } = await (supabase.from('payments') as any)
+            .select('id, created_at, amount, currency, status, patient_id')
             .eq('therapist_id', therapistId)
             .order('created_at', { ascending: false });
 
-        if (error) throw error;
+        if (paymentsError) throw paymentsError;
+
+        // Collect unique patient IDs
+        const patientIds = Array.from(
+            new Set(
+                (payments || [])
+                    .map((p: any) => p.patient_id)
+                    .filter((id: string | null) => !!id)
+            )
+        );
+
+        // Fetch patient names in a separate query
+        let patientMap = new Map<string, string>();
+        if (patientIds.length > 0) {
+            const { data: patients, error: patientsError } = await supabase
+                .from('profiles')
+                .select('user_id, full_name')
+                .in('user_id', patientIds as string[]);
+
+            if (patientsError) throw patientsError;
+
+            patientMap = new Map(
+                (patients || []).map((p: any) => [p.user_id as string, p.full_name as string])
+            );
+        }
 
         const headers = ['Date', 'ID', 'Patient', 'Amount', 'Currency', 'Status'];
-        const rows = (data || []).map((p: any) => [
+        const rows = (payments || []).map((p: any) => [
             new Date(p.created_at).toLocaleDateString(),
             p.id,
-            p.patient?.full_name || 'N/A',
+            patientMap.get(p.patient_id) || 'N/A',
             p.amount,
             p.currency,
             p.status

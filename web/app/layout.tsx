@@ -7,6 +7,7 @@ import { ErrorBoundary } from '@/components/error-boundary';
 import RollbarProvider from '@/components/providers/rollbar-provider';
 import { AuthProvider } from '@/components/providers/auth-provider';
 import { WebVitalsProvider } from '@/components/providers/web-vitals-provider';
+import { BrowserLogCollectorProvider } from '@/components/providers/browser-log-collector-provider';
 import { AnalyticsProvider } from '@/components/providers/analytics-provider';
 import { Toaster } from 'sonner';
 import './globals.css';
@@ -57,12 +58,14 @@ export default function RootLayout({
           <AuthProvider>
             <RollbarProvider>
               <WebVitalsProvider>
+                <BrowserLogCollectorProvider>
                 <AnalyticsProvider>
                   <ErrorBoundary>
                     {children}
                     <Toaster richColors position="top-right" />
                   </ErrorBoundary>
                 </AnalyticsProvider>
+                </BrowserLogCollectorProvider>
               </WebVitalsProvider>
             </RollbarProvider>
           </AuthProvider>

@@ -26,7 +26,7 @@ export default async function AppointmentsPage() {
     const { data: { user } } = await supabase.auth.getUser();
 
     return (
-        <div className="container max-w-2xl mx-auto py-6 px-4">
+        <div className="container max-w-5xl mx-auto py-6 px-4">
             {user && <BookingAgentWrapper userId={user.id} />}
             <Suspense fallback={<div className="p-4 text-center">Loading sessions...</div>}>
                 <AppointmentsListClient initialAppointments={appointments} />

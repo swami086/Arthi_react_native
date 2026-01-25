@@ -11,17 +11,17 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const { level = 'info', message, timestamp = new Date().toISOString() } = body;
 
-        // Define log file path in project root
-        // process.cwd() should return the web directory. We want to write to project root or web root.
-        // Let's write to relative 'browser.log' which will likely end up in web/browser.log
-        const logDir = path.join(process.cwd(), '..'); // Go up to project root if running in 'web'
+        // Write to browser.log. Prefer LOCAL_LOG_DIR (align with local-logs MCP logsDir), else project root.
+        const logDir = process.env.LOCAL_LOG_DIR
+            ? path.resolve(process.env.LOCAL_LOG_DIR)
+            : path.join(process.cwd(), '..');
         const logFile = path.join(logDir, 'browser.log');
+
+        await fs.promises.mkdir(logDir, { recursive: true }).catch(() => {});
 
         // Format: [TIMESTAMP] [LEVEL] MESSAGE
         const logEntry = `[${timestamp}] [${level.toUpperCase()}] ${typeof message === 'object' ? JSON.stringify(message) : message}\n`;
 
-        // Append to file
-        // We use synchronous append for simplicity in dev, or async.
         await fs.promises.appendFile(logFile, logEntry);
 
         return NextResponse.json({ success: true });
