@@ -9,6 +9,7 @@ import { AuthProvider } from '@/components/providers/auth-provider';
 import { WebVitalsProvider } from '@/components/providers/web-vitals-provider';
 import { BrowserLogCollectorProvider } from '@/components/providers/browser-log-collector-provider';
 import { AnalyticsProvider } from '@/components/providers/analytics-provider';
+import { KeyboardShortcutsProvider } from '@/components/providers/keyboard-shortcuts-provider';
 import { Toaster } from 'sonner';
 import './globals.css';
 
@@ -59,12 +60,14 @@ export default function RootLayout({
             <RollbarProvider>
               <WebVitalsProvider>
                 <BrowserLogCollectorProvider>
-                <AnalyticsProvider>
-                  <ErrorBoundary>
-                    {children}
-                    <Toaster richColors position="top-right" />
-                  </ErrorBoundary>
-                </AnalyticsProvider>
+                  <AnalyticsProvider>
+                    <KeyboardShortcutsProvider>
+                      <ErrorBoundary>
+                        {children}
+                        <Toaster richColors position="top-right" />
+                      </ErrorBoundary>
+                    </KeyboardShortcutsProvider>
+                  </AnalyticsProvider>
                 </BrowserLogCollectorProvider>
               </WebVitalsProvider>
             </RollbarProvider>
