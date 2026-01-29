@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Switch, Image, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -8,12 +8,20 @@ import * as Haptics from 'expo-haptics';
 import { useAuth } from '../../auth/hooks/useAuth';
 import { useColorScheme } from '../../../hooks/useColorScheme';
 import { reportInfo } from '../../../services/rollbar';
+import { useBiometricAuth } from '../../../hooks/useBiometricAuth';
 
 const SettingsScreen = () => {
     const navigation = useNavigation();
-    const { signOut } = useAuth();
+    const { signOut, user } = useAuth();
     const { isDark, setColorScheme } = useColorScheme();
     const [notificationsEnabled, setNotificationsEnabled] = React.useState(true);
+    const {
+        settings: biometricSettings,
+        updateSettings: updateBiometricSettings,
+        isAvailable: isBiometricAvailable,
+        biometricType,
+        isLoading: isBiometricLoading,
+    } = useBiometricAuth(user?.id);
 
     const handleDarkModeToggle = (value: boolean) => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -21,7 +29,6 @@ const SettingsScreen = () => {
         console.log('[Settings] Toggling Dark Mode to:', newScheme);
         setColorScheme(newScheme);
 
-        // Track in Rollbar
         try {
             reportInfo('User toggled dark mode', 'Settings', {
                 enabled: value,
@@ -29,6 +36,48 @@ const SettingsScreen = () => {
             });
         } catch (e) {
             console.error('[Settings] Rollbar error:', e);
+        }
+    };
+
+    const handleBiometricToggle = async (value: boolean) => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        try {
+            await updateBiometricSettings({ enabled: value });
+            reportInfo('User toggled biometric authentication', 'Settings', {
+                enabled: value,
+                biometricType
+            });
+        } catch (e) {
+            console.error('[Settings] Biometric toggle error:', e);
+        }
+    };
+
+    const getBiometricDisplayName = () => {
+        switch (biometricType) {
+            case 'face_id':
+                return 'Face ID';
+            case 'touch_id':
+                return 'Touch ID';
+            case 'fingerprint':
+                return 'Fingerprint';
+            case 'iris':
+                return 'Iris';
+            default:
+                return 'Biometric';
+        }
+    };
+
+    const getBiometricIcon = () => {
+        switch (biometricType) {
+            case 'face_id':
+                return 'face-recognition';
+            case 'touch_id':
+            case 'fingerprint':
+                return 'fingerprint';
+            case 'iris':
+                return 'eye-outline';
+            default:
+                return 'shield-lock-outline';
         }
     };
 
@@ -47,6 +96,14 @@ const SettingsScreen = () => {
             value: notificationsEnabled,
             onValueChange: setNotificationsEnabled
         },
+        ...(isBiometricAvailable && !isBiometricLoading ? [{
+            icon: getBiometricIcon(),
+            title: `${getBiometricDisplayName()} Authentication`,
+            subtitle: `Require ${getBiometricDisplayName()} for sensitive actions`,
+            toggle: true,
+            value: biometricSettings?.enabled ?? false,
+            onValueChange: handleBiometricToggle
+        }] : []),
         {
             icon: 'shield-lock-outline',
             title: 'Privacy & Security',
